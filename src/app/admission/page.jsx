@@ -17,9 +17,10 @@ import { DateValueToSring } from "../../modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { SCHOOLNAME } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import DownloadAdmissionForm from "../DownloadAdmissionForm/page";
+import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
 export default function Admission() {
-  const { setStateObject, setStateArray } = useGlobalContext();
+  const { setStateObject, setApplicationFormState, applicationFormState } =
+    useGlobalContext();
   const router = useRouter();
   const [docId, setDocId] = useState(
     new Date().getFullYear().toString() +
@@ -414,6 +415,7 @@ export default function Admission() {
       const snap = await getDoc(ref);
       const data = snap.data();
       setSearchedApplicationNo(data);
+      setApplicationFormState(data);
       setShowSearchedResult(true);
       setShowUpdateForm(false);
       setLoader(false);
@@ -750,7 +752,7 @@ export default function Admission() {
     }
     return formIsValid;
   };
-  useEffect(() => {}, [inputField, editInputField]);
+  useEffect(() => {}, [inputField, editInputField, applicationFormState]);
 
   return (
     <div className="container ben">
@@ -1615,25 +1617,29 @@ export default function Admission() {
                     View
                   </button>
 
-                  <PDFDownloadLink
-                    document={
-                      <DownloadAdmissionForm data={searchedApplicationNo} />
-                    }
-                    fileName={`Apllication Form of ${searchedApplicationNo.student_eng_name}.pdf`}
-                    style={{
-                      textDecoration: "none",
-                      padding: "10px",
-                      color: "#fff",
-                      backgroundColor: "navy",
-                      border: "1px solid #4a4a4a",
-                      width: "40%",
-                      borderRadius: 10,
-                    }}
-                  >
-                    {({ blob, url, loading, error }) =>
-                      loading ? "Loading..." : "Download"
-                    }
-                  </PDFDownloadLink>
+                  {applicationFormState.id != "" && (
+                    <PDFDownloadLink
+                      document={
+                        <CompDownloadAdmissionForm
+                          data={searchedApplicationNo}
+                        />
+                      }
+                      fileName={`Apllication Form of ${searchedApplicationNo.student_eng_name}.pdf`}
+                      style={{
+                        textDecoration: "none",
+                        padding: "10px",
+                        color: "#fff",
+                        backgroundColor: "navy",
+                        border: "1px solid #4a4a4a",
+                        width: "40%",
+                        borderRadius: 10,
+                      }}
+                    >
+                      {({ blob, url, loading, error }) =>
+                        loading ? "Loading..." : "Download"
+                      }
+                    </PDFDownloadLink>
+                  )}
                   <button
                     type="button"
                     className="btn btn-warning btn-sm m-2"
