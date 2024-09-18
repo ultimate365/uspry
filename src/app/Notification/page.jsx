@@ -429,6 +429,7 @@ const Notification = () => {
                           setSelectedNotice(el);
                           setShowNoticeDetails(true);
                         }}
+                        alt="..."
                       />
                     ) : (
                       <Image
@@ -606,7 +607,7 @@ const Notification = () => {
                 onChange={(e) => setNoticeText(e.target.value)}
               />
 
-              <div className="d-flex row mx-auto mb-3 justify-content-between px-2 align-items-center form-check form-switch">
+              <div className="d-flex row mx-auto mb-3 justify-content-evenly px-2 align-items-center form-check form-switch">
                 <h4 className="col-md-3 text-primary">Without Image/File</h4>
                 <input
                   className="form-check-input mb-3 col-md-3"
@@ -640,7 +641,7 @@ const Notification = () => {
                   />
                   {src !== null && file.type.split("/")[0] === "image" ? (
                     <div>
-                      <img
+                      <Image
                         src={src}
                         alt="uploadedImage"
                         width={150}
@@ -658,7 +659,7 @@ const Notification = () => {
                     </div>
                   ) : src !== null &&
                     file.type.split("/")[0] === "application" ? (
-                    <img
+                    <Image
                       src={
                         "https://raw.githubusercontent.com/awwbtpta/data/main/pdf.png"
                       }
