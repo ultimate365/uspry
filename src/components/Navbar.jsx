@@ -42,10 +42,7 @@ export default function Navbar() {
   const router = useRouter();
   let userdetails, loggedAt;
   let details = getCookie("uid");
-  if (details) {
-    userdetails = decryptObjData("uid");
-    loggedAt = getCookie("loggedAt");
-  }
+
   const [showLoader, setShowLoader] = useState(false);
   const handleNavCollapse = () => {
     if (typeof window !== "undefined") {
@@ -99,15 +96,21 @@ export default function Navbar() {
     setStudentUpdateTime(Date.now());
     setShowLoader(false);
   };
-
+  if (details) {
+    userdetails = decryptObjData("uid");
+    loggedAt = getCookie("loggedAt");
+  }
   useEffect(() => {
     if (details) {
       if ((Date.now() - loggedAt) / 1000 / 60 / 15 < 1) {
-        setState(userdetails);
-      } else {
-        router.push("/logout");
+        setState({
+          USER: userdetails,
+          loggedAt: loggedAt,
+          ACCESS: userdetails?.userType,
+        });
       }
     }
+
     const teacherDifference = (Date.now() - teacherUpdateTime) / 1000 / 60 / 15;
     if (teacherDifference >= 1 || teachersState.length === 0) {
       // storeTeachersData();
@@ -116,11 +119,13 @@ export default function Navbar() {
     if (schDifference >= 1 || studentState.length === 0) {
       // storeStudentData();
     }
-
     // eslint-disable-next-line
   }, []);
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
   const RenderMenu = () => {
-    if (state === "admin") {
+    if (state?.ACCESS === "admin") {
       return (
         <>
           <li className="nav-item">
@@ -150,6 +155,51 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Notifications
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/result"
+              onClick={handleNavCollapse}
+            >
+              Result
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/autoresult"
+              onClick={handleNavCollapse}
+            >
+              Auto Result
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/mdmdata"
+              onClick={handleNavCollapse}
+            >
+              MDM Data
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/MDMmonthlyReport"
+              onClick={handleNavCollapse}
+            >
+              Generate Monthly MDM Data
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/accounts"
+              onClick={handleNavCollapse}
+            >
+              Accounts
             </Link>
           </li>
 
@@ -200,7 +250,15 @@ export default function Navbar() {
               Complain or Suggest Us
             </Link>
           </li>
-
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/logout"
+              onClick={handleNavCollapse}
+            >
+              Logout
+            </Link>
+          </li>
           <li className="nav-item">
             <Link
               href="#"
@@ -221,7 +279,7 @@ export default function Navbar() {
           </li>
         </>
       );
-    } else if (state === "student") {
+    } else if (state?.ACCESS === "student") {
       return (
         <>
           <li className="nav-item">
@@ -301,7 +359,15 @@ export default function Navbar() {
               Complain or Suggest Us
             </Link>
           </li>
-
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/logout"
+              onClick={handleNavCollapse}
+            >
+              Logout
+            </Link>
+          </li>
           <li className="nav-item">
             <Link
               href="#"
@@ -362,51 +428,6 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Student Data
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              href="/result"
-              onClick={handleNavCollapse}
-            >
-              Result
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              href="/autoresult"
-              onClick={handleNavCollapse}
-            >
-              Auto Result
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              href="/mdmdata"
-              onClick={handleNavCollapse}
-            >
-              MDM Data
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              href="/MDMmonthlyReport"
-              onClick={handleNavCollapse}
-            >
-              Generate Monthly MDM Data
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              href="/accounts"
-              onClick={handleNavCollapse}
-            >
-              Accounts
             </Link>
           </li>
 

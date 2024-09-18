@@ -5,13 +5,8 @@ import { FirebaseProvider } from "./FirbaseContext";
 
 const GlobalContext = createContext({
   state: {
-    USER: {
-      name: "",
-      email: "",
-      id: "",
-      access: "",
-      userType: "",
-    },
+    USER: {},
+    ACCESS: null,
     LOGGEDAT: "",
   },
   setState: () => {},
@@ -83,13 +78,8 @@ const GlobalContext = createContext({
 });
 export const GlobalContextProvider = ({ children }) => {
   const [state, setState] = useState({
-    USER: {
-      name: "",
-      email: "",
-      id: "",
-      access: "",
-      userType: "",
-    },
+    USER: {},
+    ACCESS: null,
     LOGGEDAT: "",
   });
   const [stateArray, setStateArray] = useState([]);

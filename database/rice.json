@@ -2,168 +2,161 @@
   {
     "id": "01-07-2024",
     "date": "01-07-2024",
-    "riceOB": 50,
+    "riceOB": 60,
     "riceExpend": 4,
-    "riceCB": 46,
+    "riceCB": 56,
     "riceGiven": 0
   },
   {
     "id": "02-07-2024",
     "date": "02-07-2024",
-    "riceOB": 46,
+    "riceOB": 56,
     "riceExpend": 4,
-    "riceCB": 42,
+    "riceCB": 52,
     "riceGiven": 0
   },
   {
     "id": "03-07-2024",
     "date": "03-07-2024",
-    "riceOB": 42,
+    "riceOB": 52,
     "riceExpend": 4,
-    "riceCB": 38,
+    "riceCB": 48,
     "riceGiven": 0
   },
   {
     "id": "04-07-2024",
     "date": "04-07-2024",
-    "riceOB": 38,
+    "riceOB": 48,
     "riceExpend": 4,
-    "riceCB": 34,
+    "riceCB": 44,
     "riceGiven": 0
   },
   {
     "id": "05-07-2024",
     "date": "05-07-2024",
-    "riceOB": 34,
+    "riceOB": 44,
     "riceExpend": 4,
-    "riceCB": 30,
+    "riceCB": 40,
     "riceGiven": 0
   },
   {
     "id": "06-07-2024",
     "date": "06-07-2024",
-    "riceOB": 30,
+    "riceOB": 40,
     "riceExpend": 4,
-    "riceCB": 26,
-    "riceGiven": 0
+    "riceCB": 174,
+    "riceGiven": 138
   },
   {
     "id": "08-07-2024",
     "date": "08-07-2024",
-    "riceOB": 26,
+    "riceOB": 174,
     "riceExpend": 4,
-    "riceCB": 22,
+    "riceCB": 170,
     "riceGiven": 0
   },
-  {
-    "id": "09-07-2024",
-    "date": "09-07-2024",
-    "riceOB": 22,
-    "riceExpend": 4,
-    "riceCB": 18,
-    "riceGiven": 0
-  },
+
   {
     "id": "10-07-2024",
     "date": "10-07-2024",
-    "riceOB": 18,
+    "riceOB": 170,
     "riceExpend": 4,
-    "riceCB": 14,
-    "riceGiven": 138
+    "riceCB": 166,
+    "riceGiven": 0
   },
   {
     "id": "11-07-2024",
     "date": "11-07-2024",
-    "riceOB": 152,
+    "riceOB": 166,
     "riceExpend": 4,
-    "riceCB": 148,
+    "riceCB": 162,
     "riceGiven": 0
   },
   {
     "id": "12-07-2024",
     "date": "12-07-2024",
-    "riceOB": 148,
+    "riceOB": 162,
     "riceExpend": 3,
-    "riceCB": 145,
+    "riceCB": 158,
     "riceGiven": 0
   },
   {
     "id": "13-07-2024",
     "date": "13-07-2024",
-    "riceOB": 145,
+    "riceOB": 158,
     "riceExpend": 4,
-    "riceCB": 141,
+    "riceCB": 154,
     "riceGiven": 0
   },
   {
     "id": "15-07-2024",
     "date": "15-07-2024",
-    "riceOB": 141,
+    "riceOB": 154,
     "riceExpend": 4,
-    "riceCB": 137,
+    "riceCB": 150,
     "riceGiven": 0
   },
   {
     "id": "16-07-2024",
     "date": "16-07-2024",
-    "riceOB": 137,
+    "riceOB": 150,
     "riceExpend": 2,
-    "riceCB": 135,
+    "riceCB": 146,
     "riceGiven": 0
   },
   {
     "id": "18-07-2024",
     "date": "18-07-2024",
-    "riceOB": 135,
+    "riceOB": 146,
     "riceExpend": 1,
-    "riceCB": 134,
+    "riceCB": 142,
     "riceGiven": 0
   },
   {
     "id": "19-07-2024",
     "date": "19-07-2024",
-    "riceOB": 134,
+    "riceOB": 142,
     "riceExpend": 4,
-    "riceCB": 130,
+    "riceCB": 138,
     "riceGiven": 0
   },
   {
     "id": "20-07-2024",
     "date": "20-07-2024",
-    "riceOB": 130,
+    "riceOB": 138,
     "riceExpend": 4,
-    "riceCB": 126,
+    "riceCB": 134,
     "riceGiven": 0
   },
   {
     "id": "22-07-2024",
     "date": "22-07-2024",
-    "riceOB": 126,
-    "riceExpend": 2,
-    "riceCB": 124,
+    "riceOB": 134,
+    "riceExpend": 5,
+    "riceCB": 129,
     "riceGiven": 0
   },
   {
     "id": "23-07-2024",
     "date": "23-07-2024",
-    "riceOB": 124,
-    "riceExpend": 2,
-    "riceCB": 122,
+    "riceOB": 129,
+    "riceExpend": 5,
+    "riceCB": 124,
     "riceGiven": 0
   },
   {
     "id": "24-07-2024",
     "date": "24-07-2024",
-    "riceOB": 122,
-    "riceExpend": 4,
-    "riceCB": 118,
+    "riceOB": 124,
+    "riceExpend": 5,
+    "riceCB": 119,
     "riceGiven": 0
   },
   {
     "id": "25-07-2024",
     "date": "25-07-2024",
-    "riceOB": 118,
-    "riceExpend": 4,
+    "riceOB": 119,
+    "riceExpend": 5,
     "riceCB": 114,
     "riceGiven": 0
   },
@@ -205,14 +198,6 @@
     "riceOB": 98,
     "riceExpend": 4,
     "riceCB": 94,
-    "riceGiven": 0
-  },
-  {
-    "id": "22-07-2024",
-    "date": "22-07-2024",
-    "riceOB": 50,
-    "riceExpend": 4,
-    "riceCB": 46,
     "riceGiven": 0
   },
   {

@@ -7,17 +7,22 @@ import { ToastContainer, toast } from "react-toastify";
 import { firestore, firbaseAuth } from "../../context/FirbaseContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Loader from "../../components/Loader";
-import { encryptObjData, getCookie, setCookie } from "../../modules/encryption";
+import {
+  decryptObjData,
+  encryptObjData,
+  getCookie,
+  setCookie,
+} from "../../modules/encryption";
 import {
   comparePassword,
+  encryptPassword,
   getCurrentDateInput,
   getSubmitDateInput,
 } from "@/modules/calculatefunctions";
 import Link from "next/link";
-import Students from "./students.json";
 export default function Login() {
   const router = useRouter();
-  const { state, setState } = useGlobalContext();
+  const { state, setState, teachersState } = useGlobalContext();
   const [loader, setLoader] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +33,7 @@ export default function Login() {
   const [loginType, setLoginType] = useState(true);
   const [studentID, setStudentID] = useState("");
   const today = new Date();
-  const [dob, setDob] = useState(`01-01-${today.getFullYear() - 6}`);
+  const [dob, setDob] = useState(`01-01-${today.getFullYear() - 10}`);
   const onChangeRadio = () => {
     setLoginType(!loginType);
   };
@@ -55,16 +60,19 @@ export default function Login() {
           if (querySnapshot2.docs.length > 0) {
             const sdata = querySnapshot2.docs[0].data();
             setLoader(false);
-            toast.success("Congrats! You are Logined Successfully!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
+            toast.success(
+              `Congrats! ${sdata.student_name} You are Logined Successfully!`,
+              {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
 
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
             const Obj = {
               name: sdata.student_name,
               class: sdata.class,
@@ -80,6 +88,103 @@ export default function Login() {
             setState({
               USER: Obj,
               LOGGEDAT: Date.now(),
+              ACCESS: data.userType,
+            });
+            encryptObjData("uid", Obj, 10080);
+            setCookie("loggedAt", Date.now(), 10080);
+            router.push("/dashboard");
+          }
+        } else {
+          setLoader(false);
+          toast.error("Wrong Date of Birth!", {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } else {
+        setLoader(false);
+        toast.error("Invalid Student ID!", {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } else {
+      toast.error("Please fill all the required fields");
+    }
+  };
+
+  const validFormStudent = () => {
+    let isValid = false;
+    if (studentID.length === 0) {
+      setStudentIDERR("Student ID is required");
+      isValid = false;
+    } else {
+      setStudentIDERR("");
+      isValid = true;
+    }
+
+    return isValid;
+  };
+
+  const submitTeacherData = async (e) => {
+    e.preventDefault();
+    e.preventDefault();
+    if (validForm()) {
+      setLoader(true);
+      const collectionRef = collection(firestore, "userTeachers");
+      const q = query(
+        collectionRef,
+        where("empid", "==", username.toUpperCase())
+      );
+      const querySnapshot = await getDocs(q);
+      // console.log(querySnapshot.docs[0].data().pan);
+      if (querySnapshot.docs.length > 0) {
+        const data = querySnapshot.docs[0].data();
+
+        // if (data.password === password) {
+        if (comparePassword(password, data.password)) {
+          const collectionRef2 = collection(firestore, "teachers");
+          const q2 = query(collectionRef2, where("id", "==", data.id));
+          const querySnapshot2 = await getDocs(q2);
+          if (querySnapshot2.docs.length > 0) {
+            const sdata = querySnapshot2.docs[0].data();
+            setLoader(false);
+            toast.success(
+              `Congrats! ${sdata.tname} You are Logined Successfully!`,
+              {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
+            const Obj = {
+              name: sdata.tname,
+              desig: sdata.desig,
+              mobile: sdata.phone,
+              id: data.id,
+              userType: data.access,
+            };
+            setState({
+              USER: Obj,
+              LOGGEDAT: Date.now(),
+              ACCESS: data.access,
             });
             encryptObjData("uid", Obj, 10080);
             setCookie("loggedAt", Date.now(), 10080);
@@ -116,18 +221,6 @@ export default function Login() {
     }
   };
 
-  const validFormStudent = () => {
-    let isValid = false;
-    if (studentID.length === 0) {
-      setStudentIDERR("Student ID is required");
-      isValid = false;
-    } else {
-      setStudentIDERR("");
-      isValid = true;
-    }
-
-    return isValid;
-  };
   const validForm = () => {
     let isValid = false;
     if (username.length === 0) {
@@ -144,8 +237,28 @@ export default function Login() {
     return isValid;
   };
 
+  let userdetails, loggedAt;
+  let details = getCookie("uid");
+  if (details) {
+    userdetails = decryptObjData("uid");
+    loggedAt = getCookie("loggedAt");
+  }
+
   useEffect(() => {}, [loginType]);
 
+  useEffect(() => {
+    if (details) {
+      if ((Date.now() - loggedAt) / 1000 / 60 / 15 < 1) {
+        setState({
+          USER: userdetails,
+          loggedAt: loggedAt,
+          ACCESS: userdetails?.userType,
+        });
+        router.push("/dashboard");
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
   return (
     <div className="container text-black p-2 my-4">
       <ToastContainer
@@ -251,18 +364,6 @@ export default function Login() {
                   Login
                 </button>
               </form>
-              <p className="mt-3 text-center">
-                Do Not have an account?{" "}
-                <Link className="btn btn-success btn-sm" href="/studentsignup">
-                  Sign Up
-                </Link>
-              </p>
-              <p className="mt-3 text-center">
-                Forgot your password?{" "}
-                <Link className="btn btn-info btn-sm" href="/forgotpassword">
-                  Reset Password
-                </Link>
-              </p>
             </div>
           ) : (
             <div>
@@ -270,7 +371,7 @@ export default function Login() {
                 method="post"
                 className="mx-auto my-2"
                 autoComplete="off"
-                onSubmit={submitData}
+                onSubmit={submitTeacherData}
               >
                 <h4 className="text-black timesNewRoman">
                   Teacher&#8217;s Login
@@ -307,18 +408,6 @@ export default function Login() {
                   Login
                 </button>
               </form>
-              <p className="mt-3 text-center">
-                Do Not have an account?{" "}
-                <Link className="btn btn-success btn-sm" href="/teachersignup">
-                  Sign Up
-                </Link>
-              </p>
-              <p className="mt-3 text-center">
-                Forgot your password?{" "}
-                <Link className="btn btn-info btn-sm" href="/forgotpassword">
-                  Reset Password
-                </Link>
-              </p>
             </div>
           )}
         </div>
