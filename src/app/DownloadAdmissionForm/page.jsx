@@ -89,6 +89,7 @@ export default function DownloadAdmissionForm() {
   const scrHeight = (w) => (w * innerHeight) / 100;
   useEffect(() => {
     searchApplication();
+    //eslint-disable-next-line
   }, [applicationFormState]);
   return (
     <>

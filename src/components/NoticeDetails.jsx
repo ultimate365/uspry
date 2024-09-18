@@ -27,6 +27,7 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 // eslint-disable-next-line
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
+import Image from "next/image";
 
 const NoticeDetails = ({ sata }) => {
   // Create new plugin instance
@@ -171,7 +172,7 @@ const NoticeDetails = ({ sata }) => {
       </h3>
       {sata.url !== "" ? (
         sata.type.split("/")[0] === "image" ? (
-          <img
+          <Image
             src={
               sata.url !== ""
                 ? sata.url
@@ -240,7 +241,7 @@ const NoticeDetails = ({ sata }) => {
               ></button>
             </div>
             <div className="modal-body">
-              <img
+              <Image
                 src={
                   sata.url !== ""
                     ? sata.url

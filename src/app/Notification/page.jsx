@@ -31,6 +31,7 @@ import {
 import NoticeDetails from "../../components/NoticeDetails";
 import { useGlobalContext } from "../../context/Store";
 import { SCHOOLNAME } from "@/modules/constants";
+import Image from "next/image";
 const Notification = () => {
   const {
     noticeState,
@@ -363,7 +364,9 @@ const Notification = () => {
     getNoticeData();
     // eslint-disable-next-line
   }, []);
-  useEffect(() => {}, [file, allData]);
+  useEffect(() => {
+    //eslint-disable-next-line
+  }, [file, allData]);
   return (
     <div className="container text-center my-3">
       <ToastContainer
@@ -414,7 +417,7 @@ const Notification = () => {
                 >
                   <div className="card m-2 p-1" style={{ width: "18rem" }}>
                     {el.url !== "" && el.type.split("/")[0] === "image" ? (
-                      <img
+                      <Image
                         src={
                           el.url !== ""
                             ? el.url
@@ -422,14 +425,13 @@ const Notification = () => {
                         }
                         style={{ height: 200, cursor: "pointer" }}
                         className="card-img-top rounded-2"
-                        alt="..."
                         onClick={() => {
                           setSelectedNotice(el);
                           setShowNoticeDetails(true);
                         }}
                       />
                     ) : (
-                      <img
+                      <Image
                         src={
                           "https://raw.githubusercontent.com/awwbtpta/data/main/pdf.png"
                         }
