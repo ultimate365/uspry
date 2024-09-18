@@ -27,3 +27,11 @@ export const CCH_NAME = [
 ];
 export const UDISE_CODE = 19160213201;
 export const NGO_SHG = "SUPRAVAT+DISHARI";
+const THIS_YEAR = new Date().getFullYear();
+export const STUDENT_CLASSES = [
+  { name: "PRE PRIMARY", value: 0, year: THIS_YEAR - 5 },
+  { name: "CLASS I", value: 1, year: THIS_YEAR - 6 },
+  { name: "CLASS II", value: 2, year: THIS_YEAR - 7 },
+  { name: "CLASS III", value: 3, year: THIS_YEAR - 8 },
+  { name: "CLASS IV", value: 4, year: THIS_YEAR - 9 },
+];

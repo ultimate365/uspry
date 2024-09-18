@@ -31,7 +31,7 @@ import {
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
-import { useStatStyles } from "@chakra-ui/react";
+
 export default function MDMData() {
   const {
     setStateObject,

@@ -5,6 +5,8 @@ export const comparePassword = (userPassword, serverPassword) => {
 
   return match;
 };
+export const encryptPassword = async (password) =>
+  await bcrypt.hashSync(password, 10);
 export function round2dec(value) {
   if (value % 1 !== 0) {
     return Number(Math.round(value + "e" + 2) + "e-" + 2).toFixed(2);
