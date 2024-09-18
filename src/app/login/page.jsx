@@ -41,62 +41,76 @@ export default function Login() {
   const submitStudentData = async (e) => {
     e.preventDefault();
     if (validFormStudent()) {
-      setLoader(true);
-      const collectionRef = collection(firestore, "userStudents");
-      const q = query(
-        collectionRef,
-        where("studentID", "==", `028793${studentID}`)
-      );
-      const querySnapshot = await getDocs(q);
-      // console.log(querySnapshot.docs[0].data().pan);
-      if (querySnapshot.docs.length > 0) {
-        const data = querySnapshot.docs[0].data();
+      try {
+        setLoader(true);
+        const collectionRef = collection(firestore, "userStudents");
+        const q = query(
+          collectionRef,
+          where("studentID", "==", `028793${studentID}`)
+        );
+        const querySnapshot = await getDocs(q);
+        // console.log(querySnapshot.docs[0].data().pan);
+        if (querySnapshot.docs.length > 0) {
+          const data = querySnapshot.docs[0].data();
 
-        // if (data.password === password) {
-        if (comparePassword(dob, data.dob)) {
-          const collectionRef2 = collection(firestore, "students");
-          const q2 = query(collectionRef2, where("id", "==", data.id));
-          const querySnapshot2 = await getDocs(q2);
-          if (querySnapshot2.docs.length > 0) {
-            const sdata = querySnapshot2.docs[0].data();
+          // if (data.password === password) {
+          if (await comparePassword(dob, data.dob)) {
+            const collectionRef2 = collection(firestore, "students");
+            const q2 = query(collectionRef2, where("id", "==", data.id));
+            const querySnapshot2 = await getDocs(q2);
+            if (querySnapshot2.docs.length > 0) {
+              const sdata = querySnapshot2.docs[0].data();
+              setLoader(false);
+              toast.success(
+                `Congrats! ${sdata.student_name} You are Logined Successfully!`,
+                {
+                  position: "top-right",
+                  autoClose: 1500,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                }
+              );
+              const Obj = {
+                name: sdata.student_name,
+                class: sdata.class,
+                roll: sdata.roll_no,
+                father_name: sdata.father_name,
+                mother_name: sdata.mother_name,
+                student_id: sdata.student_id,
+                mobile: sdata.mobile,
+                id: data.id,
+                birthdate: data.birthdate,
+                userType: data.userType,
+              };
+              setState({
+                USER: Obj,
+                LOGGEDAT: Date.now(),
+                ACCESS: data.userType,
+              });
+              encryptObjData("uid", Obj, 10080);
+              setCookie("loggedAt", Date.now(), 10080);
+              router.push("/dashboard");
+            }
+          } else {
             setLoader(false);
-            toast.success(
-              `Congrats! ${sdata.student_name} You are Logined Successfully!`,
-              {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
+            toast.error("Wrong Date of Birth!", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
 
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
-            const Obj = {
-              name: sdata.student_name,
-              class: sdata.class,
-              roll: sdata.roll_no,
-              father_name: sdata.father_name,
-              mother_name: sdata.mother_name,
-              student_id: sdata.student_id,
-              mobile: sdata.mobile,
-              id: data.id,
-              birthdate: data.birthdate,
-              userType: data.userType,
-            };
-            setState({
-              USER: Obj,
-              LOGGEDAT: Date.now(),
-              ACCESS: data.userType,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
             });
-            encryptObjData("uid", Obj, 10080);
-            setCookie("loggedAt", Date.now(), 10080);
-            router.push("/dashboard");
           }
         } else {
           setLoader(false);
-          toast.error("Wrong Date of Birth!", {
+          toast.error("Invalid Student ID!", {
             position: "top-right",
             autoClose: 1500,
             hideProgressBar: false,
@@ -107,9 +121,9 @@ export default function Login() {
             theme: "light",
           });
         }
-      } else {
+      } catch (error) {
         setLoader(false);
-        toast.error("Invalid Student ID!", {
+        toast.error("Something Went Wrong!", {
           position: "top-right",
           autoClose: 1500,
           hideProgressBar: false,
@@ -119,6 +133,7 @@ export default function Login() {
           progress: undefined,
           theme: "light",
         });
+        console.log(error);
       }
     } else {
       toast.error("Please fill all the required fields");
@@ -142,57 +157,73 @@ export default function Login() {
     e.preventDefault();
     e.preventDefault();
     if (validForm()) {
-      setLoader(true);
-      const collectionRef = collection(firestore, "userTeachers");
-      const q = query(
-        collectionRef,
-        where("empid", "==", username.toUpperCase())
-      );
-      const querySnapshot = await getDocs(q);
-      // console.log(querySnapshot.docs[0].data().pan);
-      if (querySnapshot.docs.length > 0) {
-        const data = querySnapshot.docs[0].data();
+      try {
+        setLoader(true);
+        const collectionRef = collection(firestore, "userTeachers");
+        const q = query(
+          collectionRef,
+          where("username", "==", username.toUpperCase())
+        );
+        const querySnapshot = await getDocs(q);
+        // console.log(querySnapshot.docs[0].data().pan);
+        if (querySnapshot.docs.length > 0) {
+          const data = querySnapshot.docs[0].data();
+          const userPassword = password;
+          const serverPassword = data.password;
+          // if (data.password === password) {
+          if (await comparePassword(userPassword, serverPassword)) {
+            const collectionRef2 = collection(firestore, "teachers");
+            const q2 = query(collectionRef2, where("id", "==", data.id));
+            const querySnapshot2 = await getDocs(q2);
+            if (querySnapshot2.docs.length > 0) {
+              const sdata = querySnapshot2.docs[0].data();
+              setLoader(false);
+              toast.success(
+                `Congrats! ${sdata.tname} You are Logined Successfully!`,
+                {
+                  position: "top-right",
+                  autoClose: 1500,
+                  hideProgressBar: false,
+                  closeOnClick: true,
 
-        // if (data.password === password) {
-        if (comparePassword(password, data.password)) {
-          const collectionRef2 = collection(firestore, "teachers");
-          const q2 = query(collectionRef2, where("id", "==", data.id));
-          const querySnapshot2 = await getDocs(q2);
-          if (querySnapshot2.docs.length > 0) {
-            const sdata = querySnapshot2.docs[0].data();
+                  draggable: true,
+                  progress: undefined,
+                  theme: "light",
+                }
+              );
+              const Obj = {
+                name: sdata.tname,
+                desig: sdata.desig,
+                mobile: sdata.phone,
+                id: data.id,
+                username: data.username,
+                userType: data.access,
+              };
+              setState({
+                USER: Obj,
+                LOGGEDAT: Date.now(),
+                ACCESS: data.access,
+              });
+              encryptObjData("uid", Obj, 10080);
+              setCookie("loggedAt", Date.now(), 10080);
+              router.push("/dashboard");
+            }
+          } else {
             setLoader(false);
-            toast.success(
-              `Congrats! ${sdata.tname} You are Logined Successfully!`,
-              {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
+            toast.error("Wrong Password!", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
 
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
-            );
-            const Obj = {
-              name: sdata.tname,
-              desig: sdata.desig,
-              mobile: sdata.phone,
-              id: data.id,
-              userType: data.access,
-            };
-            setState({
-              USER: Obj,
-              LOGGEDAT: Date.now(),
-              ACCESS: data.access,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
             });
-            encryptObjData("uid", Obj, 10080);
-            setCookie("loggedAt", Date.now(), 10080);
-            router.push("/dashboard");
           }
         } else {
           setLoader(false);
-          toast.error("Wrong Password!", {
+          toast.error("Invalid Username!", {
             position: "top-right",
             autoClose: 1500,
             hideProgressBar: false,
@@ -203,9 +234,9 @@ export default function Login() {
             theme: "light",
           });
         }
-      } else {
+      } catch (error) {
         setLoader(false);
-        toast.error("Invalid Username!", {
+        toast.error("Something Went Wrong!", {
           position: "top-right",
           autoClose: 1500,
           hideProgressBar: false,
@@ -215,6 +246,7 @@ export default function Login() {
           progress: undefined,
           theme: "light",
         });
+        console.log(error);
       }
     } else {
       toast.error("Please fill all the required fields");

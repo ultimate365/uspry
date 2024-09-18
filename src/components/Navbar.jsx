@@ -172,7 +172,7 @@ export default function Navbar() {
               href="/autoresult"
               onClick={handleNavCollapse}
             >
-              Auto Result
+              Auto Table
             </Link>
           </li>
           <li className="nav-item">
@@ -206,15 +206,6 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
-              href="/update_self"
-              onClick={handleNavCollapse}
-            >
-              Update Profile
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
               href="/updateunp"
               onClick={handleNavCollapse}
             >
@@ -231,7 +222,7 @@ export default function Navbar() {
               Downloads
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <a
               className="nav-link"
               target="_blank"
@@ -240,7 +231,7 @@ export default function Navbar() {
             >
               <i className="bi bi-facebook"></i> Facebook Page
             </a>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link
               className="nav-link"
@@ -315,32 +306,13 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
-              href="/update_self"
-              onClick={handleNavCollapse}
-            >
-              Update Profile
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              className="nav-link"
-              href="/updateunp"
-              onClick={handleNavCollapse}
-            >
-              Update Username And Password
-            </Link>
-          </li>
-
-          <li className="nav-item">
-            <Link
-              className="nav-link"
               href="/downloads"
               onClick={handleNavCollapse}
             >
               Downloads
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <a
               className="nav-link"
               target="_blank"
@@ -349,7 +321,7 @@ export default function Navbar() {
             >
               <i className="bi bi-facebook"></i> Facebook Page
             </a>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link
               className="nav-link"

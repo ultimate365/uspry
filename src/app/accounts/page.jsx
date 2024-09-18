@@ -1,35 +1,15 @@
 "use client";
-import {
-  BLOCK,
-  MDM_COST,
-  PP_STUDENTS,
-  PRIMARY_STUDENTS,
-  SCHOOL_TYPE,
-  SCHOOLNAME,
-  WARD_NO,
-} from "@/modules/constants";
+
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { firestore } from "../../context/FirbaseContext";
-import {
-  getDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  query,
-  collection,
-} from "firebase/firestore";
+import { getDocs, query, collection } from "firebase/firestore";
 
 import Loader from "@/components/Loader";
 import {
   btnArray,
-  createDownloadLink,
   getCurrentDateInput,
-  getSubmitDateInput,
-  monthNamesWithIndex,
+  IndianFormat,
   todayInString,
-  uniqArray,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/Store";
@@ -178,7 +158,7 @@ export default function Accounts() {
                   }}
                   className="text-center p-1"
                 >
-                  {account.balance}
+                  ₹ {IndianFormat(account.balance)}
                 </td>
                 <td
                   style={{

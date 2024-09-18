@@ -1,39 +1,27 @@
 "use client";
-import {
-  BLOCK,
-  MDM_COST,
-  PP_STUDENTS,
-  PRIMARY_STUDENTS,
-  SCHOOL_TYPE,
-  SCHOOLNAME,
-  WARD_NO,
-} from "@/modules/constants";
+
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { firestore } from "../../context/FirbaseContext";
 import {
-  getDoc,
   doc,
   setDoc,
   updateDoc,
   getDocs,
   query,
   collection,
-  where,
-  addDoc,
   deleteDoc,
 } from "firebase/firestore";
 import { useGlobalContext } from "../../context/Store";
 import Loader from "@/components/Loader";
 import {
   btnArray,
-  createDownloadLink,
   getCurrentDateInput,
   getSubmitDateInput,
+  IndianFormat,
   monthNamesWithIndex,
   round2dec,
   todayInString,
-  uniqArray,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 
@@ -227,8 +215,8 @@ export default function Transactions() {
       <div>
         <h3>Transactions</h3>
         <h3>Account Name: {stateObject.accountName}</h3>
-        <h3>Account Balance: {stateObject.balance}</h3>
         <h3>Account Number: {stateObject.accountNumber}</h3>
+        <h3>Account Balance: ₹ {IndianFormat(stateObject.balance)}</h3>
         <div className="my-3">
           <button
             type="button"
@@ -345,7 +333,7 @@ export default function Transactions() {
                   }}
                   className="text-center px-1"
                 >
-                  {transaction.amount}
+                  ₹ {IndianFormat(transaction.amount)}
                 </td>
                 <td
                   style={{
@@ -361,7 +349,7 @@ export default function Transactions() {
                   }}
                   className="text-center px-1"
                 >
-                  {transaction.openingBalance}
+                  ₹ {IndianFormat(transaction.openingBalance)}
                 </td>
                 <td
                   style={{
@@ -369,7 +357,7 @@ export default function Transactions() {
                   }}
                   className="text-center px-1"
                 >
-                  {transaction.closingBalance}
+                  ₹ {IndianFormat(transaction.closingBalance)}
                 </td>
                 <td
                   style={{

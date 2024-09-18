@@ -28,6 +28,7 @@ import {
   todayInString,
   uniqArray,
   sortMonthwise,
+  IndianFormat,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
@@ -1011,7 +1012,7 @@ export default function MDMData() {
                     createDownloadLink(filteredData, `${monthText}-mdmData`);
                   }}
                 >
-                  Download {monthText} Month`&apos;`s MDM SMS Data
+                  Download {monthText} Month&#8217;s MDM SMS Data
                 </button>
                 <button
                   type="button"
@@ -1020,7 +1021,7 @@ export default function MDMData() {
                     createDownloadLink(filteredRiceData, `${monthText}-rice`);
                   }}
                 >
-                  Download {monthText} Month`&apos;`s Rice Data
+                  Download {monthText} Month&#8217;s Rice Data
                 </button>
                 {/* <button
                   type="button"
@@ -1127,8 +1128,8 @@ export default function MDMData() {
                       </p>
                       <p style={{ margin: 0, padding: 0 }}>
                         MDM Cost ={" "}
-                        {`${ppTotalMeal} X ₹${MDM_COST} + ${pryTotalMeal} X ₹${MDM_COST} = `}
-                        ₹{monthTotalCost}
+                        {`${ppTotalMeal} X ₹ ${MDM_COST} + ${pryTotalMeal} X ₹${MDM_COST} = `}
+                        ₹ {IndianFormat(monthTotalCost)}
                       </p>
                       <p style={{ margin: 0, padding: 0 }}>
                         Rice Consumption: {monthRiceConsunption}Kg.

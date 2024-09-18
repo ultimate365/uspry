@@ -33,6 +33,7 @@ import {
   createDownloadLink,
   getCurrentDateInput,
   getSubmitDateInput,
+  IndianFormat,
   monthNamesWithIndex,
   months,
   round2dec,
@@ -615,29 +616,39 @@ export default function MDMmonthlyReport() {
                     >
                       <td style={{ border: "1px solid" }}>Bal Vatika</td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthFromTransaction?.ppOB}
+                        ₹ {IndianFormat(thisMonthFromTransaction?.ppOB)}
                       </td>
-                      <td style={{ border: "1px solid" }}>{balRCPrevMonth}</td>
-                      <td style={{ border: "1px solid" }}>{balRCThisMonth}</td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.ppOB + balRCThisMonth
+                        ₹ {IndianFormat(balRCPrevMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹ {IndianFormat(balRCThisMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹{" "}
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.ppOB + balRCThisMonth
+                          )
                         )}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {prevMonthlyData?.monthlyPPCost}
+                        ₹ {IndianFormat(prevMonthlyData?.monthlyPPCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPPCost}
+                        ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPPCost}
+                        ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.ppOB +
-                            balRCThisMonth -
-                            thisMonthlyData?.monthlyPPCost
+                        ₹{" "}
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.ppOB +
+                              balRCThisMonth -
+                              thisMonthlyData?.monthlyPPCost
+                          )
                         )}
                       </td>
                     </tr>
@@ -649,29 +660,39 @@ export default function MDMmonthlyReport() {
                     >
                       <td style={{ border: "1px solid" }}>Primary</td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthFromTransaction?.pryOB}
+                        ₹ {IndianFormat(thisMonthFromTransaction?.pryOB)}
                       </td>
-                      <td style={{ border: "1px solid" }}>{pryRCPrevMonth}</td>
-                      <td style={{ border: "1px solid" }}>{pryRCThisMonth}</td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.pryOB + pryRCThisMonth
+                        ₹ {IndianFormat(pryRCPrevMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹ {IndianFormat(pryRCThisMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹{" "}
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.pryOB + pryRCThisMonth
+                          )
                         )}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {prevMonthlyData?.monthlyPRYCost}
+                        ₹ {IndianFormat(prevMonthlyData?.monthlyPRYCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPRYCost}
+                        ₹ {IndianFormat(thisMonthlyData?.monthlyPRYCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPRYCost}
+                        ₹ {IndianFormat(thisMonthlyData?.monthlyPRYCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.pryOB +
-                            pryRCThisMonth -
-                            thisMonthlyData?.monthlyPRYCost
+                        ₹{" "}
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.pryOB +
+                              pryRCThisMonth -
+                              thisMonthlyData?.monthlyPRYCost
+                          )
                         )}
                       </td>
                     </tr>
@@ -1091,29 +1112,39 @@ export default function MDMmonthlyReport() {
                         {thisMonthlyData.worrkingDays}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthFromTransaction?.ppOB}
+                        ₹{IndianFormat(thisMonthFromTransaction?.ppOB)}
                       </td>
-                      <td style={{ border: "1px solid" }}>{balRCPrevMonth}</td>
-                      <td style={{ border: "1px solid" }}>{balRCThisMonth}</td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.ppOB + balRCThisMonth
+                        ₹{IndianFormat(balRCPrevMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹{IndianFormat(balRCThisMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.ppOB + balRCThisMonth
+                          )
                         )}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {prevMonthlyData?.monthlyPPCost}
+                        ₹{IndianFormat(prevMonthlyData?.monthlyPPCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPPCost}
+                        ₹{IndianFormat(thisMonthlyData?.monthlyPPCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPPCost}
+                        ₹{IndianFormat(thisMonthlyData?.monthlyPPCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.ppOB +
-                            balRCThisMonth -
-                            thisMonthlyData?.monthlyPPCost
+                        ₹
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.ppOB +
+                              balRCThisMonth -
+                              thisMonthlyData?.monthlyPPCost
+                          )
                         )}
                       </td>
                     </tr>
@@ -1132,29 +1163,39 @@ export default function MDMmonthlyReport() {
                       </td>
 
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthFromTransaction?.pryOB}
+                        ₹{IndianFormat(thisMonthFromTransaction?.pryOB)}
                       </td>
-                      <td style={{ border: "1px solid" }}>{pryRCPrevMonth}</td>
-                      <td style={{ border: "1px solid" }}>{pryRCThisMonth}</td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.pryOB + pryRCThisMonth
+                        ₹{IndianFormat(pryRCPrevMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹{IndianFormat(pryRCThisMonth)}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        ₹
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.pryOB + pryRCThisMonth
+                          )
                         )}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {prevMonthlyData?.monthlyPRYCost}
+                        ₹{IndianFormat(prevMonthlyData?.monthlyPRYCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPRYCost}
+                        ₹{IndianFormat(thisMonthlyData?.monthlyPRYCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData?.monthlyPRYCost}
+                        ₹{IndianFormat(thisMonthlyData?.monthlyPRYCost)}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {round2dec(
-                          thisMonthFromTransaction?.pryOB +
-                            pryRCThisMonth -
-                            thisMonthlyData?.monthlyPRYCost
+                        ₹
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromTransaction?.pryOB +
+                              pryRCThisMonth -
+                              thisMonthlyData?.monthlyPRYCost
+                          )
                         )}
                       </td>
                     </tr>
@@ -1914,7 +1955,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {thisMonthFromTransaction?.ppOB}
+                        ₹ {IndianFormat(thisMonthFromTransaction?.ppOB)}
                       </td>
                       <td
                         style={{
@@ -1930,7 +1971,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {thisMonthlyData?.monthlyPPCost}
+                        ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
                       </td>
                       <td
                         style={{
@@ -1956,7 +1997,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {thisMonthFromTransaction?.pryOB}
+                        ₹ {IndianFormat(thisMonthFromTransaction?.pryOB)}
                       </td>
                       <td
                         style={{

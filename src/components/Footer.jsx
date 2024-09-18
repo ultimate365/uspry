@@ -12,14 +12,14 @@ const Footer = () => {
           className="container-fluid bg-dark my-2"
           style={{ height: "2px", opacity: 0.5 }}
         ></div>
-        <div className="row align-items-end justify-content-between p-1">
+        <div className="row align-items-end justify-content-center p-1">
           <div className="col-lg-6">
             <h5 className="container text-left">Reach Us:</h5>
             <h6 className="h-font fw-bold fs-6">{SCHOOLNAME}</h6>
             <h6 className="h-font fw-bold fs-6">{SCHOOLADDRESS}</h6>
           </div>
 
-          <div className="col-lg-6">
+          {/* <div className="col-lg-6">
             <h5 className="container text-left">Call Us:</h5>
             <Link
               href="tel: +919933684468"
@@ -54,7 +54,7 @@ const Footer = () => {
               SALAM MOLLICK, ASSISTANT TEACHER
             </Link>
             <br />
-          </div>
+          </div> */}
         </div>
       </div>
 
