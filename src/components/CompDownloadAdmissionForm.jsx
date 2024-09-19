@@ -13,7 +13,7 @@ import {
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 import { SCHOOLBENGALIADDRESS, SCHOOLBENGALINAME } from "@/modules/constants";
 
-const width = 2480;
+const width = 640;
 export default function CompDownloadAdmissionForm({ data }) {
   const {
     id,
