@@ -314,15 +314,15 @@ export default function Login() {
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
           borderRadius: "10px",
           padding: "20px",
-          width: "80%",
+          width: "100%",
           height: "auto",
           maxWidth: "400px",
           backgroundColor: "darkseagreen",
         }}
       >
-        <div className="my-5">
-          <div className="bg-dark p-2 rounded rounded-2 d-flex justify-content-between align-items-between">
-            <div className="form-check m-1">
+        <div className="my-5 text-center">
+          <div className="bg-dark p-2 rounded rounded-4 d-flex justify-content-between align-items-center">
+            <div className="form-check m-1 d-flex justify-content-between align-items-center">
               <input
                 className="form-check-input"
                 type="radio"
@@ -330,26 +330,28 @@ export default function Login() {
                 id="flexRadioDefault1"
                 checked={loginType}
                 onChange={onChangeRadio}
+                style={{ width: 30, height: 30 }}
               />
               <label
-                className="form-check-label text-white"
+                className="form-check-label m-2 text-white fs-6"
                 htmlFor="flexRadioDefault1"
               >
                 Student&#8217;s Login
               </label>
             </div>
-            <div className="form-check m-1">
+            <div className="form-check m-1 d-flex justify-content-between align-items-center">
               <input
                 className="form-check-input"
                 type="radio"
                 name="flexRadioDefaul2"
-                id="flexRadioDefault1"
+                id="flexRadioDefault2"
                 checked={!loginType}
                 onChange={onChangeRadio}
+                style={{ width: 30, height: 30 }}
               />
               <label
-                className="form-check-label text-white"
-                htmlFor="flexRadioDefault1"
+                className="form-check-label m-2 text-white fs-6"
+                htmlFor="flexRadioDefault2"
               >
                 Teacher&#8217;s Login
               </label>

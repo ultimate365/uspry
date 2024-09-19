@@ -17,35 +17,28 @@ import {
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { firestore } from "../../context/FirbaseContext";
-import {
-  getDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  query,
-  collection,
-} from "firebase/firestore";
+import { getDocs, query, collection } from "firebase/firestore";
 
 import Loader from "@/components/Loader";
 import {
-  btnArray,
-  createDownloadLink,
   getCurrentDateInput,
-  getSubmitDateInput,
   IndianFormat,
-  monthNamesWithIndex,
   months,
   round2dec,
   sortMonthwise,
-  todayInString,
   uniqArray,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
-import { useGlobalContext } from "@/context/Store";
-import { useStatStyles } from "@chakra-ui/react";
+import { useGlobalContext } from "../../context/Store";
 
 export default function MDMmonthlyReport() {
+  const {
+    transactionState,
+    setTransactionState,
+    monthlyReportState,
+    setMonthlyReportState,
+    state,
+  } = useGlobalContext();
   const [thisMonthlyData, setThisMonthlyData] = useState({
     id: "",
     month: "",
@@ -71,16 +64,7 @@ export default function MDMmonthlyReport() {
     riceGiven: "",
     date: "",
   });
-  const {
-    transactionState,
-    setTransactionState,
-    accountState,
-    setAccountState,
-    stateObject,
-    setStateObject,
-    monthlyReportState,
-    setMonthlyReportState,
-  } = useGlobalContext();
+  const access = state?.ACCESS;
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   const [allEnry, setAllEnry] = useState([]);
@@ -309,6 +293,10 @@ export default function MDMmonthlyReport() {
       getTransactions();
     } else {
       setAllTransactions(transactionState);
+    }
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unathorized access");
     }
     // eslint-disable-next-line
   }, []);

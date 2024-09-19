@@ -9,14 +9,12 @@ import {
   Image,
   Font,
 } from "@react-pdf/renderer";
-import useWindowSize from "@rooks/use-window-size";
 
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 import { SCHOOLBENGALIADDRESS, SCHOOLBENGALINAME } from "@/modules/constants";
 
+const width = 2480;
 export default function CompDownloadAdmissionForm({ data }) {
-  const { innerWidth } = useWindowSize();
-
   const {
     id,
     student_beng_name,
@@ -47,7 +45,7 @@ export default function CompDownloadAdmissionForm({ data }) {
     student_addmission_dateAndTime,
   } = data;
   const date = new Date(student_addmission_dateAndTime);
-  const scrWidth = (w) => (w * innerWidth) / 100;
+  const scrWidth = (w) => (w * width) / 100;
   return (
     <Document title={`Apllication Form of ${student_eng_name}`}>
       <Page size="A4" style={styles.page}>
@@ -192,6 +190,7 @@ const styles = StyleSheet.create({
   page: {
     display: "flex",
     padding: 10,
+    width: width,
   },
   headSection: {
     display: "flex",

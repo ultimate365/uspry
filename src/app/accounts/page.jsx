@@ -13,9 +13,11 @@ import {
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/Store";
+import { toast } from "react-toastify";
 export default function Accounts() {
-  const { setStateObject, accountState, setAccountState, setStateArray } =
+  const { setStateObject, accountState, setAccountState, state } =
     useGlobalContext();
+  const access = state?.ACCESS;
   const router = useRouter();
   const [date, setDate] = useState(todayInString());
   const [loader, setLoader] = useState(false);
@@ -45,6 +47,10 @@ export default function Accounts() {
       getAccounts();
     } else {
       setAllAccounts(accountState);
+    }
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unathorized access");
     }
     //eslint-disable-next-line
   }, []);

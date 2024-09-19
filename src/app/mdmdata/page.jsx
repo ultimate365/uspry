@@ -35,7 +35,7 @@ import { useGlobalContext } from "../../context/Store";
 
 export default function MDMData() {
   const {
-    setStateObject,
+    state,
     mealState,
     setMealState,
     riceState,
@@ -44,6 +44,7 @@ export default function MDMData() {
     setMonthlyReportState,
   } = useGlobalContext();
   const router = useRouter();
+  const access = state?.ACCESS;
   const [date, setDate] = useState(todayInString());
   const [pp, setPp] = useState("");
   const [pry, setPry] = useState("");
@@ -638,6 +639,10 @@ export default function MDMData() {
       getMainData();
     } else {
       setAllEnry(mealState);
+    }
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unathorized access");
     }
     //eslint-disable-next-line
   }, []);

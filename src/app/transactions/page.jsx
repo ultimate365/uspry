@@ -33,7 +33,9 @@ export default function Transactions() {
     setAccountState,
     stateObject,
     setStateObject,
+    state,
   } = useGlobalContext();
+  const access = state?.ACCESS;
   const router = useRouter();
   const [date, setDate] = useState(todayInString());
   const [loader, setLoader] = useState(false);
@@ -203,6 +205,10 @@ export default function Transactions() {
       } else {
         setId(getId());
       }
+    }
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unathorized access");
     }
     //eslint-disable-next-line
   }, []);
