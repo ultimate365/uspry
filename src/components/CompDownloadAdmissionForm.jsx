@@ -12,8 +12,9 @@ import {
 
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 import { SCHOOLBENGALIADDRESS, SCHOOLBENGALINAME } from "@/modules/constants";
+import { DateValueToSring } from "@/modules/calculatefunctions";
 
-const width = 640;
+const width = 900;
 export default function CompDownloadAdmissionForm({ data }) {
   const {
     id,
@@ -43,8 +44,9 @@ export default function CompDownloadAdmissionForm({ data }) {
     student_previous_school,
     student_addmission_date,
     student_addmission_dateAndTime,
+    updatedAt,
   } = data;
-  const date = new Date(student_addmission_dateAndTime);
+
   const scrWidth = (w) => (w * width) / 100;
   return (
     <Document title={`Apllication Form of ${student_eng_name}`}>
@@ -71,18 +73,14 @@ export default function CompDownloadAdmissionForm({ data }) {
             <Text style={styles.engparaText}>Application Form No.: {id}</Text>
             <Text style={[styles.engparaText, { paddingLeft: 30 }]}>
               Application Date:{" "}
-              {`${date.getDate()}-${date.getMonth()}-${date.getFullYear()} At ${
-                date.getHours() > 12 ? date.getHours() - 12 : date.getHours()
-              }:${date.getMinutes()}:${date.getSeconds()} ${
-                date.getHours() > 12 ? "PM" : "AM"
-              }`}
+              {DateValueToSring(student_addmission_dateAndTime)}
             </Text>
           </View>
           <View style={styles.paraView}>
             <Text style={styles.paraText}>
               ছাত্র / ছাত্রীর নাম (বাংলায়): {student_beng_name}
             </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               (ইংরাজীতে): {student_eng_name}
             </Text>
           </View>
@@ -90,13 +88,13 @@ export default function CompDownloadAdmissionForm({ data }) {
             <Text style={styles.paraText}>
               অভিভাবকের মোবাইল নাম্বার: {student_mobile}
             </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               ছাত্র/ছাত্রীর লিঙ্গ: {student_gender}
             </Text>
           </View>
           <View style={styles.paraView}>
             <Text style={styles.paraText}>জন্ম তারিখ: {student_birthday}</Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               আধার নং: {student_aadhaar}
             </Text>
           </View>
@@ -104,7 +102,7 @@ export default function CompDownloadAdmissionForm({ data }) {
             <Text style={styles.paraText}>
               পিতার নাম (বাংলায়): {father_beng_name}
             </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               (ইংরাজীতে): {father_eng_name}
             </Text>
           </View>
@@ -112,7 +110,7 @@ export default function CompDownloadAdmissionForm({ data }) {
             <Text style={styles.paraText}>
               মাতার নাম (বাংলায়): {mother_beng_name}
             </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               (ইংরাজীতে): {mother_eng_name}
             </Text>
           </View>
@@ -120,7 +118,7 @@ export default function CompDownloadAdmissionForm({ data }) {
             <Text style={styles.paraText}>
               অভিভাবকের নাম (বাংলায়): {guardian_beng_name}
             </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               (ইংরাজীতে): {guardian_eng_name}
             </Text>
           </View>
@@ -128,7 +126,7 @@ export default function CompDownloadAdmissionForm({ data }) {
             <Text style={styles.paraText}>
               ছাত্র/ছাত্রীর ধর্ম: {student_religion}
             </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
               ছাত্র/ছাত্রীর জাতি: {student_race}
             </Text>
           </View>
@@ -137,7 +135,7 @@ export default function CompDownloadAdmissionForm({ data }) {
               ছাত্র/ছাত্রী বি.পি.এল. কিনা?: {student_bpl_status}
             </Text>
             {student_bpl_status === "YES" && (
-              <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+              <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
                 অভিভাবকের বি.পি.এল. নাম্বার: {student_bpl_number}
               </Text>
             )}
@@ -162,7 +160,7 @@ export default function CompDownloadAdmissionForm({ data }) {
               <Text style={styles.paraText}>
                 ছাত্র/ছাত্রীর পূর্বের শ্রেণী: {student_previous_class}
               </Text>
-              <Text style={[styles.paraText, { paddingLeft: scrWidth(2) }]}>
+              <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
                 ছাত্র/ছাত্রীর পূর্বের বর্ষ: {student_previous_class_year}
               </Text>
             </View>
@@ -177,6 +175,18 @@ export default function CompDownloadAdmissionForm({ data }) {
               <Text style={styles.paraText}>
                 ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:{" "}
                 {student_previous_school}
+              </Text>
+            </View>
+          )}
+          {updatedAt !== undefined && (
+            <View
+              style={[
+                styles.paraView,
+                { flexWrap: "wrap", width: scrWidth(55) },
+              ]}
+            >
+              <Text style={styles.paraText}>
+                Updated At: {DateValueToSring(updatedAt)}
               </Text>
             </View>
           )}
@@ -246,7 +256,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   paraText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "bold",
     color: "black",
     fontFamily: "Kalpurush",

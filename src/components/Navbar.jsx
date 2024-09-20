@@ -108,6 +108,8 @@ export default function Navbar() {
           loggedAt: loggedAt,
           ACCESS: userdetails?.userType,
         });
+      } else {
+        router.push("/logout");
       }
     }
 
@@ -121,9 +123,7 @@ export default function Navbar() {
     }
     // eslint-disable-next-line
   }, []);
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
+  useEffect(() => {}, [state]);
   const RenderMenu = () => {
     if (state?.ACCESS === "admin") {
       return (
@@ -146,6 +146,15 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Dashboard
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/viewAdmission"
+              onClick={handleNavCollapse}
+            >
+              View Admission
             </Link>
           </li>
           <li className="nav-item">
@@ -222,16 +231,7 @@ export default function Navbar() {
               Downloads
             </Link>
           </li>
-          {/* <li className="nav-item">
-            <a
-              className="nav-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.facebook.com/amtawestwbtpta"
-            >
-              <i className="bi bi-facebook"></i> Facebook Page
-            </a>
-          </li> */}
+
           <li className="nav-item">
             <Link
               className="nav-link"
@@ -312,16 +312,7 @@ export default function Navbar() {
               Downloads
             </Link>
           </li>
-          {/* <li className="nav-item">
-            <a
-              className="nav-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.facebook.com/amtawestwbtpta"
-            >
-              <i className="bi bi-facebook"></i> Facebook Page
-            </a>
-          </li> */}
+
           <li className="nav-item">
             <Link
               className="nav-link"
@@ -411,18 +402,6 @@ export default function Navbar() {
             >
               Downloads
             </Link>
-          </li>
-
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://www.facebook.com/amtawestwbtpta"
-              onClick={handleNavCollapse}
-            >
-              <i className="bi bi-facebook"></i> Facebook Page
-            </a>
           </li>
 
           <li className="nav-item">

@@ -12,7 +12,7 @@ const Footer = () => {
           className="container-fluid bg-dark my-2"
           style={{ height: "2px", opacity: 0.5 }}
         ></div>
-        <div className="row align-items-end justify-content-center p-1">
+        <div className="row align-items-start justify-content-center p-1">
           <div className="col-lg-6">
             <h5 className="container text-left">Reach Us:</h5>
             <h6 className="h-font fw-bold fs-6">{SCHOOLNAME}</h6>
@@ -55,6 +55,30 @@ const Footer = () => {
             </Link>
             <br />
           </div> */}
+          <div className="col-lg-6">
+            <h5 className="container text-left">Our Teacher&#8217;s:</h5>
+            <Link
+              href="tel: +919933684468"
+              className="d-inline-block mb-2 fs-5 fw-bold text-decoration-none text-dark"
+            >
+              <i className="bi bi-telephone-fill"></i>+ 91 9933 684468, SK
+              MAIDUL ISLAM, HEAD TEACHER
+            </Link>
+            <br />
+
+            <h5 className="d-inline-block mb-2 text-decoration-none text-dark">
+              MALLIKA GAYEN, ASSISTANT TEACHER
+            </h5>
+            <br />
+            <h5 className="d-inline-block mb-2 text-decoration-none text-dark">
+              SURASHREE SADHUKHAN SAHA, ASSISTANT TEACHER
+            </h5>
+            <br />
+            <h5 className="d-inline-block mb-2 text-decoration-none text-dark">
+              ABDUS SALAM MOLLICK, ASSISTANT TEACHER
+            </h5>
+            <br />
+          </div>
         </div>
       </div>
 

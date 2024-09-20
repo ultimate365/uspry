@@ -5,12 +5,12 @@ import {
   getSubmitDateInput,
   todayInString,
   setInputNumberMaxLength,
+  compareObjects,
 } from "../../modules/calculatefunctions";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import { firestore } from "../../context/FirbaseContext";
 import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
-import { v4 as uuid } from "uuid";
 import { BsClipboard, BsClipboard2Check } from "react-icons/bs";
 import { useGlobalContext } from "../../context/Store";
 import { DateValueToSring } from "../../modules/calculatefunctions";
@@ -22,18 +22,9 @@ export default function Admission() {
   const { setStateObject, setApplicationFormState, applicationFormState } =
     useGlobalContext();
   const router = useRouter();
-  const [docId, setDocId] = useState(
-    new Date().getFullYear().toString() +
-      (new Date().getMonth() + 1 > 9
-        ? new Date().getMonth()
-        : ("0" + (new Date().getMonth() + 1)).toString()) +
-      new Date().getDate().toString() +
-      new Date().getHours().toString() +
-      new Date().getMinutes().toString() +
-      new Date().getSeconds().toString()
-  );
+
   const [inputField, setInputField] = useState({
-    id: docId,
+    id: "",
     student_beng_name: "",
     student_eng_name: "",
     father_beng_name: "",
@@ -59,6 +50,7 @@ export default function Admission() {
     student_previous_class_year: "",
     student_previous_school: "",
     student_addmission_date: todayInString(),
+    student_addmission_year: new Date().getFullYear(),
     student_addmission_dateAndTime: Date.now(),
   });
   const [errInputField, setErrInputField] = useState({
@@ -93,8 +85,38 @@ export default function Admission() {
   const [showErr, setShowErr] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showSearchedResult, setShowSearchedResult] = useState(false);
-
+  const statusID = process.env.NEXT_PUBLIC_ADMISSION_STATUS;
+  const [admissionStatus, setAdmissionStatus] = useState(false);
   const [searchedApplicationNo, setSearchedApplicationNo] = useState({
+    id: "",
+    student_beng_name: "",
+    student_eng_name: "",
+    father_beng_name: "",
+    father_eng_name: "",
+    mother_beng_name: "",
+    mother_eng_name: "",
+    guardian_beng_name: "",
+    guardian_eng_name: "",
+    student_birthday: "",
+    student_gender: "",
+    student_mobile: "",
+    student_aadhaar: "",
+    student_religion: "",
+    student_race: "",
+    student_bpl_status: "",
+    student_bpl_number: "",
+    student_village: "",
+    student_post_office: "",
+    student_police_station: "",
+    student_pin_code: "",
+    student_addmission_class: "",
+    student_previous_class: "",
+    student_previous_class_year: "",
+    student_previous_school: "",
+    student_addmission_date: "",
+    student_addmission_dateAndTime: "",
+  });
+  const [searchedOrgApplicationNo, setSearchedOrgApplicationNo] = useState({
     id: "",
     student_beng_name: "",
     student_eng_name: "",
@@ -308,8 +330,17 @@ export default function Admission() {
       //submit
       try {
         setLoader(true);
-        await setDoc(doc(firestore, "admission", docId), {
-          id: docId,
+        const ID =
+          new Date().getFullYear().toString() +
+          (new Date().getMonth() + 1 > 9
+            ? new Date().getMonth()
+            : ("0" + (new Date().getMonth() + 1)).toString()) +
+          new Date().getDate().toString() +
+          new Date().getHours().toString() +
+          new Date().getMinutes().toString() +
+          new Date().getSeconds().toString();
+        await setDoc(doc(firestore, "admission", ID), {
+          id: ID,
           student_beng_name: inputField.student_beng_name,
           student_eng_name: inputField.student_eng_name.toUpperCase(),
           father_beng_name: inputField.father_beng_name,
@@ -337,6 +368,7 @@ export default function Admission() {
           student_previous_school:
             inputField.student_previous_school.toUpperCase(),
           student_addmission_date: todayInString(),
+          student_addmission_year: new Date().getFullYear(),
           student_addmission_dateAndTime: Date.now(),
         });
 
@@ -408,6 +440,32 @@ export default function Admission() {
     }
   };
 
+  const getAdmissionStatus = async () => {
+    setLoader(true);
+    const ref = doc(firestore, "admissionStatus", statusID);
+    try {
+      const snap = await getDoc(ref);
+      const data = snap.data();
+      setAdmissionStatus(data?.status);
+      if (data?.status) {
+        toast.success("Admission is Open");
+      } else {
+        toast.error("Admission is Closed");
+      }
+      setLoader(false);
+    } catch (error) {
+      toast.error("Application Not Found!", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setLoader(false);
+    }
+  };
   const searchApplication = async () => {
     setLoader(true);
     const ref = doc(firestore, "admission", applicationNo);
@@ -491,71 +549,85 @@ export default function Admission() {
     student_previous_school: "",
   });
 
-  const updateData = async () => {
+  const updateData = async (e) => {
+    e.preventDefault();
     if (validEditForm()) {
-      setLoader(true);
-      try {
-        const docRef = doc(firestore, "admission", editInputField.id);
-        await updateDoc(docRef, editInputField)
-          .then(() => {
-            toast.success("Form Has Been Updated Successfully!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
+      if (!compareObjects(searchedOrgApplicationNo, editInputField)) {
+        setLoader(true);
+        try {
+          editInputField.updatedAt = Date.now();
+          const docRef = doc(firestore, "admission", editInputField.id);
+          await updateDoc(docRef, editInputField)
+            .then(() => {
+              toast.success("Form Has Been Updated Successfully!", {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
+              setShowEditForm(false);
+              setLoader(false);
+              setEditInputField({
+                id: "",
+                student_beng_name: "",
+                student_eng_name: "",
+                father_beng_name: "",
+                father_eng_name: "",
+                mother_beng_name: "",
+                mother_eng_name: "",
+                guardian_beng_name: "",
+                guardian_eng_name: "",
+                student_birthday: ``,
+                student_gender: "",
+                student_mobile: "",
+                student_aadhaar: "",
+                student_religion: "",
+                student_race: "",
+                student_bpl_status: "",
+                student_bpl_number: "",
+                student_village: "",
+                student_post_office: "",
+                student_police_station: "",
+                student_pin_code: "",
+                student_addmission_class: "",
+                student_previous_class: "",
+                student_previous_class_year: "",
+                student_previous_school: "",
+                student_addmission_date: "",
+                student_addmission_dateAndTime: "",
+              });
+            })
+            .catch((e) => {
+              console.log(e);
+              setLoader(false);
+              toast.error("Something went Wrong!", {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
             });
-            setShowEditForm(false);
-            setLoader(false);
-            setEditInputField({
-              id: "",
-              student_beng_name: "",
-              student_eng_name: "",
-              father_beng_name: "",
-              father_eng_name: "",
-              mother_beng_name: "",
-              mother_eng_name: "",
-              guardian_beng_name: "",
-              guardian_eng_name: "",
-              student_birthday: ``,
-              student_gender: "",
-              student_mobile: "",
-              student_aadhaar: "",
-              student_religion: "",
-              student_race: "",
-              student_bpl_status: "",
-              student_bpl_number: "",
-              student_village: "",
-              student_post_office: "",
-              student_police_station: "",
-              student_pin_code: "",
-              student_addmission_class: "",
-              student_previous_class: "",
-              student_previous_class_year: "",
-              student_previous_school: "",
-              student_addmission_date: "",
-              student_addmission_dateAndTime: "",
-            });
-          })
-          .catch((e) => {
-            console.log(e);
-            setLoader(false);
-            toast.error("Something went Wrong!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+        } catch (error) {
+          console.log(error);
+          setLoader(false);
+          toast.error("Something went Wrong!", {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
           });
-      } catch (error) {
-        console.log(error);
-        setLoader(false);
-        toast.error("Something went Wrong!", {
+        }
+      } else {
+        toast.error("No Changes Detected!", {
           position: "top-right",
           autoClose: 1500,
           hideProgressBar: false,
@@ -602,92 +674,92 @@ export default function Admission() {
       student_previous_class_year: "",
       student_previous_school: "",
     });
-    if (errEditInputField.student_beng_name === "") {
+    if (editInputField.student_beng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_beng_name: "দয়া করে ছাত্র/ছাত্রীর বাংলা নাম লিখুন",
       }));
     }
-    if (errEditInputField.student_eng_name === "") {
+    if (editInputField.student_eng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_eng_name: "দয়া করে ছাত্র/ছাত্রীর ইংরাজী নাম লিখুন",
       }));
     }
-    if (errEditInputField.father_beng_name === "") {
+    if (editInputField.father_beng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         father_beng_name: "দয়া করে বাবার বাংলা নাম লিখুন",
       }));
     }
-    if (errEditInputField.father_eng_name === "") {
+    if (editInputField.father_eng_name === "") {
       formIsValid = false;
-      setErrEditInputField((prevState) => ({
+      editInputField((prevState) => ({
         ...prevState,
         father_eng_name: "দয়া করে বাবার ইংরাজী নাম লিখুন",
       }));
     }
-    if (errEditInputField.mother_beng_name === "") {
+    if (editInputField.mother_beng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         mother_beng_name: "দয়া করে মাতার বাংলা নাম লিখুন",
       }));
     }
-    if (errEditInputField.mother_eng_name === "") {
+    if (editInputField.mother_eng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         mother_eng_name: "দয়া করে মাতার ইংরাজী নাম লিখুন",
       }));
     }
-    if (errEditInputField.guardian_beng_name === "") {
+    if (editInputField.guardian_beng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         guardian_beng_name: "দয়া করে অভিভাবকের বাংলা নাম লিখুন",
       }));
     }
-    if (errEditInputField.guardian_eng_name === "") {
+    if (editInputField.guardian_eng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         guardian_eng_name: "দয়া করে অভিভাবকের ইংরাজী নাম লিখুন",
       }));
     }
-    if (errEditInputField.student_gender === "") {
+    if (editInputField.student_gender === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_gender: "দয়া করে ছাত্র/ছাত্রীর লিঙ্গ বেছে নিন",
       }));
     }
-    if (errEditInputField.student_mobile === "") {
+    if (editInputField.student_mobile === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_mobile: "দয়া করে অভিভাবকের মোবাইল নাম্বার লিখুন",
       }));
     }
-    if (errEditInputField.student_religion === "") {
+    if (editInputField.student_religion === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_religion: "দয়া করে ছাত্র/ছাত্রীর ধর্ম বেছে নিন",
       }));
     }
-    if (errEditInputField.student_race === "") {
+    if (editInputField.student_race === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_race: "দয়া করে ছাত্র/ছাত্রীর জাতি বেছে নিন",
       }));
     }
-    if (errEditInputField.student_bpl_status === "YES") {
-      if (errEditInputField.student_bpl_number === "") {
+    if (editInputField.student_bpl_status === "YES") {
+      if (editInputField.student_bpl_number === "") {
         formIsValid = false;
         setErrEditInputField((prevState) => ({
           ...prevState,
@@ -695,21 +767,21 @@ export default function Admission() {
         }));
       }
     }
-    if (errEditInputField.student_village === "") {
+    if (editInputField.student_village === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_village: "দয়া করে ছাত্র/ছাত্রীর গ্রামের নাম লিখুন",
       }));
     }
-    if (errEditInputField.student_post_office === "") {
+    if (editInputField.student_post_office === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_post_office: "দয়া করে ছাত্র/ছাত্রীর পোস্ট অফিসের নাম লিখুন",
       }));
     }
-    if (errEditInputField.student_police_station === "") {
+    if (editInputField.student_police_station === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
@@ -717,14 +789,14 @@ export default function Admission() {
           "দয়া করে ছাত্র/ছাত্রীর পুলিশ স্টেশনের নাম লিখুন",
       }));
     }
-    if (errEditInputField.student_pin_code === "") {
+    if (editInputField.student_pin_code === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_pin_code: "দয়া করে ছাত্র/ছাত্রীর পিনকোড লিখুন",
       }));
     }
-    if (errEditInputField.student_addmission_class === "") {
+    if (editInputField.student_addmission_class === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
@@ -732,8 +804,8 @@ export default function Admission() {
           "দয়া করে ছাত্র/ছাত্রীর ভর্তি হওয়ার শ্রেনী বেছে নিন",
       }));
     }
-    if (errEditInputField.student_previous_class !== "FIRST TIME ADDMISSION") {
-      if (errEditInputField.student_previous_class_year === "") {
+    if (editInputField.student_previous_class !== "FIRST TIME ADDMISSION") {
+      if (editInputField.student_previous_class_year === "") {
         formIsValid = false;
         setErrEditInputField((prevState) => ({
           ...prevState,
@@ -741,7 +813,7 @@ export default function Admission() {
             "দয়া করে ছাত্র/ছাত্রীর পূর্বের শ্রেনীর বছর লিখুন অথবা যদি ভুল করে ছাত্র/ছাত্রীর পূর্বের শ্রেণী বেছে নিয়ে থাকেন তাহলে সেটি 'শ্রেণী বেছে নিন' করে দিন।",
         }));
       }
-      if (errEditInputField.student_previous_school === "") {
+      if (editInputField.student_previous_school === "") {
         formIsValid = false;
         setErrEditInputField((prevState) => ({
           ...prevState,
@@ -752,7 +824,16 @@ export default function Admission() {
     }
     return formIsValid;
   };
-  useEffect(() => {}, [inputField, editInputField, applicationFormState]);
+  useEffect(() => {}, [
+    inputField,
+    editInputField,
+    errEditInputField,
+    errInputField,
+    applicationFormState,
+  ]);
+  useEffect(() => {
+    getAdmissionStatus();
+  }, []);
 
   return (
     <div className="container ben">
@@ -760,28 +841,21 @@ export default function Admission() {
       <h3>WELCOME TO {SCHOOLNAME}</h3>
       <h3>ADMISSION SECTION</h3>
 
-      <button
-        type="button"
-        className={`btn btn-${showForm ? "warning" : "success"} m-2`}
-        onClick={() => {
-          setShowForm(!showForm);
-          setShowUpdateForm(false);
-          setDocId(
-            new Date().getFullYear().toString() +
-              (new Date().getMonth() + 1 > 9
-                ? new Date().getMonth()
-                : ("0" + (new Date().getMonth() + 1)).toString()) +
-              new Date().getDate().toString() +
-              new Date().getHours().toString() +
-              new Date().getMinutes().toString() +
-              new Date().getSeconds().toString()
-          );
-          setShowSearchedResult(false);
-          setShowEditForm(false);
-        }}
-      >
-        {showForm ? "Close Form" : "Fillup Form"}
-      </button>
+      {admissionStatus && (
+        <button
+          type="button"
+          className={`btn btn-${showForm ? "warning" : "success"} m-2`}
+          onClick={() => {
+            setShowForm(!showForm);
+            setShowUpdateForm(false);
+
+            setShowSearchedResult(false);
+            setShowEditForm(false);
+          }}
+        >
+          {showForm ? "Close Form" : "Fillup Form"}
+        </button>
+      )}
       <button
         type="button"
         className={`btn btn-${showUpdateForm ? "warning" : "primary"} m-2`}
@@ -795,7 +869,7 @@ export default function Admission() {
       >
         {showUpdateForm ? "Close Form" : "Edit / Print Filled Form"}
       </button>
-      {showForm && (
+      {showForm && admissionStatus && (
         <div className="my-4">
           <h6 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h6>
           <h6 className="text-danger">
@@ -1645,6 +1719,7 @@ export default function Admission() {
                     className="btn btn-warning btn-sm m-2"
                     onClick={() => {
                       setEditInputField(searchedApplicationNo);
+                      setSearchedOrgApplicationNo(searchedApplicationNo);
                       setShowEditForm(true);
                       setShowSearchedResult(false);
                       setShowUpdateForm(false);
@@ -1803,7 +1878,6 @@ export default function Admission() {
               method="post"
               className="row mx-auto"
               autoComplete="off"
-              onSubmit={updateData}
             >
               <div className="mb-3 col-md-4">
                 <label className="form-label">ছাত্র/ছাত্রীর বাংলায় নাম*</label>

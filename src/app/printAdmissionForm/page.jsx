@@ -3,13 +3,15 @@ import React, { useEffect } from "react";
 import { useGlobalContext } from "../../context/Store";
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 import Image from "next/image";
-import useWindowSize from "@rooks/use-window-size";
 import { SCHOOLBENGALIADDRESS, SCHOOLBENGALINAME } from "@/modules/constants";
 import { useRouter } from "next/navigation";
+import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { DateValueToSring } from "@/modules/calculatefunctions";
 
 export default function PrintAddmissionForm() {
   const { stateObject } = useGlobalContext();
-  const { innerWidth } = useWindowSize();
+
   const router = useRouter();
   const {
     id,
@@ -39,9 +41,8 @@ export default function PrintAddmissionForm() {
     student_previous_school,
     student_addmission_date,
     student_addmission_dateAndTime,
+    updatedAt,
   } = stateObject;
-  const date = new Date(student_addmission_dateAndTime);
-  const scrWidth = (w) => (w * innerWidth) / 100;
 
   useEffect(() => {
     document.title = `Apllication Form of ${student_eng_name}`;
@@ -99,11 +100,7 @@ export default function PrintAddmissionForm() {
                   textUnderlineOffset: 6,
                 }}
               >
-                {`${date.getDate()}-${date.getMonth()}-${date.getFullYear()} At ${
-                  date.getHours() > 12 ? date.getHours() - 12 : date.getHours()
-                }:${date.getMinutes()}:${date.getSeconds()} ${
-                  date.getHours() > 12 ? "PM" : "AM"
-                }`}
+                {DateValueToSring(student_addmission_dateAndTime)}
               </span>
             </h5>
           </div>
@@ -377,28 +374,54 @@ export default function PrintAddmissionForm() {
               </h5>
             </div>
           )}
-          <button
-            className="btn btn-primary m-2 noprint"
-            type="button"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                window.print();
+          {updatedAt && (
+            <div className="d-flex justify-content-around my-1">
+              <h5>
+                Updated At:{" "}
+                <h6
+                  style={{
+                    textDecoration: "underline 1px dotted",
+                    textUnderlineOffset: 4,
+                  }}
+                >
+                  {DateValueToSring(updatedAt)}
+                </h6>
+              </h5>
+            </div>
+          )}
+          <div className="mx-auto">
+            <button
+              className="btn btn-primary m-2 noprint"
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.print();
+                }
+              }}
+            >
+              Print Form
+            </button>
+            <PDFDownloadLink
+              document={<CompDownloadAdmissionForm data={stateObject} />}
+              fileName={`Apllication Form of ${stateObject?.student_eng_name}.pdf`}
+              className="m-2 btn btn-success"
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download"
               }
-            }}
-          >
-            Print Form
-          </button>
-          <button
-            className="btn btn-danger m-2 noprint"
-            type="button"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                router.back();
-              }
-            }}
-          >
-            Close
-          </button>
+            </PDFDownloadLink>
+            <button
+              className="btn btn-danger m-2 noprint"
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  router.back();
+                }
+              }}
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

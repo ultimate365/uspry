@@ -112,9 +112,7 @@ export default function StudentData() {
     <div className="container text-center my-3">
       {showTable ? (
         <>
-          <h3 className="text-center text-primary">
-            Student`&apos;`s Deatails
-          </h3>
+          <h3 className="text-center text-primary">Student&apos;s Deatails</h3>
           <DataTable
             columns={columns}
             data={filteredData}

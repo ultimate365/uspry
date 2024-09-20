@@ -549,12 +549,14 @@ export function compareObjects(x, y) {
 }
 
 export const DateValueToSring = (dateValue) => {
-  let date = new Date(dateValue);
-  return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} At ${
-    date.getHours() > 12 ? date.getHours() - 12 : date.getHours()
-  }:${date.getMinutes()}:${date.getSeconds()} ${
-    date.getHours() > 12 ? "PM" : "AM"
-  }`;
+  if (dateValue) {
+    let date = new Date(dateValue);
+    return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} At ${
+      date.getHours() > 12 ? date.getHours() - 12 : date.getHours()
+    }:${date.getMinutes()}:${date.getSeconds()} ${
+      date.getHours() > 12 ? "PM" : "AM"
+    }`;
+  }
 };
 export function removeDuplicates(books) {
   // Create an array of objects
