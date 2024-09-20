@@ -278,14 +278,12 @@ export default function Login() {
     if (details) {
       userdetails = decryptObjData("uid");
       loggedAt = getCookie("loggedAt");
-      if ((Date.now() - loggedAt) / 1000 / 60 / 15 < 1) {
-        setState({
-          USER: userdetails,
-          loggedAt: loggedAt,
-          ACCESS: userdetails?.userType,
-        });
-        router.push("/dashboard");
-      }
+      setState({
+        USER: userdetails,
+        loggedAt: loggedAt,
+        ACCESS: userdetails?.userType,
+      });
+      router.push("/dashboard");
     }
     // eslint-disable-next-line
   }, []);

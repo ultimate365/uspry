@@ -49,15 +49,11 @@ export default function Navbar() {
     if (details) {
       userdetails = decryptObjData("uid");
       loggedAt = getCookie("loggedAt");
-      if ((Date.now() - loggedAt) / 1000 / 60 / 15 < 1) {
-        setState({
-          USER: userdetails,
-          loggedAt: loggedAt,
-          ACCESS: userdetails?.userType,
-        });
-      } else {
-        router.push("/logout");
-      }
+      setState({
+        USER: userdetails,
+        loggedAt: loggedAt,
+        ACCESS: userdetails?.userType,
+      });
     }
     // eslint-disable-next-line
   }, []);
