@@ -6,12 +6,18 @@ import Image from "next/image";
 import { SCHOOLBENGALIADDRESS, SCHOOLBENGALINAME } from "@/modules/constants";
 import { useRouter } from "next/navigation";
 import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { DateValueToSring } from "@/modules/calculatefunctions";
 
+import { DateValueToSring } from "@/modules/calculatefunctions";
+import dynamic from "next/dynamic";
 export default function PrintAddmissionForm() {
   const { stateObject } = useGlobalContext();
-
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   const router = useRouter();
   const {
     id,

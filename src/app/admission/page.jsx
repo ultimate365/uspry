@@ -824,7 +824,9 @@ export default function Admission() {
     }
     return formIsValid;
   };
-  useEffect(() => {}, [
+  useEffect(() => {
+    //eslint-disable-next-line
+  }, [
     inputField,
     editInputField,
     errEditInputField,
@@ -833,6 +835,7 @@ export default function Admission() {
   ]);
   useEffect(() => {
     getAdmissionStatus();
+    //eslint-disable-next-line
   }, []);
 
   return (
