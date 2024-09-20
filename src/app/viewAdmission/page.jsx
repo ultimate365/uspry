@@ -149,10 +149,10 @@ export default function ViewAdmission() {
       >
         Add / Edit Entry
       </button>
-      <div className="d-flex row mx-auto mb-3 justify-content-evenly px-2 align-items-center form-check form-switch">
-        <h4 className="col-md-3 text-danger">Admission Close</h4>
+      <div className="d-flex flex-row mx-auto mb-3 justify-content-evenly px-2 align-items-center form-check form-switch">
+        <h4 className="col-md-2 text-danger m-2">Admission Close</h4>
         <input
-          className="form-check-input mb-3 col-md-3"
+          className="form-check-input col-md-2 m-2"
           type="checkbox"
           id="checkbox"
           role="switch"
@@ -174,7 +174,7 @@ export default function ViewAdmission() {
           }}
           style={{ width: 60, height: 30 }}
         />
-        <h4 className="col-md-3 text-success">Admission Open</h4>
+        <h4 className="col-md-2 text-success m-2">Admission Open</h4>
       </div>
       <div>
         <h3>Admission Application Data</h3>

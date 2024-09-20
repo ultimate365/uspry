@@ -14,21 +14,7 @@ export default function Navbar() {
   const {
     state,
     setState,
-    stateArray,
-    setStateArray,
-    stateObject,
-    setStateObject,
-    teachersState,
-    setTeachersState,
-    studentState,
-    setStudentState,
-    slideState,
-    setSlideState,
-    userState,
-    setUserState,
-    noticeState,
-    setNoticeState,
-    teacherUpdateTime,
+
     setTeacherUpdateTime,
     studentUpdateTime,
     setStudentUpdateTime,
@@ -58,50 +44,11 @@ export default function Navbar() {
       }
     }
   };
-  const storeTeachersData = async () => {
-    setShowLoader(true);
-    const q = query(collection(firestore, "teachers"));
-    const querySnapshot = await getDocs(q);
-    const datas = querySnapshot.docs.map((doc) => ({
-      // doc.data() is never undefined for query doc snapshots
-      ...doc.data(),
-      id: doc.id,
-    }));
-    let newDatas = datas.sort((a, b) => {
-      // First, compare the "school" keys
-      if (a.school < b.school) {
-        return -1;
-      }
-      if (a.school > b.school) {
-        return 1;
-      }
-      // If "school" keys are equal, compare the "rank" keys
-      return a.rank - b.rank;
-    });
-    setShowLoader(false);
-    setTeachersState(newDatas);
-    setTeacherUpdateTime(Date.now());
-  };
-  const storeStudentData = async () => {
-    setShowLoader(true);
-    const q2 = query(collection(firestore, "students"));
 
-    const querySnapshot2 = await getDocs(q2);
-    const data2 = querySnapshot2.docs.map((doc) => ({
-      // doc.data() is never undefined for query doc snapshots
-      ...doc.data(),
-      id: doc.id,
-    }));
-    setStudentState(data2);
-    setStudentUpdateTime(Date.now());
-    setShowLoader(false);
-  };
-  if (details) {
-    userdetails = decryptObjData("uid");
-    loggedAt = getCookie("loggedAt");
-  }
   useEffect(() => {
     if (details) {
+      userdetails = decryptObjData("uid");
+      loggedAt = getCookie("loggedAt");
       if ((Date.now() - loggedAt) / 1000 / 60 / 15 < 1) {
         setState({
           USER: userdetails,
@@ -111,15 +58,6 @@ export default function Navbar() {
       } else {
         router.push("/logout");
       }
-    }
-
-    const teacherDifference = (Date.now() - teacherUpdateTime) / 1000 / 60 / 15;
-    if (teacherDifference >= 1 || teachersState.length === 0) {
-      // storeTeachersData();
-    }
-    const schDifference = (Date.now() - studentUpdateTime) / 1000 / 60 / 15;
-    if (schDifference >= 1 || studentState.length === 0) {
-      // storeStudentData();
     }
     // eslint-disable-next-line
   }, []);
@@ -146,6 +84,15 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Dashboard
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/admission"
+              onClick={handleNavCollapse}
+            >
+              Addmission
             </Link>
           </li>
           <li className="nav-item">
@@ -250,24 +197,6 @@ export default function Navbar() {
               Logout
             </Link>
           </li>
-          <li className="nav-item">
-            <Link
-              href="#"
-              className="nav-link"
-              onClick={() => {
-                handleNavCollapse();
-                storeSchoolData();
-                storeTeachersData();
-                getAcceptingData();
-                setTeacherUpdateTime(Date.now() - 1000 * 60 * 15);
-                setStudentUpdateTime(Date.now() - 1000 * 60 * 15);
-                setSlideUpdateTime(Date.now() - 1000 * 60 * 15);
-                setNoticeUpdateTime(Date.now() - 1000 * 60 * 15);
-              }}
-            >
-              <i className="bi bi-arrow-clockwise text-success fs-3 cursor-pointer"></i>
-            </Link>
-          </li>
         </>
       );
     } else if (state?.ACCESS === "student") {
@@ -291,6 +220,15 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Dashboard
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/admission"
+              onClick={handleNavCollapse}
+            >
+              Addmission
             </Link>
           </li>
           <li className="nav-item">
@@ -329,24 +267,6 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Logout
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link
-              href="#"
-              className="nav-link"
-              onClick={() => {
-                handleNavCollapse();
-                storeSchoolData();
-                storeTeachersData();
-                getAcceptingData();
-                setTeacherUpdateTime(Date.now() - 1000 * 60 * 15);
-                setStudentUpdateTime(Date.now() - 1000 * 60 * 15);
-                setSlideUpdateTime(Date.now() - 1000 * 60 * 15);
-                setNoticeUpdateTime(Date.now() - 1000 * 60 * 15);
-              }}
-            >
-              <i className="bi bi-arrow-clockwise text-success fs-3 cursor-pointer"></i>
             </Link>
           </li>
         </>
@@ -444,7 +364,6 @@ export default function Navbar() {
       <div className="container-fluid">
         <Link className="navbar-brand" href="/">
           <Image
-            // src="https://raw.githubusercontent.com/usprys/usprysdata/main/logoweb.png"
             src={schoolLogo}
             alt="LOGO"
             style={{ width: 70, height: 70 }}
@@ -467,7 +386,6 @@ export default function Navbar() {
           </ul>
         </div>
       </div>
-      {showLoader && <Loader />}
     </nav>
   );
 }

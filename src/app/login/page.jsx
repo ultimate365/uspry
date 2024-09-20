@@ -271,15 +271,13 @@ export default function Login() {
 
   let userdetails, loggedAt;
   let details = getCookie("uid");
-  if (details) {
-    userdetails = decryptObjData("uid");
-    loggedAt = getCookie("loggedAt");
-  }
 
   useEffect(() => {}, [loginType]);
 
   useEffect(() => {
     if (details) {
+      userdetails = decryptObjData("uid");
+      loggedAt = getCookie("loggedAt");
       if ((Date.now() - loggedAt) / 1000 / 60 / 15 < 1) {
         setState({
           USER: userdetails,

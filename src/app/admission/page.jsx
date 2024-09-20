@@ -10,7 +10,7 @@ import {
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import { firestore } from "../../context/FirbaseContext";
-import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { BsClipboard, BsClipboard2Check } from "react-icons/bs";
 import { useGlobalContext } from "../../context/Store";
 import { DateValueToSring } from "../../modules/calculatefunctions";
@@ -470,13 +470,43 @@ export default function Admission() {
     setLoader(true);
     const ref = doc(firestore, "admission", applicationNo);
     try {
-      const snap = await getDoc(ref);
-      const data = snap.data();
-      setSearchedApplicationNo(data);
-      setApplicationFormState(data);
-      setShowSearchedResult(true);
-      setShowUpdateForm(false);
-      setLoader(false);
+      await getDoc(ref)
+        .then((data) => {
+          const adata = data.data();
+          if (adata) {
+            setSearchedApplicationNo(adata);
+            setApplicationFormState(adata);
+            setShowSearchedResult(true);
+            setShowUpdateForm(false);
+            setLoader(false);
+          } else {
+            setShowSearchedResult(false);
+            toast.error("Application Not Found!", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setLoader(false);
+          }
+        })
+        .catch((error) => {
+          toast.error("Application Not Found!", {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setShowSearchedResult(false);
+          setLoader(false);
+          console.log(error);
+        });
     } catch (error) {
       toast.error("Application Not Found!", {
         position: "top-right",
@@ -824,6 +854,22 @@ export default function Admission() {
     }
     return formIsValid;
   };
+
+  const delEntry = async (id) => {
+    setLoader(true);
+    await deleteDoc(doc(firestore, "admission", id))
+      .then(() => {
+        toast.success("You Application Deleted successfully");
+        setShowSearchedResult(false);
+        setLoader(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoader(false);
+        toast.error("Failed to delete Application");
+      });
+  };
+
   useEffect(() => {
     //eslint-disable-next-line
   }, [
@@ -1451,7 +1497,7 @@ export default function Admission() {
                 </div>
                 <div className="mb-3 col-md-6 mx-auto">
                   <label className="form-label">
-                    ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের ঠিকানা *
+                    ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা *
                   </label>
 
                   <textarea
@@ -1460,7 +1506,7 @@ export default function Admission() {
                     cols="30"
                     rows="7"
                     value={inputField.student_previous_school}
-                    placeholder="ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের ঠিকানা"
+                    placeholder="ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা"
                     className="form-control"
                     onChange={(e) =>
                       setInputField({
@@ -1668,17 +1714,17 @@ export default function Admission() {
             </thead>
             <tbody style={{ verticalAlign: "center" }}>
               <td className="p-2" style={{ border: "1px solid black" }}>
-                {searchedApplicationNo.id}
+                {searchedApplicationNo?.id}
               </td>
               <td className="p-2" style={{ border: "1px solid black" }}>
-                {searchedApplicationNo.student_eng_name}
+                {searchedApplicationNo?.student_eng_name}
               </td>
               <td className="p-2" style={{ border: "1px solid black" }}>
-                {searchedApplicationNo.father_eng_name}
+                {searchedApplicationNo?.father_eng_name}
               </td>
               <td className="p-2" style={{ border: "1px solid black" }}>
                 {DateValueToSring(
-                  searchedApplicationNo.student_addmission_dateAndTime
+                  searchedApplicationNo?.student_addmission_dateAndTime
                 )}
               </td>
               <td className="p-2">
@@ -1694,14 +1740,14 @@ export default function Admission() {
                     View
                   </button>
 
-                  {applicationFormState.id != "" && (
+                  {searchedApplicationNo?.id != undefined && (
                     <PDFDownloadLink
                       document={
                         <CompDownloadAdmissionForm
                           data={searchedApplicationNo}
                         />
                       }
-                      fileName={`Apllication Form of ${searchedApplicationNo.student_eng_name}.pdf`}
+                      fileName={`Apllication Form of ${searchedApplicationNo?.student_eng_name}.pdf`}
                       style={{
                         textDecoration: "none",
                         padding: "10px",
@@ -1730,13 +1776,29 @@ export default function Admission() {
                         setTimeout(() => {
                           document.getElementById("student_birthday").value =
                             getCurrentDateInput(
-                              searchedApplicationNo.student_birthday
+                              searchedApplicationNo?.student_birthday
                             );
                         }, 500);
                       }
                     }}
                   >
                     Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm m-2"
+                    onClick={() => {
+                      // eslint-disable-next-line no-alert
+                      if (
+                        window.confirm(
+                          "Are you sure, you want to delete your Application?"
+                        )
+                      ) {
+                        delEntry(searchedApplicationNo?.id);
+                      }
+                    }}
+                  >
+                    Delete
                   </button>
                 </div>
               </td>
@@ -1745,111 +1807,111 @@ export default function Admission() {
           {/* <div className="row">
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর বাংলায় নাম:
-              <br /> {searchedApplicationNo.student_beng_name}
+              <br /> {searchedApplicationNo?.student_beng_name}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo.student_eng_name}
+              <br /> {searchedApplicationNo?.student_eng_name}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর জন্ম তারিখ:
-              <br /> {searchedApplicationNo.student_birthday}
+              <br /> {searchedApplicationNo?.student_birthday}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর আধার নাম্বার:
-              <br /> {searchedApplicationNo.student_aadhaar}
+              <br /> {searchedApplicationNo?.student_aadhaar}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর লিঙ্গ:
-              <br /> {searchedApplicationNo.student_gender}
+              <br /> {searchedApplicationNo?.student_gender}
             </h6>
             <h6 className="text-center col-md-3">
               অভিভাবকের মোবাইল নাম্বার:
-              <br /> {searchedApplicationNo.student_mobile}
+              <br /> {searchedApplicationNo?.student_mobile}
             </h6>
             <h6 className="text-center col-md-3">
               পিতার বাংলায় নাম:
-              <br /> {searchedApplicationNo.father_beng_name}
+              <br /> {searchedApplicationNo?.father_beng_name}
             </h6>
             <h6 className="text-center col-md-3">
               পিতার ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo.father_eng_name}
+              <br /> {searchedApplicationNo?.father_eng_name}
             </h6>
             <h6 className="text-center col-md-3">
               মাতার বাংলায় নাম:
-              <br /> {searchedApplicationNo.mother_beng_name}
+              <br /> {searchedApplicationNo?.mother_beng_name}
             </h6>
             <h6 className="text-center col-md-3">
               মাতার ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo.mother_eng_name}
+              <br /> {searchedApplicationNo?.mother_eng_name}
             </h6>
             <h6 className="text-center col-md-3">
               অভিভাবকের বাংলায় নাম:
-              <br /> {searchedApplicationNo.guardian_beng_name}
+              <br /> {searchedApplicationNo?.guardian_beng_name}
             </h6>
             <h6 className="text-center col-md-3">
               অভিভাবকের ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo.guardian_eng_name}
+              <br /> {searchedApplicationNo?.guardian_eng_name}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর ধর্ম:
-              <br /> {searchedApplicationNo.student_religion}
+              <br /> {searchedApplicationNo?.student_religion}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর জাতি:
-              <br /> {searchedApplicationNo.student_race}
+              <br /> {searchedApplicationNo?.student_race}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রী বি.পি.এল. কিনা?:
-              <br /> {searchedApplicationNo.student_bpl_status}
+              <br /> {searchedApplicationNo?.student_bpl_status}
             </h6>
 
-            {searchedApplicationNo.student_bpl_status === "YES" && (
+            {searchedApplicationNo?.student_bpl_status === "YES" && (
               <h6 className="text-center col-md-3">
                 অভিভাবকের বি.পি.এল. নাম্বার:
-                <br /> {searchedApplicationNo.student_bpl_number}
+                <br /> {searchedApplicationNo?.student_bpl_number}
               </h6>
             )}
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর গ্রামের নাম:
-              <br /> {searchedApplicationNo.student_village}
+              <br /> {searchedApplicationNo?.student_village}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর পোস্ট অফিসের নাম:
-              <br /> {searchedApplicationNo.student_post_office}
+              <br /> {searchedApplicationNo?.student_post_office}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর পুলিশ স্টেশনের নাম:
-              {searchedApplicationNo.student_police_station}
+              {searchedApplicationNo?.student_police_station}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর পিনকোড:
-              <br /> {searchedApplicationNo.student_pin_code}
+              <br /> {searchedApplicationNo?.student_pin_code}
             </h6>
             <h6 className="text-center col-md-3">
               ছাত্র/ছাত্রীর বর্তমান ভর্তি হওয়ার শ্রেণী:
-              {searchedApplicationNo.student_addmission_class}
+              {searchedApplicationNo?.student_addmission_class}
             </h6>
             <h6 className="text-center col-md-3">
               ফর্ম জমা দেওয়ার তারিখ:
-              {DateValueToSring(searchedApplicationNo.student_addmission_dateAndTime)}
+              {DateValueToSring(searchedApplicationNo?.student_addmission_dateAndTime)}
             </h6>
-            {searchedApplicationNo.student_previous_class !== "" && (
+            {searchedApplicationNo?.student_previous_class !== "" && (
               <div className="row">
                 <h6 className="text-center col-md-3">
                   ছাত্র/ছাত্রীর পূর্বের শ্রেণী:
                   <br />
-                  {searchedApplicationNo.student_previous_class}
+                  {searchedApplicationNo?.student_previous_class}
                 </h6>
                 <h6 className="text-center col-md-3">
                   ছাত্র/ছাত্রীর পূর্বের বর্ষ:
                   <br />
-                  {searchedApplicationNo.student_previous_class_year}
+                  {searchedApplicationNo?.student_previous_class_year}
                 </h6>
                 <h6 className="text-center col-md-3">
-                  ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের ঠিকানা:
+                  ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:
                   <br />
-                  {searchedApplicationNo.student_previous_school}
+                  {searchedApplicationNo?.student_previous_school}
                 </h6>
               </div>
             )}
@@ -2446,7 +2508,7 @@ export default function Admission() {
                 </div>
                 <div className="mb-3 col-md-6 mx-auto">
                   <label className="form-label">
-                    ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের ঠিকানা *
+                    ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা *
                   </label>
 
                   <textarea
@@ -2455,7 +2517,7 @@ export default function Admission() {
                     cols="30"
                     rows="7"
                     value={editInputField.student_previous_school}
-                    placeholder="ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের ঠিকানা"
+                    placeholder="ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা"
                     className="form-control"
                     onChange={(e) =>
                       setEditInputField({

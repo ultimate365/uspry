@@ -56,6 +56,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`container-fluid text-center text-black ${tiro_bangla.variable} ${roboto.variable} ${dejaVuBold.variable} ${dejaVuCondensed.variable}`}
+        suppressHydrationWarning={true}
       >
         <GlobalContextProvider>
           <Navbar />
