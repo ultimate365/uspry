@@ -423,7 +423,14 @@ const Notification = () => {
                             ? el.url
                             : "https://raw.githubusercontent.com/awwbtpta/data/main/notice.png"
                         }
-                        style={{ height: 200, cursor: "pointer" }}
+                        style={{
+                          cursor: "pointer",
+                          width: "100%",
+                          height: "auto",
+                        }}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
                         className="card-img-top rounded-2"
                         onClick={() => {
                           setSelectedNotice(el);
@@ -436,7 +443,9 @@ const Notification = () => {
                         src={
                           "https://raw.githubusercontent.com/awwbtpta/data/main/pdf.png"
                         }
-                        style={{ height: 200, width: 200, cursor: "pointer" }}
+                        style={{ cursor: "pointer" }}
+                        width={100}
+                        height={100}
                         className="card-img-top rounded-2 m-0 p-0"
                         alt="..."
                         onClick={() => {
@@ -644,7 +653,13 @@ const Notification = () => {
                       <Image
                         src={src}
                         alt="uploadedImage"
-                        width={150}
+                        style={{
+                          width: "20%",
+                          height: "auto",
+                        }}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
                         className="rounded-2"
                       />
                       <button

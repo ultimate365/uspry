@@ -28,10 +28,11 @@ import "@react-pdf-viewer/core/lib/styles/index.css";
 // eslint-disable-next-line
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import Image from "next/image";
-
+import useWindowSize from "@rooks/use-window-size";
 const NoticeDetails = ({ sata }) => {
   // Create new plugin instance
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const { innerWidth, innerHeight } = useWindowSize();
   const { state } = useGlobalContext();
   const user = state?.USER;
   const name = user?.name;
@@ -179,7 +180,14 @@ const NoticeDetails = ({ sata }) => {
                 : "https://raw.githubusercontent.com/awwbtpta/data/main/notice.png"
             }
             className="rounded-2 w-100 my-3"
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              width: "100%",
+              height: "auto",
+            }}
+            width={0}
+            height={0}
+            sizes="100vw"
             alt="..."
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
@@ -249,6 +257,14 @@ const NoticeDetails = ({ sata }) => {
                 }
                 className="rounded-2 w-100 my-3"
                 alt="..."
+                style={{
+                  cursor: "pointer",
+                  width: "100%",
+                  height: "auto",
+                }}
+                width={0}
+                height={0}
+                sizes="100vw"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               />
