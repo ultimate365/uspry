@@ -16,6 +16,7 @@ import { useGlobalContext } from "../../context/Store";
 import Loader from "@/components/Loader";
 import {
   btnArray,
+  createDownloadLink,
   getCurrentDateInput,
   getSubmitDateInput,
   IndianFormat,
@@ -49,11 +50,30 @@ export default function Transactions() {
   const [ppOB, setPpOB] = useState("");
   const [ppCB, setPpCB] = useState("");
   const [ppRC, setPpRC] = useState("");
+  const [ppEX, setPpEX] = useState("");
   const [pryOB, setPryOB] = useState("");
   const [pryRC, setPryRC] = useState("");
   const [pryCB, setPryCB] = useState("");
+  const [pryEX, setPryEX] = useState("");
   const [openingBalance, setOpeningBalance] = useState(stateObject.balance);
   const [closingBalance, setClosingBalance] = useState(stateObject.balance);
+  const [editTransaction, setEditTransaction] = useState({
+    id: "",
+    accountNumber: "",
+    amount: "",
+    purpose: "",
+    type: "",
+    date: "",
+    ppOB: "",
+    ppRC: "",
+    ppCB: "",
+    ppEX: "",
+    pryOB: "",
+    pryRC: "",
+    pryCB: "",
+    pryEX: "",
+  });
+  const [showEdit, setShowEdit] = useState(false);
   const getId = () => {
     const currentDate = new Date();
     const month =
@@ -112,12 +132,14 @@ export default function Transactions() {
         id,
         ppOB,
         ppRC,
+        ppEX,
         ppCB,
         pryOB,
         pryRC,
+        pryEX,
         pryCB,
         openingBalance,
-        closingBalance,
+        closingBalance: round2dec(ppCB + pryCB),
       };
       let x = transactionState;
       x = x.push(transaction);
@@ -188,6 +210,42 @@ export default function Transactions() {
     setLoader(false);
     getTransactions();
   };
+
+  const updateTransaction = async () => {
+    try {
+      setLoader(true);
+      await updateDoc(
+        doc(firestore, "transactions", editTransaction.id),
+        editTransaction
+      );
+      let thisAccount = stateObject;
+      thisAccount.balance = editTransaction.ppCB + editTransaction.pryCB;
+      thisAccount.date = editTransaction.date;
+      await updateDoc(
+        doc(firestore, "accounts", stateObject.accountNumber),
+        thisAccount
+      );
+      let filteredAccounts = accountState.filter(
+        (el) => el.id !== stateObject.id
+      );
+      filteredAccounts.push(thisAccount);
+      setAccountState(filteredAccounts);
+      setStateObject(thisAccount);
+      let filteredTransactions = transactionState.filter(
+        (el) => el.id !== editTransaction.id
+      );
+      filteredTransactions.push(editTransaction);
+      setTransactionState(filteredTransactions);
+      toast.success("Transaction Updated successfully");
+      setShowEdit(false);
+      setLoader(false);
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      toast.error("Transaction Updation Failed");
+    }
+  };
+
   useEffect(() => {
     if (transactionState.length === 0) {
       getTransactions();
@@ -226,10 +284,25 @@ export default function Transactions() {
         <div className="my-3">
           <button
             type="button"
-            className="btn btn-success"
-            onClick={() => setShowEntry(true)}
+            className="btn btn-success m-2"
+            onClick={() => {
+              setShowEntry(true);
+              const lastTransaction =
+                transactionState[transactionState.length - 1];
+              setPpOB(lastTransaction.ppCB);
+              setPryOB(lastTransaction.pryCB);
+            }}
           >
             Add New Transaction
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary m-2"
+            onClick={() => {
+              createDownloadLink(transactionState, "transactions");
+            }}
+          >
+            Download Transaction Data
           </button>
         </div>
         <table
@@ -375,13 +448,15 @@ export default function Transactions() {
                     type="button"
                     className={`btn btn-warning m-1`}
                     onClick={() => {
-                      setShowEntry(true);
+                      setShowEntry(false);
+                      setEditTransaction(transaction);
+                      setShowEdit(true);
                       setAmount(transaction.amount);
                       setPurpose(transaction.purpose);
                       setId(transaction.purpose);
                       setType(transaction.type);
                       setDate(transaction.date);
-                      setPpOB(transaction.ppCB);
+                      setPpOB(transaction.ppOB);
                       setPpRC(transaction.ppRC);
                       setPpCB(transaction.ppCB);
                       setPryOB(transaction.pryOB);
@@ -401,10 +476,6 @@ export default function Transactions() {
                         } else {
                           setMdmWithdrawal("OTHERS");
                           setIsMDMWithdrawal(false);
-                          if (typeof (window !== "undefined")) {
-                            document.getElementById("purpose_type").value =
-                              "OTHERS";
-                          }
                         }
                       }, 200);
                     }}
@@ -489,7 +560,9 @@ export default function Transactions() {
                     onChange={(e) => {
                       setType(e.target.value);
                       if (e.target.value === "DEBIT") {
-                        setClosingBalance(stateObject.balance - amount);
+                        setClosingBalance(
+                          round2dec(stateObject.balance - amount)
+                        );
                       } else {
                         setClosingBalance(stateObject.balance + amount);
                       }
@@ -533,7 +606,7 @@ export default function Transactions() {
                       value={purpose}
                       onChange={(e) => {
                         if (e.target.value !== "") {
-                          setPurpose(e.target.value.toUpperCase());
+                          setPurpose(e.target.value);
                         } else {
                           setPurpose("");
                         }
@@ -542,9 +615,6 @@ export default function Transactions() {
                     />
                   </div>
                 )}
-              </div>
-
-              <div className="col-md-6">
                 <div className="mb-3">
                   <label htmlFor="ppOB" className="form-label">
                     PP Opening Balance
@@ -576,13 +646,39 @@ export default function Transactions() {
                     onChange={(e) => {
                       if (e.target.value !== "") {
                         setPpRC(parseFloat(e.target.value));
+                        setPpCB(parseFloat(e.target.value) + ppOB);
                       } else {
                         setPpRC("");
+                        setPpCB("");
                       }
                     }}
                     placeholder="Enter PP Received"
                   />
                 </div>
+                <div className="mb-3">
+                  <label htmlFor="ppRC" className="form-label">
+                    PP Expense
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ppEX"
+                    value={ppEX}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setPpEX(parseFloat(e.target.value));
+                        setPpCB(ppOB + ppRC - parseFloat(e.target.value));
+                      } else {
+                        setPpRC("");
+                        setPpCB(ppRC + ppOB);
+                      }
+                    }}
+                    placeholder="Enter PP Expense"
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-6">
                 <div className="mb-3">
                   <label htmlFor="ppCB" className="form-label">
                     PP Closing Balance
@@ -633,11 +729,33 @@ export default function Transactions() {
                     onChange={(e) => {
                       if (e.target.value !== "") {
                         setPryRC(parseFloat(e.target.value));
+                        setPryCB(parseFloat(e.target.value) + pryOB);
                       } else {
                         setPryRC("");
                       }
                     }}
                     placeholder="Enter Primary Received"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="pryRC" className="form-label">
+                    Primary Expense
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="pryEX"
+                    value={pryEX}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setPryEX(parseFloat(e.target.value));
+                        setPryCB(pryOB + pryRC - parseFloat(e.target.value));
+                      } else {
+                        setPryRC("");
+                        setPryCB(pryRC + pryOB);
+                      }
+                    }}
+                    placeholder="Enter Primary Expense"
                   />
                 </div>
                 <div className="mb-3">
@@ -696,6 +814,393 @@ export default function Transactions() {
                       if (typeof (window !== "undefined")) {
                         document.getElementById("purpose_type").value =
                           "MDM WITHDRAWAL";
+                        document.getElementById("type").value = "DEBIT";
+                      }
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
+        {showEdit && (
+          <form action="" className="mx-auto" autoComplete="off">
+            <h3>Update Transaction</h3>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="date" className="form-label">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="date"
+                    defaultValue={getCurrentDateInput(editTransaction.date)}
+                    onChange={(e) =>
+                      setEditTransaction({
+                        ...editTransaction,
+                        date: getSubmitDateInput(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="amount" className="form-label">
+                    Amount
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="amount"
+                    value={editTransaction.amount}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+
+                        setEditTransaction({
+                          ...editTransaction,
+                          amount: parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          amount: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter amount"
+                  />
+                  <small
+                    id="amountHelp"
+                    className="form-text text-muted fs-6 my-2"
+                  >
+                    Maximum amount allowed: {stateObject.balance}
+                  </small>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="type" className="form-label">
+                    Type
+                  </label>
+                  <select
+                    className="form-select"
+                    id="type"
+                    value={editTransaction.type}
+                    onChange={(e) => {
+                      if (e.target.value === "DEBIT") {
+                        setEditTransaction({
+                          ...editTransaction,
+                          closingBalance:
+                            stateObject.balance - editTransaction.amount,
+                          type: e.target.value,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          closingBalance:
+                            stateObject.balance + editTransaction.amount,
+                          type: e.target.value,
+                        });
+                      }
+                    }}
+                  >
+                    <option value="CREDIT">CREDIT</option>
+                    <option value="DEBIT">DEBIT</option>
+                  </select>
+                </div>
+                {/* <div className="mb-3">
+                  <label htmlFor="purpose_type" className="form-label">
+                    Transaction Purpose
+                  </label>
+                  <select
+                    className="form-select"
+                    id="purpose_type"
+                    defaultValue={mdmWithdrawal}
+                    onChange={(e) => {
+                      if (e.target.value === "MDM WITHDRAWAL") {
+                        setIsMDMWithdrawal(true);
+                        setMdmWithdrawal(e.target.value);
+                        
+                        setId(getId());
+                      } else {
+                        setIsMDMWithdrawal(false);
+                      }
+                    }}
+                  >
+                    <option value="MDM WITHDRAWAL">MDM WITHDRAWAL</option>
+                    <option value="OTHERS">OTHERS</option>
+                  </select>
+                </div> */}
+
+                <div className="mb-3">
+                  <label htmlFor="amount" className="form-label">
+                    Purpose
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="purpose"
+                    value={editTransaction.purpose}
+                    onChange={(e) => {
+                      setEditTransaction({
+                        ...editTransaction,
+                        purpose: e.target.value,
+                      });
+                    }}
+                    placeholder="Enter Purpose"
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="ppOB" className="form-label">
+                    PP Opening Balance
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ppOB"
+                    value={editTransaction.ppOB}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppOB: parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppOB: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter PP Opening Balance"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="ppRC" className="form-label">
+                    PP Received
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ppRC"
+                    value={ppRC}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setPpRC(parseFloat(e.target.value));
+                        setPpCB(parseFloat(e.target.value) + ppOB);
+                      } else {
+                        setPpRC("");
+                      }
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppRC: parsedAmount,
+                          pryCB: parsedAmount + editTransaction.ppOB,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppRC: "",
+                          ppCB: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter PP Received"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="pryRC" className="form-label">
+                    PP Expense
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ppEX"
+                    value={editTransaction?.ppEX}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppEX: parsedAmount,
+                          ppCB:
+                            editTransaction.ppOB +
+                            editTransaction.ppRC -
+                            parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppEX: "",
+                          ppCB: editTransaction.ppOB + editTransaction.ppRC,
+                        });
+                      }
+                    }}
+                    placeholder="Enter Primary Expense"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="ppCB" className="form-label">
+                    PP Closing Balance
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="ppCB"
+                    value={editTransaction.ppCB}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppCB: parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          ppCB: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter PP Closing Balance"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="pryOB" className="form-label">
+                    Primary Opening Balance
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="pryOB"
+                    value={editTransaction.pryOB}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryOB: parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryOB: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter Primary Opening Balance"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="pryRC" className="form-label">
+                    Primary Received
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="pryRC"
+                    value={editTransaction.pryRC}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryRC: parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryRC: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter Primary Received"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="pryRC" className="form-label">
+                    Primary Expense
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="pryEX"
+                    value={editTransaction?.pryEX}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryEX: parsedAmount,
+                          pryCB:
+                            editTransaction.pryOB +
+                            editTransaction.pryRC -
+                            parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryEX: "",
+                          pryCB: editTransaction.pryOB + editTransaction.pryRC,
+                        });
+                      }
+                    }}
+                    placeholder="Enter Primary Expense"
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="pryCB" className="form-label">
+                    Primary Closing Balance
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="pryCB"
+                    value={editTransaction.pryCB}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryCB: parsedAmount,
+                        });
+                      } else {
+                        setEditTransaction({
+                          ...editTransaction,
+                          pryCB: "",
+                        });
+                      }
+                    }}
+                    placeholder="Enter Primary Closing Balance"
+                  />
+                </div>
+
+                <div className="my-2">
+                  <button
+                    type="button"
+                    className="btn btn-primary m-2"
+                    onClick={updateTransaction}
+                    disabled={
+                      stateObject.amount <= 0 ||
+                      stateObject.amount > stateObject.balance
+                    }
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger m-2"
+                    onClick={() => {
+                      setShowEdit(false);
+
+                      if (typeof (window !== "undefined")) {
                         document.getElementById("type").value = "DEBIT";
                       }
                     }}

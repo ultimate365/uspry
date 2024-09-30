@@ -66,7 +66,7 @@ export default function MDMData() {
   const [showMonthSelection, setShowMonthSelection] = useState(false);
   const [monthText, setMonthText] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [joiningMonths, setJoiningMonths] = useState([]);
+  const [entryMonths, setEntryYears] = useState([]);
   const [serviceArray, setServiceArray] = useState([]);
   const [showDataTable, setShowDataTable] = useState(false);
   const [riceData, setRiceData] = useState([]);
@@ -95,12 +95,14 @@ export default function MDMData() {
   const [monthPRYTotal, setMonthPRYTotal] = useState("");
   const [monthlyPRYCost, setMonthlyPRYCost] = useState("");
   const [monthTotalCost, setMonthTotalCost] = useState("");
+  const [thisMonthTotalCost, setThisMonthTotalCost] = useState("");
   const [monthRiceOB, setMonthRiceOB] = useState("");
   const [monthRiceGiven, setMonthRiceGiven] = useState("");
   const [monthRiceConsunption, setMonthRiceConsunption] = useState("");
+  const [thisMonthTotalRiceConsumption, setThisMonthTotalRiceConsumption] =
+    useState("");
   const [monthRiceCB, setMonthRiceCB] = useState("");
   const [monthYearID, setMonthYearID] = useState("");
-  const [monYear, setMonYear] = useState("");
   const submitData = async () => {
     if (validForm()) {
       setLoader(true);
@@ -320,8 +322,8 @@ export default function MDMData() {
   const calledData = (array) => {
     let x = [];
     array.map((entry) => {
-      const joiningYear = entry.date.split("-")[2];
-      x.push(joiningYear);
+      const entryYear = entry.date.split("-")[2];
+      x.push(entryYear);
       x = uniqArray(x);
       x = x.sort((a, b) => a - b);
     });
@@ -357,14 +359,14 @@ export default function MDMData() {
       let x = [];
       let y = [];
       allEnry.map((entry) => {
-        const joiningYear = entry.date.split("-")[2];
-        const joiningMonth = entry.date.split("-")[1];
-        if (joiningYear === selectedValue) {
+        const entryYear = entry.date.split("-")[2];
+        const entryMonth = entry.date.split("-")[1];
+        if (entryYear === selectedValue) {
           x.push(entry);
         }
-        if (joiningYear === selectedValue) {
+        if (entryYear === selectedValue) {
           monthNamesWithIndex.map((month) => {
-            if (joiningMonth === month.index) {
+            if (entryMonth === month.index) {
               y.push(month);
             }
           });
@@ -374,26 +376,27 @@ export default function MDMData() {
       setShowMonthSelection(true);
       setFilteredData(x);
       setMoreFilteredData(x);
-      setJoiningMonths(uniqArray(y));
+      setEntryYears(uniqArray(y));
     } else {
       setFilteredData([]);
       setSelectedYear("");
     }
   };
   const handleMonthChange = (month) => {
+    console.log("called");
     let x = [];
     let y = [];
     allEnry.map((entry) => {
-      const joiningYear = entry.date.split("-")[2];
-      const joiningMonth = entry.date.split("-")[1];
-      if (joiningYear === selectedYear && joiningMonth === month.index) {
+      const entryYear = entry.date.split("-")[2];
+      const entryMonth = entry.date.split("-")[1];
+      if (entryYear === selectedYear && entryMonth === month.index) {
         return x.push(entry);
       }
     });
     riceData.map((entry) => {
-      const joiningYear = entry.date.split("-")[2];
-      const joiningMonth = entry.date.split("-")[1];
-      if (joiningYear === selectedYear && joiningMonth === month.index) {
+      const entryYear = entry.date.split("-")[2];
+      const entryMonth = entry.date.split("-")[1];
+      if (entryYear === selectedYear && entryMonth === month.index) {
         return y.push(entry);
       }
     });
@@ -437,7 +440,7 @@ export default function MDMData() {
     setMonthPPTotal(ppTotal);
     setMonthlyPPCost(Math.round(ppTotal * MDM_COST));
     setMonthPRYTotal(pryTotal);
-    setMonthTotalCost(Math.round((ppTotal + pryTotal) * MDM_COST));
+    setThisMonthTotalCost(Math.round((ppTotal + pryTotal) * MDM_COST));
     setMonthlyPRYCost(
       Math.round((ppTotal + pryTotal) * MDM_COST) -
         Math.round(ppTotal * MDM_COST)
@@ -446,7 +449,7 @@ export default function MDMData() {
     setMonthRiceCB(thisMonthRiceData[0]?.riceCB);
     setMonthRiceGiven(riceGiven);
     setMonthRiceCB(thisMonthRiceData[thisMonthRiceData.length - 1]?.riceCB);
-    setMonthRiceConsunption(
+    setThisMonthTotalRiceConsumption(
       thisMonthRiceData[0]?.riceOB +
         riceGiven -
         thisMonthRiceData[thisMonthRiceData.length - 1]?.riceCB
@@ -462,7 +465,7 @@ export default function MDMData() {
         id: date,
         date: date,
         riceOB: riceOB,
-        riceGiven: riceGiven,
+        riceGiven: riceGiven === "" ? 0 : riceGiven,
         riceExpend: riceExpend,
         riceCB: riceOB - riceExpend,
       })
@@ -932,14 +935,14 @@ export default function MDMData() {
           </div>
           {selectedYear && showMonthSelection ? (
             <div className="noprint">
-              {joiningMonths.length > 1 && (
+              {entryMonths.length > 1 && (
                 <h4 className="text-center text-primary">Filter By Month</h4>
               )}
             </div>
           ) : null}
           {showMonthSelection && (
             <div className="row d-flex justify-content-center noprint">
-              {joiningMonths.length > 1 && (
+              {entryMonths.length > 1 && (
                 <div className="col-md-4 mx-auto mb-3 noprint">
                   <select
                     className="form-select"
@@ -962,7 +965,7 @@ export default function MDMData() {
                     <option value="" className="text-center text-primary">
                       Select Month
                     </option>
-                    {joiningMonths.map((month, index) => (
+                    {entryMonths.map((month, index) => (
                       <option
                         className="text-center text-success"
                         key={index}
@@ -1134,10 +1137,13 @@ export default function MDMData() {
                       <p style={{ margin: 0, padding: 0 }}>
                         MDM Cost ={" "}
                         {`${ppTotalMeal} X ₹ ${MDM_COST} + ${pryTotalMeal} X ₹${MDM_COST} = `}
-                        ₹ {IndianFormat(monthTotalCost)}
+                        ₹ {IndianFormat(thisMonthTotalCost)}
                       </p>
                       <p style={{ margin: 0, padding: 0 }}>
-                        Rice Consumption: {monthRiceConsunption}Kg.
+                        Total Rice Given: {totalRiceGiven}Kg.
+                      </p>
+                      <p style={{ margin: 0, padding: 0 }}>
+                        Rice Consumption: {thisMonthTotalRiceConsumption}Kg.
                       </p>
                     </th>
                   </tr>

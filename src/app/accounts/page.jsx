@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { firestore } from "../../context/FirbaseContext";
-import { getDocs, query, collection } from "firebase/firestore";
+import { getDocs, query, collection, updateDoc, doc } from "firebase/firestore";
 
 import Loader from "@/components/Loader";
 import {
@@ -19,7 +19,13 @@ export default function Accounts() {
     useGlobalContext();
   const access = state?.ACCESS;
   const router = useRouter();
-  const [date, setDate] = useState(todayInString());
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [account, setAccount] = useState({
+    accountName: "",
+    accountNumber: "",
+    balance: 0,
+    date: todayInString(),
+  });
   const [loader, setLoader] = useState(false);
   const [allAccounts, setAllAccounts] = useState([]);
   const getAccounts = async () => {
@@ -42,6 +48,23 @@ export default function Accounts() {
     setAllAccounts(data);
     setAccountState(data);
   };
+
+  const updateAccount = async (account) => {
+    try {
+      await updateDoc(doc(firestore, "accounts", account.accountNumber), {
+        accountName: account.accountName,
+        accountNumber: account.accountNumber,
+        balance: account.balance,
+      });
+      toast.success("Account updated successfully");
+      setShowUpdate(false);
+      getAccounts();
+    } catch (error) {
+      toast.error("Error updating account");
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     if (accountState.length === 0) {
       getAccounts();
@@ -123,6 +146,14 @@ export default function Accounts() {
               >
                 TRANSACTIONS
               </th>
+              <th
+                style={{
+                  border: "1px solid",
+                }}
+                className="text-center p-1"
+              >
+                UPDATE
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -191,11 +222,93 @@ export default function Accounts() {
                     Transactions
                   </button>
                 </td>
+                <td
+                  style={{
+                    border: "1px solid",
+                  }}
+                  className="text-center p-1"
+                >
+                  <button
+                    type="button"
+                    className={`btn btn-${btnArray[index + 2].color} m-1`}
+                    onClick={() => {
+                      setShowUpdate(true);
+                      setAccount(account);
+                    }}
+                  >
+                    Update
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {showUpdate && (
+        <div className="col-md-6 mx-auto">
+          <h3>Update Account</h3>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              updateAccount(account);
+            }}
+          >
+            <div className="form-group">
+              <label htmlFor="accountName">Account Name:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="accountName"
+                value={account.accountName}
+                onChange={(e) =>
+                  setAccount({ ...account, accountName: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="accountNumber">Account Number:</label>
+              <input
+                type="text"
+                className="form-control"
+                id="accountNumber"
+                value={account.accountNumber}
+                onChange={(e) =>
+                  setAccount({ ...account, accountNumber: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="balance">Balance:</label>
+              <input
+                type="number"
+                className="form-control"
+                id="balance"
+                value={account.balance}
+                onChange={(e) =>
+                  setAccount({
+                    ...account,
+                    balance: parseFloat(e.target.value),
+                  })
+                }
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary m-2">
+              Update
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary m-2"
+              onClick={() => setShowUpdate(false)}
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

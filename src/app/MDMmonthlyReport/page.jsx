@@ -141,15 +141,15 @@ export default function MDMmonthlyReport() {
   const [showMonthSelection, setShowMonthSelection] = useState(false);
   const [monthText, setMonthText] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [joiningMonths, setJoiningMonths] = useState([]);
+  const [entryMonthsMonths, setEntryMonths] = useState([]);
   const [serviceArray, setServiceArray] = useState([]);
   const [showNewFormat, setShowNewFormat] = useState(true);
   const [showOldFormat, setShowOldFormat] = useState(true);
   const calledData = (array) => {
     let x = [];
     array.map((entry) => {
-      const joiningYear = entry.id.split("-")[1];
-      x.push(joiningYear);
+      const entryYear = entry.id.split("-")[1];
+      x.push(entryYear);
       x = uniqArray(x);
       x = x.sort((a, b) => a - b);
     });
@@ -173,19 +173,19 @@ export default function MDMmonthlyReport() {
       let x = [];
       let y = [];
       allEnry.map((entry) => {
-        const joiningYear = entry.id.split("-")[1];
-        const joiningMonth = entry.id.split("-")[0];
+        const entryYear = entry.id.split("-")[1];
+        const entryMonth = entry.id.split("-")[0];
 
-        if (joiningYear === selectedValue) {
+        if (entryYear === selectedValue) {
           x.push(entry);
-          y.push(joiningMonth);
+          y.push(entryMonth);
         }
       });
       setSelectedYear(selectedValue);
       setShowMonthSelection(true);
       setFilteredData(x);
       setMoreFilteredData(x);
-      setJoiningMonths(uniqArray(y));
+      setEntryMonths(uniqArray(y));
     } else {
       setFilteredData([]);
       setSelectedYear("");
@@ -194,12 +194,13 @@ export default function MDMmonthlyReport() {
     }
   };
   const handleMonthChange = (month) => {
+    console.log(month);
     let x = [];
 
     allEnry.map((entry, index) => {
-      const joiningYear = entry.id.split("-")[1];
-      const joiningMonth = entry.id.split("-")[0];
-      if (joiningYear === selectedYear && joiningMonth === month) {
+      const entryYear = entry.id.split("-")[1];
+      const entryMonth = entry.id.split("-")[0];
+      if (entryYear === selectedYear && entryMonth === month) {
         x.push(entry);
         setThisMonthlyData(entry);
         setPrevMonthData(allEnry[index - 1]);
@@ -244,6 +245,7 @@ export default function MDMmonthlyReport() {
           (account) => account.id === `${prevMonthName}-${entry.year}`
         )[0];
         setPreviousMonthFromTransaction(thisPrevMonthTransaction);
+        return x;
       }
     });
 
@@ -347,14 +349,14 @@ export default function MDMmonthlyReport() {
             </div>
             {selectedYear && showMonthSelection ? (
               <div className="noprint">
-                {joiningMonths.length > 1 && (
+                {entryMonthsMonths.length > 1 && (
                   <h4 className="text-center text-primary">Select Month</h4>
                 )}
               </div>
             ) : null}
             {showMonthSelection && (
               <div className="row d-flex justify-content-center noprint">
-                {joiningMonths.length > 1 && (
+                {entryMonthsMonths.length > 1 && (
                   <div className="col-md-4 mx-auto mb-3 noprint">
                     <select
                       className="form-select"
@@ -363,6 +365,7 @@ export default function MDMmonthlyReport() {
                       onChange={(e) => {
                         if (e.target.value) {
                           handleMonthChange(e.target.value);
+                          console.log(e.target.value);
                         } else {
                           setMonthText("");
                           setFilteredData(moreFilteredData);
@@ -378,8 +381,8 @@ export default function MDMmonthlyReport() {
                       <option value="" className="text-center text-primary">
                         Select Month
                       </option>
-                      {joiningMonths
-                        .slice(1, joiningMonths.length)
+                      {entryMonthsMonths
+                        .slice(1, entryMonthsMonths.length)
                         .map((month, index) => (
                           <option
                             className="text-center text-success"
@@ -1596,7 +1599,7 @@ export default function MDMmonthlyReport() {
                       >
                         <div className="d-flex flex-row p-2 justify-content-center align-items-center">
                           <p className="m-0 p-0 mx-2">Government</p>
-                          <input type="checkbox" checked />
+                          <input type="checkbox" checked readOnly />
                         </div>
                         <div className="d-flex flex-row p-2 justify-content-center align-items-center">
                           <p className="m-0 p-0 mx-2">Local Body</p>
