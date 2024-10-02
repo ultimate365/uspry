@@ -273,7 +273,7 @@ export default function Transactions() {
         orgTransaction.amount === editTransaction.amount
       ) {
         console.log("Case 2");
-        if (prevtype === "DEBIT") {
+        if (orgTransaction.type === "DEBIT") {
           if (fetchedAmount + parseFloat(editTransaction.amount) * 2 < 0) {
             amount =
               round2dec(
@@ -301,7 +301,7 @@ export default function Transactions() {
         orgTransaction.amount !== editTransaction.amount
       ) {
         console.log("Case 3");
-        if (prevtype === "DEBIT") {
+        if (orgTransaction.type === "DEBIT") {
           if (
             fetchedAmount -
               parseFloat(orgTransaction.amount) +
@@ -346,7 +346,7 @@ export default function Transactions() {
         }
       } else {
         console.log("Case 4");
-        if (prevtype === "DEBIT") {
+        if (orgTransaction.type === "DEBIT") {
           if (
             fetchedAmount -
               parseFloat(orgTransaction.amount) +
