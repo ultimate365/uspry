@@ -64,6 +64,7 @@ export default function MDMmonthlyReport() {
     riceConsunption: "",
     riceGiven: "",
     date: "",
+    remarks: "",
   });
   const access = state?.ACCESS;
   const router = useRouter();
@@ -95,6 +96,7 @@ export default function MDMmonthlyReport() {
     riceConsunption: "",
     riceGiven: "",
     date: "",
+    remarks: "",
   });
   const [thisMonthFromTransaction, setThisMonthFromTransaction] = useState({
     accountName: "",
@@ -184,6 +186,9 @@ export default function MDMmonthlyReport() {
   const [serviceArray, setServiceArray] = useState([]);
   const [showNewFormat, setShowNewFormat] = useState(true);
   const [showOldFormat, setShowOldFormat] = useState(true);
+  const [showRemarksPage1, setShowRemarksPage1] = useState(false);
+  const [showRemarksPage4, setShowRemarksPage4] = useState(false);
+  const [remarks, setRemarks] = useState("");
   const calledData = (array) => {
     let x = [];
     array.map((entry) => {
@@ -242,6 +247,7 @@ export default function MDMmonthlyReport() {
       if (entryYear === selectedYear && entryMonth === month) {
         x.push(entry);
         setThisMonthlyData(entry);
+        setRemarks(entry?.remarks);
         setPrevMonthData(allEnry[index - 1]);
         setShowData(true);
         const thisMonthTransaction = transactionState.filter(
@@ -377,7 +383,7 @@ export default function MDMmonthlyReport() {
               type="button"
               className="btn btn-primary m-2"
               onClick={() => {
-                createDownloadLink(monthlyReportState, "monthlyReportState");
+                createDownloadLink(monthlyReportState, "mothlyMDMData");
               }}
             >
               Download Monthly Report Data
@@ -501,6 +507,24 @@ export default function MDMmonthlyReport() {
               }}
             >
               Print Old Format
+            </button>
+            <button
+              className={`btn btn-dark m-2`}
+              type="button"
+              onClick={() => {
+                setShowRemarksPage1(!showRemarksPage1);
+              }}
+            >
+              {showRemarksPage1 ? "Hide Remarks Page 1" : "Show Remarks Page 1"}
+            </button>
+            <button
+              className={`btn btn-warning m-2`}
+              type="button"
+              onClick={() => {
+                setShowRemarksPage4(!showRemarksPage4);
+              }}
+            >
+              {showRemarksPage4 ? "Hide Remarks Page 4" : "Show Remarks Page 4"}
             </button>
           </div>
 
@@ -1040,6 +1064,13 @@ export default function MDMmonthlyReport() {
                     .............................................................................
                   </h6>
                   <h6>Signature of Head Teacher / TIC</h6>
+                </div>
+                <div className="mx-auto mt-5">
+                  {showRemarksPage1 && remarks.length && (
+                    <p>
+                      <b>Remarks:</b> {remarks}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="nobreak">
@@ -2714,6 +2745,13 @@ export default function MDMmonthlyReport() {
                     </h6>
                     <h6>Signature of Head Teacher / TIC</h6>
                   </div>
+                </div>
+                <div className="mx-auto mt-5">
+                  {showRemarksPage4 && remarks.length && (
+                    <p>
+                      <b>Remarks:</b> {remarks}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

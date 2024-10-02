@@ -86,7 +86,7 @@ export default function MDMData() {
   const [errRice, setErrRice] = useState("");
   const [showRiceBalance, setShowRiceBalance] = useState(false);
   const [showSubmitMonthlyReport, setShowSubmitMonthlyReport] = useState(false);
-
+  const [remarks, setRemarks] = useState("");
   const [monthToSubmit, setMonthToSubmit] = useState("");
   const [financialYear, setFinancialYear] = useState("");
   const [monthWorkingDays, setMonthWorkingDays] = useState("");
@@ -317,6 +317,7 @@ export default function MDMData() {
     setRicePPCB(entry.ricePPCB);
     setRicePryCB(entry.ricePryCB);
     setMonthRiceCB(entry.riceCB);
+    setRemarks(entry.remarks);
   };
 
   const calledData = (array) => {
@@ -538,6 +539,7 @@ export default function MDMData() {
         riceCB: monthRiceCB,
         riceConsunption: monthRiceConsunption,
         riceGiven: monthRiceGiven,
+        remarks: remarks,
         date: todayInString(),
       };
       await setDoc(doc(firestore, "mothlyMDMData", monthYearID), entry)
@@ -1483,6 +1485,17 @@ export default function MDMData() {
                               setMonthRiceCB("");
                             }
                           }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">Remarks</label>
+                        <textarea
+                          className="form-control"
+                          id="remarks"
+                          rows="5"
+                          value={remarks}
+                          onChange={(e) => setRemarks(e.target.value)}
+                          placeholder="Add Remarks"
                         />
                       </div>
                       <button
