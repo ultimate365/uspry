@@ -154,6 +154,15 @@ export default function Navbar() {
               Accounts
             </Link>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/vecAccount"
+              onClick={handleNavCollapse}
+            >
+              VEC Account
+            </Link>
+          </li>
 
           <li className="nav-item">
             <Link

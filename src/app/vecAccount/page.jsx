@@ -16,8 +16,7 @@ import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/Store";
 import { toast } from "react-toastify";
 export default function Accounts() {
-  const { setStateObject, accountState, setAccountState, state } =
-    useGlobalContext();
+  const { setStateObject, state } = useGlobalContext();
   const access = state?.ACCESS;
   const router = useRouter();
   const [showUpdate, setShowUpdate] = useState(false);
@@ -32,7 +31,7 @@ export default function Accounts() {
   const getAccounts = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "accounts"))
+      query(collection(firestore, "vecaccount"))
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -47,12 +46,11 @@ export default function Accounts() {
       );
     setLoader(false);
     setAllAccounts(data);
-    setAccountState(data);
   };
 
   const updateAccount = async (account) => {
     try {
-      await updateDoc(doc(firestore, "accounts", account.accountNumber), {
+      await updateDoc(doc(firestore, "vecaccount", account.accountNumber), {
         accountName: account.accountName,
         accountNumber: account.accountNumber,
         balance: account.balance,
@@ -67,15 +65,11 @@ export default function Accounts() {
   };
 
   useEffect(() => {
-    if (accountState.length === 0) {
-      getAccounts();
-    } else {
-      setAllAccounts(accountState);
-    }
     if (access !== "admin") {
       router.push("/");
       toast.error("Unathorized access");
     }
+    getAccounts();
     //eslint-disable-next-line
   }, []);
   return (
@@ -87,7 +81,7 @@ export default function Accounts() {
           type="button"
           className="btn btn-primary m-2"
           onClick={() => {
-            createDownloadLink(accountState, "accounts");
+            createDownloadLink(allAccounts, "vecaccount");
           }}
         >
           Download Account Data
@@ -225,7 +219,7 @@ export default function Accounts() {
                     className={`btn btn-${btnArray[index].color} m-1`}
                     onClick={() => {
                       setStateObject(account);
-                      router.push("/transactions");
+                      router.push("/vecTransactions");
                     }}
                   >
                     Transactions

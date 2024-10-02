@@ -73,6 +73,22 @@ export default function Transactions() {
     pryCB: "",
     pryEX: "",
   });
+  const [orgTransaction, setOrgTransaction] = useState({
+    id: "",
+    accountNumber: "",
+    amount: "",
+    purpose: "",
+    type: "",
+    date: "",
+    ppOB: "",
+    ppRC: "",
+    ppCB: "",
+    ppEX: "",
+    pryOB: "",
+    pryRC: "",
+    pryCB: "",
+    pryEX: "",
+  });
   const [showEdit, setShowEdit] = useState(false);
   const getId = () => {
     const currentDate = new Date();
@@ -155,6 +171,7 @@ export default function Transactions() {
       thisAccount.date = date;
       await updateDoc(doc(firestore, "accounts", stateObject.accountNumber), {
         balance: thisAccount.balance,
+        date: date,
       });
       let filteredAccounts = accountState.filter(
         (el) => el.id !== stateObject.id
@@ -219,8 +236,161 @@ export default function Transactions() {
         editTransaction
       );
       let thisAccount = stateObject;
-      thisAccount.balance = editTransaction.ppCB + editTransaction.pryCB;
+
       thisAccount.date = editTransaction.date;
+      const fetchedAmount = stateObject.balance;
+      let amount = 0;
+      if (
+        orgTransaction.type !== editTransaction.type &&
+        orgTransaction.amount !== editTransaction.amount
+      ) {
+        console.log("Case 1");
+        if (orgTransaction.type === "DEBIT") {
+          if (fetchedAmount + parseFloat(editTransaction.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount + parseFloat(editTransaction.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount + parseFloat(editTransaction.amount) * 2
+            );
+          }
+        } else {
+          if (fetchedAmount - parseFloat(editTransaction.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount - parseFloat(editTransaction.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount - parseFloat(editTransaction.amount) * 2
+            );
+          }
+        }
+      } else if (
+        orgTransaction.type !== editTransaction.type &&
+        orgTransaction.amount === editTransaction.amount
+      ) {
+        console.log("Case 2");
+        if (prevtype === "DEBIT") {
+          if (fetchedAmount + parseFloat(editTransaction.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount + parseFloat(editTransaction.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount + parseFloat(editTransaction.amount) * 2
+            );
+          }
+        } else {
+          if (fetchedAmount - parseFloat(editTransaction.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount - parseFloat(editTransaction.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount - parseFloat(editTransaction.amount) * 2
+            );
+          }
+        }
+      } else if (
+        orgTransaction.type === editTransaction.type &&
+        orgTransaction.amount !== editTransaction.amount
+      ) {
+        console.log("Case 3");
+        if (prevtype === "DEBIT") {
+          if (
+            fetchedAmount -
+              parseFloat(orgTransaction.amount) +
+              parseFloat(editTransaction.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount +
+                  parseFloat(orgTransaction.amount) -
+                  parseFloat(editTransaction.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount +
+                parseFloat(orgTransaction.amount) -
+                parseFloat(editTransaction.amount)
+            );
+          }
+        } else {
+          if (
+            fetchedAmount -
+              parseFloat(orgTransaction.amount) +
+              parseFloat(editTransaction.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount -
+                  parseFloat(orgTransaction.amount) +
+                  parseFloat(editTransaction.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount -
+                parseFloat(orgTransaction.amount) +
+                parseFloat(editTransaction.amount)
+            );
+          }
+        }
+      } else {
+        console.log("Case 4");
+        if (prevtype === "DEBIT") {
+          if (
+            fetchedAmount -
+              parseFloat(orgTransaction.amount) +
+              parseFloat(editTransaction.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount -
+                  parseFloat(orgTransaction.amount) +
+                  parseFloat(editTransaction.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount -
+                parseFloat(orgTransaction.amount) +
+                parseFloat(editTransaction.amount)
+            );
+          }
+        } else {
+          if (
+            fetchedAmount -
+              parseFloat(orgTransaction.amount) -
+              parseFloat(editTransaction.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount -
+                  parseFloat(orgTransaction.amount) -
+                  parseFloat(editTransaction.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount -
+                parseFloat(orgTransaction.amount) +
+                parseFloat(editTransaction.amount)
+            );
+          }
+        }
+      }
+      thisAccount.balance = amount;
       await updateDoc(
         doc(firestore, "accounts", stateObject.accountNumber),
         thisAccount
@@ -441,6 +611,7 @@ export default function Transactions() {
                 <td
                   style={{
                     border: "1px solid",
+                    backgroundColor: "lavender",
                   }}
                   className="text-center px-1"
                 >
@@ -450,6 +621,7 @@ export default function Transactions() {
                     onClick={() => {
                       setShowEntry(false);
                       setEditTransaction(transaction);
+                      setOrgTransaction(transaction);
                       setShowEdit(true);
                       setAmount(transaction.amount);
                       setPurpose(transaction.purpose);
@@ -1043,7 +1215,7 @@ export default function Transactions() {
                         });
                       }
                     }}
-                    placeholder="Enter Primary Expense"
+                    placeholder="Enter PP Expense"
                   />
                 </div>
                 <div className="mb-3">
