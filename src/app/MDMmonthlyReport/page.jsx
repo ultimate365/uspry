@@ -1915,7 +1915,6 @@ export default function MDMmonthlyReport() {
                         style={{
                           paddingInline: 2,
 
-                          backgroundColor: "black",
                           color: "white",
                         }}
                         rowSpan={3}
