@@ -401,11 +401,10 @@ export default function Transactions() {
       filteredAccounts.push(thisAccount);
       setAccountState(filteredAccounts);
       setStateObject(thisAccount);
-      let filteredTransactions = transactionState.filter(
-        (el) => el.id !== editTransaction.id
-      );
-      filteredTransactions.push(editTransaction);
-      setTransactionState(filteredTransactions);
+      let x = transactionState;
+      x = x.filter((item) => item.id !== orgTransaction.id);
+      x.push(editTransaction);
+      setTransactionState(x);
       toast.success("Transaction Updated successfully");
       setShowEdit(false);
       setLoader(false);
