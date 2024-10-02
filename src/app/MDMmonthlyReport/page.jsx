@@ -461,6 +461,17 @@ export default function MDMmonthlyReport() {
         <div>
           <div className="noprint">
             <button
+              className={`btn btn-success m-2`}
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.print();
+                }
+              }}
+            >
+              Print All
+            </button>
+            <button
               className={`btn btn-primary m-2`}
               type="button"
               onClick={() => {
@@ -2029,7 +2040,14 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {thisMonthFromTransaction?.ppCB}
+                        ₹{" "}
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromFirstTransaction?.ppOB +
+                              balRCThisMonth -
+                              thisMonthlyData?.monthlyPPCost
+                          )
+                        )}
                       </td>
                     </tr>
                     <tr>
@@ -2071,7 +2089,14 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {thisMonthFromTransaction?.pryCB}
+                        ₹{" "}
+                        {IndianFormat(
+                          round2dec(
+                            thisMonthFromFirstTransaction?.pryOB +
+                              pryRCThisMonth -
+                              thisMonthlyData?.monthlyPRYCost
+                          )
+                        )}
                       </td>
                     </tr>
                     <tr>
