@@ -26,6 +26,7 @@ export const CCH_NAME = [
   ,
 ];
 export const UDISE_CODE = 19160213201;
+export const HOI_MOBILE_NO = "9933684468";
 export const NGO_SHG = "SUPRAVAT+DISHARI";
 const THIS_YEAR = new Date().getFullYear();
 export const STUDENT_CLASSES = [
@@ -35,3 +36,16 @@ export const STUDENT_CLASSES = [
   { name: "CLASS III", value: 3, year: THIS_YEAR - 8 },
   { name: "CLASS IV", value: 4, year: THIS_YEAR - 9 },
 ];
+export const VILL = "SEHAGORI";
+export const PO = "KHOROP";
+export const PS = "JOYPUR";
+export const MOUZA = "SEHAGORI";
+export const CIRCLE = "AMTA WEST";
+export const MEDIUM = "BENGALI";
+export const JLNO = "112";
+export const SCHNO = "72";
+export const LAST_DAY_OF_INSPECTION = "13-08-2024";
+export const SCHOOL_RECOGNITION_DATE = "23-04-1980";
+export const SCHOOL_AREA = "0.05 Acre";
+export const KHATIAN_NO = "21";
+export const PLOT_NO = "755";
