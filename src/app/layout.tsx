@@ -60,7 +60,7 @@ export default function RootLayout({
       >
         <GlobalContextProvider>
           <Navbar />
-          <div className="my-4">
+          <div className="my-2">
             <ToastContainer
               position="top-right"
               autoClose={1500}

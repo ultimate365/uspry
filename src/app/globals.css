@@ -122,14 +122,23 @@ body {
   .noprint {
     display: none;
   }
+  .nobreak {
+    break-inside: avoid;
+  }
   @page {
     size: A4;
-    margin: 20mm;
+   
   }
   body {
     margin: 0;
   }
+  @media (orientation: portrait) {
+    body {
+      flex-direction: column;
+    }
+  }
 }
+
 
 @import url("https://fonts.googleapis.com/css2?family=Fasthand&display=swap");
 
@@ -283,19 +292,3 @@ table#team-list tr:nth-child(n + 1) td:first-child::before {
   margin-right: 0.5em;
 }
 
-@media print {
-  div.nobreak {
-    break-inside: avoid;
-  }
-  table.nobreak {
-    break-inside: avoid;
-  }
-}
-
-@media print {
-  @media (orientation: portrait) {
-    body {
-      flex-direction: column;
-    }
-  }
-}
