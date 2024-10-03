@@ -10,7 +10,8 @@
     "desig": "HT",
     "rank": 1,
     "id": "teachers381",
-    "cast": "OBC-A"
+    "cast": "OBC-A",
+    "workingDays": 24
   },
   {
     "cast": "SC",
@@ -23,7 +24,8 @@
     "dojnow": "20-01-2014",
     "dob": "02-01-1989",
     "id": "teachers382",
-    "doj": "20-01-2014"
+    "doj": "20-01-2014",
+    "workingDays": 24
   },
   {
     "dojnow": "20-01-2014",
@@ -34,9 +36,10 @@
     "training": "D. EL. ED.",
     "education": "B.Sc.",
     "cast": "SC",
-    "tname": "SURASHREE SAHA",
+    "tname": "SURASHREE SADHUKHAN SAHA",
     "id": "teachers383",
-    "dor": "31-10-2053"
+    "dor": "31-10-2053",
+    "workingDays": 24
   },
   {
     "doj": "28-07-2021",
@@ -49,6 +52,7 @@
     "education": "B.A.",
     "dor": "30-11-2040",
     "id": "teachers384",
-    "desig": "AT"
+    "desig": "AT",
+    "workingDays": 24
   }
 ]
