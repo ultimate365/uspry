@@ -83,6 +83,18 @@ export default function Teachersreturn() {
     WOPay: "",
     workingDays: workingDays,
   });
+
+  const [showAvrAtt, setShowAvrAtt] = useState(false);
+  const [averageAttendance, setAverageAttendance] = useState({
+    pp: 0,
+    i: 0,
+    ii: 0,
+    iii: 0,
+    iv: 0,
+    v: 0,
+    total: 0,
+  });
+
   const getMonth = () => {
     const currentDate = new Date();
     const month =
@@ -100,6 +112,7 @@ export default function Teachersreturn() {
   const handleShow = () => setShowModal(true);
 
   const handleHide = () => setShowModal(false);
+
   useEffect(() => {
     if (access !== "admin") {
       router.push("/");
@@ -116,10 +129,17 @@ export default function Teachersreturn() {
           <button
             type="button"
             id="launchModalTrigger"
-            className="btn btn-primary"
+            className="btn btn-sm btn-primary m-1"
             onClick={handleShow}
           >
             Set Working Days
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-dark m-1"
+            onClick={() => setShowAvrAtt(true)}
+          >
+            Edit Average Attaindance
           </button>
         </div>
       </div>
@@ -872,7 +892,13 @@ export default function Teachersreturn() {
                 </h4>
               </div>
               <div className="mx-auto">
-                <table style={{ border: "1px solid", width: "100%" }}>
+                <table
+                  style={{
+                    border: "1px solid",
+                    width: "100%",
+                    overflowX: "scroll",
+                  }}
+                >
                   <thead>
                     <tr style={{ border: "1px solid" }}>
                       <th
@@ -1175,73 +1201,69 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.Boys}
+                        {students.pp.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>{students.i.Boys}</td>
+                      <td style={{ border: "1px solid" }}>
+                        {students.ii.Boys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.Boys}
+                        {students.iii.Boys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.Boys}
+                        {students.iv.Boys}
                       </td>
+                      <td style={{ border: "1px solid" }}>{students.v.Boys}</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.Boys}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.Boys}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.Boys}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.Boys}
+                        {students.total.Boys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.Girls}
+                        {students.pp.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.Girls}
+                        {students.i.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.Girls}
+                        {students.ii.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.Girls}
+                        {students.iii.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.Girls}
+                        {students.iv.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.Girls}
+                        {students.v.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.Girls}
+                        {students.total.Girls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.Total}
+                        {students.pp.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.Total}
+                        {students.i.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.Total}
+                        {students.ii.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.Total}
+                        {students.iii.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.Total}
+                        {students.iv.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.Total}
+                        {students.v.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.Total}
+                        {students.total.Total}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1250,73 +1272,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.GeneralBoys}
+                        {students.pp.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.GeneralBoys}
+                        {students.i.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.GeneralBoys}
+                        {students.ii.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.GeneralBoys}
+                        {students.iii.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.GeneralBoys}
+                        {students.iv.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.GeneralBoys}
+                        {students.v.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.GeneralBoys}
+                        {students.total.GeneralBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.GeneralGirls}
+                        {students.pp.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.GeneralGirls}
+                        {students.i.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.GeneralGirls}
+                        {students.ii.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.GeneralGirls}
+                        {students.iii.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.GeneralGirls}
+                        {students.iv.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.GeneralGirls}
+                        {students.v.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.GeneralGirls}
+                        {students.total.GeneralGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.GeralTotal}
+                        {students.pp.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.GeralTotal}
+                        {students.i.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.GeralTotal}
+                        {students.ii.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.GeralTotal}
+                        {students.iii.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.GeralTotal}
+                        {students.iv.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.GeralTotal}
+                        {students.v.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.GeralTotal}
+                        {students.total.GeralTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1325,73 +1347,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ScBoys}
+                        {students.pp.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ScBoys}
+                        {students.i.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ScBoys}
+                        {students.ii.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ScBoys}
+                        {students.iii.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ScBoys}
+                        {students.iv.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ScBoys}
+                        {students.v.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ScBoys}
+                        {students.total.ScBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ScGirls}
+                        {students.pp.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ScGirls}
+                        {students.i.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ScGirls}
+                        {students.ii.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ScGirls}
+                        {students.iii.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ScGirls}
+                        {students.iv.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ScGirls}
+                        {students.v.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ScGirls}
+                        {students.total.ScGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ScTotal}
+                        {students.pp.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ScTotal}
+                        {students.i.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ScTotal}
+                        {students.ii.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ScTotal}
+                        {students.iii.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ScTotal}
+                        {students.iv.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ScTotal}
+                        {students.v.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ScTotal}
+                        {students.total.ScTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1400,73 +1422,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.StBoys}
+                        {students.pp.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.StBoys}
+                        {students.i.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.StBoys}
+                        {students.ii.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.StBoys}
+                        {students.iii.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.StBoys}
+                        {students.iv.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.StBoys}
+                        {students.v.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.StBoys}
+                        {students.total.StBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.StGirls}
+                        {students.pp.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.StGirls}
+                        {students.i.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.StGirls}
+                        {students.ii.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.StGirls}
+                        {students.iii.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.StGirls}
+                        {students.iv.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.StGirls}
+                        {students.v.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.StGirls}
+                        {students.total.StGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.StTotal}
+                        {students.pp.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.StTotal}
+                        {students.i.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.StTotal}
+                        {students.ii.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.StTotal}
+                        {students.iii.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.StTotal}
+                        {students.iv.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.StTotal}
+                        {students.v.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.StTotal}
+                        {students.total.StTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1475,73 +1497,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ObcABoys}
+                        {students.pp.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ObcABoys}
+                        {students.i.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ObcABoys}
+                        {students.ii.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ObcABoys}
+                        {students.iii.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcABoys}
+                        {students.iv.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ObcABoys}
+                        {students.v.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ObcABoys}
+                        {students.total.ObcABoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ObcAGirls}
+                        {students.pp.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ObcAGirls}
+                        {students.i.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ObcAGirls}
+                        {students.ii.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ObcAGirls}
+                        {students.iii.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcAGirls}
+                        {students.iv.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ObcAGirls}
+                        {students.v.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ObcAGirls}
+                        {students.total.ObcAGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ObcATotal}
+                        {students.pp.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ObcATotal}
+                        {students.i.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ObcATotal}
+                        {students.ii.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ObcATotal}
+                        {students.iii.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcATotal}
+                        {students.iv.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ObcATotal}
+                        {students.v.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ObcATotal}
+                        {students.total.ObcATotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1550,73 +1572,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ObcBBoys}
+                        {students.pp.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ObcABoys}
+                        {students.i.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ObcBBoys}
+                        {students.ii.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ObcBBoys}
+                        {students.iii.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcBBoys}
+                        {students.iv.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ObcBBoys}
+                        {students.v.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ObcBBoys}
+                        {students.total.ObcBBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ObcBGirls}
+                        {students.pp.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ObcBGirls}
+                        {students.i.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ObcBGirls}
+                        {students.ii.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ObcBGirls}
+                        {students.iii.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcBGirls}
+                        {students.iv.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ObcBGirls}
+                        {students.v.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ObcBGirls}
+                        {students.total.ObcBGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.ObcBTotal}
+                        {students.pp.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.ObcBTotal}
+                        {students.i.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.ObcBTotal}
+                        {students.ii.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.ObcBTotal}
+                        {students.iii.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcBTotal}
+                        {students.iv.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.ObcBTotal}
+                        {students.v.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.ObcBTotal}
+                        {students.total.ObcBTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1625,73 +1647,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.MinorityBoys}
+                        {students.pp.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.MinorityBoys}
+                        {students.i.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.MinorityBoys}
+                        {students.ii.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.MinorityBoys}
+                        {students.iii.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.ObcBBoys}
+                        {students.iv.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.MinorityBoys}
+                        {students.v.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.MinorityBoys}
+                        {students.total.MinorityBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.MinorityGirls}
+                        {students.pp.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.MinorityGirls}
+                        {students.i.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.MinorityGirls}
+                        {students.ii.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.MinorityGirls}
+                        {students.iii.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.MinorityGirls}
+                        {students.iv.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.MinorityGirls}
+                        {students.v.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.MinorityGirls}
+                        {students.total.MinorityGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.MinorityTotal}
+                        {students.pp.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.MinorityTotal}
+                        {students.i.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.MinorityTotal}
+                        {students.ii.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.MinorityTotal}
+                        {students.iii.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.MinorityTotal}
+                        {students.iv.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.MinorityTotal}
+                        {students.v.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.MinorityTotal}
+                        {students.total.MinorityTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1699,25 +1721,27 @@ export default function Teachersreturn() {
                         Average Attendance of the month
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.averageAttendance}
+                        {students.pp.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.averageAttendance}
+                        {students.i.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.averageAttendance}
+                        {students.ii.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.averageAttendance}
+                        {students.iii.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.averageAttendance}
+                        {students.iv.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.averageAttendance}
+                        {students.v.averageAttendance > 0
+                          ? students.v.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.averageAttendance}
+                        {students.total.averageAttendance}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1731,7 +1755,7 @@ export default function Teachersreturn() {
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.averageAttendance}
+                        {students.v.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>-</td>
                     </tr>
@@ -1755,25 +1779,25 @@ export default function Teachersreturn() {
                         inspection
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.inspectionDateAttendance}
+                        {students.pp.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.inspectionDateAttendance}
+                        {students.i.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.inspectionDateAttendance}
+                        {students.ii.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.inspectionDateAttendance}
+                        {students.iii.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.inspectionDateAttendance}
+                        {students.iv.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.inspectionDateAttendance}
+                        {students.v.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.inspectionDateAttendance}
+                        {students.total.inspectionDateAttendance}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1782,73 +1806,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.lastYearBoys}
+                        {students.pp.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.lastYearBoys}
+                        {students.i.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.lastYearBoys}
+                        {students.ii.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.lastYearBoys}
+                        {students.iii.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.lastYearBoys}
+                        {students.iv.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.lastYearBoys}
+                        {students.v.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.lastYearBoys}
+                        {students.total.lastYearBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.lastYearGirls}
+                        {students.pp.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.lastYearGirls}
+                        {students.i.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.lastYearGirls}
+                        {students.ii.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.lastYearGirls}
+                        {students.iii.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.lastYearGirls}
+                        {students.iv.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.lastYearGirls}
+                        {students.v.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.lastYearGirls}
+                        {students.total.lastYearGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.pp.lastYearTotal}
+                        {students.pp.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.i.lastYearTotal}
+                        {students.i.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.ii.lastYearTotal}
+                        {students.ii.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iii.lastYearTotal}
+                        {students.iii.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.iv.lastYearTotal}
+                        {students.iv.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.v.lastYearTotal}
+                        {students.v.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {ReturnStudentData.total.lastYearTotal}
+                        {students.total.lastYearTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2145,6 +2169,268 @@ export default function Teachersreturn() {
               >
                 close
               </button>
+            </div>
+          )}
+          {showAvrAtt && (
+            <div
+              className="modal fade show"
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: "block" }}
+              aria-modal="true"
+            >
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                      Set Average Attaindance
+                    </h1>
+                  </div>
+                  <div className="modal-body">
+                    <div className="row">
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">PP</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.pp?.averageAttendance !== undefined &&
+                            students.pp?.averageAttendance !== null
+                              ? students.pp.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students.pp,
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                              total: {
+                                ...students.total,
+                                averageAttendance:
+                                  parseInt(value) +
+                                  students.i.averageAttendance +
+                                  students.ii.averageAttendance +
+                                  students.iii.averageAttendance +
+                                  students.iv.averageAttendance +
+                                  students.v.averageAttendance,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">I</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.i?.averageAttendance !== undefined &&
+                            students.i?.averageAttendance !== null
+                              ? students.i.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students.i,
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                              total: {
+                                ...students.total,
+                                averageAttendance:
+                                  students.pp.averageAttendance +
+                                  parseInt(value) +
+                                  students.ii.averageAttendance +
+                                  students.iii.averageAttendance +
+                                  students.iv.averageAttendance +
+                                  students.v.averageAttendance,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">II</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.ii?.averageAttendance !== undefined &&
+                            students.ii?.averageAttendance !== null
+                              ? students.ii.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students.ii,
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                              total: {
+                                ...students.total,
+                                averageAttendance:
+                                  students.pp.averageAttendance +
+                                  students.i.averageAttendance +
+                                  parseInt(value) +
+                                  students.iii.averageAttendance +
+                                  students.iv.averageAttendance +
+                                  students.v.averageAttendance,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">III</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.iii?.averageAttendance !== undefined &&
+                            students.iii?.averageAttendance !== null
+                              ? students.iii.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students.iii,
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                              total: {
+                                ...students.total,
+                                averageAttendance:
+                                  students.pp.averageAttendance +
+                                  students.i.averageAttendance +
+                                  students.ii.averageAttendance +
+                                  parseInt(value) +
+                                  students.iv.averageAttendance +
+                                  students.v.averageAttendance,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">IV</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.iv?.averageAttendance !== undefined &&
+                            students.iv?.averageAttendance !== null
+                              ? students.iv.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students.iv,
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                              total: {
+                                ...students.total,
+                                averageAttendance:
+                                  students.pp.averageAttendance +
+                                  students.i.averageAttendance +
+                                  students.ii.averageAttendance +
+                                  students.iii.averageAttendance +
+                                  parseInt(value) +
+                                  students.v.averageAttendance,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">V</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.v?.averageAttendance !== undefined &&
+                            students.v?.averageAttendance !== null
+                              ? students.v.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students.v,
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                              total: {
+                                ...students.total,
+                                averageAttendance:
+                                  students.pp.averageAttendance +
+                                  students.i.averageAttendance +
+                                  students.ii.averageAttendance +
+                                  students.iii.averageAttendance +
+                                  students.iv.averageAttendance +
+                                  parseInt(value),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-6">
+                        <label htmlFor="avgAttaindance">Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students.total?.averageAttendance !== undefined &&
+                            students.total?.averageAttendance !== null
+                              ? students.total.averageAttendance
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students.total, // Corrected this to use `students.total`
+                                averageAttendance:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => setShowAvrAtt(false)}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>

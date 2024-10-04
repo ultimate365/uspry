@@ -161,7 +161,7 @@
     "MinorityBoys": "-",
     "MinorityGirls": "-",
     "MinorityTotal": "-",
-    "averageAttendance": "-",
+    "averageAttendance": 0,
     "inspectionDateAttendance": "-",
     "lastYearBoys": "-",
     "lastYearGirls": "-",
