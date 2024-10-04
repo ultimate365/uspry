@@ -42,6 +42,8 @@ const GlobalContext = createContext({
     student_addmission_date: "",
     student_addmission_dateAndTime: "",
   },
+  returnState: [],
+  setReturnState: () => [],
   setApplicationFormState: () => {},
   teachersState: [],
   setTeachersState: () => [],
@@ -99,6 +101,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [riceState, setRiceState] = useState([]);
   const [mealState, setMealState] = useState([]);
   const [monthlyReportState, setMonthlyReportState] = useState([]);
+  const [returnState, setReturnState] = useState([]);
   const [applicationFormState, setApplicationFormState] = useState({
     id: "",
     student_beng_name: "",
@@ -170,6 +173,8 @@ export const GlobalContextProvider = ({ children }) => {
         setMonthlyReportState,
         applicationFormState,
         setApplicationFormState,
+        returnState,
+        setReturnState,
       }}
     >
       <FirebaseProvider>{children}</FirebaseProvider>

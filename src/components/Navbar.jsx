@@ -139,6 +139,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/MonthlyTeachersReturn"
+              onClick={handleNavCollapse}
+            >
+              View Monthly Teacher&#8217;s Return
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/mdmdata"
               onClick={handleNavCollapse}
             >

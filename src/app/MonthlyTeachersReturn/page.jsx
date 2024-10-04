@@ -2,7 +2,7 @@
 import {
   createDownloadLink,
   monthNamesWithIndex,
-  todayInString,
+  sortMonthwise,
   uniqArray,
 } from "@/modules/calculatefunctions";
 import {
@@ -11,7 +11,6 @@ import {
   HOI_MOBILE_NO,
   JLNO,
   KHATIAN_NO,
-  LAST_DAY_OF_INSPECTION,
   MEDIUM,
   MOUZA,
   PLOT_NO,
@@ -41,607 +40,291 @@ import {
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import ReturnData from "./teacherReturn.json";
-export default function Teachersreturn() {
+
+export default function MonthlyTeachersReturn() {
   const { state, returnState, setReturnState } = useGlobalContext();
 
   const access = state?.ACCESS;
   const router = useRouter();
+
   const [loader, setLoader] = useState(false);
-  const [showRemark, setShowRemark] = useState(false);
+  const [yearArray, setYearArray] = useState([]);
+  const [allEnry, setAllEnry] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
   const [remarks, setRemarks] = useState("");
-  const [addRemark, setAddRemark] = useState(false);
+  const [filteredEntry, setFilteredEntry] = useState([]);
+  const [moreFilteredEntry, setMoreFilteredEntry] = useState([]);
+  const [entryMonths, setEntryMonths] = useState("");
+  const [showMonthSelection, setShowMonthSelection] = useState(false);
+  const [showRemark, setShowRemark] = useState(true);
+  const [inspectionDate, setInspectionDate] = useState("");
   const [showFrontPage, setShowFrontPage] = useState(true);
   const [showBackPage, setShowBackPage] = useState(true);
   const [workingDays, setWorkingDays] = useState(24);
-  const [editTeacher, setEditTeacher] = useState({
-    cast: "",
-    tname: "",
-    training: "",
-    education: "",
-    dor: "",
-    desig: "",
-    rank: "",
-    dojnow: "",
-    dob: "",
-    id: "",
-    doj: "",
-    clThisMonth: "",
-    clThisYear: "",
-    olThisMonth: "",
-    olThisYear: "",
-    fullPay: "",
-    halfPay: "",
-    WOPay: "",
-    workingDays: workingDays,
-  });
-
-  const [teachers, setTeachers] = useState(ReturnData[0].teachers);
-  const [filteredData, setFilteredData] = useState(ReturnData[0].teachers);
-  const [students, setStudents] = useState(ReturnData[0].students);
-  const [inspectionDate, setInspectionDate] = useState(
-    ReturnData[0].inspectionDate
-  );
-  const [showAvrAtt, setShowAvrAtt] = useState(false);
-
-  const currentDate = new Date();
-  const month =
-    monthNamesWithIndex[
-      currentDate.getDate() > 10
-        ? currentDate.getMonth()
-        : currentDate.getMonth() - 1
-    ].monthName;
-  const year = currentDate.getFullYear();
-
+  const [filteredData, setFilteredData] = useState();
+  const [students, setStudents] = useState();
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [showData, setShowData] = useState(false);
   const getMonth = () => {
     return `${month.toUpperCase()} of ${year}`;
   };
-  const getID = () => {
-    return `${month}-${year}`;
-  };
-  const [showModal, setShowModal] = useState(true);
+  const handleChange = (e) => {
+    if (e.target.value !== "") {
+      if (typeof window !== undefined) {
+        let monthSelect = document.getElementById("month-select");
+        if (monthSelect) {
+          monthSelect.value = "";
+        }
+      }
+      const selectedValue = e.target.value;
+      let x = [];
+      let y = [];
+      allEnry.map((entry) => {
+        const entryYear = entry.id.split("-")[1];
+        const entryMonth = entry.id.split("-")[0];
 
-  const submitMonthlyData = async () => {
-    setLoader(true);
-    try {
-      const id = getID();
-      const entry = {
-        id,
-        month,
-        year,
-        inspectionDate,
-        teachers: filteredData,
-        students,
-        workingDays,
-        date: todayInString(),
-        remarks,
-      };
-      await setDoc(doc(firestore, "monthlyTeachersReturn", id), entry);
-      setReturnState([...returnState, entry]);
-      toast.success("Monthly Data Submitted Successfully!", {
-        position: "top-right",
+        if (entryYear === selectedValue) {
+          x.push(entry);
+          y.push(entryMonth);
+        }
       });
-      setLoader(false);
-      setShowFrontPage(true);
-      setShowBackPage(true);
-    } catch (error) {
-      console.log(error);
-      setLoader(false);
-      toast.error("Failed to Submit Monthly Data");
+      setSelectedYear(selectedValue);
+      setShowMonthSelection(true);
+      setFilteredEntry(x);
+      setMoreFilteredEntry(x);
+      setEntryMonths(uniqArray(y));
+    } else {
+      setFilteredEntry([]);
+      setSelectedYear("");
+      setShowMonthSelection(false);
+      toast.error("Please select a year");
     }
   };
+  const handleMonthChange = (month) => {
+    console.log(month);
+    let x = [];
+
+    allEnry.map((entry, index) => {
+      const entryYear = entry.id.split("-")[1];
+      const entryMonth = entry.id.split("-")[0];
+      if (entryYear === selectedYear && entryMonth === month) {
+        x.push(entry);
+        setShowData(true);
+        setRemarks(entry?.remarks);
+        setWorkingDays(entry?.workingDays);
+        setInspectionDate(entry?.inspectionDate);
+        setFilteredData(entry?.teachers);
+        setStudents(entry?.students);
+        setMonth(entry?.month);
+        setYear(entry?.year);
+        return x;
+      }
+    });
+    setFilteredEntry(x);
+  };
+
+  const getMonthlyData = async () => {
+    setLoader(true);
+    const querySnapshot = await getDocs(
+      query(collection(firestore, "monthlyTeachersReturn"))
+    );
+    const data = querySnapshot.docs.map((doc) => ({
+      // doc.data() is never undefined for query doc snapshots
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const monthwiseSorted = sortMonthwise(data);
+    setReturnState(monthwiseSorted);
+    setLoader(false);
+    calledData(monthwiseSorted);
+  };
+  const calledData = (array) => {
+    let x = [];
+    array.map((entry) => {
+      const entryYear = entry.id.split("-")[1];
+      x.push(entryYear);
+      x = uniqArray(x);
+      x = x.sort((a, b) => a - b);
+    });
+    setYearArray(x);
+
+    setLoader(false);
+    setAllEnry(array);
+    setFilteredEntry(array);
+  };
+
   useEffect(() => {
     if (access !== "admin") {
       router.push("/");
       toast.error("Unathorized access");
     }
+    if (returnState.length === 0) {
+      getMonthlyData();
+    } else {
+      calledData(returnState);
+      console.log(returnState);
+    }
     //eslint-disable-next-line
   }, []);
   return (
     <div className="container-fluid">
-      {loader && <Loader />}
-
-      <div className="col-md-6 mx-auto my-2 noprint">
-        <div className="mb-3 mx-auto col-md-6">
-          <button
-            type="button"
-            id="launchModalTrigger"
-            className="btn btn-sm btn-primary m-1"
-            onClick={() => {
-              if (
-                window.confirm("Are you sure, you want to Submit this Data?")
-              ) {
-                submitMonthlyData();
-              }
-            }}
-          >
-            Submit Return Data
-          </button>
-          <button
-            type="button"
-            id="launchModalTrigger"
-            className="btn btn-sm btn-primary m-1"
-            onClick={() => setShowModal(true)}
-          >
-            Set Working Days
-          </button>
-          <button
-            type="button"
-            className="btn btn-sm btn-dark m-1"
-            onClick={() => setShowAvrAtt(true)}
-          >
-            Edit Average Attaindance
-          </button>
-        </div>
-      </div>
-
-      {showModal ? (
-        <div
-          className="modal fade show"
-          tabIndex="-1"
-          role="dialog"
-          style={{ display: "block" }}
-          aria-modal="true"
+      <div className="noprint">
+        <button
+          type="button"
+          className="btn btn-primary m-2"
+          onClick={() => {
+            createDownloadLink(allEnry, "monthlyTeachersReturn");
+          }}
         >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                  Set Working Days
-                </h1>
-              </div>
-              <div className="modal-body">
-                <div className="col-md-6 mx-auto my-2 noprint">
-                  <div className="mb-3 mx-auto col-md-6">
-                    <h5 htmlFor="rank" className="text-danger">
-                      ***Set Total Working Days of this Month
-                    </h5>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="workingDays"
-                      name="workingDays"
-                      value={workingDays}
-                      onChange={(e) => {
-                        if (e.target.value !== "") {
-                          setWorkingDays(parseInt(e.target.value));
-                          try {
-                            // Map over teachers and create the updated array
-                            const myData = teachers.map((data) => {
-                              if (data.clThisMonth) {
-                                // Update the workingDays field
-                                return {
-                                  ...data,
-                                  workingDays:
-                                    parseInt(e.target.value) - data.clThisMonth,
-                                };
-                              }
-                              return data;
-                            });
-                            // Update the filtered data with the new array
-                            setFilteredData(myData);
-                          } catch (error) {
-                            console.log(error);
-                          }
-                        } else {
-                          setWorkingDays("");
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                {workingDays > 0 && (
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Save
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
+          Download Monthly Return Data
+        </button>
         <div>
-          <div className="noprint">
+          <h4>Select Year</h4>
+          <div className="col-md-4 mx-auto mb-3 noprint">
+            <select
+              className="form-select"
+              defaultValue={""}
+              onChange={handleChange}
+              aria-label="Default select example"
+            >
+              <option className="text-center text-primary" value="">
+                Select Data Year
+              </option>
+              {yearArray.map((el, i) => (
+                <option
+                  className="text-center text-success text-wrap"
+                  key={i}
+                  value={el}
+                >
+                  {"Year - " + el}
+                </option>
+              ))}
+            </select>
+          </div>
+          {selectedYear && showMonthSelection ? (
+            <div className="noprint">
+              {entryMonths.length > 1 && (
+                <h4 className="text-center text-primary">Select Month</h4>
+              )}
+            </div>
+          ) : null}
+          {showMonthSelection && (
+            <div className="row d-flex justify-content-center noprint">
+              {entryMonths.length > 0 && (
+                <div className="col-md-4 mx-auto mb-3 noprint">
+                  <select
+                    className="form-select"
+                    id="month-select"
+                    defaultValue={""}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        handleMonthChange(e.target.value);
+                        console.log(e.target.value);
+                      } else {
+                        setFilteredEntry(moreFilteredEntry);
+                        setShowData(false);
+                        toast.error("Please select a Month");
+                        if (typeof window !== undefined) {
+                          document.getElementById("month-select").value = "";
+                        }
+                      }
+                    }}
+                    aria-label="Default select example"
+                  >
+                    <option value="" className="text-center text-primary">
+                      Select Month
+                    </option>
+                    {entryMonths
+                      // .slice(1, entryMonths.length)
+                      .map((month, index) => (
+                        <option
+                          className="text-center text-success"
+                          key={index}
+                          value={month}
+                        >
+                          {month}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        {showData && (
+          <div>
             <button
               type="button"
               className="btn btn-primary m-2"
               onClick={() => {
-                createDownloadLink(teachers, "teachers");
+                createDownloadLink(
+                  filteredEntry,
+                  `${filteredEntry[0]?.id} Teachers Return`
+                );
               }}
             >
-              Download Teachers Data
+              Download {month} {year} Return Data
             </button>
-            <div>
-              <button
-                type="button"
-                className="btn btn-success m-2"
-                onClick={() => {
-                  if (typeof window !== undefined) {
+            <button
+              type="button"
+              className="btn btn-success m-2"
+              onClick={() => {
+                if (typeof window !== undefined) {
+                  window.print();
+                }
+              }}
+            >
+              Print
+            </button>
+            <button
+              className={`btn btn-primary m-2`}
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  setShowBackPage(false);
+                  setTimeout(() => {
                     window.print();
-                  }
-                }}
-              >
-                Print
-              </button>
+                    setShowBackPage(true);
+                  }, 2000);
+                }
+              }}
+            >
+              Print Front Page
+            </button>
+            <button
+              className={`btn btn-info m-2`}
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  setShowBackPage(true);
+                  setShowFrontPage(false);
+                  setTimeout(() => {
+                    window.print();
+                    setShowFrontPage(true);
+                  }, 2000);
+                }
+              }}
+            >
+              Print Back Page
+            </button>
+            {remarks.length > 0 && (
               <button
                 className={`btn btn-primary m-2`}
                 type="button"
                 onClick={() => {
-                  if (typeof window !== "undefined") {
-                    setShowBackPage(false);
-                    setTimeout(() => {
-                      window.print();
-                      setShowBackPage(true);
-                    }, 200);
-                  }
+                  setShowRemark(!showRemark);
                 }}
               >
-                Print Front Page
+                {showRemark ? "Hide Remark" : "Show Remark"}
               </button>
-              <button
-                className={`btn btn-info m-2`}
-                type="button"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    setShowBackPage(true);
-                    setShowFrontPage(false);
-                    setTimeout(() => {
-                      window.print();
-                      setShowFrontPage(true);
-                    }, 200);
-                  }
-                }}
-              >
-                Print Back Page
-              </button>
-            </div>
-            <div>
-              <button
-                className={`btn btn-dark m-2`}
-                type="button"
-                onClick={() => {
-                  setShowBackPage(false);
-                  setShowFrontPage(false);
-                  setAddRemark(!addRemark);
-                  if (addRemark) {
-                    setShowBackPage(true);
-                    setShowFrontPage(true);
-                  }
-                }}
-              >
-                {addRemark ? "Close Remark" : "Write Remark"}
-              </button>
-              {remarks.length > 0 && !addRemark && (
-                <button
-                  className={`btn btn-primary m-2`}
-                  type="button"
-                  onClick={() => {
-                    setShowRemark(!showRemark);
-                  }}
-                >
-                  {showRemark ? "Hide Remark" : "Show Remark"}
-                </button>
-              )}
-            </div>
+            )}
           </div>
-          <div
-            className="noprint rounded p-2 m-2 col-md-4 mx-auto"
-            style={{ backgroundColor: "#a19e9d" }}
-          >
-            <h4 className="text-black">Edit Teacher</h4>
-            <table className="table table-hover table-sm table-bordered border-black border-1 align-middle table-responsive text-center rounded">
-              <thead>
-                <tr>
-                  <th className="text-center" style={{ border: "1px solid" }}>
-                    SL. NO.
-                  </th>
-                  <th className="text-center" style={{ border: "1px solid" }}>
-                    TEACHER'S NAME
-                  </th>
-                  <th className="text-center" style={{ border: "1px solid" }}>
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {teachers.map((teacher, index) => (
-                  <tr key={index} className="teacher-tr">
-                    <td className="text-center" style={{ border: "1px solid" }}>
-                      {index + 1}
-                    </td>
-                    <td className="text-center" style={{ border: "1px solid" }}>
-                      {teacher.tname}
-                    </td>
-                    <td className="text-center" style={{ border: "1px solid" }}>
-                      {/* <!-- Button trigger modal --> */}
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"
-                        onClick={() => {
-                          setEditTeacher(teacher);
-                        }}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div
-            className="modal fade"
-            id="staticBackdrop"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            tabIndex="-1"
-            aria-labelledby="staticBackdropLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                    {editTeacher?.tname}
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <form>
-                    <div className="mb-3">
-                      <h6 htmlFor="tname" className="form-label">
-                        Name: {editTeacher?.tname}
-                      </h6>
-                      <h6 htmlFor="rank" className="form-label">
-                        Rank: {editTeacher?.rank}
-                      </h6>
-                      <h6 htmlFor="rank" className="form-label text-danger">
-                        *** Please Set This Month&#8217;s Working Days First
-                      </h6>
-                      <h6 htmlFor="rank" className="form-label text-danger">
-                        *** Total Working Days of This Month is {workingDays}
-                      </h6>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        CL This Month
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="clThisMonth"
-                        name="clThisMonth"
-                        value={editTeacher?.clThisMonth}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisMonth: parseInt(e.target.value),
-                              workingDays:
-                                workingDays - parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisMonth: "",
-                              workingDays: workingDays,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        CL This Year
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="clThisYear"
-                        name="clThisYear"
-                        value={editTeacher?.clThisYear}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisYear: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisYear: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Other Leave This Month
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="olThisMonth"
-                        name="olThisMonth"
-                        value={editTeacher?.olThisMonth}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olThisMonth: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olThisMonth: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Other Leave This Year
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="olThisYear"
-                        name="olThisYear"
-                        value={editTeacher?.olThisYear}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olthisYear: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olThisYear: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Full Pay
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="fullPay"
-                        name="fullPay"
-                        value={editTeacher?.fullPay}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              fullPay: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              fullPay: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Half Pay
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="halfPay"
-                        name="halfPay"
-                        value={editTeacher?.halfPay}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              halfPay: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              halfPay: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Without Pay
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="WOPay"
-                        name="WOPay"
-                        value={editTeacher?.WOPay}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              WOPay: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              WOPay: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                  </form>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-bs-dismiss="modal"
-                    onClick={() => {
-                      const updatedArray = filteredData
-                        .map((t) =>
-                          t.id === editTeacher?.id ? editTeacher : t
-                        )
-                        .sort((a, b) => a.rank - b.rank);
-                      setFilteredData(updatedArray);
-                      setEditTeacher({
-                        cast: "",
-                        tname: "",
-                        training: "",
-                        education: "",
-                        dor: "",
-                        desig: "",
-                        rank: "",
-                        dojnow: "",
-                        dob: "",
-                        id: "",
-                        doj: "",
-                        clThisMonth: "",
-                        clThisYear: "",
-                        olThisMonth: "",
-                        olThisYear: "",
-                        fullPay: "",
-                        halfPay: "",
-                        WOPay: "",
-                      });
-                    }}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+        )}
+      </div>
+      {loader && <Loader />}
+      {showData && (
+        <div>
           {showFrontPage && (
             <div
               className="mx-auto nobreak p-2"
@@ -1182,7 +865,7 @@ export default function Teachersreturn() {
           {showBackPage && (
             <div
               className="mx-auto  nobreak p-2"
-              style={{ border: "2px solid", zoom: 0.82 }}
+              style={{ border: "2px solid", zoom: 0.8 }}
             >
               <div className="mx-auto" style={{ width: "100%" }}>
                 <h4 className="dejavu fs-5">
@@ -1232,69 +915,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.Boys}
-                      </td>
-                      <td style={{ border: "1px solid" }}>{students.i.Boys}</td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.ii.Boys}
+                        {students?.pp?.Boys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.Boys}
+                        {students?.i?.Boys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.Boys}
+                        {students?.ii?.Boys}
                       </td>
-                      <td style={{ border: "1px solid" }}>{students.v.Boys}</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.Boys}
+                        {students?.iii?.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        {students?.iv?.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        {students?.v?.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        {students?.total?.Boys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.Girls}
+                        {students?.pp?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.Girls}
+                        {students?.i?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.Girls}
+                        {students?.ii?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.Girls}
+                        {students?.iii?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.Girls}
+                        {students?.iv?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.Girls}
+                        {students?.v?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.Girls}
+                        {students?.total?.Girls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.Total}
+                        {students?.pp?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.Total}
+                        {students?.i?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.Total}
+                        {students?.ii?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.Total}
+                        {students?.iii?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.Total}
+                        {students?.iv?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.Total}
+                        {students?.v?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.Total}
+                        {students?.total?.Total}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1303,73 +990,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.GeneralBoys}
+                        {students?.pp?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.GeneralBoys}
+                        {students?.i?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.GeneralBoys}
+                        {students?.ii?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.GeneralBoys}
+                        {students?.iii?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.GeneralBoys}
+                        {students?.iv?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.GeneralBoys}
+                        {students?.v?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.GeneralBoys}
+                        {students?.total?.GeneralBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.GeneralGirls}
+                        {students?.pp?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.GeneralGirls}
+                        {students?.i?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.GeneralGirls}
+                        {students?.ii?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.GeneralGirls}
+                        {students?.iii?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.GeneralGirls}
+                        {students?.iv?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.GeneralGirls}
+                        {students?.v?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.GeneralGirls}
+                        {students?.total?.GeneralGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.GeralTotal}
+                        {students?.pp?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.GeralTotal}
+                        {students?.i?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.GeralTotal}
+                        {students?.ii?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.GeralTotal}
+                        {students?.iii?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.GeralTotal}
+                        {students?.iv?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.GeralTotal}
+                        {students?.v?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.GeralTotal}
+                        {students?.total?.GeralTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1378,73 +1065,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ScBoys}
+                        {students?.pp?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ScBoys}
+                        {students?.i?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ScBoys}
+                        {students?.ii?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ScBoys}
+                        {students?.iii?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ScBoys}
+                        {students?.iv?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ScBoys}
+                        {students?.v?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ScBoys}
+                        {students?.total?.ScBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ScGirls}
+                        {students?.pp?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ScGirls}
+                        {students?.i?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ScGirls}
+                        {students?.ii?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ScGirls}
+                        {students?.iii?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ScGirls}
+                        {students?.iv?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ScGirls}
+                        {students?.v?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ScGirls}
+                        {students?.total?.ScGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ScTotal}
+                        {students?.pp?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ScTotal}
+                        {students?.i?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ScTotal}
+                        {students?.ii?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ScTotal}
+                        {students?.iii?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ScTotal}
+                        {students?.iv?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ScTotal}
+                        {students?.v?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ScTotal}
+                        {students?.total?.ScTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1453,73 +1140,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.StBoys}
+                        {students?.pp?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.StBoys}
+                        {students?.i?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.StBoys}
+                        {students?.ii?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.StBoys}
+                        {students?.iii?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.StBoys}
+                        {students?.iv?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.StBoys}
+                        {students?.v?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.StBoys}
+                        {students?.total?.StBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.StGirls}
+                        {students?.pp?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.StGirls}
+                        {students?.i?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.StGirls}
+                        {students?.ii?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.StGirls}
+                        {students?.iii?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.StGirls}
+                        {students?.iv?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.StGirls}
+                        {students?.v?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.StGirls}
+                        {students?.total?.StGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.StTotal}
+                        {students?.pp?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.StTotal}
+                        {students?.i?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.StTotal}
+                        {students?.ii?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.StTotal}
+                        {students?.iii?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.StTotal}
+                        {students?.iv?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.StTotal}
+                        {students?.v?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.StTotal}
+                        {students?.total?.StTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1528,73 +1215,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcABoys}
+                        {students?.pp?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcABoys}
+                        {students?.i?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcABoys}
+                        {students?.ii?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcABoys}
+                        {students?.iii?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcABoys}
+                        {students?.iv?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcABoys}
+                        {students?.v?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcABoys}
+                        {students?.total?.ObcABoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcAGirls}
+                        {students?.pp?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcAGirls}
+                        {students?.i?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcAGirls}
+                        {students?.ii?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcAGirls}
+                        {students?.iii?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcAGirls}
+                        {students?.iv?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcAGirls}
+                        {students?.v?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcAGirls}
+                        {students?.total?.ObcAGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcATotal}
+                        {students?.pp?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcATotal}
+                        {students?.i?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcATotal}
+                        {students?.ii?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcATotal}
+                        {students?.iii?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcATotal}
+                        {students?.iv?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcATotal}
+                        {students?.v?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcATotal}
+                        {students?.total?.ObcATotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1603,73 +1290,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcBBoys}
+                        {students?.pp?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcABoys}
+                        {students?.i?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcBBoys}
+                        {students?.ii?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcBBoys}
+                        {students?.iii?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBBoys}
+                        {students?.iv?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcBBoys}
+                        {students?.v?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcBBoys}
+                        {students?.total?.ObcBBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcBGirls}
+                        {students?.pp?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcBGirls}
+                        {students?.i?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcBGirls}
+                        {students?.ii?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcBGirls}
+                        {students?.iii?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBGirls}
+                        {students?.iv?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcBGirls}
+                        {students?.v?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcBGirls}
+                        {students?.total?.ObcBGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcBTotal}
+                        {students?.pp?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcBTotal}
+                        {students?.i?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcBTotal}
+                        {students?.ii?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcBTotal}
+                        {students?.iii?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBTotal}
+                        {students?.iv?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcBTotal}
+                        {students?.v?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcBTotal}
+                        {students?.total?.ObcBTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1678,73 +1365,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.MinorityBoys}
+                        {students?.pp?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.MinorityBoys}
+                        {students?.i?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.MinorityBoys}
+                        {students?.ii?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.MinorityBoys}
+                        {students?.iii?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBBoys}
+                        {students?.iv?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.MinorityBoys}
+                        {students?.v?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.MinorityBoys}
+                        {students?.total?.MinorityBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.MinorityGirls}
+                        {students?.pp?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.MinorityGirls}
+                        {students?.i?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.MinorityGirls}
+                        {students?.ii?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.MinorityGirls}
+                        {students?.iii?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.MinorityGirls}
+                        {students?.iv?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.MinorityGirls}
+                        {students?.v?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.MinorityGirls}
+                        {students?.total?.MinorityGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.MinorityTotal}
+                        {students?.pp?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.MinorityTotal}
+                        {students?.i?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.MinorityTotal}
+                        {students?.ii?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.MinorityTotal}
+                        {students?.iii?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.MinorityTotal}
+                        {students?.iv?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.MinorityTotal}
+                        {students?.v?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.MinorityTotal}
+                        {students?.total?.MinorityTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1752,27 +1439,27 @@ export default function Teachersreturn() {
                         Average Attendance of the month
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.averageAttendance}
+                        {students?.pp?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.averageAttendance}
+                        {students?.i?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.averageAttendance}
+                        {students?.ii?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.averageAttendance}
+                        {students?.iii?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.averageAttendance}
+                        {students?.iv?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.averageAttendance > 0
-                          ? students.v.averageAttendance
+                        {students?.v?.averageAttendance > 0
+                          ? students?.v?.averageAttendance
                           : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.averageAttendance}
+                        {students?.total?.averageAttendance}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1786,7 +1473,7 @@ export default function Teachersreturn() {
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.averageAttendance}
+                        {students?.v?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>-</td>
                     </tr>
@@ -1810,25 +1497,25 @@ export default function Teachersreturn() {
                         inspection
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.inspectionDateAttendance}
+                        {students?.pp?.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.inspectionDateAttendance}
+                        {students?.i?.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.inspectionDateAttendance}
+                        {students?.ii?.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.inspectionDateAttendance}
+                        {students?.iii?.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.inspectionDateAttendance}
+                        {students?.iv?.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.inspectionDateAttendance}
+                        {students?.v?.inspectionDateAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.inspectionDateAttendance}
+                        {students?.total?.inspectionDateAttendance}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1837,73 +1524,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.lastYearBoys}
+                        {students?.pp?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.lastYearBoys}
+                        {students?.i?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.lastYearBoys}
+                        {students?.ii?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.lastYearBoys}
+                        {students?.iii?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.lastYearBoys}
+                        {students?.iv?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.lastYearBoys}
+                        {students?.v?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.lastYearBoys}
+                        {students?.total?.lastYearBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.lastYearGirls}
+                        {students?.pp?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.lastYearGirls}
+                        {students?.i?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.lastYearGirls}
+                        {students?.ii?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.lastYearGirls}
+                        {students?.iii?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.lastYearGirls}
+                        {students?.iv?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.lastYearGirls}
+                        {students?.v?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.lastYearGirls}
+                        {students?.total?.lastYearGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.lastYearTotal}
+                        {students?.pp?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.lastYearTotal}
+                        {students?.i?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.lastYearTotal}
+                        {students?.ii?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.lastYearTotal}
+                        {students?.iii?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.lastYearTotal}
+                        {students?.iv?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.lastYearTotal}
+                        {students?.v?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.lastYearTotal}
+                        {students?.total?.lastYearTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2150,316 +1837,6 @@ export default function Teachersreturn() {
                   <h6 className="fw-bold">
                     Signature of Head Teacher / Teacher- In-Charge
                   </h6>
-                </div>
-              </div>
-            </div>
-          )}
-          {addRemark && (
-            <div className="col-md-6 mx-auto">
-              <div className="form-group m-2">
-                <label className="m-2">Remarks</label>
-                <textarea
-                  className="form-control"
-                  id="remarks"
-                  rows="5"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                  placeholder="Add Remarks"
-                />
-              </div>
-              <button
-                className="btn btn-success m-2"
-                type="button"
-                onClick={() => {
-                  setAddRemark(false);
-                  setShowFrontPage(true);
-                  setShowBackPage(true);
-                }}
-              >
-                Save
-              </button>
-              {remarks.length > 0 && (
-                <button
-                  className="btn btn-danger m-2"
-                  type="button"
-                  onClick={() => {
-                    setRemarks("");
-                  }}
-                >
-                  Clear
-                </button>
-              )}
-              <button
-                className="btn btn-dark m-2"
-                type="button"
-                onClick={() => {
-                  setAddRemark(false);
-                  setShowBackPage(true);
-                  setShowFrontPage(true);
-                }}
-              >
-                close
-              </button>
-            </div>
-          )}
-          {showAvrAtt && (
-            <div
-              className="modal fade show"
-              tabIndex="-1"
-              role="dialog"
-              style={{ display: "block" }}
-              aria-modal="true"
-            >
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                      Set Average Attaindance
-                    </h1>
-                  </div>
-                  <div className="modal-body">
-                    <div className="row">
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">PP</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.pp?.averageAttendance !== undefined &&
-                            students.pp?.averageAttendance !== null
-                              ? students.pp.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              pp: {
-                                ...students.pp,
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                              total: {
-                                ...students.total,
-                                averageAttendance:
-                                  parseInt(value) +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">I</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.i?.averageAttendance !== undefined &&
-                            students.i?.averageAttendance !== null
-                              ? students.i.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              i: {
-                                ...students.i,
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                              total: {
-                                ...students.total,
-                                averageAttendance:
-                                  students.pp.averageAttendance +
-                                  parseInt(value) +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">II</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.ii?.averageAttendance !== undefined &&
-                            students.ii?.averageAttendance !== null
-                              ? students.ii.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              ii: {
-                                ...students.ii,
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                              total: {
-                                ...students.total,
-                                averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  parseInt(value) +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">III</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.iii?.averageAttendance !== undefined &&
-                            students.iii?.averageAttendance !== null
-                              ? students.iii.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              iii: {
-                                ...students.iii,
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                              total: {
-                                ...students.total,
-                                averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  parseInt(value) +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">IV</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.iv?.averageAttendance !== undefined &&
-                            students.iv?.averageAttendance !== null
-                              ? students.iv.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              iv: {
-                                ...students.iv,
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                              total: {
-                                ...students.total,
-                                averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  parseInt(value) +
-                                  students.v.averageAttendance,
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">V</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.v?.averageAttendance !== undefined &&
-                            students.v?.averageAttendance !== null
-                              ? students.v.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              v: {
-                                ...students.v,
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                              total: {
-                                ...students.total,
-                                averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  parseInt(value),
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group col-md-6">
-                        <label htmlFor="avgAttaindance">Total</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={
-                            students.total?.averageAttendance !== undefined &&
-                            students.total?.averageAttendance !== null
-                              ? students.total.averageAttendance
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            setStudents({
-                              ...students,
-                              total: {
-                                ...students.total, // Corrected this to use `students.total`
-                                averageAttendance:
-                                  value === "" ? null : parseInt(value, 10),
-                              },
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={() => setShowAvrAtt(false)}
-                    >
-                      Save
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
