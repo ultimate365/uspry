@@ -1320,7 +1320,7 @@ export default function Teachersreturn() {
                               border: "1px solid",
                               paddingInline: 2,
                               width: 300,
-                              height: 65,
+                              height: 75,
                             }}
                           ></td>
                           <td
@@ -1331,7 +1331,7 @@ export default function Teachersreturn() {
                           <tr>
                             <td
                               colSpan={18}
-                              style={{ border: "1px solid", height: 16 }}
+                              style={{ border: "1px solid", height: 5 }}
                             ></td>
                           </tr>
                         )}

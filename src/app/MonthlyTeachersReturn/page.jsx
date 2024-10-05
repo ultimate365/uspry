@@ -27,16 +27,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../../context/Store";
 import { firestore } from "../../context/FirbaseContext";
-import {
-  getDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  query,
-  collection,
-  deleteDoc,
-} from "firebase/firestore";
+import { getDocs, query, collection } from "firebase/firestore";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -167,8 +158,11 @@ export default function MonthlyTeachersReturn() {
     } else {
       calledData(returnState);
     }
-    //eslint-disable-next-line
   }, []);
+  useEffect(() => {
+    document.title = `${filteredEntry[0]?.id} Teachers Return`;
+    //eslint-disable-next-line
+  }, [filteredEntry]);
   return (
     <div className="container-fluid">
       <div className="noprint">
@@ -904,7 +898,7 @@ export default function MonthlyTeachersReturn() {
                               border: "1px solid",
                               paddingInline: 2,
                               width: 300,
-                              height: 65,
+                              height: 75,
                             }}
                           ></td>
                           <td
@@ -915,7 +909,7 @@ export default function MonthlyTeachersReturn() {
                           <tr>
                             <td
                               colSpan={18}
-                              style={{ border: "1px solid", height: 16 }}
+                              style={{ border: "1px solid", height: 5 }}
                             ></td>
                           </tr>
                         )}
@@ -1564,6 +1558,7 @@ export default function MonthlyTeachersReturn() {
                       <td
                         colSpan={8}
                         style={{ border: "1px solid", height: 80 }}
+                        className="text-break"
                       >
                         {showRemark && remarks}
                       </td>

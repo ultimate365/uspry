@@ -85,6 +85,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/studentdata"
+              onClick={handleNavCollapse}
+            >
+              Student Data
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/admission"
               onClick={handleNavCollapse}
             >
@@ -181,6 +190,24 @@ export default function Navbar() {
               VEC Account
             </Link>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/userStudents"
+              onClick={handleNavCollapse}
+            >
+              Students Login Section
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/userTeachers"
+              onClick={handleNavCollapse}
+            >
+              Teachers Login Section
+            </Link>
+          </li>
 
           <li className="nav-item">
             <Link
@@ -243,6 +270,15 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Dashboard
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/studentdata"
+              onClick={handleNavCollapse}
+            >
+              Student Data
             </Link>
           </li>
           <li className="nav-item">

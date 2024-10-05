@@ -7,14 +7,20 @@ import Loader from "@/components/Loader";
 import { firestore } from "@/context/FirbaseContext";
 import { collection, getDocs, query } from "firebase/firestore";
 import { SCHOOLNAME } from "@/modules/constants";
-
+import { useGlobalContext } from "../../context/Store";
 export default function StudentData() {
+  const {
+    studentState,
+    studentUpdateTime,
+    setStudentState,
+    setStudentUpdateTime,
+  } = useGlobalContext();
   const [showTable, setShowTable] = useState(false);
 
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
-  const userData = async () => {
+  const studentData = async () => {
     const querySnapshot = await getDocs(
       query(collection(firestore, "students"))
     );
@@ -25,11 +31,20 @@ export default function StudentData() {
     }));
     setData(data);
     setShowTable(true);
+    setStudentState(data);
+    setStudentUpdateTime(Date.now());
   };
 
   useEffect(() => {
     document.title = `${SCHOOLNAME}:Students Database`;
-    userData();
+
+    const studentDifference = (Date.now() - studentUpdateTime) / 1000 / 60 / 15;
+    if (studentDifference >= 1 || studentState.length === 0) {
+      studentData();
+    } else {
+      setData(studentState);
+      setShowTable(true);
+    }
   }, []);
   useEffect(() => {
     const result = data.filter((el) => {
@@ -40,44 +55,44 @@ export default function StudentData() {
   const columns = [
     {
       name: "Sl",
-      selector: (row, ind) => ind + 1,
+      selector: (row, ind) => data.findIndex((i) => i.id === row.id) + 1,
       width: "2",
     },
 
     {
       name: "Student Name",
       selector: (row) => row.student_name,
-      sortable: true,
-      wrap: true,
-      center: true,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
     },
     {
       name: "Class",
       selector: (row) => row.class.split(" (A)")[0],
-      sortable: true,
-      wrap: true,
-      center: true,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
     },
     {
       name: "Roll No.",
       selector: (row) => row.roll_no,
-      sortable: true,
-      wrap: true,
-      center: true,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
     },
     {
       name: "Student ID",
       selector: (row) => row.student_id,
-      sortable: true,
-      wrap: true,
-      center: true,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
     },
     {
       name: "Gurdian's Name",
       selector: (row) => row.guardians_name,
-      sortable: true,
-      wrap: true,
-      center: true,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
     },
 
     {
@@ -104,8 +119,8 @@ export default function StudentData() {
           </p>
         ),
       sortable: false,
-      wrap: true,
-      center: true,
+      wrap: +true,
+      center: +true,
     },
   ];
   return (
