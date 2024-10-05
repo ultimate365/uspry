@@ -285,8 +285,10 @@ export default function MonthlyTeachersReturn() {
                   setShowBackPage(false);
                   setTimeout(() => {
                     window.print();
-                    setShowBackPage(true);
-                  }, 2000);
+                    setTimeout(() => {
+                      setShowBackPage(true);
+                    }, 2000);
+                  }, 200);
                 }
               }}
             >
@@ -301,8 +303,10 @@ export default function MonthlyTeachersReturn() {
                   setShowFrontPage(false);
                   setTimeout(() => {
                     window.print();
-                    setShowFrontPage(true);
-                  }, 2000);
+                    setTimeout(() => {
+                      setShowFrontPage(true);
+                    }, 2000);
+                  }, 200);
                 }
               }}
             >
