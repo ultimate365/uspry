@@ -83,7 +83,7 @@ export default function Teachersreturn() {
     ReturnData[0].inspectionDate
   );
   const [showAvrAtt, setShowAvrAtt] = useState(false);
-
+  const [beforeSubmit, setBeforeSubmit] = useState(false);
   const currentDate = new Date();
   const month =
     monthNamesWithIndex[
@@ -101,21 +101,21 @@ export default function Teachersreturn() {
   };
   const [showModal, setShowModal] = useState(true);
 
+  const id = getID();
+  const entry = {
+    id,
+    month,
+    year,
+    inspectionDate,
+    teachers: filteredData,
+    students,
+    workingDays,
+    date: todayInString(),
+    remarks,
+  };
   const submitMonthlyData = async () => {
     setLoader(true);
     try {
-      const id = getID();
-      const entry = {
-        id,
-        month,
-        year,
-        inspectionDate,
-        teachers: filteredData,
-        students,
-        workingDays,
-        date: todayInString(),
-        remarks,
-      };
       await setDoc(doc(firestore, "monthlyTeachersReturn", id), entry);
       setReturnState([...returnState, entry]);
       toast.success("Monthly Data Submitted Successfully!", {
@@ -147,13 +147,7 @@ export default function Teachersreturn() {
             type="button"
             id="launchModalTrigger"
             className="btn btn-sm btn-primary m-1"
-            onClick={() => {
-              if (
-                window.confirm("Are you sure, you want to Submit this Data?")
-              ) {
-                submitMonthlyData();
-              }
-            }}
+            onClick={() => setBeforeSubmit(true)}
           >
             Submit Return Data
           </button>
@@ -174,6 +168,125 @@ export default function Teachersreturn() {
           </button>
         </div>
       </div>
+
+      {beforeSubmit && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-xl flex-wrap text-center">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                  Showing Data to Be Submitted
+                </h1>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="mb-3 mx-auto">
+                    <h3 htmlFor="rank" className="text-danger">
+                      ***Data you are Going to Submit
+                    </h3>
+                    <h5>ID:{entry?.id}</h5>
+                    <h5>Year:{entry?.year}</h5>
+                    <h5>Month:{entry?.month}</h5>
+                    <h5>InspectionDate:{entry?.inspectionDate}</h5>
+                    <h5>WorkingDays:{entry?.workingDays}</h5>
+                    <h5>Date:{entry?.date}</h5>
+                    <h5>Remarks:{entry?.remarks}</h5>
+                    <div className="my-2">
+                      <h5>Teachers:</h5>
+                      {entry?.teachers.map((teacher, index) => (
+                        <div key={index}>
+                          <p>Name:{teacher?.tname}</p>
+                          <p>
+                            Data:{JSON.stringify(teacher).split(`"`).join("")}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="my-2">
+                      <h5>Students:</h5>
+                      <h5>PP:</h5>
+                      <p className="text-center text-break">
+                        {JSON.stringify(entry?.students?.pp)
+                          .split(`"`)
+                          .join("")}
+                      </p>
+                      <h5>Class I:</h5>
+                      <p className="text-center text-break">
+                        {JSON.stringify(entry?.students?.i).split(`"`).join("")}
+                      </p>
+                      <h5>Class II:</h5>
+                      <p className="text-center text-break">
+                        {JSON.stringify(entry?.students?.ii)
+                          .split(`"`)
+                          .join("")}
+                      </p>
+                      <h5>Class III:</h5>
+                      <p className="text-center text-break">
+                        {JSON.stringify(entry?.students?.iii)
+                          .split(`"`)
+                          .join("")}
+                      </p>
+                      <h5>Class IV:</h5>
+                      <p className="text-center text-break">
+                        {JSON.stringify(entry?.students?.iv)
+                          .split(`"`)
+                          .join("")}
+                      </p>
+                      {entry?.students?.v?.Total !== "-" && (
+                        <div>
+                          <h5>Class V:</h5>
+                          <p className="text-center text-break">
+                            {JSON.stringify(entry?.students?.iv)
+                              .split(`"`)
+                              .join("")}
+                          </p>
+                        </div>
+                      )}
+                      <h5>Total:</h5>
+                      <p className="text-center text-break">
+                        {JSON.stringify(entry?.students?.total)
+                          .split(`"`)
+                          .join("")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-dark"
+                  onClick={() => setBeforeSubmit(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure, you want to Submit this Data?"
+                      )
+                    ) {
+                      setBeforeSubmit(false);
+                      submitMonthlyData();
+                    }
+                  }}
+                >
+                  Final Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal ? (
         <div
@@ -2235,12 +2348,12 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               pp: {
-                                ...students.pp,
+                                ...students?.pp,
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
                               total: {
-                                ...students.total,
+                                ...students?.total,
                                 averageAttendance:
                                   parseInt(value) +
                                   students.i.averageAttendance +
@@ -2269,12 +2382,12 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               i: {
-                                ...students.i,
+                                ...students?.i,
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
                               total: {
-                                ...students.total,
+                                ...students?.total,
                                 averageAttendance:
                                   students.pp.averageAttendance +
                                   parseInt(value) +
@@ -2304,12 +2417,12 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               ii: {
-                                ...students.ii,
+                                ...students?.ii,
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
                               total: {
-                                ...students.total,
+                                ...students?.total,
                                 averageAttendance:
                                   students.pp.averageAttendance +
                                   students.i.averageAttendance +
@@ -2338,12 +2451,12 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               iii: {
-                                ...students.iii,
+                                ...students?.iii,
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
                               total: {
-                                ...students.total,
+                                ...students?.total,
                                 averageAttendance:
                                   students.pp.averageAttendance +
                                   students.i.averageAttendance +
@@ -2373,12 +2486,12 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               iv: {
-                                ...students.iv,
+                                ...students?.iv,
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
                               total: {
-                                ...students.total,
+                                ...students?.total,
                                 averageAttendance:
                                   students.pp.averageAttendance +
                                   students.i.averageAttendance +
@@ -2407,12 +2520,12 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               v: {
-                                ...students.v,
+                                ...students?.v,
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
                               total: {
-                                ...students.total,
+                                ...students?.total,
                                 averageAttendance:
                                   students.pp.averageAttendance +
                                   students.i.averageAttendance +
@@ -2441,7 +2554,7 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               total: {
-                                ...students.total, // Corrected this to use `students.total`
+                                ...students?.total, // Corrected this to use `students.total`
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },

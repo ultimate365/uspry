@@ -59,7 +59,10 @@ export default function MonthlyTeachersReturn() {
   const [showRemark, setShowRemark] = useState(true);
   const [inspectionDate, setInspectionDate] = useState("");
   const [showFrontPage, setShowFrontPage] = useState(true);
-  const [showBackPage, setShowBackPage] = useState(true);
+  const [showBackPage, setShowBackPage] = useState(false);
+  const [frontPageZoom, setFrontPageZoom] = useState(93);
+  const [backPageZoom, setBackPageZoom] = useState(80);
+  const [showZoom, setShowZoom] = useState(false);
   const [workingDays, setWorkingDays] = useState(24);
   const [filteredData, setFilteredData] = useState();
   const [students, setStudents] = useState();
@@ -253,7 +256,7 @@ export default function MonthlyTeachersReturn() {
           )}
         </div>
         {showData && (
-          <div>
+          <div className="allButtons">
             <button
               type="button"
               className="btn btn-primary m-2"
@@ -266,6 +269,14 @@ export default function MonthlyTeachersReturn() {
             >
               Download {month} {year} Return Data
             </button>
+
+            <button
+              type="button"
+              className="btn btn-warning m-2"
+              onClick={() => setShowZoom(true)}
+            >
+              Set Page Zoom
+            </button>
             <button
               type="button"
               className="btn btn-success m-2"
@@ -277,41 +288,34 @@ export default function MonthlyTeachersReturn() {
             >
               Print
             </button>
-            <button
-              className={`btn btn-primary m-2`}
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  setShowBackPage(false);
-                  setTimeout(() => {
-                    window.print();
-                    setTimeout(() => {
-                      setShowBackPage(true);
-                    }, 2000);
-                  }, 200);
-                }
-              }}
-            >
-              Print Front Page
-            </button>
-            <button
-              className={`btn btn-info m-2`}
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  setShowBackPage(true);
-                  setShowFrontPage(false);
-                  setTimeout(() => {
-                    window.print();
-                    setTimeout(() => {
-                      setShowFrontPage(true);
-                    }, 2000);
-                  }, 200);
-                }
-              }}
-            >
-              Print Back Page
-            </button>
+            {showBackPage && (
+              <button
+                className={`btn btn-dark m-2`}
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    setShowFrontPage(true);
+                    setShowBackPage(false);
+                  }
+                }}
+              >
+                Show Front Page
+              </button>
+            )}
+            {showFrontPage && (
+              <button
+                className={`btn btn-info m-2`}
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    setShowBackPage(true);
+                    setShowFrontPage(false);
+                  }
+                }}
+              >
+                Show Back Page
+              </button>
+            )}
             {remarks.length > 0 && (
               <button
                 className={`btn btn-primary m-2`}
@@ -325,6 +329,74 @@ export default function MonthlyTeachersReturn() {
             )}
           </div>
         )}
+
+        {showData && showZoom && (
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Set Page Zoom
+                  </h1>
+                </div>
+                <div className="modal-body">
+                  <div className="col-md-6 mx-auto my-2 noprint">
+                    <div className="mb-3 mx-auto">
+                      <h5 htmlFor="rank" className="text-danger">
+                        ***Write percent without "%" e.g.(80, 90)
+                      </h5>
+                      <input
+                        type="number"
+                        className="form-control m-2"
+                        id="frontPageZoom"
+                        name="frontPageZoom"
+                        value={frontPageZoom}
+                        onChange={(e) => {
+                          if (e.target.value !== "") {
+                            setFrontPageZoom(parseInt(e.target.value));
+                          } else {
+                            setFrontPageZoom("");
+                          }
+                        }}
+                      />
+                      <input
+                        type="number"
+                        className="form-control m-2"
+                        id="frontPageZoom"
+                        name="frontPageZoom"
+                        value={backPageZoom}
+                        onChange={(e) => {
+                          if (e.target.value !== "") {
+                            setBackPageZoom(parseInt(e.target.value));
+                          } else {
+                            setBackPageZoom("");
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  {(frontPageZoom > 0) & (backPageZoom > 0) && (
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => setShowZoom(false)}
+                    >
+                      Save
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       {loader && <Loader />}
       {showData && (
@@ -332,7 +404,7 @@ export default function MonthlyTeachersReturn() {
           {showFrontPage && (
             <div
               className="mx-auto nobreak p-2"
-              style={{ border: "2px solid", zoom: 0.93 }}
+              style={{ border: "2px solid", zoom: frontPageZoom / 100 || 0.93 }}
             >
               <div className="p-2">
                 <div>
@@ -869,7 +941,7 @@ export default function MonthlyTeachersReturn() {
           {showBackPage && (
             <div
               className="mx-auto  nobreak p-2"
-              style={{ border: "2px solid", zoom: 0.8 }}
+              style={{ border: "2px solid", zoom: backPageZoom / 100 || 0.8 }}
             >
               <div className="mx-auto" style={{ width: "100%" }}>
                 <h4 className="dejavu fs-5">
