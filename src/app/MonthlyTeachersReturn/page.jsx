@@ -166,7 +166,6 @@ export default function MonthlyTeachersReturn() {
       getMonthlyData();
     } else {
       calledData(returnState);
-      console.log(returnState);
     }
     //eslint-disable-next-line
   }, []);

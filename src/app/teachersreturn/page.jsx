@@ -2,6 +2,7 @@
 import {
   createDownloadLink,
   monthNamesWithIndex,
+  sortMonthwise,
   todayInString,
   uniqArray,
 } from "@/modules/calculatefunctions";
@@ -41,7 +42,6 @@ import {
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import ReturnData from "./teacherReturn.json";
 export default function Teachersreturn() {
   const { state, returnState, setReturnState } = useGlobalContext();
 
@@ -75,13 +75,11 @@ export default function Teachersreturn() {
     WOPay: "",
     workingDays: workingDays,
   });
-
-  const [teachers, setTeachers] = useState(ReturnData[0].teachers);
-  const [filteredData, setFilteredData] = useState(ReturnData[0].teachers);
-  const [students, setStudents] = useState(ReturnData[0].students);
-  const [inspectionDate, setInspectionDate] = useState(
-    ReturnData[0].inspectionDate
-  );
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [teachers, setTeachers] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [students, setStudents] = useState({});
+  const [inspectionDate, setInspectionDate] = useState("");
   const [showAvrAtt, setShowAvrAtt] = useState(false);
   const [beforeSubmit, setBeforeSubmit] = useState(false);
   const currentDate = new Date();
@@ -100,7 +98,11 @@ export default function Teachersreturn() {
     return `${month}-${year}`;
   };
   const [showModal, setShowModal] = useState(true);
-
+  const [yearArray, setYearArray] = useState([]);
+  const [allEnry, setAllEnry] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+  const [filteredEntry, setFilteredEntry] = useState([]);
+  const [moreFilteredEntry, setMoreFilteredEntry] = useState([]);
   const id = getID();
   const entry = {
     id,
@@ -113,6 +115,59 @@ export default function Teachersreturn() {
     date: todayInString(),
     remarks,
   };
+
+  const getMonthlyData = async () => {
+    setLoader(true);
+    const querySnapshot = await getDocs(
+      query(collection(firestore, "monthlyTeachersReturn"))
+    );
+    const data = querySnapshot.docs.map((doc) => ({
+      // doc.data() is never undefined for query doc snapshots
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const monthwiseSorted = sortMonthwise(data);
+    setReturnState(monthwiseSorted);
+    setLoader(false);
+    calledData(monthwiseSorted);
+    appedData(monthwiseSorted[monthwiseSorted.length - 1]);
+  };
+  const appedData = (data) => {
+    setTeachers(data.teachers);
+    setFilteredData(data.teachers);
+    setStudents(data.students);
+    setInspectionDate(data.inspectionDate);
+    setWorkingDays(data.workingDays);
+  };
+  const calledData = (array) => {
+    let x = [];
+    array.map((entry) => {
+      const entryYear = entry.id.split("-")[1];
+      x.push(entryYear);
+      x = uniqArray(x);
+      x = x.sort((a, b) => a - b);
+    });
+    setYearArray(x);
+
+    setLoader(false);
+    setAllEnry(array);
+    setFilteredEntry(array);
+  };
+
+  useEffect(() => {
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unathorized access");
+    }
+    if (returnState.length === 0) {
+      getMonthlyData();
+    } else {
+      calledData(returnState);
+      appedData(returnState[returnState.length - 1]);
+    }
+    //eslint-disable-next-line
+  }, []);
+
   const submitMonthlyData = async () => {
     setLoader(true);
     try {
@@ -162,7 +217,11 @@ export default function Teachersreturn() {
           <button
             type="button"
             className="btn btn-sm btn-dark m-1"
-            onClick={() => setShowAvrAtt(true)}
+            onClick={() => {
+              setShowAvrAtt(true);
+              setShowBackPage(false);
+              setShowFrontPage(false);
+            }}
           >
             Edit Average Attaindance
           </button>
@@ -476,10 +535,11 @@ export default function Teachersreturn() {
                       <button
                         type="button"
                         className="btn btn-primary btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"
                         onClick={() => {
                           setEditTeacher(teacher);
+                          setShowEditForm(true);
+                          setShowBackPage(false);
+                          setShowFrontPage(false);
                         }}
                       >
                         Edit
@@ -490,271 +550,277 @@ export default function Teachersreturn() {
               </tbody>
             </table>
           </div>
-          <div
-            className="modal fade"
-            id="staticBackdrop"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            tabIndex="-1"
-            aria-labelledby="staticBackdropLabel"
-            aria-hidden="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                    {editTeacher?.tname}
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <form>
-                    <div className="mb-3">
-                      <h6 htmlFor="tname" className="form-label">
-                        Name: {editTeacher?.tname}
-                      </h6>
-                      <h6 htmlFor="rank" className="form-label">
-                        Rank: {editTeacher?.rank}
-                      </h6>
-                      <h6 htmlFor="rank" className="form-label text-danger">
-                        *** Please Set This Month&#8217;s Working Days First
-                      </h6>
-                      <h6 htmlFor="rank" className="form-label text-danger">
-                        *** Total Working Days of This Month is {workingDays}
-                      </h6>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        CL This Month
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="clThisMonth"
-                        name="clThisMonth"
-                        value={editTeacher?.clThisMonth}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisMonth: parseInt(e.target.value),
-                              workingDays:
-                                workingDays - parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisMonth: "",
-                              workingDays: workingDays,
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        CL This Year
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="clThisYear"
-                        name="clThisYear"
-                        value={editTeacher?.clThisYear}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisYear: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              clThisYear: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Other Leave This Month
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="olThisMonth"
-                        name="olThisMonth"
-                        value={editTeacher?.olThisMonth}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olThisMonth: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olThisMonth: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Other Leave This Year
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="olThisYear"
-                        name="olThisYear"
-                        value={editTeacher?.olThisYear}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olthisYear: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              olThisYear: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Full Pay
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="fullPay"
-                        name="fullPay"
-                        value={editTeacher?.fullPay}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              fullPay: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              fullPay: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Half Pay
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="halfPay"
-                        name="halfPay"
-                        value={editTeacher?.halfPay}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              halfPay: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              halfPay: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="rank" className="form-label">
-                        Without Pay
-                      </label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="WOPay"
-                        name="WOPay"
-                        value={editTeacher?.WOPay}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setEditTeacher({
-                              ...editTeacher,
-                              WOPay: parseInt(e.target.value),
-                            });
-                          } else {
-                            setEditTeacher({
-                              ...editTeacher,
-                              WOPay: "",
-                            });
-                          }
-                        }}
-                      />
-                    </div>
-                  </form>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-bs-dismiss="modal"
-                    onClick={() => {
-                      const updatedArray = filteredData
-                        .map((t) =>
-                          t.id === editTeacher?.id ? editTeacher : t
-                        )
-                        .sort((a, b) => a.rank - b.rank);
-                      setFilteredData(updatedArray);
-                      setEditTeacher({
-                        cast: "",
-                        tname: "",
-                        training: "",
-                        education: "",
-                        dor: "",
-                        desig: "",
-                        rank: "",
-                        dojnow: "",
-                        dob: "",
-                        id: "",
-                        doj: "",
-                        clThisMonth: "",
-                        clThisYear: "",
-                        olThisMonth: "",
-                        olThisYear: "",
-                        fullPay: "",
-                        halfPay: "",
-                        WOPay: "",
-                      });
-                    }}
-                  >
-                    Submit
-                  </button>
+          {showEditForm && (
+            <div
+              className="modal fade show"
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: "block" }}
+              aria-modal="true"
+            >
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                      {editTeacher?.tname}
+                    </h1>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <form>
+                      <div className="mb-3">
+                        <h6 htmlFor="tname" className="form-label">
+                          Name: {editTeacher?.tname}
+                        </h6>
+                        <h6 htmlFor="rank" className="form-label">
+                          Rank: {editTeacher?.rank}
+                        </h6>
+                        <h6 htmlFor="rank" className="form-label text-danger">
+                          *** Please Set This Month&#8217;s Working Days First
+                        </h6>
+                        <h6 htmlFor="rank" className="form-label text-danger">
+                          *** Total Working Days of This Month is {workingDays}
+                        </h6>
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          CL This Month
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="clThisMonth"
+                          name="clThisMonth"
+                          value={editTeacher?.clThisMonth}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                clThisMonth: parseInt(e.target.value),
+                                workingDays:
+                                  workingDays - parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                clThisMonth: "",
+                                workingDays: workingDays,
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          CL This Year
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="clThisYear"
+                          name="clThisYear"
+                          value={editTeacher?.clThisYear}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                clThisYear: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                clThisYear: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Other Leave This Month
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="olThisMonth"
+                          name="olThisMonth"
+                          value={editTeacher?.olThisMonth}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                olThisMonth: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                olThisMonth: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Other Leave This Year
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="olThisYear"
+                          name="olThisYear"
+                          value={editTeacher?.olThisYear}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                olthisYear: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                olThisYear: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Full Pay
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="fullPay"
+                          name="fullPay"
+                          value={editTeacher?.fullPay}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                fullPay: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                fullPay: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Half Pay
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="halfPay"
+                          name="halfPay"
+                          value={editTeacher?.halfPay}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                halfPay: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                halfPay: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Without Pay
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="WOPay"
+                          name="WOPay"
+                          value={editTeacher?.WOPay}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                WOPay: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                WOPay: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        setShowEditForm(false);
+                        setShowBackPage(true);
+                        setShowFrontPage(true);
+                      }}
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        const updatedArray = filteredData
+                          .map((t) =>
+                            t.id === editTeacher?.id ? editTeacher : t
+                          )
+                          .sort((a, b) => a.rank - b.rank);
+                        setFilteredData(updatedArray);
+                        setEditTeacher({
+                          cast: "",
+                          tname: "",
+                          training: "",
+                          education: "",
+                          dor: "",
+                          desig: "",
+                          rank: "",
+                          dojnow: "",
+                          dob: "",
+                          id: "",
+                          doj: "",
+                          clThisMonth: "",
+                          clThisYear: "",
+                          olThisMonth: "",
+                          olThisYear: "",
+                          fullPay: "",
+                          halfPay: "",
+                          WOPay: "",
+                        });
+                        setShowEditForm(false);
+                        setShowBackPage(true);
+                        setShowFrontPage(true);
+                      }}
+                    >
+                      Submit
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
           {showFrontPage && (
             <div
               className="mx-auto nobreak p-2"
@@ -2568,7 +2634,11 @@ export default function Teachersreturn() {
                     <button
                       type="button"
                       className="btn btn-success"
-                      onClick={() => setShowAvrAtt(false)}
+                      onClick={() => {
+                        setShowAvrAtt(false);
+                        setShowBackPage(true);
+                        setShowFrontPage(true);
+                      }}
                     >
                       Save
                     </button>
