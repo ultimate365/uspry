@@ -182,6 +182,76 @@ export default function MonthlyTeachersReturn() {
         >
           Download Monthly Return Data
         </button>
+        {showZoom && (
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-sm">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Set Page Zoom
+                  </h1>
+                </div>
+                <div className="modal-body">
+                  <div className="mx-auto my-2 noprint">
+                    <div className="mb-3 mx-auto">
+                      <h5 htmlFor="rank" className="text-danger">
+                        ***Write percent without "%" e.g.(80, 90)
+                      </h5>
+                      <input
+                        type="number"
+                        className="form-control m-2 col-md-4"
+                        id="frontPageZoom"
+                        name="frontPageZoom"
+                        value={frontPageZoom}
+                        onChange={(e) => {
+                          if (e.target.value !== "") {
+                            setFrontPageZoom(parseInt(e.target.value));
+                          } else {
+                            setFrontPageZoom("");
+                          }
+                        }}
+                      />
+                      <input
+                        type="number"
+                        className="form-control m-2 col-md-4"
+                        id="frontPageZoom"
+                        name="frontPageZoom"
+                        value={backPageZoom}
+                        onChange={(e) => {
+                          if (e.target.value !== "") {
+                            setBackPageZoom(parseInt(e.target.value));
+                          } else {
+                            setBackPageZoom("");
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  {(frontPageZoom > 0) & (backPageZoom > 0) && (
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => {
+                        setShowZoom(false);
+                        setShowData(true);
+                      }}
+                    >
+                      Save
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div>
           <h4>Select Year</h4>
           <div className="col-md-4 mx-auto mb-3 noprint">
@@ -273,7 +343,10 @@ export default function MonthlyTeachersReturn() {
             <button
               type="button"
               className="btn btn-warning m-2"
-              onClick={() => setShowZoom(true)}
+              onClick={() => {
+                setShowZoom(true);
+                setShowData(false);
+              }}
             >
               Set Page Zoom
             </button>
@@ -327,74 +400,6 @@ export default function MonthlyTeachersReturn() {
                 {showRemark ? "Hide Remark" : "Show Remark"}
               </button>
             )}
-          </div>
-        )}
-
-        {showData && showZoom && (
-          <div
-            className="modal fade show"
-            tabIndex="-1"
-            role="dialog"
-            style={{ display: "block" }}
-            aria-modal="true"
-          >
-            <div className="modal-dialog">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                    Set Page Zoom
-                  </h1>
-                </div>
-                <div className="modal-body">
-                  <div className="col-md-6 mx-auto my-2 noprint">
-                    <div className="mb-3 mx-auto">
-                      <h5 htmlFor="rank" className="text-danger">
-                        ***Write percent without "%" e.g.(80, 90)
-                      </h5>
-                      <input
-                        type="number"
-                        className="form-control m-2"
-                        id="frontPageZoom"
-                        name="frontPageZoom"
-                        value={frontPageZoom}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setFrontPageZoom(parseInt(e.target.value));
-                          } else {
-                            setFrontPageZoom("");
-                          }
-                        }}
-                      />
-                      <input
-                        type="number"
-                        className="form-control m-2"
-                        id="frontPageZoom"
-                        name="frontPageZoom"
-                        value={backPageZoom}
-                        onChange={(e) => {
-                          if (e.target.value !== "") {
-                            setBackPageZoom(parseInt(e.target.value));
-                          } else {
-                            setBackPageZoom("");
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  {(frontPageZoom > 0) & (backPageZoom > 0) && (
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={() => setShowZoom(false)}
-                    >
-                      Save
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>
