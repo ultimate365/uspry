@@ -28,8 +28,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [userNameErr, setUserNameErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
-  const [studentIDERR, setStudentIDERR] = useState("");
-  const [dobErr, setDobErr] = useState("");
+  const [showTip, setShowTip] = useState(false);
   const [loginType, setLoginType] = useState(true);
   const [studentID, setStudentID] = useState("");
   const today = new Date();
@@ -364,13 +363,16 @@ export default function Login() {
                 <h4 className="text-black timesNewRoman">
                   Student&#8217;s Login
                 </h4>
-                <div className="mb-3">
-                  <span className="form-label my-3 fs-6">
-                    Last 8 Digits of Student ID, after 028793
+                <label className="form-label my-3 fs-5">
+                  Last 8 Digits of Student ID
+                </label>
+                <div className="input-group mb-3">
+                  <span className="input-group-text" id="basic-addon1">
+                    028793
                   </span>
                   <input
                     type="text"
-                    className="form-control my-2"
+                    className="form-control"
                     id="studentID"
                     value={studentID}
                     onChange={(e) => setStudentID(e.target.value)}
@@ -378,7 +380,7 @@ export default function Login() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">
+                  <label className="form-label fs-5">
                     Student&#8217;s Date of Birth *
                   </label>
                   <input
@@ -390,8 +392,17 @@ export default function Login() {
                     onChange={(e) => setDob(getSubmitDateInput(e.target.value))}
                   />
                 </div>
-                <button type="submit" className="btn btn-primary">
-                  Login
+                <div className="mb-3">
+                  <button type="submit" className="btn btn-primary">
+                    Login
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-dark"
+                  onClick={() => router.push("/studentdata")}
+                >
+                  To Know Student ID Click Here
                 </button>
               </form>
             </div>
@@ -437,10 +448,64 @@ export default function Login() {
                 <button type="submit" className="btn btn-primary">
                   Login
                 </button>
+                <div className="my-2">
+                  <p className="text-white fs-4">
+                    {" "}
+                    Forgot Username or Password?{" "}
+                  </p>
+                  <button
+                    type="button"
+                    className="btn btn-dark"
+                    onClick={() => setShowTip(true)}
+                  >
+                    Click Here
+                  </button>
+                </div>
               </form>
             </div>
           )}
         </div>
+        {showTip && (
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-sm flex-wrap text-center">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Teacher&#8217;s Login Tip
+                  </h1>
+                </div>
+                <div className="modal-body">
+                  <div className="mx-auto my-2 noprint">
+                    <div className="mb-3 mx-auto">
+                      <h6 htmlFor="rank" className="text-danger text-break">
+                        Your Default Username is Your Employeed ID and Your
+                        Default password is your PAN
+                      </h6>
+                      <h6 htmlFor="rank" className="text-danger text-break">
+                        However You can Chage it anytime after login
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-dark"
+                    onClick={() => setShowTip(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
