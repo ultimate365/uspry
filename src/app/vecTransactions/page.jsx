@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { useGlobalContext } from "../../context/Store";
 import Loader from "@/components/Loader";
+import CustomInput from "@/components/CustomInput";
 import {
   btnArray,
   createDownloadLink,
@@ -25,10 +26,10 @@ import {
   todayInString,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
+import { type } from "os";
 
 export default function VecTransactions() {
-  const { accountState, setAccountState, stateObject, setStateObject, state } =
-    useGlobalContext();
+  const { stateObject, setStateObject, state } = useGlobalContext();
   const access = state?.ACCESS;
   const router = useRouter();
 
@@ -43,20 +44,10 @@ export default function VecTransactions() {
     purpose: "",
     type: "DEBIT",
     date: todayInString(),
-    openingBalance: stateObject?.balance,
-    closingBalance: stateObject?.balance,
+    openingBalance: parseFloat(stateObject?.balance),
+    closingBalance: parseFloat(stateObject?.balance),
   });
   const [editVecObj, setEditVecObj] = useState({
-    id: "",
-    accountNumber: "",
-    amount: "",
-    purpose: "",
-    type: "",
-    date: todayInString(),
-    openingBalance: "",
-    closingBalance: "",
-  });
-  const [orgVecObj, setOrgVecObj] = useState({
     id: "",
     accountNumber: "",
     amount: "",
@@ -110,8 +101,8 @@ export default function VecTransactions() {
       purpose: "",
       type: "DEBIT",
       date: todayInString(),
-      openingBalance: stateObject?.balance,
-      closingBalance: stateObject?.balance,
+      openingBalance: parseFloat(stateObject?.balance),
+      closingBalance: parseFloat(stateObject?.balance),
     });
   };
 
@@ -385,7 +376,6 @@ export default function VecTransactions() {
                       setShowVECEnrty(false);
                       setShowVECEdit(true);
                       setEditVecObj(transaction);
-                      setOrgVecObj(transaction);
                     }}
                   >
                     Edit
@@ -427,12 +417,7 @@ export default function VecTransactions() {
                     value={vecObj.id}
                     placeholder="Enter id"
                     disabled={true}
-                    onChange={(e) => {
-                      setVecObj({
-                        ...vecObj,
-                        id: e.target.value,
-                      });
-                    }}
+                    readOnly
                   />
                 </div>
               )}
@@ -447,43 +432,60 @@ export default function VecTransactions() {
                   value={vecObj.openingBalance}
                   placeholder="Enter Opening balance"
                   disabled={true}
+                  readOnly={true}
                   onChange={(e) => {
-                    setVecObj({
-                      ...vecObj,
-                      openingBalance: parseFloat(e.target.value),
-                    });
+                    toast.error(
+                      "Can't change the opening balance, from this section"
+                    );
                   }}
                 />
               </div>
 
-              <div className="mb-3">
-                <label htmlFor="vec_amount" className="form-label">
-                  Amount
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_amount"
-                  value={vecObj.amount}
-                  placeholder="Enter amount"
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setVecObj({
-                        ...vecObj,
-                        amount: parseFloat(e.target.value),
-                        closingBalance:
-                          parseFloat(e.target.value) + vecObj.openingBalance,
-                      });
-                    } else {
-                      setVecObj({
-                        ...vecObj,
-                        amount: "",
-                        closingBalance: vecObj.openingBalance,
-                      });
-                    }
-                  }}
-                />
-              </div>
+              <CustomInput
+                title={"Purpose"}
+                id="vec_purpose"
+                value={vecObj.purpose}
+                placeholder="Enter purpose"
+                onChange={(e) => {
+                  setVecObj({
+                    ...vecObj,
+                    purpose: e.target.value,
+                    id: e.target.value.split(" ").join("-") + "-" + getId(),
+                  });
+                }}
+              />
+
+              <CustomInput
+                title={"Amount"}
+                id="vec_amount"
+                value={vecObj.amount}
+                placeholder="Enter amount"
+                type={"number"}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setVecObj({
+                      ...vecObj,
+                      amount: parseFloat(e.target.value),
+                      closingBalance:
+                        vecObj.type === "DEBIT"
+                          ? parseFloat(
+                              round2dec(
+                                vecObj.openingBalance -
+                                  parseFloat(e.target.value)
+                              )
+                            )
+                          : parseFloat(e.target.value) + vecObj.openingBalance,
+                    });
+                  } else {
+                    setVecObj({
+                      ...vecObj,
+                      amount: "",
+                      closingBalance: vecObj.openingBalance,
+                    });
+                  }
+                }}
+              />
+
               <div className="mb-3">
                 <label htmlFor="type" className="form-label">
                   Type
@@ -534,25 +536,6 @@ export default function VecTransactions() {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="vec_purpose" className="form-label">
-                  Purpose
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_purpose"
-                  value={vecObj.purpose}
-                  placeholder="Enter purpose"
-                  onChange={(e) => {
-                    setVecObj({
-                      ...vecObj,
-                      purpose: e.target.value,
-                      id: e.target.value.split(" ").join("-") + "-" + getId(),
-                    });
-                  }}
-                />
-              </div>
-              <div className="mb-3">
                 <label htmlFor="vec_balance" className="form-label">
                   Closing Balance
                 </label>
@@ -562,12 +545,7 @@ export default function VecTransactions() {
                   id="vec_balance"
                   value={vecObj.closingBalance}
                   disabled={true}
-                  onChange={(e) => {
-                    setVecObj({
-                      ...vecObj,
-                      closingBalance: parseFloat(e.target.value),
-                    });
-                  }}
+                  readOnly={true}
                 />
               </div>
 
@@ -586,7 +564,19 @@ export default function VecTransactions() {
                 <button
                   type="button"
                   className="btn btn-danger m-2"
-                  onClick={() => setShowVECEnrty(false)}
+                  onClick={() => {
+                    setShowVECEnrty(false);
+                    setVecObj({
+                      id: "",
+                      accountNumber: stateObject?.accountNumber,
+                      amount: "",
+                      purpose: "",
+                      type: "DEBIT",
+                      date: todayInString(),
+                      openingBalance: parseFloat(stateObject?.balance),
+                      closingBalance: parseFloat(stateObject?.balance),
+                    });
+                  }}
                 >
                   Close
                 </button>

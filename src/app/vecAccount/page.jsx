@@ -48,7 +48,7 @@ export default function Accounts() {
     setAllAccounts(data);
   };
 
-  const updateAccount = async (account) => {
+  const updateAccount = async () => {
     try {
       await updateDoc(doc(firestore, "vecaccount", account.accountNumber), {
         accountName: account.accountName,
@@ -253,7 +253,7 @@ export default function Accounts() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              updateAccount(account);
+              updateAccount();
             }}
           >
             <div className="form-group">
