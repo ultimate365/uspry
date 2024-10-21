@@ -26,7 +26,6 @@ import {
   todayInString,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
-import { type } from "os";
 
 export default function VecTransactions() {
   const { stateObject, setStateObject, state } = useGlobalContext();
@@ -108,31 +107,42 @@ export default function VecTransactions() {
 
   const delTransaction = async (transaction) => {
     setLoader(true);
-    await deleteDoc(doc(firestore, "vectransactions", transaction.id));
-    const thisAccount = stateObject;
-    thisAccount.balance =
-      transaction.type === "DEBIT"
-        ? round2dec(
-            parseFloat(stateObject.balance) + parseFloat(transaction.amount)
-          )
-        : round2dec(
-            parseFloat(stateObject.balance) - parseFloat(transaction.amount)
-          );
-    await updateDoc(doc(firestore, "vecaccount", stateObject.accountNumber), {
-      balance:
-        transaction.type === "DEBIT"
-          ? round2dec(
-              parseFloat(stateObject.balance) + parseFloat(transaction.amount)
-            )
-          : round2dec(
-              parseFloat(stateObject.balance) - parseFloat(transaction.amount)
-            ),
-    });
-
-    setStateObject(thisAccount);
-    toast.success("Transaction deleted successfully");
-    setLoader(false);
-    getTransactions();
+    await deleteDoc(doc(firestore, "vectransactions", transaction.id))
+      .then(async () => {
+        const thisAccount = stateObject;
+        thisAccount.balance =
+          transaction.type === "DEBIT"
+            ? parseFloat(
+                round2dec(
+                  parseFloat(stateObject.balance) +
+                    parseFloat(transaction.amount)
+                )
+              )
+            : parseFloat(
+                round2dec(
+                  parseFloat(stateObject.balance) -
+                    parseFloat(transaction.amount)
+                )
+              );
+        await updateDoc(
+          doc(firestore, "vecaccount", stateObject.accountNumber),
+          thisAccount
+        )
+          .then(() => {
+            setStateObject(thisAccount);
+            toast.success("Account Updated successfully");
+            setLoader(false);
+            getTransactions();
+          })
+          .catch((err) => {
+            setLoader(false);
+            toast.error("Account Update Failed!");
+          });
+      })
+      .catch((err) => {
+        setLoader(false);
+        toast.error("Transaction Deletion Failed!");
+      });
   };
 
   const handleVECSubmit = async (e) => {
@@ -422,6 +432,54 @@ export default function VecTransactions() {
                 </div>
               )}
               <div className="mb-3">
+                <label htmlFor="vec_date" className="form-label">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="vec_date"
+                  defaultValue={getCurrentDateInput(vecObj.date)}
+                  onChange={(e) => {
+                    setVecObj({
+                      ...vecObj,
+                      date: getSubmitDateInput(e.target.value),
+                    });
+                  }}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="type" className="form-label">
+                  Type
+                </label>
+                <select
+                  className="form-select"
+                  id="type"
+                  value={vecObj.type}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "DEBIT") {
+                      setVecObj({
+                        ...vecObj,
+                        type: value,
+                        closingBalance: round2dec(
+                          stateObject.balance - vecObj.amount
+                        ),
+                      });
+                    } else {
+                      setVecObj({
+                        ...vecObj,
+                        type: value,
+                        closingBalance: stateObject.balance + vecObj.amount,
+                      });
+                    }
+                  }}
+                >
+                  <option value="CREDIT">CREDIT</option>
+                  <option value="DEBIT">DEBIT</option>
+                </select>
+              </div>
+              <div className="mb-3">
                 <label htmlFor="vec_balance" className="form-label">
                   Opening Balance
                 </label>
@@ -444,13 +502,25 @@ export default function VecTransactions() {
               <CustomInput
                 title={"Purpose"}
                 id="vec_purpose"
+                type={"text"}
                 value={vecObj.purpose}
                 placeholder="Enter purpose"
                 onChange={(e) => {
+                  console.log(vecObj.date);
+                  const inpMonth = parseInt(vecObj.date?.split("-")[1]) - 1;
+                  const inpYear = vecObj.date?.split("-")[2];
+                  const textMonth = monthNamesWithIndex[inpMonth].monthName;
+                  let newId = `${textMonth}-${inpYear}`;
+                  const checkDuplicate = allTransactions.filter(
+                    (transaction) => transaction.id === newId
+                  );
+                  if (checkDuplicate.length > 0) {
+                    newId = newId + "-" + new Date().getMinutes().toString();
+                  }
                   setVecObj({
                     ...vecObj,
                     purpose: e.target.value,
-                    id: e.target.value.split(" ").join("-") + "-" + getId(),
+                    id: e.target.value.split(" ").join("-") + "-" + newId,
                   });
                 }}
               />
@@ -487,55 +557,6 @@ export default function VecTransactions() {
               />
 
               <div className="mb-3">
-                <label htmlFor="type" className="form-label">
-                  Type
-                </label>
-                <select
-                  className="form-select"
-                  id="type"
-                  value={vecObj.type}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "DEBIT") {
-                      setVecObj({
-                        ...vecObj,
-                        type: value,
-                        closingBalance: round2dec(
-                          stateObject.balance - vecObj.amount
-                        ),
-                      });
-                    } else {
-                      setVecObj({
-                        ...vecObj,
-                        type: value,
-                        closingBalance: stateObject.balance + vecObj.amount,
-                      });
-                    }
-                  }}
-                >
-                  <option value="CREDIT">CREDIT</option>
-                  <option value="DEBIT">DEBIT</option>
-                </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="vec_date" className="form-label">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="vec_date"
-                  defaultValue={getCurrentDateInput(vecObj.date)}
-                  onChange={(e) => {
-                    setVecObj({
-                      ...vecObj,
-                      date: getSubmitDateInput(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-
-              <div className="mb-3">
                 <label htmlFor="vec_balance" className="form-label">
                   Closing Balance
                 </label>
@@ -553,11 +574,7 @@ export default function VecTransactions() {
                 <button
                   type="submit"
                   className="btn btn-primary m-2"
-                  disabled={
-                    vecObj.amount <= 0 ||
-                    vecObj.amount > stateObject?.balance ||
-                    vecObj.purpose === ""
-                  }
+                  disabled={vecObj.closingBalance <= 0 || vecObj.purpose === ""}
                 >
                   Submit
                 </button>
