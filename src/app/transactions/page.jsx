@@ -186,7 +186,7 @@ export default function Transactions() {
       setType("DEBIT");
       setPurpose("");
       setAmount("");
-      getTransactions();
+      // getTransactions();
     } else {
       toast.error("Please fill all the required fields");
       setLoader(false);
@@ -225,7 +225,7 @@ export default function Transactions() {
     setStateObject(thisAccount);
     toast.success("Transaction deleted successfully");
     setLoader(false);
-    getTransactions();
+    // getTransactions();
   };
 
   const updateTransaction = async () => {
@@ -694,33 +694,6 @@ export default function Transactions() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="amount" className="form-label">
-                    Amount
-                  </label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="amount"
-                    value={amount}
-                    onChange={(e) => {
-                      if (e.target.value !== "") {
-                        const parsedAmount = parseFloat(e.target.value);
-
-                        setAmount(parsedAmount);
-                      } else {
-                        setAmount("");
-                      }
-                    }}
-                    placeholder="Enter amount"
-                  />
-                  <small
-                    id="amountHelp"
-                    className="form-text text-muted fs-6 my-2"
-                  >
-                    Maximum amount allowed: {stateObject.balance}
-                  </small>
-                </div>
-                <div className="mb-3">
                   <label htmlFor="type" className="form-label">
                     Type
                   </label>
@@ -786,6 +759,34 @@ export default function Transactions() {
                     />
                   </div>
                 )}
+                <div className="mb-3">
+                  <label htmlFor="amount" className="form-label">
+                    Amount
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="amount"
+                    value={amount}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        const parsedAmount = parseFloat(e.target.value);
+
+                        setAmount(parsedAmount);
+                      } else {
+                        setAmount("");
+                      }
+                    }}
+                    placeholder="Enter amount"
+                  />
+                  <small
+                    id="amountHelp"
+                    className="form-text text-muted fs-6 my-2"
+                  >
+                    Maximum amount allowed: {stateObject.balance}
+                  </small>
+                </div>
+
                 <div className="mb-3">
                   <label htmlFor="ppOB" className="form-label">
                     PP Opening Balance

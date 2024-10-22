@@ -414,7 +414,11 @@ export default function VecTransactions() {
 
         {showVECEnrty && (
           <div className="mx-auto">
-            <form className="col-md-6 mx-auto" onSubmit={handleVECSubmit}>
+            <form
+              className="col-md-6 mx-auto"
+              onSubmit={handleVECSubmit}
+              autoComplete="off"
+            >
               {vecObj.id && (
                 <div className="mb-3">
                   <label htmlFor="vec_id" className="form-label">
@@ -515,7 +519,7 @@ export default function VecTransactions() {
                     (transaction) => transaction.id === newId
                   );
                   if (checkDuplicate.length > 0) {
-                    newId = newId + "-" + new Date().getMinutes().toString();
+                    newId = new Date().getMinutes().toString() + "-" + newId;
                   }
                   setVecObj({
                     ...vecObj,
