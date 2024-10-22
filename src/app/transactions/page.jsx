@@ -138,6 +138,11 @@ export default function Transactions() {
   const submitTransaction = async () => {
     if (amount && purpose && type) {
       setLoader(true);
+      let y = purpose;
+      let z = transactionState.filter((item) => item.id === y);
+      if (z.length > 0) {
+        y = y + `-${z.length}`;
+      }
       const transaction = {
         accountName: stateObject.accountName,
         accountNumber: stateObject.accountNumber,
@@ -145,7 +150,7 @@ export default function Transactions() {
         purpose,
         type,
         date,
-        id,
+        id: y,
         ppOB,
         ppRC,
         ppEX,
@@ -160,11 +165,6 @@ export default function Transactions() {
       let x = transactionState;
       x = x.push(transaction);
       setTransactionState(x);
-      let y = purpose;
-      let z = transactionState.filter((item) => item.id === y);
-      if (z.length > 0) {
-        y = y + `-${z.length}`;
-      }
       await setDoc(doc(firestore, "transactions", y), transaction);
       let thisAccount = stateObject;
       thisAccount.balance = transaction.closingBalance;
