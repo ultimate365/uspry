@@ -77,6 +77,10 @@ const GlobalContext = createContext({
   setMealState: () => [],
   monthlyReportState: [],
   setMonthlyReportState: () => [],
+  expensesState: [],
+  setExpensesState: () => [],
+  expensesUpdateTime: "",
+  setExpensesUpdateTime: () => "",
 });
 export const GlobalContextProvider = ({ children }) => {
   const [state, setState] = useState({
@@ -131,6 +135,10 @@ export const GlobalContextProvider = ({ children }) => {
     student_addmission_date: "",
     student_addmission_dateAndTime: "",
   });
+  const [expensesState, setExpensesState] = useState([]);
+  const [expensesUpdateTime, setExpensesUpdateTime] = useState(
+    Date.now() - 1000
+  );
 
   return (
     <GlobalContext.Provider
@@ -175,6 +183,10 @@ export const GlobalContextProvider = ({ children }) => {
         setApplicationFormState,
         returnState,
         setReturnState,
+        expensesState,
+        setExpensesState,
+        expensesUpdateTime,
+        setExpensesUpdateTime,
       }}
     >
       <FirebaseProvider>{children}</FirebaseProvider>

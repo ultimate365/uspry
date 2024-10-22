@@ -169,8 +169,8 @@ export default function Transactions() {
       let thisAccount = stateObject;
       thisAccount.balance = transaction.closingBalance;
       thisAccount.date = date;
-      await updateDoc(doc(firestore, "accounts", stateObject.accountNumber), {
-        balance: thisAccount.balance,
+      await updateDoc(doc(firestore, "accounts", stateObject.id), {
+        balance: parseFloat(thisAccount.balance),
         date: date,
       });
       let filteredAccounts = accountState.filter(
@@ -198,21 +198,30 @@ export default function Transactions() {
     const thisAccount = stateObject;
     thisAccount.balance =
       transaction.type === "DEBIT"
-        ? round2dec(
-            parseFloat(stateObject.balance) + parseFloat(transaction.amount)
-          )
-        : round2dec(
-            parseFloat(stateObject.balance) - parseFloat(transaction.amount)
-          );
-    await updateDoc(doc(firestore, "accounts", stateObject.accountNumber), {
-      balance:
-        transaction.type === "DEBIT"
-          ? round2dec(
+        ? parseFloat(
+            round2dec(
               parseFloat(stateObject.balance) + parseFloat(transaction.amount)
             )
-          : round2dec(
+          )
+        : parseFloat(
+            round2dec(
               parseFloat(stateObject.balance) - parseFloat(transaction.amount)
+            )
+          );
+    await updateDoc(doc(firestore, "accounts", stateObject.id), {
+      balance:
+        transaction.type === "DEBIT"
+          ? parseFloat(
+              round2dec(
+                parseFloat(stateObject.balance) + parseFloat(transaction.amount)
+              )
+            )
+          : parseFloat(
+              round2dec(
+                parseFloat(stateObject.balance) - parseFloat(transaction.amount)
+              )
             ),
+      date: todayInString(),
     });
     let x = transactionState;
     x = x.filter((item) => item.id !== transaction.id);
@@ -391,10 +400,8 @@ export default function Transactions() {
         }
       }
       thisAccount.balance = amount;
-      await updateDoc(
-        doc(firestore, "accounts", stateObject.accountNumber),
-        thisAccount
-      );
+      thisAccount.date = todayInString();
+      await updateDoc(doc(firestore, "accounts", stateObject.id), thisAccount);
       let filteredAccounts = accountState.filter(
         (el) => el.id !== stateObject.id
       );

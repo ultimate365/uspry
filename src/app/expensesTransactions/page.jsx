@@ -27,7 +27,7 @@ import {
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 
-export default function VecTransactions() {
+export default function ExpensesTransactions() {
   const { stateObject, setStateObject, state } = useGlobalContext();
   const access = state?.ACCESS;
   const router = useRouter();
@@ -72,7 +72,7 @@ export default function VecTransactions() {
   const getTransactions = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "vectransactions"))
+      query(collection(firestore, "expensesTransactions"))
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -107,7 +107,7 @@ export default function VecTransactions() {
 
   const delTransaction = async (transaction) => {
     setLoader(true);
-    await deleteDoc(doc(firestore, "vectransactions", transaction.id))
+    await deleteDoc(doc(firestore, "expensesTransactions", transaction.id))
       .then(async () => {
         const thisAccount = stateObject;
         thisAccount.balance =
@@ -124,10 +124,7 @@ export default function VecTransactions() {
                     parseFloat(transaction.amount)
                 )
               );
-        await updateDoc(
-          doc(firestore, "vecaccount", stateObject.id),
-          thisAccount
-        )
+        await updateDoc(doc(firestore, "expenses", stateObject.id), thisAccount)
           .then(() => {
             setStateObject(thisAccount);
             toast.success("Account Updated successfully");
@@ -150,12 +147,12 @@ export default function VecTransactions() {
 
     try {
       setLoader(true);
-      await setDoc(doc(firestore, "vectransactions", vecObj.id), vecObj);
+      await setDoc(doc(firestore, "expensesTransactions", vecObj.id), vecObj);
 
       let thisAccount = stateObject;
       thisAccount.balance = vecObj.closingBalance;
       thisAccount.date = vecObj.date;
-      await updateDoc(doc(firestore, "vecaccount", stateObject.id), {
+      await updateDoc(doc(firestore, "expenses", stateObject.id), {
         balance: thisAccount.balance,
         date: thisAccount.date,
       });
@@ -176,7 +173,7 @@ export default function VecTransactions() {
     try {
       setLoader(true);
       await updateDoc(
-        doc(firestore, "vectransactions", editVecObj.id),
+        doc(firestore, "expensesTransactions", editVecObj.id),
         editVecObj
       );
 
@@ -184,7 +181,7 @@ export default function VecTransactions() {
 
       thisAccount.balance = editVecObj.closingBalance;
       thisAccount.date = editVecObj.date;
-      await updateDoc(doc(firestore, "vecaccount", stateObject.id), {
+      await updateDoc(doc(firestore, "expenses", stateObject.id), {
         balance: thisAccount.balance,
         date: thisAccount.date,
       });
@@ -233,184 +230,188 @@ export default function VecTransactions() {
             type="button"
             className="btn btn-primary m-2"
             onClick={() => {
-              createDownloadLink(allTransactions, "vectransactions");
+              createDownloadLink(allTransactions, "expensesTransactions");
             }}
           >
-            Download VEC Transaction Data
+            Download Expenses Transaction Data
           </button>
         </div>
-        <table
-          style={{
-            width: "100%",
-            overflowX: "auto",
-            marginBottom: "20px",
-            border: "1px solid",
-          }}
-          className="text-white"
-        >
-          <thead>
-            <tr
-              style={{
-                border: "1px solid",
-              }}
-              className="text-center bg-primary"
-            >
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Date
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Type
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Amount
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Purpose
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Opening Balance
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Closing Balance
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {allTransactions.map((transaction, index) => (
+        {allTransactions.length > 0 ? (
+          <table
+            style={{
+              width: "100%",
+              overflowX: "auto",
+              marginBottom: "20px",
+              border: "1px solid",
+            }}
+            className="text-white"
+          >
+            <thead>
               <tr
                 style={{
                   border: "1px solid",
                 }}
-                className={`text-center ${
-                  transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
-                }`}
-                key={transaction.id}
+                className="text-center bg-primary"
               >
-                <td
+                <th
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center px-1"
                 >
-                  {transaction.date}
-                </td>
-                <td
+                  Date
+                </th>
+                <th
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center px-1"
                 >
-                  {transaction.type}
-                </td>
-                <td
+                  Type
+                </th>
+                <th
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center px-1"
                 >
-                  ₹ {IndianFormat(transaction?.amount)}
-                </td>
-                <td
+                  Amount
+                </th>
+                <th
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center px-1"
                 >
-                  {transaction.purpose}
-                </td>
-                <td
+                  Purpose
+                </th>
+                <th
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center px-1"
                 >
-                  ₹ {IndianFormat(transaction?.openingBalance)}
-                </td>
-                <td
+                  Opening Balance
+                </th>
+                <th
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center px-1"
                 >
-                  ₹ {IndianFormat(transaction?.closingBalance)}
-                </td>
-                <td
+                  Closing Balance
+                </th>
+                <th
                   style={{
                     border: "1px solid",
-                    backgroundColor: "lavender",
                   }}
                   className="text-center px-1"
                 >
-                  <button
-                    type="button"
-                    className={`btn btn-warning m-1`}
-                    onClick={() => {
-                      setShowVECEnrty(false);
-                      setShowVECEdit(true);
-                      setEditVecObj(transaction);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className={`btn btn-danger m-1`}
-                    onClick={() => {
-                      // eslint-disable-next-line no-alert
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this entry?"
-                        )
-                      ) {
-                        delTransaction(transaction);
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {allTransactions.map((transaction, index) => (
+                <tr
+                  style={{
+                    border: "1px solid",
+                  }}
+                  className={`text-center ${
+                    transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
+                  }`}
+                  key={transaction.id}
+                >
+                  <td
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    {transaction.date}
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    {transaction.type}
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    ₹ {IndianFormat(transaction?.amount)}
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    {transaction.purpose}
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    ₹ {IndianFormat(transaction?.openingBalance)}
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    ₹ {IndianFormat(transaction?.closingBalance)}
+                  </td>
+                  <td
+                    style={{
+                      border: "1px solid",
+                      backgroundColor: "lavender",
+                    }}
+                    className="text-center px-1"
+                  >
+                    <button
+                      type="button"
+                      className={`btn btn-warning m-1`}
+                      onClick={() => {
+                        setShowVECEnrty(false);
+                        setShowVECEdit(true);
+                        setEditVecObj(transaction);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn btn-danger m-1`}
+                      onClick={() => {
+                        // eslint-disable-next-line no-alert
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this entry?"
+                          )
+                        ) {
+                          delTransaction(transaction);
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <h6>No Transactions Found</h6>
+        )}
 
         {showVECEnrty && (
           <div className="mx-auto">
