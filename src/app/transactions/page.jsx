@@ -471,216 +471,231 @@ export default function Transactions() {
           >
             Add New Transaction
           </button>
-          <button
-            type="button"
-            className="btn btn-primary m-2"
-            onClick={() => {
-              createDownloadLink(transactionState, "transactions");
+          {transactionState.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-primary m-2"
+              onClick={() => {
+                createDownloadLink(transactionState, "transactions");
+              }}
+            >
+              Download Transaction Data
+            </button>
+          )}
+        </div>
+        {thisAccounTransactions.length > 0 ? (
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
+            style={{
+              width: "100%",
+              overflowX: "scroll",
+              flexWrap: "wrap",
             }}
           >
-            Download Transaction Data
-          </button>
-        </div>
-        <table
-          style={{
-            width: "100%",
-            overflowX: "auto",
-            marginBottom: "20px",
-            border: "1px solid",
-          }}
-          className="text-white"
-        >
-          <thead>
-            <tr
+            <table
               style={{
+                width: "100%",
+                overflowX: "auto",
+                marginBottom: "20px",
                 border: "1px solid",
               }}
-              className="text-center bg-primary"
+              className="text-white"
             >
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Date
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Type
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Amount
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Purpose
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Opening Balance
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Closing Balance
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {thisAccounTransactions.map((transaction, index) => (
-              <tr
-                style={{
-                  border: "1px solid",
-                }}
-                className={`text-center ${
-                  transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
-                }`}
-                key={transaction.id}
-              >
-                <td
+              <thead>
+                <tr
                   style={{
                     border: "1px solid",
                   }}
-                  className="text-center px-1"
+                  className="text-center bg-primary"
                 >
-                  {transaction.date}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  {transaction.type}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  ₹ {IndianFormat(transaction?.amount)}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  {transaction.purpose}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  ₹ {IndianFormat(transaction?.openingBalance)}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  ₹ {IndianFormat(transaction?.closingBalance)}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                    backgroundColor: "lavender",
-                  }}
-                  className="text-center px-1"
-                >
-                  <button
-                    type="button"
-                    className={`btn btn-warning m-1`}
-                    onClick={() => {
-                      setShowEntry(false);
-                      setEditTransaction(transaction);
-                      setOrgTransaction(transaction);
-                      setShowEdit(true);
-                      setAmount(transaction.amount);
-                      setPurpose(transaction.purpose);
-                      setId(transaction.purpose);
-                      setType(transaction.type);
-                      setDate(transaction.date);
-                      setPpOB(transaction.ppOB);
-                      setPpRC(transaction.ppRC);
-                      setPpCB(transaction.ppCB);
-                      setPryOB(transaction.pryOB);
-                      setPryRC(transaction.pryRC);
-                      setPryCB(transaction.pryCB);
-                      setPryCB(transaction.pryCB);
-                      setOpeningBalance(transaction.openingBalance);
-                      setClosingBalance(transaction.closingBalance);
-                      setTimeout(() => {
-                        if (transaction?.purpose?.split(" ")[1] === "MDM") {
-                          setMdmWithdrawal("MDM WITHDRAWAL");
-                          setIsMDMWithdrawal(true);
-                          if (typeof (window !== "undefined")) {
-                            document.getElementById("purpose_type").value =
-                              "MDM WITHDRAWAL";
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Date
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Type
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Amount
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Purpose
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Opening Balance
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Closing Balance
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {thisAccounTransactions.map((transaction, index) => (
+                  <tr
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className={`text-center ${
+                      transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
+                    }`}
+                    key={transaction.id}
+                  >
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.date}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.type}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.amount)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.purpose}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.openingBalance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.closingBalance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                        backgroundColor: "lavender",
+                      }}
+                      className="text-center px-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-warning m-1`}
+                        onClick={() => {
+                          setShowEntry(false);
+                          setEditTransaction(transaction);
+                          setOrgTransaction(transaction);
+                          setShowEdit(true);
+                          setAmount(transaction.amount);
+                          setPurpose(transaction.purpose);
+                          setId(transaction.purpose);
+                          setType(transaction.type);
+                          setDate(transaction.date);
+                          setPpOB(transaction.ppOB);
+                          setPpRC(transaction.ppRC);
+                          setPpCB(transaction.ppCB);
+                          setPryOB(transaction.pryOB);
+                          setPryRC(transaction.pryRC);
+                          setPryCB(transaction.pryCB);
+                          setPryCB(transaction.pryCB);
+                          setOpeningBalance(transaction.openingBalance);
+                          setClosingBalance(transaction.closingBalance);
+                          setTimeout(() => {
+                            if (transaction?.purpose?.split(" ")[1] === "MDM") {
+                              setMdmWithdrawal("MDM WITHDRAWAL");
+                              setIsMDMWithdrawal(true);
+                              if (typeof (window !== "undefined")) {
+                                document.getElementById("purpose_type").value =
+                                  "MDM WITHDRAWAL";
+                              }
+                            } else {
+                              setMdmWithdrawal("OTHERS");
+                              setIsMDMWithdrawal(false);
+                            }
+                          }, 200);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn btn-${btnArray[index].color} m-1`}
+                        onClick={() => {
+                          // eslint-disable-next-line no-alert
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this entry?"
+                            )
+                          ) {
+                            delTransaction(transaction);
                           }
-                        } else {
-                          setMdmWithdrawal("OTHERS");
-                          setIsMDMWithdrawal(false);
-                        }
-                      }, 200);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className={`btn btn-${btnArray[index].color} m-1`}
-                    onClick={() => {
-                      // eslint-disable-next-line no-alert
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this entry?"
-                        )
-                      ) {
-                        delTransaction(transaction);
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <h6>No Transactions Found</h6>
+        )}
         {showEntry && (
           <form action="" className="mx-auto" autoComplete="off">
             <h3>Add New Transaction</h3>

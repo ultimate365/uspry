@@ -86,186 +86,192 @@ export default function Accounts() {
       {loader && <Loader />}
       <div>
         <h3>Accounts</h3>
-        <button
-          type="button"
-          className="btn btn-primary m-2"
-          onClick={() => {
-            createDownloadLink(accountState, "accounts");
-          }}
-        >
-          Download Account Data
-        </button>
+        {accountState.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-primary m-2"
+            onClick={() => {
+              createDownloadLink(accountState, "accounts");
+            }}
+          >
+            Download Account Data
+          </button>
+        )}
 
-        <div
-          className="d-flex flex-column justify-content-center align-items-center"
-          style={{
-            width: "100%",
-            overflowX: "scroll",
-            flexWrap: "wrap",
-          }}
-        >
-          <table
-            className="table table-responsive table-striped "
+        {allAccounts.length > 0 ? (
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
             style={{
               width: "100%",
               overflowX: "scroll",
-              marginBottom: "20px",
-              border: "1px solid",
+              flexWrap: "wrap",
             }}
           >
-            <thead>
-              <tr
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center p-1"
-              >
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  SL
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  ACCOUNT NAME
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  ACCOUNT NUMBER
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  BALANCE
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  UPDATED AT
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  TRANSACTIONS
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  UPDATE
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allAccounts.map((account, index) => (
+            <table
+              className="table table-responsive table-striped "
+              style={{
+                width: "100%",
+                overflowX: "scroll",
+                marginBottom: "20px",
+                border: "1px solid",
+              }}
+            >
+              <thead>
                 <tr
-                  key={account.id}
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center p-1"
                 >
-                  <td
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {index + 1}
-                  </td>
-                  <td
+                    SL
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {account.accountName}
-                  </td>
-                  <td
+                    ACCOUNT NAME
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {account.accountNumber}
-                  </td>
-                  <td
+                    ACCOUNT NUMBER
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    ₹ {IndianFormat(account.balance)}
-                  </td>
-                  <td
+                    BALANCE
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {account.date}
-                  </td>
-                  <td
+                    UPDATED AT
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    <button
-                      type="button"
-                      className={`btn btn-${btnArray[index].color} m-1`}
-                      onClick={() => {
-                        setStateObject(account);
-                        router.push("/transactions");
-                      }}
-                    >
-                      Transactions
-                    </button>
-                  </td>
-                  <td
+                    TRANSACTIONS
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    <button
-                      type="button"
-                      className={`btn btn-${btnArray[index + 2].color} m-1`}
-                      onClick={() => {
-                        setShowUpdate(true);
-                        setAccount(account);
-                      }}
-                    >
-                      Update
-                    </button>
-                  </td>
+                    UPDATE
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {allAccounts.map((account, index) => (
+                  <tr
+                    key={account.id}
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center p-1"
+                  >
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {account.accountName}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {account.accountNumber}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      ₹ {IndianFormat(account.balance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {account.date}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-${btnArray[index].color} m-1`}
+                        onClick={() => {
+                          setStateObject(account);
+                          router.push("/transactions");
+                        }}
+                      >
+                        Transactions
+                      </button>
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-${btnArray[index + 2].color} m-1`}
+                        onClick={() => {
+                          setShowUpdate(true);
+                          setAccount(account);
+                        }}
+                      >
+                        Update
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <h6>No Accounts Found</h6>
+        )}
       </div>
       {showUpdate && (
         <div className="col-md-6 mx-auto">

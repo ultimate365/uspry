@@ -14,7 +14,6 @@ import {
 } from "firebase/firestore";
 
 import Loader from "@/components/Loader";
-import CustomInput from "@/components/CustomInput";
 import {
   btnArray,
   createDownloadLink,
@@ -40,8 +39,7 @@ export default function Expenses() {
   const [newAccount, setNewAccount] = useState({
     id: "",
     accountName: "",
-    accountNumber: "",
-    balance: 0,
+    balance: "",
     date: todayInString(),
   });
   const [loader, setLoader] = useState(false);
@@ -171,35 +169,48 @@ export default function Expenses() {
                   <h1 className="modal-title fs-5" id="staticBackdropLabel">
                     Add New Account
                   </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    aria-label="Close"
+                    onClick={() => {
+                      setAddAccount(false);
+                      setNewAccount({
+                        accountName: "",
+                        balance: "",
+                        id: "",
+                        date: todayInString(),
+                      });
+                    }}
+                  ></button>
                 </div>
                 <div className="modal-body">
                   <form autoComplete="off">
                     <div className="mx-auto my-2 noprint">
-                      <CustomInput
-                        title={"Account Name"}
-                        placeholder={"Enter Account Name"}
-                        value={newAccount.accountName}
-                        onChange={(e) =>
-                          setNewAccount({
-                            ...newAccount,
-                            accountName: e.target.value,
-                            id: e.target.value?.split(" ")?.join("-"),
-                          })
-                        }
-                      />
-                      <CustomInput
-                        title={"Account Number"}
-                        placeholder={"Enter Account Number"}
-                        type={"number"}
-                        value={newAccount.accountNumber}
-                        onChange={(e) =>
-                          setNewAccount({
-                            ...newAccount,
-                            accountNumber: e.target.value,
-                          })
-                        }
-                      />
-
+                      <div className="my-3">
+                        <label htmlFor="">Account Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder={"Enter Account Name"}
+                          value={newAccount.accountName}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setNewAccount({
+                                ...newAccount,
+                                accountName: e.target.value,
+                                id: e.target.value?.split(" ")?.join("-"),
+                              });
+                            } else {
+                              setNewAccount({
+                                ...newAccount,
+                                accountName: "",
+                                id: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
                       <div className="my-3">
                         <label htmlFor="">Account Balance</label>
                         <input
@@ -227,7 +238,7 @@ export default function Expenses() {
                 </div>
                 <div className="modal-footer">
                   {newAccount.accountName !== "" &&
-                    newAccount.accountNumber !== "" &&
+                    newAccount.id !== "" &&
                     newAccount.balance !== "" && (
                       <button
                         type="submit"
@@ -245,6 +256,12 @@ export default function Expenses() {
                     className="btn btn-dark m-2"
                     onClick={() => {
                       setAddAccount(false);
+                      setNewAccount({
+                        accountName: "",
+                        balance: "",
+                        id: "",
+                        date: todayInString(),
+                      });
                     }}
                   >
                     Close
@@ -254,206 +271,196 @@ export default function Expenses() {
             </div>
           </div>
         )}
-        <div
-          className="d-flex flex-column justify-content-center align-items-center"
-          style={{
-            width: "100%",
-            overflowX: "scroll",
-            flexWrap: "wrap",
-          }}
-        >
-          <table
-            className="table table-responsive table-striped "
+        {allAccounts.length > 0 ? (
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
             style={{
               width: "100%",
               overflowX: "scroll",
-              marginBottom: "20px",
-              border: "1px solid",
+              flexWrap: "wrap",
             }}
           >
-            <thead>
-              <tr
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center p-1"
-              >
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  SL
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  ACCOUNT NAME
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  ACCOUNT NUMBER
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  BALANCE
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  UPDATED AT
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  TRANSACTIONS
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  UPDATE
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center p-1"
-                >
-                  DELETE
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allAccounts.map((account, index) => (
+            <table
+              className="table table-responsive table-striped "
+              style={{
+                width: "100%",
+                overflowX: "scroll",
+                marginBottom: "20px",
+                border: "1px solid",
+              }}
+            >
+              <thead>
                 <tr
-                  key={account.id}
                   style={{
                     border: "1px solid",
                   }}
                   className="text-center p-1"
                 >
-                  <td
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {index + 1}
-                  </td>
-                  <td
+                    SL
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {account.accountName}
-                  </td>
-                  <td
+                    ACCOUNT NAME
+                  </th>
+
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {account.accountNumber}
-                  </td>
-                  <td
+                    BALANCE
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    ₹ {IndianFormat(account.balance)}
-                  </td>
-                  <td
+                    UPDATED AT
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    {account.date}
-                  </td>
-                  <td
+                    TRANSACTIONS
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    <button
-                      type="button"
-                      className={`btn btn-${btnArray[index].color} m-1`}
-                      onClick={() => {
-                        setStateObject(account);
-                        router.push("/expensesTransactions");
-                      }}
-                    >
-                      Transactions
-                    </button>
-                  </td>
-                  <td
+                    UPDATE
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center p-1"
                   >
-                    <button
-                      type="button"
-                      className={`btn btn-${btnArray[index + 2].color} m-1`}
-                      onClick={() => {
-                        setShowUpdate(true);
-                        setAccount(account);
-                      }}
-                    >
-                      Update
-                    </button>
-                  </td>
-                  <td
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center p-1"
-                  >
-                    <button
-                      type="button"
-                      className={`btn btn-danger m-1`}
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Are you sure you want to delete this account?"
-                          )
-                        ) {
-                          deleteAccount(account);
-                        }
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
+                    DELETE
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {allAccounts.map((account, index) => (
+                  <tr
+                    key={account.id}
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center p-1"
+                  >
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {index + 1}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {account.accountName}
+                    </td>
+
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      ₹ {IndianFormat(account.balance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      {account.date}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-${btnArray[index].color} m-1`}
+                        onClick={() => {
+                          setStateObject(account);
+                          router.push("/expensesTransactions");
+                        }}
+                      >
+                        Transactions
+                      </button>
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-${btnArray[index + 2].color} m-1`}
+                        onClick={() => {
+                          setShowUpdate(true);
+                          setAccount(account);
+                        }}
+                      >
+                        Update
+                      </button>
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-danger m-1`}
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this account?"
+                            )
+                          ) {
+                            deleteAccount(account);
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <h6>No Accounts Found</h6>
+        )}
       </div>
       {showUpdate && (
         <div className="col-md-6 mx-auto">
@@ -477,19 +484,7 @@ export default function Expenses() {
                 required
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="accountNumber">Account Number:</label>
-              <input
-                type="text"
-                className="form-control"
-                id="accountNumber"
-                value={account.accountNumber}
-                onChange={(e) =>
-                  setAccount({ ...account, accountNumber: e.target.value })
-                }
-                required
-              />
-            </div>
+
             <div className="form-group">
               <label htmlFor="balance">Balance:</label>
               <input

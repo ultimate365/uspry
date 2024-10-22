@@ -160,7 +160,7 @@ export default function Navbar() {
               href="/mdmdata"
               onClick={handleNavCollapse}
             >
-              MDM Data
+              MDM Entry Section
             </Link>
           </li>
           <li className="nav-item">
@@ -178,7 +178,7 @@ export default function Navbar() {
               href="/accounts"
               onClick={handleNavCollapse}
             >
-              Accounts
+              MDM Account
             </Link>
           </li>
           <li className="nav-item">
@@ -187,7 +187,7 @@ export default function Navbar() {
               href="/expenses"
               onClick={handleNavCollapse}
             >
-              Expenses
+              Expenses Account
             </Link>
           </li>
           <li className="nav-item">

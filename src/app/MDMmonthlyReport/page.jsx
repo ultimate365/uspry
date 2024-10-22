@@ -253,6 +253,7 @@ export default function MDMmonthlyReport() {
         const thisMonthTransaction = transactionState.filter(
           (account) => account.id === entry.id
         )[0];
+        console.log(thisMonthTransaction);
         const creditTrThisMonth = transactionState.filter(
           (tr) =>
             tr.purpose.split(`MDM Cost-`)[1] === entry.id ||

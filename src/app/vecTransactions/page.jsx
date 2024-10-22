@@ -229,188 +229,203 @@ export default function VecTransactions() {
           >
             Add New Transaction
           </button>
-          <button
-            type="button"
-            className="btn btn-primary m-2"
-            onClick={() => {
-              createDownloadLink(allTransactions, "vectransactions");
+          {allTransactions.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-primary m-2"
+              onClick={() => {
+                createDownloadLink(allTransactions, "vectransactions");
+              }}
+            >
+              Download VEC Transaction Data
+            </button>
+          )}
+        </div>
+        {allTransactions.length > 0 ? (
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
+            style={{
+              width: "100%",
+              overflowX: "scroll",
+              flexWrap: "wrap",
             }}
           >
-            Download VEC Transaction Data
-          </button>
-        </div>
-        <table
-          style={{
-            width: "100%",
-            overflowX: "auto",
-            marginBottom: "20px",
-            border: "1px solid",
-          }}
-          className="text-white"
-        >
-          <thead>
-            <tr
+            <table
               style={{
+                width: "100%",
+                overflowX: "auto",
+                marginBottom: "20px",
                 border: "1px solid",
               }}
-              className="text-center bg-primary"
+              className="text-white"
             >
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Date
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Type
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Amount
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Purpose
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Opening Balance
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Closing Balance
-              </th>
-              <th
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center px-1"
-              >
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {allTransactions.map((transaction, index) => (
-              <tr
-                style={{
-                  border: "1px solid",
-                }}
-                className={`text-center ${
-                  transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
-                }`}
-                key={transaction.id}
-              >
-                <td
+              <thead>
+                <tr
                   style={{
                     border: "1px solid",
                   }}
-                  className="text-center px-1"
+                  className="text-center bg-primary"
                 >
-                  {transaction.date}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  {transaction.type}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  ₹ {IndianFormat(transaction?.amount)}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  {transaction.purpose}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  ₹ {IndianFormat(transaction?.openingBalance)}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  ₹ {IndianFormat(transaction?.closingBalance)}
-                </td>
-                <td
-                  style={{
-                    border: "1px solid",
-                    backgroundColor: "lavender",
-                  }}
-                  className="text-center px-1"
-                >
-                  <button
-                    type="button"
-                    className={`btn btn-warning m-1`}
-                    onClick={() => {
-                      setShowVECEnrty(false);
-                      setShowVECEdit(true);
-                      setEditVecObj(transaction);
+                  <th
+                    style={{
+                      border: "1px solid",
                     }}
+                    className="text-center px-1"
                   >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className={`btn btn-danger m-1`}
-                    onClick={() => {
-                      // eslint-disable-next-line no-alert
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this entry?"
-                        )
-                      ) {
-                        delTransaction(transaction);
-                      }
+                    Date
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
                     }}
+                    className="text-center px-1"
                   >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    Type
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Amount
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Purpose
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Opening Balance
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Closing Balance
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center px-1"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {allTransactions.map((transaction, index) => (
+                  <tr
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className={`text-center ${
+                      transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
+                    }`}
+                    key={transaction.id}
+                  >
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.date}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.type}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.amount)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.purpose}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.openingBalance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.closingBalance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                        backgroundColor: "lavender",
+                      }}
+                      className="text-center px-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-warning m-1`}
+                        onClick={() => {
+                          setShowVECEnrty(false);
+                          setShowVECEdit(true);
+                          setEditVecObj(transaction);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn btn-danger m-1`}
+                        onClick={() => {
+                          // eslint-disable-next-line no-alert
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this entry?"
+                            )
+                          ) {
+                            delTransaction(transaction);
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <h6>No Transactions Found</h6>
+        )}
 
         {showVECEnrty && (
           <div className="mx-auto">

@@ -34,11 +34,10 @@ export default function ExpensesTransactions() {
 
   const [loader, setLoader] = useState(false);
   const [allTransactions, setAllTransactions] = useState([]);
-  const [showVECEnrty, setShowVECEnrty] = useState(false);
-  const [showVECEdit, setShowVECEdit] = useState(false);
-  const [vecObj, setVecObj] = useState({
+  const [showExpenseEntry, setShowExpenseEntry] = useState(false);
+  const [showExpenseEdit, setShowExpenseEdit] = useState(false);
+  const [expenseObj, setExpenseObj] = useState({
     id: "",
-    accountNumber: stateObject?.accountNumber,
     amount: "",
     purpose: "",
     type: "DEBIT",
@@ -46,9 +45,8 @@ export default function ExpensesTransactions() {
     openingBalance: parseFloat(stateObject?.balance),
     closingBalance: parseFloat(stateObject?.balance),
   });
-  const [editVecObj, setEditVecObj] = useState({
+  const [editexpenseObj, setEditexpenseObj] = useState({
     id: "",
-    accountNumber: "",
     amount: "",
     purpose: "",
     type: "",
@@ -93,9 +91,8 @@ export default function ExpensesTransactions() {
     } else {
       setId(getId());
     }
-    setVecObj({
+    setExpenseObj({
       id: "",
-      accountNumber: stateObject?.accountNumber,
       amount: "",
       purpose: "",
       type: "DEBIT",
@@ -147,17 +144,20 @@ export default function ExpensesTransactions() {
 
     try {
       setLoader(true);
-      await setDoc(doc(firestore, "expensesTransactions", vecObj.id), vecObj);
+      await setDoc(
+        doc(firestore, "expensesTransactions", expenseObj.id),
+        expenseObj
+      );
 
       let thisAccount = stateObject;
-      thisAccount.balance = vecObj.closingBalance;
-      thisAccount.date = vecObj.date;
+      thisAccount.balance = expenseObj.closingBalance;
+      thisAccount.date = expenseObj.date;
       await updateDoc(doc(firestore, "expenses", stateObject.id), {
         balance: thisAccount.balance,
         date: thisAccount.date,
       });
       setStateObject(thisAccount);
-      setShowVECEnrty(false);
+      setShowExpenseEntry(false);
       getTransactions();
       setLoader(false);
       toast.success("Transaction added successfully");
@@ -173,20 +173,20 @@ export default function ExpensesTransactions() {
     try {
       setLoader(true);
       await updateDoc(
-        doc(firestore, "expensesTransactions", editVecObj.id),
-        editVecObj
+        doc(firestore, "expensesTransactions", editexpenseObj.id),
+        editexpenseObj
       );
 
       let thisAccount = stateObject;
 
-      thisAccount.balance = editVecObj.closingBalance;
-      thisAccount.date = editVecObj.date;
+      thisAccount.balance = editexpenseObj.closingBalance;
+      thisAccount.date = editexpenseObj.date;
       await updateDoc(doc(firestore, "expenses", stateObject.id), {
         balance: thisAccount.balance,
         date: thisAccount.date,
       });
       toast.success("VEC Transaction updated successfully");
-      setShowVECEdit(false);
+      setShowExpenseEdit(false);
       getTransactions();
       setLoader(false);
     } catch (error) {
@@ -213,214 +213,224 @@ export default function ExpensesTransactions() {
       <div>
         <h3>Transactions</h3>
         <h3>Account Name: {stateObject.accountName}</h3>
-        <h3>Account Number: {stateObject.accountNumber}</h3>
         <h3>Account Balance: ₹ {IndianFormat(stateObject?.balance)}</h3>
         <div className="my-3">
           <button
             type="button"
             className="btn btn-success m-2"
             onClick={() => {
-              setShowVECEnrty(true);
-              setShowVECEdit(false);
+              setShowExpenseEntry(true);
+              setShowExpenseEdit(false);
             }}
           >
             Add New Transaction
           </button>
-          <button
-            type="button"
-            className="btn btn-primary m-2"
-            onClick={() => {
-              createDownloadLink(allTransactions, "expensesTransactions");
-            }}
-          >
-            Download Expenses Transaction Data
-          </button>
+          {allTransactions.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-primary m-2"
+              onClick={() => {
+                createDownloadLink(allTransactions, "expensesTransactions");
+              }}
+            >
+              Download Expenses Transaction Data
+            </button>
+          )}
         </div>
         {allTransactions.length > 0 ? (
-          <table
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
             style={{
               width: "100%",
-              overflowX: "auto",
-              marginBottom: "20px",
-              border: "1px solid",
+              overflowX: "scroll",
+              flexWrap: "wrap",
             }}
-            className="text-white"
           >
-            <thead>
-              <tr
-                style={{
-                  border: "1px solid",
-                }}
-                className="text-center bg-primary"
-              >
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Date
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Type
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Amount
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Purpose
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Opening Balance
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Closing Balance
-                </th>
-                <th
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center px-1"
-                >
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allTransactions.map((transaction, index) => (
+            <table
+              style={{
+                width: "100%",
+                overflowX: "auto",
+                marginBottom: "20px",
+                border: "1px solid",
+              }}
+              className="text-white"
+            >
+              <thead>
                 <tr
                   style={{
                     border: "1px solid",
                   }}
-                  className={`text-center ${
-                    transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
-                  }`}
-                  key={transaction.id}
+                  className="text-center bg-primary"
                 >
-                  <td
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center px-1"
                   >
-                    {transaction.date}
-                  </td>
-                  <td
+                    Date
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center px-1"
                   >
-                    {transaction.type}
-                  </td>
-                  <td
+                    Type
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center px-1"
                   >
-                    ₹ {IndianFormat(transaction?.amount)}
-                  </td>
-                  <td
+                    Amount
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center px-1"
                   >
-                    {transaction.purpose}
-                  </td>
-                  <td
+                    Purpose
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center px-1"
                   >
-                    ₹ {IndianFormat(transaction?.openingBalance)}
-                  </td>
-                  <td
+                    Opening Balance
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
                     }}
                     className="text-center px-1"
                   >
-                    ₹ {IndianFormat(transaction?.closingBalance)}
-                  </td>
-                  <td
+                    Closing Balance
+                  </th>
+                  <th
                     style={{
                       border: "1px solid",
-                      backgroundColor: "lavender",
                     }}
                     className="text-center px-1"
                   >
-                    <button
-                      type="button"
-                      className={`btn btn-warning m-1`}
-                      onClick={() => {
-                        setShowVECEnrty(false);
-                        setShowVECEdit(true);
-                        setEditVecObj(transaction);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      className={`btn btn-danger m-1`}
-                      onClick={() => {
-                        // eslint-disable-next-line no-alert
-                        if (
-                          window.confirm(
-                            "Are you sure you want to delete this entry?"
-                          )
-                        ) {
-                          delTransaction(transaction);
-                        }
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
+                    Action
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {allTransactions.map((transaction, index) => (
+                  <tr
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className={`text-center ${
+                      transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
+                    }`}
+                    key={transaction.id}
+                  >
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.date}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.type}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.amount)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      {transaction.purpose}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.openingBalance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center px-1"
+                    >
+                      ₹ {IndianFormat(transaction?.closingBalance)}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                        backgroundColor: "lavender",
+                      }}
+                      className="text-center px-1"
+                    >
+                      <button
+                        type="button"
+                        className={`btn btn-warning m-1`}
+                        onClick={() => {
+                          setShowExpenseEntry(false);
+                          setShowExpenseEdit(true);
+                          setEditexpenseObj(transaction);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn btn-danger m-1`}
+                        onClick={() => {
+                          // eslint-disable-next-line no-alert
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this entry?"
+                            )
+                          ) {
+                            delTransaction(transaction);
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <h6>No Transactions Found</h6>
         )}
 
-        {showVECEnrty && (
+        {showExpenseEntry && (
           <div className="mx-auto">
             <form
               className="col-md-6 mx-auto"
               onSubmit={handleVECSubmit}
               autoComplete="off"
             >
-              {vecObj.id && (
+              {expenseObj.id && (
                 <div className="mb-3">
                   <label htmlFor="vec_id" className="form-label">
                     ID
@@ -429,7 +439,7 @@ export default function ExpensesTransactions() {
                     type="text"
                     className="form-control"
                     id="vec_balance"
-                    value={vecObj.id}
+                    value={expenseObj.id}
                     placeholder="Enter id"
                     disabled={true}
                     readOnly
@@ -444,10 +454,10 @@ export default function ExpensesTransactions() {
                   type="date"
                   className="form-control"
                   id="vec_date"
-                  defaultValue={getCurrentDateInput(vecObj.date)}
+                  defaultValue={getCurrentDateInput(expenseObj.date)}
                   onChange={(e) => {
-                    setVecObj({
-                      ...vecObj,
+                    setExpenseObj({
+                      ...expenseObj,
                       date: getSubmitDateInput(e.target.value),
                     });
                   }}
@@ -460,22 +470,22 @@ export default function ExpensesTransactions() {
                 <select
                   className="form-select"
                   id="type"
-                  value={vecObj.type}
+                  value={expenseObj.type}
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value === "DEBIT") {
-                      setVecObj({
-                        ...vecObj,
+                      setExpenseObj({
+                        ...expenseObj,
                         type: value,
                         closingBalance: round2dec(
-                          stateObject.balance - vecObj.amount
+                          stateObject.balance - expenseObj.amount
                         ),
                       });
                     } else {
-                      setVecObj({
-                        ...vecObj,
+                      setExpenseObj({
+                        ...expenseObj,
                         type: value,
-                        closingBalance: stateObject.balance + vecObj.amount,
+                        closingBalance: stateObject.balance + expenseObj.amount,
                       });
                     }
                   }}
@@ -492,7 +502,7 @@ export default function ExpensesTransactions() {
                   type="text"
                   className="form-control"
                   id="vec_balance"
-                  value={vecObj.openingBalance}
+                  value={expenseObj.openingBalance}
                   placeholder="Enter Opening balance"
                   disabled={true}
                   readOnly={true}
@@ -508,12 +518,12 @@ export default function ExpensesTransactions() {
                 title={"Purpose"}
                 id="vec_purpose"
                 type={"text"}
-                value={vecObj.purpose}
+                value={expenseObj.purpose}
                 placeholder="Enter purpose"
                 onChange={(e) => {
-                  console.log(vecObj.date);
-                  const inpMonth = parseInt(vecObj.date?.split("-")[1]) - 1;
-                  const inpYear = vecObj.date?.split("-")[2];
+                  console.log(expenseObj.date);
+                  const inpMonth = parseInt(expenseObj.date?.split("-")[1]) - 1;
+                  const inpYear = expenseObj.date?.split("-")[2];
                   const textMonth = monthNamesWithIndex[inpMonth].monthName;
                   let newId = `${textMonth}-${inpYear}`;
                   const checkDuplicate = allTransactions.filter(
@@ -522,8 +532,8 @@ export default function ExpensesTransactions() {
                   if (checkDuplicate.length > 0) {
                     newId = new Date().getMinutes().toString() + "-" + newId;
                   }
-                  setVecObj({
-                    ...vecObj,
+                  setExpenseObj({
+                    ...expenseObj,
                     purpose: e.target.value,
                     id: e.target.value.split(" ").join("-") + "-" + newId,
                   });
@@ -533,29 +543,30 @@ export default function ExpensesTransactions() {
               <CustomInput
                 title={"Amount"}
                 id="vec_amount"
-                value={vecObj.amount}
+                value={expenseObj.amount}
                 placeholder="Enter amount"
                 type={"number"}
                 onChange={(e) => {
                   if (e.target.value) {
-                    setVecObj({
-                      ...vecObj,
+                    setExpenseObj({
+                      ...expenseObj,
                       amount: parseFloat(e.target.value),
                       closingBalance:
-                        vecObj.type === "DEBIT"
+                        expenseObj.type === "DEBIT"
                           ? parseFloat(
                               round2dec(
-                                vecObj.openingBalance -
+                                expenseObj.openingBalance -
                                   parseFloat(e.target.value)
                               )
                             )
-                          : parseFloat(e.target.value) + vecObj.openingBalance,
+                          : parseFloat(e.target.value) +
+                            expenseObj.openingBalance,
                     });
                   } else {
-                    setVecObj({
-                      ...vecObj,
+                    setExpenseObj({
+                      ...expenseObj,
                       amount: "",
-                      closingBalance: vecObj.openingBalance,
+                      closingBalance: expenseObj.openingBalance,
                     });
                   }
                 }}
@@ -569,7 +580,7 @@ export default function ExpensesTransactions() {
                   type="text"
                   className="form-control"
                   id="vec_balance"
-                  value={vecObj.closingBalance}
+                  value={expenseObj.closingBalance}
                   disabled={true}
                   readOnly={true}
                 />
@@ -579,7 +590,9 @@ export default function ExpensesTransactions() {
                 <button
                   type="submit"
                   className="btn btn-primary m-2"
-                  disabled={vecObj.closingBalance <= 0 || vecObj.purpose === ""}
+                  disabled={
+                    expenseObj.closingBalance <= 0 || expenseObj.purpose === ""
+                  }
                 >
                   Submit
                 </button>
@@ -587,10 +600,9 @@ export default function ExpensesTransactions() {
                   type="button"
                   className="btn btn-danger m-2"
                   onClick={() => {
-                    setShowVECEnrty(false);
-                    setVecObj({
+                    setShowExpenseEntry(false);
+                    setExpenseObj({
                       id: "",
-                      accountNumber: stateObject?.accountNumber,
                       amount: "",
                       purpose: "",
                       type: "DEBIT",
@@ -606,7 +618,7 @@ export default function ExpensesTransactions() {
             </form>
           </div>
         )}
-        {showVECEdit && (
+        {showExpenseEdit && (
           <div className="mx-auto">
             <form className="mx-auto col-md-6" onSubmit={updateVec}>
               <div className="mb-3">
@@ -617,10 +629,10 @@ export default function ExpensesTransactions() {
                   type="text"
                   className="form-control"
                   id="vec_edit_balance"
-                  value={editVecObj.amount}
+                  value={editexpenseObj.amount}
                   onChange={(e) => {
-                    setEditVecObj({
-                      ...editVecObj,
+                    setEditexpenseObj({
+                      ...editexpenseObj,
                       amount: parseFloat(e.target.value),
                     });
                   }}
@@ -634,10 +646,10 @@ export default function ExpensesTransactions() {
                   type="date"
                   className="form-control"
                   id="vec_edit_date"
-                  defaultValue={getCurrentDateInput(editVecObj.date)}
+                  defaultValue={getCurrentDateInput(editexpenseObj.date)}
                   onChange={(e) => {
-                    setEditVecObj({
-                      ...editVecObj,
+                    setEditexpenseObj({
+                      ...editexpenseObj,
                       date: getSubmitDateInput(e.target.value),
                     });
                   }}
@@ -651,10 +663,10 @@ export default function ExpensesTransactions() {
                   type="text"
                   className="form-control"
                   id="vec_edit_purpose"
-                  value={editVecObj.purpose}
+                  value={editexpenseObj.purpose}
                   onChange={(e) => {
-                    setEditVecObj({
-                      ...editVecObj,
+                    setEditexpenseObj({
+                      ...editexpenseObj,
                       purpose: e.target.value,
                     });
                   }}
@@ -668,10 +680,10 @@ export default function ExpensesTransactions() {
                   type="text"
                   className="form-control"
                   id="vec_edit_balance"
-                  value={editVecObj.openingBalance}
+                  value={editexpenseObj.openingBalance}
                   onChange={(e) => {
-                    setEditVecObj({
-                      ...editVecObj,
+                    setEditexpenseObj({
+                      ...editexpenseObj,
                       openingBalance: parseFloat(e.target.value),
                     });
                   }}
@@ -685,10 +697,10 @@ export default function ExpensesTransactions() {
                   type="text"
                   className="form-control"
                   id="vec_edit_balance"
-                  value={editVecObj.closingBalance}
+                  value={editexpenseObj.closingBalance}
                   onChange={(e) => {
-                    setEditVecObj({
-                      ...editVecObj,
+                    setEditexpenseObj({
+                      ...editexpenseObj,
                       closingBalance: parseFloat(e.target.value),
                     });
                   }}
@@ -699,8 +711,8 @@ export default function ExpensesTransactions() {
                   type="submit"
                   className="btn btn-primary m-2"
                   disabled={
-                    vecObj.editBalance <= 0 ||
-                    vecObj.editBalance > stateObject?.balance
+                    expenseObj.editBalance <= 0 ||
+                    expenseObj.editBalance > stateObject?.balance
                   }
                 >
                   Save
@@ -708,7 +720,7 @@ export default function ExpensesTransactions() {
                 <button
                   type="button"
                   className="btn btn-danger m-2"
-                  onClick={() => setShowVECEdit(false)}
+                  onClick={() => setShowExpenseEdit(false)}
                 >
                   Close
                 </button>
