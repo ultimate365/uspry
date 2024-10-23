@@ -127,7 +127,6 @@ body {
   }
   @page {
     size: A4;
-   
   }
   body {
     margin: 0;
@@ -137,8 +136,28 @@ body {
       flex-direction: column;
     }
   }
-}
+  /* width */
+  ::-webkit-scrollbar {
+    width: 0;
+  }
 
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: none;
+    border-radius: 0;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: none;
+  }
+}
 
 @import url("https://fonts.googleapis.com/css2?family=Fasthand&display=swap");
 
@@ -176,10 +195,9 @@ td {
   font-family: var(--font-roboto);
 }
 
-.timesNewRoman{
+.timesNewRoman {
   font-family: "Times New Roman", Times, serif;
 }
-
 
 .times {
   height: 900px;
@@ -291,4 +309,3 @@ table#team-list tr:nth-child(n + 1) td:first-child::before {
   min-width: 1em;
   margin-right: 0.5em;
 }
-

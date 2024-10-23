@@ -169,7 +169,7 @@ export default function Navbar() {
               href="/MDMmonthlyReport"
               onClick={handleNavCollapse}
             >
-              Generate Monthly MDM Data
+              Generate Monthly MDM Return
             </Link>
           </li>
           <li className="nav-item">

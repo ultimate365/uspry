@@ -659,8 +659,11 @@ export default function Transactions() {
                               setMdmWithdrawal("MDM WITHDRAWAL");
                               setIsMDMWithdrawal(true);
                               if (typeof (window !== "undefined")) {
-                                document.getElementById("purpose_type").value =
-                                  "MDM WITHDRAWAL";
+                                const purpose_type =
+                                  document.getElementById("purpose_type");
+                                if (purpose_type) {
+                                  purpose_type.value = "MDM WITHDRAWAL";
+                                }
                               }
                             } else {
                               setMdmWithdrawal("OTHERS");

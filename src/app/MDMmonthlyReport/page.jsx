@@ -176,7 +176,7 @@ export default function MDMmonthlyReport() {
   const [balRCThisMonth, setBalRCThisMonth] = useState(0);
   const [pryRCThisMonth, setPryRCThisMonth] = useState(0);
   const [pryRCPrevMonth, setPryRCPrevMonth] = useState(0);
-
+  const [ftFound, setFtFound] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [moreFilteredData, setMoreFilteredData] = useState([]);
   const [showMonthSelection, setShowMonthSelection] = useState(false);
@@ -238,7 +238,6 @@ export default function MDMmonthlyReport() {
     }
   };
   const handleMonthChange = (month) => {
-    console.log(month);
     let x = [];
 
     allEnry.map((entry, index) => {
@@ -253,12 +252,17 @@ export default function MDMmonthlyReport() {
         const thisMonthTransaction = transactionState.filter(
           (account) => account.id === entry.id
         )[0];
-        console.log(thisMonthTransaction);
+        setThisMonthFromTransaction(thisMonthTransaction);
         const creditTrThisMonth = transactionState.filter(
           (tr) =>
             tr.purpose.split(`MDM Cost-`)[1] === entry.id ||
             tr.purpose.split(`Interest-`)[1] === entry.id
         );
+        if (creditTrThisMonth.length > 0) {
+          setFtFound(true);
+        } else {
+          setFtFound(false);
+        }
         setThisMonthFromFirstTransaction(creditTrThisMonth[0]);
         let cBalRCThisMonth = 0;
         let cPryRCThisMonth = 0;
@@ -268,7 +272,7 @@ export default function MDMmonthlyReport() {
         });
         setBalRCThisMonth(cBalRCThisMonth);
         setPryRCThisMonth(cPryRCThisMonth);
-        setThisMonthFromTransaction(thisMonthTransaction);
+
         const thisMonthName = entry.id.split("-")[0];
         const thisMonthYear = entry.id.split("-")[1];
         const prevMonthName = months[months.indexOf(thisMonthName) - 1];
@@ -531,7 +535,14 @@ export default function MDMmonthlyReport() {
 
           {showNewFormat && (
             <div>
-              <div className="nobreak">
+              <div
+                className="nobreak"
+                style={{
+                  width: "100%",
+                  overflowX: "scroll",
+                  flexWrap: "wrap",
+                }}
+              >
                 <table
                   style={{
                     width: "100%",
@@ -548,9 +559,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td colSpan={9}>
+                      <th colSpan={9}>
                         Monthly Progress Report of Mid Day Meal
-                      </td>
+                      </th>
                     </tr>
                     <tr>
                       <td colSpan={2} style={{ border: "1px solid" }}>
@@ -628,9 +639,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td style={{ border: "1px solid" }} colSpan={9}>
+                      <th style={{ border: "1px solid" }} colSpan={9}>
                         Utilization Certificate (COOKING COST)
-                      </td>
+                      </th>
                     </tr>
                     <tr
                       style={{
@@ -700,7 +711,12 @@ export default function MDMmonthlyReport() {
                     >
                       <td style={{ border: "1px solid" }}>Bal Vatika</td>
                       <td style={{ border: "1px solid" }}>
-                        ₹ {IndianFormat(thisMonthFromFirstTransaction?.ppOB)}
+                        ₹{" "}
+                        {IndianFormat(
+                          ftFound
+                            ? thisMonthFromFirstTransaction?.ppOB
+                            : thisMonthFromTransaction.ppOB
+                        )}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         ₹ {IndianFormat(balRCPrevMonth)}
@@ -712,7 +728,10 @@ export default function MDMmonthlyReport() {
                         ₹{" "}
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.ppOB + balRCThisMonth
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.ppOB +
+                                  balRCThisMonth
+                              : thisMonthFromTransaction?.ppOB + balRCThisMonth
                           )
                         )}
                       </td>
@@ -729,9 +748,13 @@ export default function MDMmonthlyReport() {
                         ₹{" "}
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.ppOB +
-                              balRCThisMonth -
-                              thisMonthlyData?.monthlyPPCost
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.ppOB +
+                                  balRCThisMonth -
+                                  thisMonthlyData?.monthlyPPCost
+                              : thisMonthFromTransaction?.ppOB +
+                                  balRCThisMonth -
+                                  thisMonthlyData?.monthlyPPCost
                           )
                         )}
                       </td>
@@ -744,7 +767,12 @@ export default function MDMmonthlyReport() {
                     >
                       <td style={{ border: "1px solid" }}>Primary</td>
                       <td style={{ border: "1px solid" }}>
-                        ₹ {IndianFormat(thisMonthFromFirstTransaction?.pryOB)}
+                        ₹{" "}
+                        {IndianFormat(
+                          ftFound
+                            ? thisMonthFromFirstTransaction?.pryOB
+                            : thisMonthFromTransaction?.pryOB
+                        )}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         ₹ {IndianFormat(pryRCPrevMonth)}
@@ -756,8 +784,10 @@ export default function MDMmonthlyReport() {
                         ₹{" "}
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.pryOB +
-                              pryRCThisMonth
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.pryOB +
+                                  pryRCThisMonth
+                              : thisMonthFromTransaction?.pryOB + pryRCThisMonth
                           )
                         )}
                       </td>
@@ -774,9 +804,13 @@ export default function MDMmonthlyReport() {
                         ₹{" "}
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.pryOB +
-                              pryRCThisMonth -
-                              thisMonthlyData?.monthlyPRYCost
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.pryOB +
+                                  pryRCThisMonth -
+                                  thisMonthlyData?.monthlyPRYCost
+                              : thisMonthFromTransaction?.pryOB +
+                                  pryRCThisMonth -
+                                  thisMonthlyData?.monthlyPRYCost
                           )
                         )}
                       </td>
@@ -814,9 +848,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td style={{ border: "1px solid" }} colSpan={9}>
+                      <th style={{ border: "1px solid" }} colSpan={9}>
                         Utilization Certificate (FOOD GRAIN)
-                      </td>
+                      </th>
                     </tr>
                     <tr
                       style={{
@@ -976,9 +1010,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td style={{ border: "1px solid" }} colSpan={9}>
+                      <th style={{ border: "1px solid" }} colSpan={9}>
                         Utilization Certificate (HONORARIUM TO COOK)
-                      </td>
+                      </th>
                     </tr>
                     <tr
                       style={{
@@ -1074,7 +1108,14 @@ export default function MDMmonthlyReport() {
                   )}
                 </div>
               </div>
-              <div className="nobreak">
+              <div
+                className="nobreak"
+                style={{
+                  width: "100%",
+                  overflowX: "scroll",
+                  flexWrap: "wrap",
+                }}
+              >
                 <table
                   style={{
                     width: "100%",
@@ -1091,9 +1132,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td colSpan={12}>
+                      <th colSpan={12}>
                         Utilization Certificate (COOKING COST)
-                      </td>
+                      </th>
                     </tr>
                     <tr>
                       <td colSpan={4} style={{ border: "1px solid" }}>
@@ -1204,7 +1245,12 @@ export default function MDMmonthlyReport() {
                         {thisMonthlyData.worrkingDays}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        ₹{IndianFormat(thisMonthFromFirstTransaction?.ppOB)}
+                        ₹
+                        {IndianFormat(
+                          ftFound
+                            ? thisMonthFromFirstTransaction?.ppOB
+                            : thisMonthFromTransaction?.ppOB
+                        )}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         ₹{IndianFormat(balRCPrevMonth)}
@@ -1216,7 +1262,10 @@ export default function MDMmonthlyReport() {
                         ₹
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.ppOB + balRCThisMonth
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.ppOB +
+                                  balRCThisMonth
+                              : thisMonthFromTransaction?.ppOB + balRCThisMonth
                           )
                         )}
                       </td>
@@ -1233,9 +1282,13 @@ export default function MDMmonthlyReport() {
                         ₹
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.ppOB +
-                              balRCThisMonth -
-                              thisMonthlyData?.monthlyPPCost
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.ppOB +
+                                  balRCThisMonth -
+                                  thisMonthlyData?.monthlyPPCost
+                              : thisMonthFromTransaction?.ppOB +
+                                  balRCThisMonth -
+                                  thisMonthlyData?.monthlyPPCost
                           )
                         )}
                       </td>
@@ -1255,7 +1308,12 @@ export default function MDMmonthlyReport() {
                       </td>
 
                       <td style={{ border: "1px solid" }}>
-                        ₹{IndianFormat(thisMonthFromFirstTransaction?.pryOB)}
+                        ₹
+                        {IndianFormat(
+                          ftFound
+                            ? thisMonthFromFirstTransaction?.pryOB
+                            : thisMonthFromTransaction?.pryOB
+                        )}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         ₹{IndianFormat(pryRCPrevMonth)}
@@ -1267,8 +1325,10 @@ export default function MDMmonthlyReport() {
                         ₹
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.pryOB +
-                              pryRCThisMonth
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.pryOB +
+                                  pryRCThisMonth
+                              : thisMonthFromTransaction?.pryOB + pryRCThisMonth
                           )
                         )}
                       </td>
@@ -1285,9 +1345,13 @@ export default function MDMmonthlyReport() {
                         ₹
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.pryOB +
-                              pryRCThisMonth -
-                              thisMonthlyData?.monthlyPRYCost
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.pryOB +
+                                  pryRCThisMonth -
+                                  thisMonthlyData?.monthlyPRYCost
+                              : thisMonthFromTransaction?.pryOB +
+                                  pryRCThisMonth -
+                                  thisMonthlyData?.monthlyPRYCost
                           )
                         )}
                       </td>
@@ -1316,9 +1380,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td colSpan={12}>
+                      <th colSpan={12}>
                         Utilization Certificate (FOOD GRAINS)
-                      </td>
+                      </th>
                     </tr>
 
                     <tr>
@@ -1490,9 +1554,9 @@ export default function MDMmonthlyReport() {
                       }}
                       className="text-center"
                     >
-                      <td colSpan={12}>
+                      <th colSpan={12}>
                         Utilization Certificate (HONORARIUM TO COOK)
-                      </td>
+                      </th>
                     </tr>
 
                     <tr>
@@ -1596,7 +1660,14 @@ export default function MDMmonthlyReport() {
 
           {showOldFormat && (
             <div className="mx-auto text-center">
-              <div className="nobreak">
+              <div
+                className="nobreak"
+                style={{
+                  width: "100%",
+                  overflowX: "scroll",
+                  flexWrap: "wrap",
+                }}
+              >
                 <h4>Pradhan Mantri Poshan Shakti Nirman (PM POSHAN)</h4>
                 <h4>School Monthly Data Capture Format (MDCF)</h4>
                 <p>
@@ -2047,7 +2118,12 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {IndianFormat(thisMonthFromFirstTransaction?.ppOB)}
+                        ₹{" "}
+                        {IndianFormat(
+                          ftFound
+                            ? thisMonthFromFirstTransaction?.ppOB
+                            : thisMonthFromTransaction?.ppOB
+                        )}
                       </td>
                       <td
                         style={{
@@ -2074,9 +2150,13 @@ export default function MDMmonthlyReport() {
                         ₹{" "}
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.ppOB +
-                              balRCThisMonth -
-                              thisMonthlyData?.monthlyPPCost
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.ppOB +
+                                  balRCThisMonth -
+                                  thisMonthlyData?.monthlyPPCost
+                              : thisMonthFromTransaction?.ppOB +
+                                  balRCThisMonth -
+                                  thisMonthlyData?.monthlyPPCost
                           )
                         )}
                       </td>
@@ -2096,7 +2176,12 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        ₹ {IndianFormat(thisMonthFromFirstTransaction?.pryOB)}
+                        ₹{" "}
+                        {IndianFormat(
+                          ftFound
+                            ? thisMonthFromFirstTransaction?.pryOB
+                            : thisMonthFromTransaction?.pryOB
+                        )}
                       </td>
                       <td
                         style={{
@@ -2123,9 +2208,13 @@ export default function MDMmonthlyReport() {
                         ₹{" "}
                         {IndianFormat(
                           round2dec(
-                            thisMonthFromFirstTransaction?.pryOB +
-                              pryRCThisMonth -
-                              thisMonthlyData?.monthlyPRYCost
+                            ftFound
+                              ? thisMonthFromFirstTransaction?.pryOB +
+                                  pryRCThisMonth -
+                                  thisMonthlyData?.monthlyPRYCost
+                              : thisMonthFromTransaction?.pryOB +
+                                  pryRCThisMonth -
+                                  thisMonthlyData?.monthlyPRYCost
                           )
                         )}
                       </td>
@@ -2731,7 +2820,7 @@ export default function MDMmonthlyReport() {
                 </table>
                 <div
                   className="d-flex flex-row justify-content-between p-2"
-                  style={{ marginTop: 200 }}
+                  style={{ marginTop: 200, flexWrap: "wrap" }}
                 >
                   <div>
                     <h6>
