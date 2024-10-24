@@ -206,7 +206,7 @@ export default function VecTransactions() {
       name: "Sl",
       selector: (row, ind) =>
         allFTransactions.findIndex((i) => i.id === row.id) + 1,
-      width: "10%",
+      width: "7%",
     },
 
     {
@@ -215,7 +215,7 @@ export default function VecTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "15%",
+      width: "13%",
     },
     {
       name: "Tran. Type",
@@ -223,7 +223,16 @@ export default function VecTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "12%",
+      width: "10%",
+    },
+
+    {
+      name: "Purpose",
+      selector: (row) => row?.purpose,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "15%",
     },
     {
       name: "Amount",
@@ -239,7 +248,7 @@ export default function VecTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "15%",
+      width: "13%",
     },
     {
       name: "Closing Balance",
@@ -247,7 +256,7 @@ export default function VecTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "15%",
+      width: "13%",
     },
     {
       name: "Action",
@@ -255,7 +264,8 @@ export default function VecTransactions() {
         <div>
           <button
             type="button"
-            className={`btn btn-warning m-1`}
+            className={`btn btn-sm btn-warning m-1`}
+            style={{ fontSize: 10 }}
             onClick={() => {
               setShowVECEnrty(false);
               setShowVECEdit(true);
@@ -266,7 +276,8 @@ export default function VecTransactions() {
           </button>
           <button
             type="button"
-            className={`btn btn-danger m-1`}
+            className={`btn btn-sm btn-danger m-1`}
+            style={{ fontSize: 10 }}
             onClick={() => {
               // eslint-disable-next-line no-alert
               if (
@@ -292,6 +303,7 @@ export default function VecTransactions() {
       style: {
         backgroundColor: "red",
         color: "white",
+        fontSize: "11px",
       },
     },
     {
@@ -299,6 +311,7 @@ export default function VecTransactions() {
       style: {
         backgroundColor: "green",
         color: "white",
+        fontSize: "11px",
       },
     },
   ];
@@ -575,11 +588,7 @@ export default function VecTransactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form
-                    className="col-md-6 mx-auto"
-                    onSubmit={handleVECSubmit}
-                    autoComplete="off"
-                  >
+                  <form className="col-md-6 mx-auto" autoComplete="off">
                     {vecObj.id && (
                       <div className="mb-3">
                         <label htmlFor="vec_id" className="form-label">
@@ -749,6 +758,7 @@ export default function VecTransactions() {
                       disabled={
                         vecObj.closingBalance <= 0 || vecObj.purpose === ""
                       }
+                      onClick={handleVECSubmit}
                     >
                       Submit
                     </button>
@@ -799,7 +809,7 @@ export default function VecTransactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form className="mx-auto col-md-6" onSubmit={updateVec}>
+                  <form className="mx-auto col-md-6">
                     <div className="mb-3">
                       <label htmlFor="vec_edit_balance" className="form-label">
                         Edit Amount
@@ -893,6 +903,7 @@ export default function VecTransactions() {
                           vecObj.editBalance <= 0 ||
                           vecObj.editBalance > stateObject?.balance
                         }
+                        onClick={updateVec}
                       >
                         Save
                       </button>

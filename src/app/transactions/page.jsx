@@ -445,7 +445,7 @@ export default function Transactions() {
       name: "Sl",
       selector: (row, ind) =>
         transactionState.findIndex((i) => i.id === row.id) + 1,
-      width: "10%",
+      width: "7%",
     },
 
     {
@@ -454,7 +454,7 @@ export default function Transactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "15%",
+      width: "13%",
     },
     {
       name: "Tran. Type",
@@ -462,7 +462,16 @@ export default function Transactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "12%",
+      width: "10%",
+    },
+
+    {
+      name: "Purpose",
+      selector: (row) => row?.purpose,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "15%",
     },
     {
       name: "Amount",
@@ -478,7 +487,7 @@ export default function Transactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "15%",
+      width: "13%",
     },
     {
       name: "Closing Balance",
@@ -486,7 +495,7 @@ export default function Transactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "15%",
+      width: "13%",
     },
     {
       name: "Action",
@@ -555,7 +564,7 @@ export default function Transactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "20%",
+      width: "18%",
     },
   ];
   const conditionalRowStyles = [
@@ -564,6 +573,7 @@ export default function Transactions() {
       style: {
         backgroundColor: "red",
         color: "white",
+        fontSize: "11px",
       },
     },
     {
@@ -571,6 +581,7 @@ export default function Transactions() {
       style: {
         backgroundColor: "green",
         color: "white",
+        fontSize: "11px",
       },
     },
   ];
