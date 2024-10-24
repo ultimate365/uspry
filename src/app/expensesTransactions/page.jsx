@@ -579,7 +579,11 @@ export default function ExpensesTransactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form className="col-md-6 mx-auto" autoComplete="off">
+                  <form
+                    className="col-md-6 mx-auto"
+                    autoComplete="off"
+                    onSubmit={handleVECSubmit}
+                  >
                     {expenseObj.id && (
                       <div className="mb-3">
                         <label htmlFor="vec_id" className="form-label">
@@ -800,7 +804,7 @@ export default function ExpensesTransactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form className="mx-auto col-md-6">
+                  <form className="mx-auto col-md-6" onSubmit={updateVec}>
                     <div className="mb-3">
                       <label htmlFor="vec_edit_balance" className="form-label">
                         Edit Amount

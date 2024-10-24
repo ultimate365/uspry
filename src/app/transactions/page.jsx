@@ -152,7 +152,8 @@ export default function Transactions() {
     setTransactionState(data);
   };
 
-  const submitTransaction = async () => {
+  const submitTransaction = async (e) => {
+    e.preventDefault();
     if (amount && purpose && type) {
       setLoader(true);
       let y = purpose;
@@ -256,7 +257,8 @@ export default function Transactions() {
     // getTransactions();
   };
 
-  const updateTransaction = async () => {
+  const updateTransaction = async (e) => {
+    e.preventDefault();
     try {
       setLoader(true);
       await updateDoc(
@@ -918,7 +920,12 @@ export default function Transactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form action="" className="mx-auto" autoComplete="off">
+                  <form
+                    action=""
+                    className="mx-auto"
+                    autoComplete="off"
+                    onSubmit={submitTransaction}
+                  >
                     <div className="row">
                       <div className="col-md-6">
                         <label htmlFor="date" className="form-label">
@@ -1240,7 +1247,7 @@ export default function Transactions() {
                 </div>
                 <div className="modal-footer">
                   <button
-                    type="button"
+                    type="submit"
                     className="btn btn-primary m-2"
                     onClick={submitTransaction}
                     disabled={
@@ -1311,7 +1318,12 @@ export default function Transactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form action="" className="mx-auto" autoComplete="off">
+                  <form
+                    action=""
+                    className="mx-auto"
+                    autoComplete="off"
+                    onSubmit={updateTransaction}
+                  >
                     <div className="row">
                       <div className="col-md-6">
                         <div className="mb-3">
@@ -1669,7 +1681,7 @@ export default function Transactions() {
                 <div className="modal-footer">
                   <div className="my-2">
                     <button
-                      type="button"
+                      type="submit"
                       className="btn btn-primary m-2"
                       onClick={updateTransaction}
                       disabled={
