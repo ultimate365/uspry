@@ -26,7 +26,7 @@ import {
   todayInString,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
-
+import DataTable from "react-data-table-component";
 export default function ExpensesTransactions() {
   const { stateObject, setStateObject, state } = useGlobalContext();
   const access = state?.ACCESS;
@@ -34,6 +34,7 @@ export default function ExpensesTransactions() {
 
   const [loader, setLoader] = useState(false);
   const [allTransactions, setAllTransactions] = useState([]);
+  const [allFTransactions, setAllFTransactions] = useState([]);
   const [showExpenseEntry, setShowExpenseEntry] = useState(false);
   const [showExpenseEdit, setShowExpenseEdit] = useState(false);
   const [expenseObj, setExpenseObj] = useState({
@@ -85,6 +86,7 @@ export default function ExpensesTransactions() {
       );
     setLoader(false);
     setAllTransactions(data);
+    setAllFTransactions(data);
     const x = data.filter((t) => t.id === id);
     if (x.length > 0) {
       setId(getId() + `-${x.length}`);
@@ -195,7 +197,107 @@ export default function ExpensesTransactions() {
       toast.error("VEC Transaction update failed");
     }
   };
+  const columns = [
+    {
+      name: "Sl",
+      selector: (row, ind) =>
+        allFTransactions.findIndex((i) => i.id === row.id) + 1,
+      width: "10%",
+    },
 
+    {
+      name: "Date",
+      selector: (row) => row.date,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "15%",
+    },
+    {
+      name: "Tran. Type",
+      selector: (row) => row.type,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "12%",
+    },
+    {
+      name: "Amount",
+      selector: (row) => `₹ ${IndianFormat(row?.amount)}`,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "12%",
+    },
+    {
+      name: "Opening Balance",
+      selector: (row) => `₹ ${IndianFormat(row?.openingBalance)}`,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "15%",
+    },
+    {
+      name: "Closing Balance",
+      selector: (row) => `₹ ${IndianFormat(row?.closingBalance)}`,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "15%",
+    },
+    {
+      name: "Action",
+      selector: (transaction, index) => (
+        <div>
+          <button
+            type="button"
+            className={`btn btn-warning m-1`}
+            onClick={() => {
+              setShowExpenseEntry(false);
+              setShowExpenseEdit(true);
+              setEditexpenseObj(transaction);
+            }}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            className={`btn btn-danger m-1`}
+            onClick={() => {
+              // eslint-disable-next-line no-alert
+              if (
+                window.confirm("Are you sure you want to delete this entry?")
+              ) {
+                delTransaction(transaction);
+              }
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      ),
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "20%",
+    },
+  ];
+  const conditionalRowStyles = [
+    {
+      when: (row) => row.type === "DEBIT",
+      style: {
+        backgroundColor: "red",
+        color: "white",
+      },
+    },
+    {
+      when: (row) => row.type === "CREDIT",
+      style: {
+        backgroundColor: "green",
+        color: "white",
+      },
+    },
+  ];
   useEffect(() => {
     if (access !== "admin") {
       router.push("/");
@@ -237,7 +339,17 @@ export default function ExpensesTransactions() {
             </button>
           )}
         </div>
-        {allTransactions.length > 0 ? (
+        {allTransactions.length > 0 && (
+          <DataTable
+            columns={columns}
+            data={allTransactions}
+            pagination
+            highlightOnHover
+            fixedHeader
+            conditionalRowStyles={conditionalRowStyles}
+          />
+        )}
+        {/* {allTransactions.length > 0 ? (
           <div
             className="d-flex flex-column justify-content-center align-items-center"
             style={{
@@ -421,311 +533,376 @@ export default function ExpensesTransactions() {
           </div>
         ) : (
           <h6>No Transactions Found</h6>
-        )}
+        )} */}
 
         {showExpenseEntry && (
-          <div className="mx-auto">
-            <form
-              className="col-md-6 mx-auto"
-              onSubmit={handleVECSubmit}
-              autoComplete="off"
-            >
-              {expenseObj.id && (
-                <div className="mb-3">
-                  <label htmlFor="vec_id" className="form-label">
-                    ID
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="vec_balance"
-                    value={expenseObj.id}
-                    placeholder="Enter id"
-                    disabled={true}
-                    readOnly
-                  />
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-md">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Add New Transaction
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => {
+                      setShowExpenseEntry(false);
+                      setExpenseObj({
+                        id: "",
+                        amount: "",
+                        purpose: "",
+                        type: "DEBIT",
+                        date: todayInString(),
+                        openingBalance: parseFloat(stateObject?.balance),
+                        closingBalance: parseFloat(stateObject?.balance),
+                      });
+                    }}
+                  ></button>
                 </div>
-              )}
-              <div className="mb-3">
-                <label htmlFor="vec_date" className="form-label">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="vec_date"
-                  defaultValue={getCurrentDateInput(expenseObj.date)}
-                  onChange={(e) => {
-                    setExpenseObj({
-                      ...expenseObj,
-                      date: getSubmitDateInput(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="type" className="form-label">
-                  Type
-                </label>
-                <select
-                  className="form-select"
-                  id="type"
-                  value={expenseObj.type}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "DEBIT") {
-                      setExpenseObj({
-                        ...expenseObj,
-                        type: value,
-                        closingBalance: round2dec(
-                          stateObject.balance - expenseObj.amount
-                        ),
-                      });
-                    } else {
-                      setExpenseObj({
-                        ...expenseObj,
-                        type: value,
-                        closingBalance: stateObject.balance + expenseObj.amount,
-                      });
-                    }
-                  }}
-                >
-                  <option value="CREDIT">CREDIT</option>
-                  <option value="DEBIT">DEBIT</option>
-                </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor="vec_balance" className="form-label">
-                  Opening Balance
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_balance"
-                  value={expenseObj.openingBalance}
-                  placeholder="Enter Opening balance"
-                  disabled={true}
-                  readOnly={true}
-                  onChange={(e) => {
-                    toast.error(
-                      "Can't change the opening balance, from this section"
-                    );
-                  }}
-                />
-              </div>
+                <div className="modal-body">
+                  <form
+                    className="col-md-6 mx-auto"
+                    onSubmit={handleVECSubmit}
+                    autoComplete="off"
+                  >
+                    {expenseObj.id && (
+                      <div className="mb-3">
+                        <label htmlFor="vec_id" className="form-label">
+                          ID
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="vec_balance"
+                          value={expenseObj.id}
+                          placeholder="Enter id"
+                          disabled={true}
+                          readOnly
+                        />
+                      </div>
+                    )}
+                    <div className="mb-3">
+                      <label htmlFor="vec_date" className="form-label">
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="vec_date"
+                        defaultValue={getCurrentDateInput(expenseObj.date)}
+                        onChange={(e) => {
+                          setExpenseObj({
+                            ...expenseObj,
+                            date: getSubmitDateInput(e.target.value),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="type" className="form-label">
+                        Type
+                      </label>
+                      <select
+                        className="form-select"
+                        id="type"
+                        value={expenseObj.type}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "DEBIT") {
+                            setExpenseObj({
+                              ...expenseObj,
+                              type: value,
+                              closingBalance: round2dec(
+                                stateObject.balance - expenseObj.amount
+                              ),
+                            });
+                          } else {
+                            setExpenseObj({
+                              ...expenseObj,
+                              type: value,
+                              closingBalance:
+                                stateObject.balance + expenseObj.amount,
+                            });
+                          }
+                        }}
+                      >
+                        <option value="CREDIT">CREDIT</option>
+                        <option value="DEBIT">DEBIT</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="vec_balance" className="form-label">
+                        Opening Balance
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vec_balance"
+                        value={expenseObj.openingBalance}
+                        placeholder="Enter Opening balance"
+                        disabled={true}
+                        readOnly={true}
+                        onChange={(e) => {
+                          toast.error(
+                            "Can't change the opening balance, from this section"
+                          );
+                        }}
+                      />
+                    </div>
 
-              <CustomInput
-                title={"Purpose"}
-                id="vec_purpose"
-                type={"text"}
-                value={expenseObj.purpose}
-                placeholder="Enter purpose"
-                onChange={(e) => {
-                  console.log(expenseObj.date);
-                  const inpMonth = parseInt(expenseObj.date?.split("-")[1]) - 1;
-                  const inpYear = expenseObj.date?.split("-")[2];
-                  const textMonth = monthNamesWithIndex[inpMonth].monthName;
-                  let newId = `${textMonth}-${inpYear}`;
-                  const checkDuplicate = allTransactions.filter(
-                    (transaction) => transaction.id === newId
-                  );
-                  if (checkDuplicate.length > 0) {
-                    newId = new Date().getMinutes().toString() + "-" + newId;
-                  }
-                  setExpenseObj({
-                    ...expenseObj,
-                    purpose: e.target.value,
-                    id: e.target.value.split(" ").join("-") + "-" + newId,
-                  });
-                }}
-              />
+                    <CustomInput
+                      title={"Purpose"}
+                      id="vec_purpose"
+                      type={"text"}
+                      value={expenseObj.purpose}
+                      placeholder="Enter purpose"
+                      onChange={(e) => {
+                        console.log(expenseObj.date);
+                        const inpMonth =
+                          parseInt(expenseObj.date?.split("-")[1]) - 1;
+                        const inpYear = expenseObj.date?.split("-")[2];
+                        const textMonth =
+                          monthNamesWithIndex[inpMonth].monthName;
+                        let newId = `${textMonth}-${inpYear}`;
+                        const checkDuplicate = allTransactions.filter(
+                          (transaction) => transaction.id === newId
+                        );
+                        if (checkDuplicate.length > 0) {
+                          newId =
+                            new Date().getMinutes().toString() + "-" + newId;
+                        }
+                        setExpenseObj({
+                          ...expenseObj,
+                          purpose: e.target.value,
+                          id: e.target.value.split(" ").join("-") + "-" + newId,
+                        });
+                      }}
+                    />
 
-              <CustomInput
-                title={"Amount"}
-                id="vec_amount"
-                value={expenseObj.amount}
-                placeholder="Enter amount"
-                type={"number"}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    setExpenseObj({
-                      ...expenseObj,
-                      amount: parseFloat(e.target.value),
-                      closingBalance:
-                        expenseObj.type === "DEBIT"
-                          ? parseFloat(
-                              round2dec(
-                                expenseObj.openingBalance -
-                                  parseFloat(e.target.value)
-                              )
-                            )
-                          : parseFloat(e.target.value) +
-                            expenseObj.openingBalance,
-                    });
-                  } else {
-                    setExpenseObj({
-                      ...expenseObj,
-                      amount: "",
-                      closingBalance: expenseObj.openingBalance,
-                    });
-                  }
-                }}
-              />
+                    <CustomInput
+                      title={"Amount"}
+                      id="vec_amount"
+                      value={expenseObj.amount}
+                      placeholder="Enter amount"
+                      type={"number"}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          setExpenseObj({
+                            ...expenseObj,
+                            amount: parseFloat(e.target.value),
+                            closingBalance:
+                              expenseObj.type === "DEBIT"
+                                ? parseFloat(
+                                    round2dec(
+                                      expenseObj.openingBalance -
+                                        parseFloat(e.target.value)
+                                    )
+                                  )
+                                : parseFloat(e.target.value) +
+                                  expenseObj.openingBalance,
+                          });
+                        } else {
+                          setExpenseObj({
+                            ...expenseObj,
+                            amount: "",
+                            closingBalance: expenseObj.openingBalance,
+                          });
+                        }
+                      }}
+                    />
 
-              <div className="mb-3">
-                <label htmlFor="vec_balance" className="form-label">
-                  Closing Balance
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_balance"
-                  value={expenseObj.closingBalance}
-                  disabled={true}
-                  readOnly={true}
-                />
+                    <div className="mb-3">
+                      <label htmlFor="vec_balance" className="form-label">
+                        Closing Balance
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vec_balance"
+                        value={expenseObj.closingBalance}
+                        disabled={true}
+                        readOnly={true}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="modal-footer">
+                  <div className="my-2">
+                    <button
+                      type="submit"
+                      className="btn btn-primary m-2"
+                      disabled={
+                        expenseObj.closingBalance <= 0 ||
+                        expenseObj.purpose === ""
+                      }
+                    >
+                      Submit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger m-2"
+                      onClick={() => {
+                        setShowExpenseEntry(false);
+                        setExpenseObj({
+                          id: "",
+                          amount: "",
+                          purpose: "",
+                          type: "DEBIT",
+                          date: todayInString(),
+                          openingBalance: parseFloat(stateObject?.balance),
+                          closingBalance: parseFloat(stateObject?.balance),
+                        });
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
-
-              <div className="my-2">
-                <button
-                  type="submit"
-                  className="btn btn-primary m-2"
-                  disabled={
-                    expenseObj.closingBalance <= 0 || expenseObj.purpose === ""
-                  }
-                >
-                  Submit
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger m-2"
-                  onClick={() => {
-                    setShowExpenseEntry(false);
-                    setExpenseObj({
-                      id: "",
-                      amount: "",
-                      purpose: "",
-                      type: "DEBIT",
-                      date: todayInString(),
-                      openingBalance: parseFloat(stateObject?.balance),
-                      closingBalance: parseFloat(stateObject?.balance),
-                    });
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         )}
         {showExpenseEdit && (
-          <div className="mx-auto">
-            <form className="mx-auto col-md-6" onSubmit={updateVec}>
-              <div className="mb-3">
-                <label htmlFor="vec_edit_balance" className="form-label">
-                  Edit Amount
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_edit_balance"
-                  value={editexpenseObj.amount}
-                  onChange={(e) => {
-                    setEditexpenseObj({
-                      ...editexpenseObj,
-                      amount: parseFloat(e.target.value),
-                    });
-                  }}
-                />
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-md">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Edit Transaction
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowExpenseEdit(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <form className="mx-auto col-md-6" onSubmit={updateVec}>
+                    <div className="mb-3">
+                      <label htmlFor="vec_edit_balance" className="form-label">
+                        Edit Amount
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vec_edit_balance"
+                        value={editexpenseObj.amount}
+                        onChange={(e) => {
+                          setEditexpenseObj({
+                            ...editexpenseObj,
+                            amount: parseFloat(e.target.value),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="vec_edit_date" className="form-label">
+                        Edit Date
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="vec_edit_date"
+                        defaultValue={getCurrentDateInput(editexpenseObj.date)}
+                        onChange={(e) => {
+                          setEditexpenseObj({
+                            ...editexpenseObj,
+                            date: getSubmitDateInput(e.target.value),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="vec_edit_purpose" className="form-label">
+                        Edit Purpose
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vec_edit_purpose"
+                        value={editexpenseObj.purpose}
+                        onChange={(e) => {
+                          setEditexpenseObj({
+                            ...editexpenseObj,
+                            purpose: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="vec_edit_balance" className="form-label">
+                        Edit Opening Balance
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vec_edit_balance"
+                        value={editexpenseObj.openingBalance}
+                        onChange={(e) => {
+                          setEditexpenseObj({
+                            ...editexpenseObj,
+                            openingBalance: parseFloat(e.target.value),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="vec_edit_balance" className="form-label">
+                        Edit Closing Balance
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="vec_edit_balance"
+                        value={editexpenseObj.closingBalance}
+                        onChange={(e) => {
+                          setEditexpenseObj({
+                            ...editexpenseObj,
+                            closingBalance: parseFloat(e.target.value),
+                          });
+                        }}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="modal-footer">
+                  <div className="my-2">
+                    <button
+                      type="submit"
+                      className="btn btn-primary m-2"
+                      disabled={
+                        expenseObj.editBalance <= 0 ||
+                        expenseObj.editBalance > stateObject?.balance
+                      }
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger m-2"
+                      onClick={() => setShowExpenseEdit(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="mb-3">
-                <label htmlFor="vec_edit_date" className="form-label">
-                  Edit Date
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="vec_edit_date"
-                  defaultValue={getCurrentDateInput(editexpenseObj.date)}
-                  onChange={(e) => {
-                    setEditexpenseObj({
-                      ...editexpenseObj,
-                      date: getSubmitDateInput(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="vec_edit_purpose" className="form-label">
-                  Edit Purpose
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_edit_purpose"
-                  value={editexpenseObj.purpose}
-                  onChange={(e) => {
-                    setEditexpenseObj({
-                      ...editexpenseObj,
-                      purpose: e.target.value,
-                    });
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="vec_edit_balance" className="form-label">
-                  Edit Opening Balance
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_edit_balance"
-                  value={editexpenseObj.openingBalance}
-                  onChange={(e) => {
-                    setEditexpenseObj({
-                      ...editexpenseObj,
-                      openingBalance: parseFloat(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="vec_edit_balance" className="form-label">
-                  Edit Closing Balance
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="vec_edit_balance"
-                  value={editexpenseObj.closingBalance}
-                  onChange={(e) => {
-                    setEditexpenseObj({
-                      ...editexpenseObj,
-                      closingBalance: parseFloat(e.target.value),
-                    });
-                  }}
-                />
-              </div>
-              <div className="my-2">
-                <button
-                  type="submit"
-                  className="btn btn-primary m-2"
-                  disabled={
-                    expenseObj.editBalance <= 0 ||
-                    expenseObj.editBalance > stateObject?.balance
-                  }
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger m-2"
-                  onClick={() => setShowExpenseEdit(false)}
-                >
-                  Close
-                </button>
-              </div>
-            </form>
+            </div>
           </div>
         )}
       </div>

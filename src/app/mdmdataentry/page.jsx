@@ -519,7 +519,7 @@ export default function MDMData() {
       const entry = {
         id: monthYearID,
         month: monthToSubmit,
-        year: parseInt(selectedYear),
+        year: selectedYear.toString(),
         financialYear: financialYear,
         worrkingDays: monthWorkingDays,
         ppTotal: monthPPTotal,

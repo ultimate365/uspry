@@ -72,6 +72,10 @@ export default function MDMmonthlyReport() {
   const [allEnry, setAllEnry] = useState([]);
   const [showData, setShowData] = useState(false);
   const [allTransactions, setAllTransactions] = useState([]);
+  const [selectedYearTransactions, setSelectedYearTransactions] = useState([]);
+  const [selectedMonthTransactions, setSelectedMonthTransactions] = useState(
+    []
+  );
   const [prevMonthlyData, setPrevMonthData] = useState({
     id: "",
     month: "",
@@ -133,44 +137,6 @@ export default function MDMmonthlyReport() {
       openingBalance: "",
       closingBalance: "",
     });
-  const [previousMonthFromTransaction, setPreviousMonthFromTransaction] =
-    useState({
-      accountName: "",
-      accountNumber: "",
-      amount: "",
-      purpose: "",
-      type: "",
-      date: "",
-      id: "",
-      ppOB: "",
-      ppRC: "",
-      ppCB: "",
-      pryOB: "",
-      pryRC: "",
-      pryCB: "",
-      openingBalance: "",
-      closingBalance: "",
-    });
-  const [
-    previousMonthFromFirstTransaction,
-    setPreviousMonthFromFirstTransaction,
-  ] = useState({
-    accountName: "",
-    accountNumber: "",
-    amount: "",
-    purpose: "",
-    type: "",
-    date: "",
-    id: "",
-    ppOB: "",
-    ppRC: "",
-    ppCB: "",
-    pryOB: "",
-    pryRC: "",
-    pryCB: "",
-    openingBalance: "",
-    closingBalance: "",
-  });
 
   const [balRCPrevMonth, setBalRCPrevMonth] = useState(0);
   const [balRCThisMonth, setBalRCThisMonth] = useState(0);
@@ -192,7 +158,7 @@ export default function MDMmonthlyReport() {
   const calledData = (array) => {
     let x = [];
     array.map((entry) => {
-      const entryYear = entry.id.split("-")[1];
+      const entryYear = entry.year;
       x.push(entryYear);
       x = uniqArray(x);
       x = x.sort((a, b) => a - b);
@@ -212,13 +178,18 @@ export default function MDMmonthlyReport() {
           monthSelect.value = "";
         }
       }
+      setSelectedYearTransactions(
+        transactionState.filter(
+          (transaction) => transaction.year === e.target.value
+        )
+      );
       setMonthText("");
       const selectedValue = e.target.value;
       let x = [];
       let y = [];
       allEnry.map((entry) => {
-        const entryYear = entry.id.split("-")[1];
-        const entryMonth = entry.id.split("-")[0];
+        const entryYear = entry.year;
+        const entryMonth = entry.month;
 
         if (entryYear === selectedValue) {
           x.push(entry);
@@ -241,8 +212,8 @@ export default function MDMmonthlyReport() {
     let x = [];
 
     allEnry.map((entry, index) => {
-      const entryYear = entry.id.split("-")[1];
-      const entryMonth = entry.id.split("-")[0];
+      const entryYear = entry.year;
+      const entryMonth = entry.month;
       if (entryYear === selectedYear && entryMonth === month) {
         x.push(entry);
         setThisMonthlyData(entry);
@@ -253,11 +224,11 @@ export default function MDMmonthlyReport() {
           (account) => account.id === entry.id
         )[0];
         setThisMonthFromTransaction(thisMonthTransaction);
-        const creditTrThisMonth = transactionState.filter(
-          (tr) =>
-            tr.purpose.split(`MDM Cost-`)[1] === entry.id ||
-            tr.purpose.split(`Interest-`)[1] === entry.id
-        );
+        const creditTrThisMonth = selectedYearTransactions
+          .filter((trmonth) => trmonth.month === month)
+          .filter((trtype) => trtype.type === "CREDIT");
+        setSelectedMonthTransactions(creditTrThisMonth);
+
         if (creditTrThisMonth.length > 0) {
           setFtFound(true);
         } else {
@@ -272,18 +243,12 @@ export default function MDMmonthlyReport() {
         });
         setBalRCThisMonth(cBalRCThisMonth);
         setPryRCThisMonth(cPryRCThisMonth);
-
-        const thisMonthName = entry.id.split("-")[0];
-        const thisMonthYear = entry.id.split("-")[1];
+        const thisMonthName = entry.month;
         const prevMonthName = months[months.indexOf(thisMonthName) - 1];
-        const creditTrPrevMonth = transactionState.filter(
-          (tr) =>
-            tr.purpose.split(`MDM Cost-`)[1] ===
-              `${prevMonthName}-${thisMonthYear}` ||
-            tr.purpose.split(`Interest-`)[1] ===
-              `${prevMonthName}-${thisMonthYear}`
-        );
-        setPreviousMonthFromFirstTransaction(creditTrPrevMonth[0]);
+        const creditTrPrevMonth = selectedYearTransactions
+          .filter((trmonth) => trmonth.month === prevMonthName)
+          .filter((trtype) => trtype.type === "CREDIT");
+
         let cBalPrevMonth = 0;
         let cPryPrevMonth = 0;
         creditTrPrevMonth.forEach((tr) => {
@@ -292,11 +257,6 @@ export default function MDMmonthlyReport() {
         });
         setBalRCPrevMonth(cBalPrevMonth);
         setPryRCPrevMonth(cPryPrevMonth);
-
-        const thisPrevMonthTransaction = transactionState.filter(
-          (account) => account.id === `${prevMonthName}-${entry.year}`
-        )[0];
-        setPreviousMonthFromTransaction(thisPrevMonthTransaction);
         return x;
       }
     });
@@ -341,6 +301,7 @@ export default function MDMmonthlyReport() {
     setLoader(false);
     setAllTransactions(data);
     setTransactionState(data);
+    console.log(data);
   };
   useEffect(() => {
     if (transactionState.length === 0) {

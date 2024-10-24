@@ -11,20 +11,7 @@ import { Loader } from "rsuite";
 import Image from "next/image";
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 export default function Navbar() {
-  const {
-    state,
-    setState,
-
-    setTeacherUpdateTime,
-    studentUpdateTime,
-    setStudentUpdateTime,
-    slideUpdateTime,
-    setSlideUpdateTime,
-    noticeUpdateTime,
-    setNoticeUpdateTime,
-    userUpdateTime,
-    setUserUpdateTime,
-  } = useGlobalContext();
+  const { state, setState } = useGlobalContext();
   const router = useRouter();
   let userdetails, loggedAt;
   let details = getCookie("uid");
@@ -157,10 +144,10 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
-              href="/mdmdata"
+              href="/mdmdataentry"
               onClick={handleNavCollapse}
             >
-              MDM Entry Section
+              MDM Data Entry
             </Link>
           </li>
           <li className="nav-item">
