@@ -18,6 +18,14 @@ const dejaVuBold = localFont({
   ],
   variable: "--font-dejaVuBold",
 });
+const kalpurush = localFont({
+  src: [
+    {
+      path: "../../public/assets/fonts/kalpurush.ttf",
+    },
+  ],
+  variable: "--font-kalpurush",
+});
 const dejaVuCondensed = localFont({
   src: [
     {
@@ -26,13 +34,7 @@ const dejaVuCondensed = localFont({
   ],
   variable: "--font-dejaVuCondensed",
 });
-const tiro_bangla = Tiro_Bangla({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  preload: true,
-  variable: "--font-tiro",
-});
+
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -55,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`container-fluid text-center text-black ${tiro_bangla.variable} ${roboto.variable} ${dejaVuBold.variable} ${dejaVuCondensed.variable}`}
+        className={`container-fluid text-center text-black ${kalpurush.variable} ${roboto.variable} ${dejaVuBold.variable} ${dejaVuCondensed.variable}`}
         suppressHydrationWarning={true}
       >
         <GlobalContextProvider>

@@ -155,6 +155,9 @@ export default function MDMmonthlyReport() {
   const [showRemarksPage1, setShowRemarksPage1] = useState(false);
   const [showRemarksPage4, setShowRemarksPage4] = useState(false);
   const [remarks, setRemarks] = useState("");
+  const [showZoom, setShowZoom] = useState(false);
+  const [newFormatZoom, setNewFormatZoom] = useState(100);
+  const [oldFormatZoom, setOldFormatZoom] = useState(100);
   const calledData = (array) => {
     let x = [];
     array.map((entry) => {
@@ -349,6 +352,75 @@ export default function MDMmonthlyReport() {
       ) : (
         <>
           <div className="noprint">
+          {showZoom && (
+            <div
+              className="modal fade show"
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: "block" }}
+              aria-modal="true"
+            >
+              <div className="modal-dialog modal-sm">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                      Set Page Zoom
+                    </h1>
+                  </div>
+                  <div className="modal-body">
+                    <div className="mx-auto my-2 noprint">
+                      <div className="mb-3 mx-auto">
+                        <h5 htmlFor="rank" className="text-danger">
+                          ***Write percent without "%" e.g.(80, 90)
+                        </h5>
+                        <input
+                          type="number"
+                          className="form-control m-2 col-md-4"
+                          id="newFormatZoom"
+                          name="newFormatZoom"
+                          value={newFormatZoom}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setNewFormatZoom(parseInt(e.target.value));
+                            } else {
+                              setNewFormatZoom("");
+                            }
+                          }}
+                        />
+                        <input
+                          type="number"
+                          className="form-control m-2 col-md-4"
+                          id="oldFormatZoom"
+                          name="oldFormatZoom"
+                          value={oldFormatZoom}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setOldFormatZoom(parseInt(e.target.value));
+                            } else {
+                              setOldFormatZoom("");
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    {newFormatZoom > 0 && oldFormatZoom > 0 && (
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() => {
+                          setShowZoom(false);
+                        }}
+                      >
+                        Save
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
             <button
               type="button"
               className="btn btn-primary m-2"
@@ -496,6 +568,15 @@ export default function MDMmonthlyReport() {
             >
               {showRemarksPage4 ? "Hide Remarks Page 4" : "Show Remarks Page 4"}
             </button>
+            <button
+              type="button"
+              className="btn btn-success m-2"
+              onClick={() => {
+                setShowZoom(true);
+              }}
+            >
+              Set Page Zoom
+            </button>
           </div>
 
           {showNewFormat && (
@@ -506,6 +587,7 @@ export default function MDMmonthlyReport() {
                   width: "100%",
                   overflowX: "scroll",
                   flexWrap: "wrap",
+                  zoom: newFormatZoom/100 || 100,
                 }}
               >
                 <table
@@ -1631,6 +1713,7 @@ export default function MDMmonthlyReport() {
                   width: "100%",
                   overflowX: "scroll",
                   flexWrap: "wrap",
+                  zoom: oldFormatZoom/100 || 100,
                 }}
               >
                 <h4>Pradhan Mantri Poshan Shakti Nirman (PM POSHAN)</h4>
@@ -2810,6 +2893,8 @@ export default function MDMmonthlyReport() {
               </div>
             </div>
           )}
+
+          
         </div>
       )}
     </div>

@@ -468,16 +468,17 @@ export default function MDMData() {
         riceOB: riceOB,
         riceGiven: riceGiven === "" ? 0 : riceGiven,
         riceExpend: riceExpend,
-        riceCB: riceOB - riceExpend,
+        riceCB: riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend,
       })
         .then(() => {
           toast.success("Rice Data added successfully");
           setRiceGiven(0);
-          setRiceOB(riceOB - riceExpend);
+          setRiceOB(riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend);
           getRiceData();
           setDocId(todayInString());
           setDate(todayInString());
           setRiceExpend("");
+          setRiceGiven("");
           setShowRiceData(false);
           setShowEntry(false);
           setShowDataTable(false);
@@ -1596,15 +1597,30 @@ export default function MDMData() {
                   }
                 }}
               />
-              {errRice && (
-                <p className="text-danger m-2">Please Enter Rice Expenditure</p>
-              )}
-              {showRiceBalance && (
-                <h4 className="text-info m-2">
-                  Closing Balance {riceOB - riceExpend} Kg.
-                </h4>
-              )}
+              {errRice && <p className="text-danger m-2">{errRice}</p>}
             </div>
+            <div className="form-group m-2 col-md-4 mx-auto">
+              <label className="m-2">Rice Received (in Kg.)</label>
+              <input
+                type="number"
+                className="form-control "
+                placeholder={`Enter Rice Received`}
+                value={riceGiven}
+                onChange={(e) => {
+                  if (e.target.value !== "") {
+                    setRiceGiven(parseInt(e.target.value));
+                  } else {
+                    setRiceGiven("");
+                  }
+                }}
+              />
+            </div>
+            {showRiceBalance && (
+              <h4 className="text-info m-2">
+                Closing Balance{" "}
+                {riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend} Kg.
+              </h4>
+            )}
             <button
               type="submit"
               className="btn btn-success"
@@ -1615,6 +1631,7 @@ export default function MDMData() {
                   return;
                 }
                 setErrRice("");
+
                 submitRice();
               }}
             >

@@ -737,7 +737,16 @@ export default function Transactions() {
                               setDate(date);
                               setMonth(cmonth);
                               setYear(cyear);
-                              setId(getMonthYear(e.target.value));
+
+                              const genId = getMonthYear(e.target.value);
+                              const checkId = transactionState.filter(
+                                (tr) => tr.id === genId
+                              );
+                              if (checkId.length > 0) {
+                                setId(genId + `-${checkId.length + 1}`);
+                              } else {
+                                setId(genId);
+                              }
                             }}
                           />
                         </div>
@@ -755,6 +764,12 @@ export default function Transactions() {
                                 setMdmWithdrawal("MDM WITHDRAWAL");
                                 setPurpose("MDM WITHDRAWAL");
                                 setTransactionPurpose("MDM WITHDRAWAL");
+                                setPpRC(0);
+                                setPryRC(0);
+                                setPpCB(ppOB);
+                                setPryCB(parseFloat(pryOB));
+                                setPpEX("");
+                                setPryEX("");
                                 if (typeof (window !== "undefined")) {
                                   let purpose_type =
                                     document.getElementById("purpose_type");
@@ -766,6 +781,12 @@ export default function Transactions() {
                                 setMdmWithdrawal("MDM COOKING COST");
                                 setPurpose("MDM COOKING COST");
                                 setTransactionPurpose("MDM COOKING COST");
+                                setPpEX(0);
+                                setPryEX(0);
+                                setPpCB(ppOB + ppRC);
+                                setPryCB(pryOB + pryRC);
+                                setPpRC("");
+                                setPryRC("");
                                 if (typeof (window !== "undefined")) {
                                   let purpose_type =
                                     document.getElementById("purpose_type");
@@ -874,50 +895,54 @@ export default function Transactions() {
                             placeholder="Enter PP Opening Balance"
                           />
                         </div>
-                        <div className="mb-3">
-                          <label htmlFor="ppRC" className="form-label">
-                            PP Received
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="ppRC"
-                            value={ppRC}
-                            onChange={(e) => {
-                              if (e.target.value !== "") {
-                                setPpRC(parseFloat(e.target.value));
-                                setPpCB(parseFloat(e.target.value) + ppOB);
-                              } else {
-                                setPpRC("");
-                                setPpCB("");
-                              }
-                            }}
-                            placeholder="Enter PP Received"
-                          />
-                        </div>
-                        <div className="mb-3">
-                          <label htmlFor="ppRC" className="form-label">
-                            PP Expense
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="ppEX"
-                            value={ppEX}
-                            onChange={(e) => {
-                              if (e.target.value !== "") {
-                                setPpEX(parseFloat(e.target.value));
-                                setPpCB(
-                                  ppOB + ppRC - parseFloat(e.target.value)
-                                );
-                              } else {
-                                setPpRC("");
-                                setPpCB(ppRC + ppOB);
-                              }
-                            }}
-                            placeholder="Enter PP Expense"
-                          />
-                        </div>
+                        {type === "CREDIT" && (
+                          <div className="mb-3">
+                            <label htmlFor="ppRC" className="form-label">
+                              PP Received
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="ppRC"
+                              value={ppRC}
+                              onChange={(e) => {
+                                if (e.target.value !== "") {
+                                  setPpRC(parseFloat(e.target.value));
+                                  setPpCB(ppOB + parseFloat(e.target.value));
+                                } else {
+                                  setPpRC("");
+                                  setPpCB(ppRC + ppOB);
+                                }
+                              }}
+                              placeholder="Enter PP Received"
+                            />
+                          </div>
+                        )}
+                        {type === "DEBIT" && (
+                          <div className="mb-3">
+                            <label htmlFor="ppRC" className="form-label">
+                              PP Expense
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="ppEX"
+                              value={ppEX}
+                              onChange={(e) => {
+                                if (e.target.value !== "") {
+                                  setPpEX(parseFloat(e.target.value));
+                                  setPpCB(
+                                    ppOB + ppRC - parseFloat(e.target.value)
+                                  );
+                                } else {
+                                  setPpRC("");
+                                  setPpCB(ppRC + ppOB);
+                                }
+                              }}
+                              placeholder="Enter PP Expense"
+                            />
+                          </div>
+                        )}
                       </div>
 
                       <div className="col-md-6">
@@ -959,49 +984,53 @@ export default function Transactions() {
                             placeholder="Enter Primary Opening Balance"
                           />
                         </div>
-                        <div className="mb-3">
-                          <label htmlFor="pryRC" className="form-label">
-                            Primary Received
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="pryRC"
-                            value={pryRC}
-                            onChange={(e) => {
-                              if (e.target.value !== "") {
-                                setPryRC(parseFloat(e.target.value));
-                                setPryCB(parseFloat(e.target.value) + pryOB);
-                              } else {
-                                setPryRC("");
-                              }
-                            }}
-                            placeholder="Enter Primary Received"
-                          />
-                        </div>
-                        <div className="mb-3">
-                          <label htmlFor="pryRC" className="form-label">
-                            Primary Expense
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="pryEX"
-                            value={pryEX}
-                            onChange={(e) => {
-                              if (e.target.value !== "") {
-                                setPryEX(parseFloat(e.target.value));
-                                setPryCB(
-                                  pryOB + pryRC - parseFloat(e.target.value)
-                                );
-                              } else {
-                                setPryRC("");
-                                setPryCB(pryRC + pryOB);
-                              }
-                            }}
-                            placeholder="Enter Primary Expense"
-                          />
-                        </div>
+                        {type === "CREDIT" && (
+                          <div className="mb-3">
+                            <label htmlFor="pryRC" className="form-label">
+                              Primary Received
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="pryRC"
+                              value={pryRC}
+                              onChange={(e) => {
+                                if (e.target.value !== "") {
+                                  setPryRC(parseFloat(e.target.value));
+                                  setPryCB(parseFloat(e.target.value) + pryOB);
+                                } else {
+                                  setPryRC("");
+                                }
+                              }}
+                              placeholder="Enter Primary Received"
+                            />
+                          </div>
+                        )}
+                        {type === "DEBIT" && (
+                          <div className="mb-3">
+                            <label htmlFor="pryRC" className="form-label">
+                              Primary Expense
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="pryEX"
+                              value={pryEX}
+                              onChange={(e) => {
+                                if (e.target.value !== "") {
+                                  setPryEX(parseFloat(e.target.value));
+                                  setPryCB(
+                                    pryOB + pryRC - parseFloat(e.target.value)
+                                  );
+                                } else {
+                                  setPryRC("");
+                                  setPryCB(pryRC + pryOB);
+                                }
+                              }}
+                              placeholder="Enter Primary Expense"
+                            />
+                          </div>
+                        )}
                         <div className="mb-3">
                           <label htmlFor="pryCB" className="form-label">
                             Primary Closing Balance

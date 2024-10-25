@@ -49,3 +49,11 @@ export const SCHOOL_RECOGNITION_DATE = "23-04-1980";
 export const SCHOOL_AREA = "0.05 Acre";
 export const KHATIAN_NO = "21";
 export const PLOT_NO = "755";
+export const classWiseAge = [
+  { className: "PRE PRIMARY", benClassName:"প্রাক প্রাথমিক", age: 5 },
+  { className: "CLASS I", benClassName:"প্রথম শ্রেনী", age: 6 },
+  { className: "CLASS II", benClassName:"দ্বিতীয় শ্রেনী", age: 7 },
+  { className: "CLASS III", benClassName:"তৃতীয় শ্রেনী", age: 8 },
+  { className: "CLASS IV", benClassName:"চতুর্থ শ্রেনী", age: 9 },
+  { className: "CLASS V", benClassName:"পঞ্চম শ্রেনী", age: 10 },
+];

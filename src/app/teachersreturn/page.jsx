@@ -103,6 +103,9 @@ export default function Teachersreturn() {
   const [selectedYear, setSelectedYear] = useState("");
   const [filteredEntry, setFilteredEntry] = useState([]);
   const [moreFilteredEntry, setMoreFilteredEntry] = useState([]);
+  const [frontPageZoom, setFrontPageZoom] = useState(93);
+  const [backPageZoom, setBackPageZoom] = useState(80);
+  const [showZoom, setShowZoom] = useState(false);
   const id = getID();
   const entry = {
     id,
@@ -418,7 +421,10 @@ export default function Teachersreturn() {
           </div>
         </div>
       ) : (
-        <div>
+        <div style={{
+          width: "100%",
+          overflowX: "scroll",
+          flexWrap: "wrap",}}>
           <div className="noprint">
             <button
               type="button"
@@ -500,6 +506,15 @@ export default function Teachersreturn() {
                   {showRemark ? "Hide Remark" : "Show Remark"}
                 </button>
               )}
+              <button
+                type="button"
+                className="btn btn-warning m-2"
+                onClick={() => {
+                  setShowZoom(true);
+                }}
+              >
+                Set Page Zoom
+              </button>
             </div>
           </div>
           <div
@@ -824,7 +839,7 @@ export default function Teachersreturn() {
           {showFrontPage && (
             <div
               className="mx-auto nobreak p-2"
-              style={{ border: "2px solid", zoom: 0.93 }}
+              style={{ border: "2px solid", zoom: frontPageZoom / 100 || 0.93 }}
             >
               <div className="p-2">
                 <div>
@@ -1361,7 +1376,7 @@ export default function Teachersreturn() {
           {showBackPage && (
             <div
               className="mx-auto  nobreak p-2"
-              style={{ border: "2px solid", zoom: 0.82 }}
+              style={{ border: "2px solid", zoom: backPageZoom / 100 || 0.8 }}
             >
               <div className="mx-auto" style={{ width: "100%" }}>
                 <h4 className="dejavu fs-5">
@@ -2642,6 +2657,75 @@ export default function Teachersreturn() {
                     >
                       Save
                     </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {showZoom && (
+            <div
+              className="modal fade show"
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: "block" }}
+              aria-modal="true"
+            >
+              <div className="modal-dialog modal-sm">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                      Set Page Zoom
+                    </h1>
+                  </div>
+                  <div className="modal-body">
+                    <div className="mx-auto my-2 noprint">
+                      <div className="mb-3 mx-auto">
+                        <h5 htmlFor="rank" className="text-danger">
+                          ***Write percent without "%" e.g.(80, 90)
+                        </h5>
+                        <input
+                          type="number"
+                          className="form-control m-2 col-md-4"
+                          id="frontPageZoom"
+                          name="frontPageZoom"
+                          value={frontPageZoom}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setFrontPageZoom(parseInt(e.target.value));
+                            } else {
+                              setFrontPageZoom("");
+                            }
+                          }}
+                        />
+                        <input
+                          type="number"
+                          className="form-control m-2 col-md-4"
+                          id="frontPageZoom"
+                          name="frontPageZoom"
+                          value={backPageZoom}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setBackPageZoom(parseInt(e.target.value));
+                            } else {
+                              setBackPageZoom("");
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    {frontPageZoom > 0 && backPageZoom > 0 && (
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() => {
+                          setShowZoom(false);
+                        }}
+                      >
+                        Save
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

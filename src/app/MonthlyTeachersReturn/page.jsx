@@ -228,7 +228,7 @@ export default function MonthlyTeachersReturn() {
                   </div>
                 </div>
                 <div className="modal-footer">
-                  {(frontPageZoom > 0) & (backPageZoom > 0) && (
+                  {frontPageZoom > 0 && backPageZoom > 0 && (
                     <button
                       type="button"
                       className="btn btn-success"
@@ -398,7 +398,12 @@ export default function MonthlyTeachersReturn() {
       </div>
       {loader && <Loader />}
       {showData && (
-        <div>
+        <div style={{
+          width: "100%",
+          overflowX: "scroll",
+          flexWrap: "wrap",
+          
+        }}>
           {showFrontPage && (
             <div
               className="mx-auto nobreak p-2"
@@ -685,6 +690,7 @@ export default function MonthlyTeachersReturn() {
                     border: "1px solid",
                     width: "100%",
                     overflowX: "scroll",
+                    flexWrap: "wrap",
                   }}
                 >
                   <thead>

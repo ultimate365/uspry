@@ -106,16 +106,10 @@ body {
   font-size: 14px;
 }
 
-/* @import url("https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap");
 
 .ben {
-  font-family: "Tiro Bangla", serif;
-  font-weight: 400;
-  font-style: normal;
-} */
-
-.ben {
-  font-family: var(--font-tiro);
+  font-family: var(--font-kalpurush);
+  font-size: larger;
 }
 
 @media print {

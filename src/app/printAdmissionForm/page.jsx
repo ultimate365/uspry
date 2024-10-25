@@ -47,7 +47,7 @@ export default function PrintAddmissionForm() {
     student_previous_school,
     student_addmission_date,
     student_addmission_dateAndTime,
-    updatedAt,
+    updatedAt,student_previous_student_id
   } = stateObject;
 
   useEffect(() => {
@@ -361,6 +361,22 @@ export default function PrintAddmissionForm() {
                   }}
                 >
                   {student_previous_class_year}
+                </span>
+              </h5>
+            </div>
+          )}
+          {student_previous_class !== "" && (
+            <div className="d-flex justify-content-around my-1">
+              
+              <h5>
+                ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি:{" "}
+                <span
+                  style={{
+                    textDecoration: "underline 1px dotted",
+                    textUnderlineOffset: 6,
+                  }}
+                >
+                  {student_previous_student_id}
                 </span>
               </h5>
             </div>

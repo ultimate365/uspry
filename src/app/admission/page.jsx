@@ -15,7 +15,7 @@ import { BsClipboard, BsClipboard2Check } from "react-icons/bs";
 import { useGlobalContext } from "../../context/Store";
 import { DateValueToSring } from "../../modules/calculatefunctions";
 import { useRouter } from "next/navigation";
-import { SCHOOLNAME } from "@/modules/constants";
+import { SCHOOLNAME, classWiseAge } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
 export default function Admission() {
@@ -49,6 +49,7 @@ export default function Admission() {
     student_previous_class: "FIRST TIME ADDMISSION",
     student_previous_class_year: "",
     student_previous_school: "",
+    student_previous_student_id: "",
     student_addmission_date: todayInString(),
     student_addmission_year: new Date().getFullYear(),
     student_addmission_dateAndTime: Date.now(),
@@ -76,6 +77,7 @@ export default function Admission() {
     student_addmission_class: "",
     student_previous_class_year: "",
     student_previous_school: "",
+    student_previous_student_id: "",
   });
   const [success, setSuccess] = useState(false);
   const [showForm, setShowForm] = useState(true);
@@ -113,6 +115,7 @@ export default function Admission() {
     student_previous_class: "",
     student_previous_class_year: "",
     student_previous_school: "",
+    student_previous_student_id: "",
     student_addmission_date: "",
     student_addmission_dateAndTime: "",
   });
@@ -142,6 +145,7 @@ export default function Admission() {
     student_previous_class: "",
     student_previous_class_year: "",
     student_previous_school: "",
+    student_previous_student_id: "",
     student_addmission_date: "",
     student_addmission_dateAndTime: "",
   });
@@ -172,6 +176,7 @@ export default function Admission() {
       student_addmission_class: "",
       student_previous_class_year: "",
       student_previous_school: "",
+      student_previous_student_id: "",
     });
     if (inputField.student_beng_name === "") {
       formIsValid = false;
@@ -312,6 +317,14 @@ export default function Admission() {
             "দয়া করে ছাত্র/ছাত্রীর পূর্বের শ্রেনীর বছর লিখুন অথবা যদি ভুল করে ছাত্র/ছাত্রীর পূর্বের শ্রেণী বেছে নিয়ে থাকেন তাহলে সেটি 'শ্রেণী বেছে নিন' করে দিন।",
         }));
       }
+      if (inputField.student_previous_student_id === "") {
+        formIsValid = false;
+        setErrInputField((prevState) => ({
+          ...prevState,
+          student_previous_student_id:
+            "দয়া করে ছাত্র/ছাত্রীর পূর্বের ১৪ সংখ্যার স্টুডেন্ট আইডিটি লিখুন অথবা যদি ভুল করে ছাত্র/ছাত্রীর পূর্বের শ্রেণী বেছে নিয়ে থাকেন তাহলে সেটি 'শ্রেণী বেছে নিন' করে দিন।",
+        }));
+      }
       if (inputField.student_previous_school === "") {
         formIsValid = false;
         setErrInputField((prevState) => ({
@@ -367,6 +380,7 @@ export default function Admission() {
           student_previous_class_year: inputField.student_previous_class_year,
           student_previous_school:
             inputField.student_previous_school.toUpperCase(),
+          student_previous_student_id: inputField.student_previous_student_id,
           student_addmission_date: todayInString(),
           student_addmission_year: new Date().getFullYear(),
           student_addmission_dateAndTime: Date.now(),
@@ -387,7 +401,7 @@ export default function Admission() {
         setShowForm(false);
         setStateObject(inputField);
         setInputField({
-          id: docId,
+          id: "",
           student_beng_name: "",
           student_eng_name: "",
           father_beng_name: "",
@@ -412,6 +426,7 @@ export default function Admission() {
           student_previous_class: "FIRST TIME ADDMISSION",
           student_previous_class_year: "",
           student_previous_school: "",
+          student_previous_student_id: "",
           student_addmission_date: todayInString(),
           student_addmission_dateAndTime: Date.now(),
         });
@@ -548,6 +563,7 @@ export default function Admission() {
     student_previous_class: "",
     student_previous_class_year: "",
     student_previous_school: "",
+    student_previous_student_id: "",
     student_addmission_date: "",
     student_addmission_dateAndTime: "",
     student_updatation_dateAndTime: Date.now(),
@@ -577,6 +593,7 @@ export default function Admission() {
     student_addmission_class: "",
     student_previous_class_year: "",
     student_previous_school: "",
+    student_previous_student_id: "",
   });
 
   const updateData = async (e) => {
@@ -626,6 +643,7 @@ export default function Admission() {
                 student_previous_class: "",
                 student_previous_class_year: "",
                 student_previous_school: "",
+                student_previous_student_id: "",
                 student_addmission_date: "",
                 student_addmission_dateAndTime: "",
               });
@@ -703,6 +721,7 @@ export default function Admission() {
       student_addmission_class: "",
       student_previous_class_year: "",
       student_previous_school: "",
+      student_previous_student_id: "",
     });
     if (editInputField.student_beng_name === "") {
       formIsValid = false;
@@ -851,6 +870,14 @@ export default function Admission() {
             "দয়া করে ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা লিখুন অথবা যদি ভুল করে ছাত্র/ছাত্রীর পূর্বের শ্রেণী বেছে নিয়ে থাকেন তাহলে সেটি 'শ্রেণী বেছে নিন' করে দিন।",
         }));
       }
+      if (editInputField.student_previous_student_id === "") {
+        formIsValid = false;
+        setErrEditInputField((prevState) => ({
+          ...prevState,
+          student_previous_student_id:
+            "দয়া করে ছাত্র/ছাত্রীর পূর্বের ১৪ সংখ্যার স্টুডেন্ট আইডিটি লিখুন অথবা যদি ভুল করে ছাত্র/ছাত্রীর পূর্বের শ্রেণী বেছে নিয়ে থাকেন তাহলে সেটি 'শ্রেণী বেছে নিন' করে দিন।",
+        }));
+      }
     }
     return formIsValid;
   };
@@ -869,7 +896,82 @@ export default function Admission() {
         toast.error("Failed to delete Application");
       });
   };
+  const [ageStatus, setAgeStatus] = useState("");
+  const [birthdayStatus, setBirthdayStatus] = useState(false);
+  const [calcAge, setCalcAge] = useState(5);
+  const calculateAge = (inputDate) => {
+    const birthDate = new Date(inputDate);
+    const today = new Date();
 
+    const month = today.getMonth() + 1;
+    let year = today.getFullYear();
+    if (month > 3) {
+      year = year + 1;
+    } else {
+      year = year;
+    }
+
+    // Validate if the birth date is in the future
+    if (birthDate > today) {
+      setAgeStatus("The birth date cannot be in the future.");
+      return;
+    }
+
+    const referenceDate = new Date(`${year}-01-01`);
+
+    // Calculate the difference in years, months, and days
+    let years = referenceDate.getFullYear() - birthDate.getFullYear();
+    let months = referenceDate.getMonth() - birthDate.getMonth();
+    let days = referenceDate.getDate() - birthDate.getDate();
+
+    // Adjust for negative days
+    if (days < 0) {
+      months--;
+      const lastMonth = new Date(
+        referenceDate.getFullYear(),
+        referenceDate.getMonth(),
+        0
+      ); // Get the last day of the previous month
+      days += lastMonth.getDate(); // Add the days from the last month
+    }
+
+    // Adjust for negative months
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    // Prepare age status message
+    const ageMessage = `The age is ${years} years, ${months} months, and ${days} days.`;
+
+    // Check if age is equal or above 5 years
+    if (
+      years > 5 ||
+      (years === 5 && months > 0) ||
+      (years === 5 && months === 0 && days > 0)
+    ) {
+      setAgeStatus(ageMessage);
+    } else {
+      setAgeStatus(ageMessage);
+    }
+    setCalcAge(years);
+    if (years >= 5) {
+      setBirthdayStatus(true);
+    } else {
+      setBirthdayStatus(false);
+    }
+  };
+  const [validStudentClass, setValidStudentClass] = useState(false);
+  const validateAge = (students_class) => {
+    const validAge = classWiseAge.filter(
+      (item) => item.className === students_class
+    )[0].age;
+    if (validAge === calcAge) {
+      setValidStudentClass(true);
+    } else {
+      setValidStudentClass(false);
+    }
+  };
   useEffect(() => {
     //eslint-disable-next-line
   }, [
@@ -881,14 +983,15 @@ export default function Admission() {
   ]);
   useEffect(() => {
     getAdmissionStatus();
+    // validateAge(inputField.student_addmission_class);
     //eslint-disable-next-line
   }, []);
 
   return (
     <div className="container ben">
       {loader ? <Loader /> : null}
-      <h3>WELCOME TO {SCHOOLNAME}</h3>
-      <h3>ADMISSION SECTION</h3>
+      <h3 className="timesNewRoman">WELCOME TO {SCHOOLNAME}</h3>
+      <h3 className="timesNewRoman">ADMISSION SECTION</h3>
 
       {admissionStatus && (
         <button
@@ -920,22 +1023,21 @@ export default function Admission() {
       </button>
       {showForm && admissionStatus && (
         <div className="my-4">
-          <h6 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h6>
-          <h6 className="text-danger">
-            *** যে অংশগুলি বাংলায় বলা আছে শুধুমাত্র সেইগুলিই বাংলায় করবেন বাকি
-            সমস্ত অংশ ইংরাজীতে লিখবেন।
-          </h6>
-          <h6 className="text-danger ben">
-            ** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনার ছাত্র/ছাত্রীর সমস্ত প্রয়োজনীয়
-            ডকুমেন্টস আপনার সাথে রাখুন।
-          </h6>
-          <h6 className="text-danger">
-            *** ফর্ম ফিলাপের পর প্রদত্ত অ্যাপ্লিকেশন নাম্বার অবশ্যই আপনার কাছে
-            সংরক্ষিত রাখবেন।
-          </h6>
-
           <div className="my-4">
-            <h3 className="text-primary">ADMISSION FORM</h3>
+            <h5 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h5>
+            <h5 className="text-danger">
+              *** যে অংশগুলি বাংলায় বলা আছে শুধুমাত্র সেইগুলিই বাংলায় করবেন বাকি
+              সমস্ত অংশ ইংরাজীতে লিখবেন।
+            </h5>
+            <h5 className="text-danger ben">
+              ** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনার ছাত্র/ছাত্রীর সমস্ত
+              প্রয়োজনীয় ডকুমেন্টস আপনার সাথে রাখুন।
+            </h5>
+            <h5 className="text-danger">
+              *** ফর্ম ফিলাপের পর প্রদত্ত অ্যাপ্লিকেশন নাম্বার অবশ্যই আপনার কাছে
+              সংরক্ষিত রাখবেন।
+            </h5>
+            <h3 className="text-primary timesNewRoman">ADMISSION FORM</h3>
           </div>
           <div className="text-center text-black">
             <form
@@ -1007,8 +1109,20 @@ export default function Admission() {
                       ...inputField,
                       student_birthday: getSubmitDateInput(e.target.value),
                     });
+                    // calculateAge(e.target.value);
+                    // validateAge(inputField.student_addmission_class)
                   }}
                 />
+                {/* {ageStatus.length > 0 && birthdayStatus && validStudentClass ? (
+                  <p className="text-success m-0 p-0">{ageStatus}</p>
+                ) : (
+                  <p className="text-danger m-0 p-0">{ageStatus}</p>
+                )}
+                {validStudentClass?(
+                  <p className="text-success m-0 p-0">Student Valid!</p>
+                ) : (
+                  <p className="text-danger m-0 p-0">Student Need to Check!</p>
+                )} */}
               </div>
               <div className="mb-3 col-md-4">
                 <label className="form-label">ছাত্র/ছাত্রীর আধার নাম্বার</label>
@@ -1421,6 +1535,7 @@ export default function Admission() {
                       ...inputField,
                       student_addmission_class: e.target.value,
                     });
+                    // validateAge(e.target.value)
                   }}
                 >
                   <option value={"PRE PRIMARY"}>প্রাক প্রাথমিক</option>
@@ -1436,10 +1551,10 @@ export default function Admission() {
                 )}
               </div>
               <hr className="text-danger" />
-              <p className="text-danger">
+              <h4 className="text-danger">
                 *** এই অংশ যদি ছাত্র/ছাত্রী অন্য স্কুল থেকে ট্রান্সফার নিয়ে আসে
                 সেটির জন্য
-              </p>
+              </h4>
               <div
                 className="rounded rounded-2 p-2 m-2 row"
                 style={{ backgroundColor: "pink" }}
@@ -1482,16 +1597,45 @@ export default function Admission() {
                     value={inputField.student_previous_class_year}
                     placeholder="ছাত্র/ছাত্রীর পূর্বের বর্ষ"
                     className="form-control"
-                    onChange={(e) =>
-                      setInputField({
-                        ...inputField,
-                        student_previous_class_year: e.target.value,
-                      })
-                    }
+                    onChange={(e) => {
+                      if (e.target.value.length <= 4) {
+                        setInputField({
+                          ...inputField,
+                          student_previous_class_year: e.target.value,
+                        });
+                      }
+                    }}
                   />
                   {errInputField.student_previous_class_year.length > 0 && (
                     <span className="error">
                       {errInputField.student_previous_class_year}
+                    </span>
+                  )}
+                </div>
+                <div className="mb-3 col-md-6">
+                  <label className="form-label">
+                    ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি *
+                  </label>
+                  <input
+                    type="number"
+                    name=""
+                    id=""
+                    value={inputField.student_previous_student_id}
+                    placeholder="ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি"
+                    className="form-control"
+                    onChange={(e) => {
+                      setInputField({
+                        ...inputField,
+                        student_previous_student_id: setInputNumberMaxLength(
+                          e.target.value,
+                          14
+                        ),
+                      });
+                    }}
+                  />
+                  {errInputField.student_previous_student_id.length > 0 && (
+                    <span className="error">
+                      {errInputField.student_previous_student_id}
                     </span>
                   )}
                 </div>
@@ -1536,7 +1680,7 @@ export default function Admission() {
                   className="btn btn-danger m-2"
                   onClick={() => {
                     setInputField({
-                      id: docId,
+                      id: "",
                       student_beng_name: "",
                       student_eng_name: "",
                       father_beng_name: "",
@@ -1561,6 +1705,7 @@ export default function Admission() {
                       student_previous_class: "FIRST TIME ADDMISSION",
                       student_previous_class_year: "",
                       student_previous_school: "",
+                      student_previous_student_id: "",
                       student_addmission_date: todayInString(),
                       student_addmission_dateAndTime: Date.now(),
                     });
@@ -1589,10 +1734,10 @@ export default function Admission() {
       )}
       {showUpdateForm && (
         <div className="my-4 mx-auto">
-          <h6 className="text-danger ben">
+          <h5 className="text-danger ben">
             *** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনাকে প্রদত্ত ছাত্র/ছাত্রীর
             প্রদত্ত অ্যাপ্লিকেশন নাম্বারটি নিজের কাছে রাখুন। e.g. 20240828143615
-          </h6>
+          </h5>
           <div className="my-4 mx-auto d-flex justify-content-center align-items-center">
             <form method="post" className="mb-3 col-md-6">
               <label className="form-label">অ্যাপ্লিকেশন নাম্বার লিখুন*</label>
@@ -1653,7 +1798,7 @@ export default function Admission() {
                     size={30}
                     color="skyblue"
                   />
-                  <h6 className="text-info my-1">Copy</h6>
+                  <h5 className="text-info my-1">Copy</h5>
                 </div>
               ) : (
                 <div>
@@ -1666,17 +1811,17 @@ export default function Admission() {
                     size={30}
                     color="green"
                   />
-                  <h6 className="text-success my-1">
+                  <h5 className="text-success my-1">
                     Application Number Copied
-                  </h6>
+                  </h5>
                 </div>
               )}
             </div>
             <h1 className="text-primary text-center timesNewRoman">{docId}</h1>
             {success ? (
-              <h6 className="text-success" suppressHydrationWarning={true}>
+              <h5 className="text-success" suppressHydrationWarning={true}>
                 Token Coppied to Clipboard
-              </h6>
+              </h5>
             ) : null}
             <div className="mx-auto mt-2">
               <button
@@ -1804,135 +1949,19 @@ export default function Admission() {
               </td>
             </tbody>
           </table>
-          {/* <div className="row">
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর বাংলায় নাম:
-              <br /> {searchedApplicationNo?.student_beng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo?.student_eng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর জন্ম তারিখ:
-              <br /> {searchedApplicationNo?.student_birthday}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর আধার নাম্বার:
-              <br /> {searchedApplicationNo?.student_aadhaar}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর লিঙ্গ:
-              <br /> {searchedApplicationNo?.student_gender}
-            </h6>
-            <h6 className="text-center col-md-3">
-              অভিভাবকের মোবাইল নাম্বার:
-              <br /> {searchedApplicationNo?.student_mobile}
-            </h6>
-            <h6 className="text-center col-md-3">
-              পিতার বাংলায় নাম:
-              <br /> {searchedApplicationNo?.father_beng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              পিতার ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo?.father_eng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              মাতার বাংলায় নাম:
-              <br /> {searchedApplicationNo?.mother_beng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              মাতার ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo?.mother_eng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              অভিভাবকের বাংলায় নাম:
-              <br /> {searchedApplicationNo?.guardian_beng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              অভিভাবকের ইংরাজীতে নাম:
-              <br /> {searchedApplicationNo?.guardian_eng_name}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর ধর্ম:
-              <br /> {searchedApplicationNo?.student_religion}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর জাতি:
-              <br /> {searchedApplicationNo?.student_race}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রী বি.পি.এল. কিনা?:
-              <br /> {searchedApplicationNo?.student_bpl_status}
-            </h6>
-
-            {searchedApplicationNo?.student_bpl_status === "YES" && (
-              <h6 className="text-center col-md-3">
-                অভিভাবকের বি.পি.এল. নাম্বার:
-                <br /> {searchedApplicationNo?.student_bpl_number}
-              </h6>
-            )}
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর গ্রামের নাম:
-              <br /> {searchedApplicationNo?.student_village}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর পোস্ট অফিসের নাম:
-              <br /> {searchedApplicationNo?.student_post_office}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর পুলিশ স্টেশনের নাম:
-              {searchedApplicationNo?.student_police_station}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর পিনকোড:
-              <br /> {searchedApplicationNo?.student_pin_code}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ছাত্র/ছাত্রীর বর্তমান ভর্তি হওয়ার শ্রেণী:
-              {searchedApplicationNo?.student_addmission_class}
-            </h6>
-            <h6 className="text-center col-md-3">
-              ফর্ম জমা দেওয়ার তারিখ:
-              {DateValueToSring(searchedApplicationNo?.student_addmission_dateAndTime)}
-            </h6>
-            {searchedApplicationNo?.student_previous_class !== "" && (
-              <div className="row">
-                <h6 className="text-center col-md-3">
-                  ছাত্র/ছাত্রীর পূর্বের শ্রেণী:
-                  <br />
-                  {searchedApplicationNo?.student_previous_class}
-                </h6>
-                <h6 className="text-center col-md-3">
-                  ছাত্র/ছাত্রীর পূর্বের বর্ষ:
-                  <br />
-                  {searchedApplicationNo?.student_previous_class_year}
-                </h6>
-                <h6 className="text-center col-md-3">
-                  ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:
-                  <br />
-                  {searchedApplicationNo?.student_previous_school}
-                </h6>
-              </div>
-            )}
-          </div> */}
         </div>
       )}
       {showEditForm && (
         <div className="my-4">
-          <h6 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h6>
-          <h6 className="text-danger">
+          <h5 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h5>
+          <h5 className="text-danger">
             *** যে অংশগুলি বাংলায় বলা আছে শুধুমাত্র সেইগুলিই বাংলায় করবেন বাকি
             সমস্ত অংশ ইংরাজীতে লিখবেন।
-          </h6>
-          <h6 className="text-danger ben">
+          </h5>
+          <h5 className="text-danger ben">
             ** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনার ছাত্র/ছাত্রীর সমস্ত প্রয়োজনীয়
             ডকুমেন্টস আপনার সাথে রাখুন।
-          </h6>
-          {/* <h6 className="text-danger">
-            *** ফর্ম ফিলাপের পর প্রদত্ত অ্যাপ্লিকেশন নাম্বার অবশ্যই আপনার কাছে সংরক্ষিত
-            রাখবেন।
-          </h6> */}
+          </h5>
 
           <div className="my-4">
             <h3 className="text-primary">UPDATE ADMISSION FORM</h3>
@@ -2493,16 +2522,46 @@ export default function Admission() {
                     value={editInputField.student_previous_class_year}
                     placeholder="ছাত্র/ছাত্রীর পূর্বের বর্ষ"
                     className="form-control"
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setEditInputField({
                         ...editInputField,
-                        student_previous_class_year: e.target.value,
-                      })
-                    }
+                        student_previous_class_year: setInputNumberMaxLength(
+                          e.target.value,
+                          4
+                        ),
+                      });
+                    }}
                   />
                   {errEditInputField.student_previous_class_year.length > 0 && (
                     <span className="error">
                       {errEditInputField.student_previous_class_year}
+                    </span>
+                  )}
+                </div>
+                <div className="mb-3 col-md-6">
+                  <label className="form-label">
+                    ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি *
+                  </label>
+                  <input
+                    type="number"
+                    name=""
+                    id=""
+                    value={editInputField.student_previous_student_id}
+                    placeholder="ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি"
+                    className="form-control"
+                    onChange={(e) => {
+                      setEditInputField({
+                        ...editInputField,
+                        student_previous_student_id: setInputNumberMaxLength(
+                          e.target.value,
+                          14
+                        ),
+                      });
+                    }}
+                  />
+                  {errEditInputField.student_previous_student_id.length > 0 && (
+                    <span className="error">
+                      {errEditInputField.student_previous_student_id}
                     </span>
                   )}
                 </div>
@@ -2572,6 +2631,7 @@ export default function Admission() {
                       student_previous_class: "",
                       student_previous_class_year: "",
                       student_previous_school: "",
+                      student_previous_student_id: "",
                       student_addmission_date: "",
                       student_addmission_dateAndTime: "",
                     });

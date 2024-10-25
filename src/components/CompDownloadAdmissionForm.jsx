@@ -44,7 +44,7 @@ export default function CompDownloadAdmissionForm({ data }) {
     student_previous_school,
     student_addmission_date,
     student_addmission_dateAndTime,
-    updatedAt,
+    updatedAt,student_previous_student_id
   } = data;
 
   const scrWidth = (w) => (w * width) / 100;
@@ -162,6 +162,15 @@ export default function CompDownloadAdmissionForm({ data }) {
               </Text>
               <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
                 ছাত্র/ছাত্রীর পূর্বের বর্ষ: {student_previous_class_year}
+              </Text>
+              
+            </View>
+          )}
+          {student_previous_class !== "" && (
+            <View style={styles.paraView}>
+            
+              <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
+                ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি: {student_previous_student_id}
               </Text>
             </View>
           )}
