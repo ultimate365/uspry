@@ -220,10 +220,14 @@ export default function MDMmonthlyReport() {
         setRemarks(entry?.remarks);
         setPrevMonthData(allEnry[index - 1]);
         setShowData(true);
-        const thisMonthTransaction = transactionState.filter(
-          (account) => account.id === entry.id
-        )[0];
-        setThisMonthFromTransaction(thisMonthTransaction);
+        const debitThisMonth = selectedYearTransactions
+          .filter((transaction) => transaction.month === entryMonth)
+          .filter((trans) => trans.transactionPurpose === "MDM WITHDRAWAL");
+        // const thisMonthTransaction = transactionState.filter(
+        //   (transaction) => transaction.id === entry.id
+        // )[0];
+
+        setThisMonthFromTransaction(debitThisMonth[0]);
         const creditTrThisMonth = selectedYearTransactions
           .filter((trmonth) => trmonth.month === month)
           .filter((trtype) => trtype.type === "CREDIT");

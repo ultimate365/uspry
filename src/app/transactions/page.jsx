@@ -41,12 +41,13 @@ export default function Transactions() {
   const [date, setDate] = useState(todayInString());
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
+  const [transactionPurpose, setTransactionPurpose] =
+    useState("MDM WITHDRAWAL");
   const [loader, setLoader] = useState(false);
   const [allTransactions, setAllTransactions] = useState([]);
   const [thisAccounTransactions, setThisAccounTransactions] = useState([]);
   const [showEntry, setShowEntry] = useState(false);
   const [amount, setAmount] = useState("");
-  const [isMDMWithdrawal, setIsMDMWithdrawal] = useState(true);
   const [mdmWithdrawal, setMdmWithdrawal] = useState("MDM WITHDRAWAL");
   const [type, setType] = useState("DEBIT");
   const [ppOB, setPpOB] = useState("");
@@ -58,7 +59,6 @@ export default function Transactions() {
   const [pryCB, setPryCB] = useState("");
   const [pryEX, setPryEX] = useState("");
   const [openingBalance, setOpeningBalance] = useState(stateObject.balance);
-  const [closingBalance, setClosingBalance] = useState(stateObject.balance);
   const [editTransaction, setEditTransaction] = useState({
     id: "",
     accountNumber: "",
@@ -67,6 +67,7 @@ export default function Transactions() {
     year: "",
     purpose: "",
     type: "",
+    transactionPurpose: "",
     date: "",
     ppOB: "",
     ppRC: "",
@@ -85,6 +86,7 @@ export default function Transactions() {
     year: "",
     purpose: "",
     type: "",
+    transactionPurpose: "",
     date: "",
     ppOB: "",
     ppRC: "",
@@ -170,6 +172,7 @@ export default function Transactions() {
         date,
         month,
         year,
+        transactionPurpose,
         id: y,
         ppOB,
         ppRC,
@@ -525,11 +528,9 @@ export default function Transactions() {
               setPryCB(transaction.pryCB);
               setPryCB(transaction.pryCB);
               setOpeningBalance(transaction.openingBalance);
-              setClosingBalance(transaction.closingBalance);
               setTimeout(() => {
                 if (transaction?.purpose?.split(" ")[1] === "MDM") {
                   setMdmWithdrawal("MDM WITHDRAWAL");
-                  setIsMDMWithdrawal(true);
                   if (typeof (window !== "undefined")) {
                     const purpose_type =
                       document.getElementById("purpose_type");
@@ -539,7 +540,6 @@ export default function Transactions() {
                   }
                 } else {
                   setMdmWithdrawal("OTHERS");
-                  setIsMDMWithdrawal(false);
                 }
               }, 200);
             }}
@@ -658,222 +658,6 @@ export default function Transactions() {
             conditionalRowStyles={conditionalRowStyles}
           />
         )}
-        {/* {thisAccounTransactions.length > 0 ? (
-          <div
-            className="d-flex flex-column justify-content-center align-items-center"
-            style={{
-              width: "100%",
-              overflowX: "scroll",
-              flexWrap: "wrap",
-            }}
-          >
-            <table
-              style={{
-                width: "100%",
-                overflowX: "auto",
-                marginBottom: "20px",
-                border: "1px solid",
-              }}
-              className="text-white"
-            >
-              <thead>
-                <tr
-                  style={{
-                    border: "1px solid",
-                  }}
-                  className="text-center bg-primary"
-                >
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Date
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Type
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Amount
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Purpose
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Opening Balance
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Closing Balance
-                  </th>
-                  <th
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className="text-center px-1"
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {thisAccounTransactions.map((transaction, index) => (
-                  <tr
-                    style={{
-                      border: "1px solid",
-                    }}
-                    className={`text-center ${
-                      transaction.type === "CREDIT" ? "bg-success" : "bg-danger"
-                    }`}
-                    key={transaction.id}
-                  >
-                    <td
-                      style={{
-                        border: "1px solid",
-                      }}
-                      className="text-center px-1"
-                    >
-                      {transaction.date}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid",
-                      }}
-                      className="text-center px-1"
-                    >
-                      {transaction.type}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid",
-                      }}
-                      className="text-center px-1"
-                    >
-                      ₹ {IndianFormat(transaction?.amount)}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid",
-                      }}
-                      className="text-center px-1"
-                    >
-                      {transaction.purpose}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid",
-                      }}
-                      className="text-center px-1"
-                    >
-                      ₹ {IndianFormat(transaction?.openingBalance)}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid",
-                      }}
-                      className="text-center px-1"
-                    >
-                      ₹ {IndianFormat(transaction?.closingBalance)}
-                    </td>
-                    <td
-                      style={{
-                        border: "1px solid",
-                        backgroundColor: "lavender",
-                      }}
-                      className="text-center px-1"
-                    >
-                      <button
-                        type="button"
-                        className={`btn btn-warning m-1`}
-                        onClick={() => {
-                          setShowEntry(false);
-                          setEditTransaction(transaction);
-                          setOrgTransaction(transaction);
-                          setShowEdit(true);
-                          setAmount(transaction.amount);
-                          setPurpose(transaction.purpose);
-                          setId(transaction.purpose);
-                          setType(transaction.type);
-                          setDate(transaction.date);
-                          setPpOB(transaction.ppOB);
-                          setPpRC(transaction.ppRC);
-                          setPpCB(transaction.ppCB);
-                          setPryOB(transaction.pryOB);
-                          setPryRC(transaction.pryRC);
-                          setPryCB(transaction.pryCB);
-                          setPryCB(transaction.pryCB);
-                          setOpeningBalance(transaction.openingBalance);
-                          setClosingBalance(transaction.closingBalance);
-                          setTimeout(() => {
-                            if (transaction?.purpose?.split(" ")[1] === "MDM") {
-                              setMdmWithdrawal("MDM WITHDRAWAL");
-                              setIsMDMWithdrawal(true);
-                              if (typeof (window !== "undefined")) {
-                                const purpose_type =
-                                  document.getElementById("purpose_type");
-                                if (purpose_type) {
-                                  purpose_type.value = "MDM WITHDRAWAL";
-                                }
-                              }
-                            } else {
-                              setMdmWithdrawal("OTHERS");
-                              setIsMDMWithdrawal(false);
-                            }
-                          }, 200);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        className={`btn btn-${btnArray[index].color} m-1`}
-                        onClick={() => {
-                          // eslint-disable-next-line no-alert
-                          if (
-                            window.confirm(
-                              "Are you sure you want to delete this entry?"
-                            )
-                          ) {
-                            delTransaction(transaction);
-                          }
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <h6>No Transactions Found</h6>
-        )} */}
 
         {showEntry && (
           <div
@@ -908,9 +692,7 @@ export default function Transactions() {
                       setPryCB("");
                       setPryCB("");
                       setOpeningBalance(stateObject.balance);
-                      setClosingBalance(stateObject.balance);
                       setMdmWithdrawal("MDM WITHDRAWAL");
-                      setIsMDMWithdrawal(true);
                       if (typeof (window !== "undefined")) {
                         document.getElementById("purpose_type").value =
                           "MDM WITHDRAWAL";
@@ -970,11 +752,9 @@ export default function Transactions() {
                             onChange={(e) => {
                               setType(e.target.value);
                               if (e.target.value === "DEBIT") {
-                                setClosingBalance(
-                                  round2dec(stateObject.balance - amount)
-                                );
                                 setMdmWithdrawal("MDM WITHDRAWAL");
-                                setIsMDMWithdrawal(false);
+                                setPurpose("MDM WITHDRAWAL");
+                                setTransactionPurpose("MDM WITHDRAWAL");
                                 if (typeof (window !== "undefined")) {
                                   let purpose_type =
                                     document.getElementById("purpose_type");
@@ -983,14 +763,14 @@ export default function Transactions() {
                                   }
                                 }
                               } else {
-                                setClosingBalance(stateObject.balance + amount);
-                                setMdmWithdrawal("MDM Cooking Cost");
-                                setIsMDMWithdrawal(false);
+                                setMdmWithdrawal("MDM COOKING COST");
+                                setPurpose("MDM COOKING COST");
+                                setTransactionPurpose("MDM COOKING COST");
                                 if (typeof (window !== "undefined")) {
                                   let purpose_type =
                                     document.getElementById("purpose_type");
                                   if (purpose_type) {
-                                    purpose_type.value = "MDM Cooking Cost";
+                                    purpose_type.value = "MDM COOKING COST";
                                   }
                                 }
                               }
@@ -1009,18 +789,18 @@ export default function Transactions() {
                             id="purpose_type"
                             defaultValue={mdmWithdrawal}
                             onChange={(e) => {
-                              setIsMDMWithdrawal(true);
                               setMdmWithdrawal(e.target.value);
                               setPurpose(e.target.value);
+                              setTransactionPurpose(e.target.value);
                             }}
                           >
                             <option value="MDM WITHDRAWAL">
                               MDM WITHDRAWAL
                             </option>
-                            <option value="MDM Cooking Cost">
-                              MDM Cooking Cost
+                            <option value="MDM COOKING COST">
+                              MDM COOKING COST
                             </option>
-                            <option value="MDM Interest">MDM Interest</option>
+                            <option value="MDM INTEREST">MDM INTEREST</option>
                             <option value="OTHERS">OTHERS</option>
                           </select>
                         </div>
@@ -1275,9 +1055,7 @@ export default function Transactions() {
                       setPryCB("");
                       setPryCB("");
                       setOpeningBalance(stateObject.balance);
-                      setClosingBalance(stateObject.balance);
                       setMdmWithdrawal("MDM WITHDRAWAL");
-                      setIsMDMWithdrawal(true);
                       if (typeof (window !== "undefined")) {
                         document.getElementById("purpose_type").value =
                           "MDM WITHDRAWAL";
@@ -1423,7 +1201,31 @@ export default function Transactions() {
                             <option value="DEBIT">DEBIT</option>
                           </select>
                         </div>
-
+                        <div className="mb-3">
+                          <label htmlFor="purpose_type" className="form-label">
+                            Transaction Purpose
+                          </label>
+                          <select
+                            className="form-select"
+                            id="purpose_type"
+                            defaultValue={editTransaction.transactionPurpose}
+                            onChange={(e) => {
+                              setEditTransaction({
+                                ...editTransaction,
+                                transactionPurpose: e.target.value,
+                              });
+                            }}
+                          >
+                            <option value="MDM WITHDRAWAL">
+                              MDM WITHDRAWAL
+                            </option>
+                            <option value="MDM COOKING COST">
+                              MDM COOKING COST
+                            </option>
+                            <option value="MDM INTEREST">MDM INTEREST</option>
+                            <option value="OTHERS">OTHERS</option>
+                          </select>
+                        </div>
                         <div className="mb-3">
                           <label htmlFor="amount" className="form-label">
                             Purpose
