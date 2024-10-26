@@ -8,12 +8,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { ToastContainer } from "react-toastify";
-import { Tiro_Bangla, Roboto } from "next/font/google";
 import localFont from "next/font/local";
 const dejaVuBold = localFont({
   src: [
     {
-      path: "../../public/assets/fonts/DejaVuSerifCondensed-Bold.ttf",
+      path: "./fonts/DejaVuSerifCondensed-Bold.ttf",
     },
   ],
   variable: "--font-dejaVuBold",
@@ -21,7 +20,7 @@ const dejaVuBold = localFont({
 const kalpurush = localFont({
   src: [
     {
-      path: "../../public/assets/fonts/kalpurush.ttf",
+      path: "./fonts/kalpurush.ttf",
     },
   ],
   variable: "--font-kalpurush",
@@ -29,20 +28,12 @@ const kalpurush = localFont({
 const dejaVuCondensed = localFont({
   src: [
     {
-      path: "../../public/assets/fonts/DejaVuSerifCondensed.ttf",
+      path: "./fonts/DejaVuSerifCondensed.ttf",
     },
   ],
   variable: "--font-dejaVuCondensed",
 });
 
-
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
-  preload: true,
-  variable: "--font-roboto",
-});
 
 export const metadata: Metadata = {
   title: "UTTAR SEHAGORI PRIMARY SCHOOL",
@@ -57,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`container-fluid text-center text-black ${kalpurush.variable} ${roboto.variable} ${dejaVuBold.variable} ${dejaVuCondensed.variable}`}
+        className={`container-fluid text-center text-black ${kalpurush.variable} ${dejaVuBold.variable} ${dejaVuCondensed.variable}`}
         suppressHydrationWarning={true}
       >
         <GlobalContextProvider>

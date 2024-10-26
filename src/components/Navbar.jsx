@@ -129,7 +129,7 @@ export default function Navbar() {
               href="/teachersreturn"
               onClick={handleNavCollapse}
             >
-              Teacher&#8217;s Return
+             Create Teacher&#8217;s Return
             </Link>
           </li>
           <li className="nav-item">

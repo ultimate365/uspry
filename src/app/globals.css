@@ -186,7 +186,7 @@ td {
 }
 
 .timesFont {
-  font-family: var(--font-roboto);
+  font-family: "Times New Roman", Times, serif;
 }
 
 .timesNewRoman {

@@ -376,6 +376,7 @@ export default function Teachersreturn() {
                       className="form-control"
                       id="workingDays"
                       name="workingDays"
+                      placeholder="Enter Working Days"
                       value={workingDays}
                       onChange={(e) => {
                         if (e.target.value !== "") {
@@ -582,8 +583,12 @@ export default function Teachersreturn() {
                     <button
                       type="button"
                       className="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
+                      
+                      aria-label="Close" onClick={()=>{
+                        setShowEditForm(false);
+                        setShowBackPage(true);
+                        setShowFrontPage(true);
+                      }}
                     ></button>
                   </div>
                   <div className="modal-body">
@@ -2688,6 +2693,7 @@ export default function Teachersreturn() {
                           className="form-control m-2 col-md-4"
                           id="frontPageZoom"
                           name="frontPageZoom"
+                          placeholder="Enter Front Page Zoom"
                           value={frontPageZoom}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -2702,6 +2708,7 @@ export default function Teachersreturn() {
                           className="form-control m-2 col-md-4"
                           id="frontPageZoom"
                           name="frontPageZoom"
+                          placeholder="Enter Back Page Zoom"
                           value={backPageZoom}
                           onChange={(e) => {
                             if (e.target.value !== "") {

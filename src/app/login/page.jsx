@@ -2,7 +2,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useGlobalContext } from "../../context/Store";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import { firestore, firbaseAuth } from "../../context/FirbaseContext";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -19,7 +18,7 @@ import {
   getCurrentDateInput,
   getSubmitDateInput,
 } from "@/modules/calculatefunctions";
-import Link from "next/link";
+import CustomInput from "../../components/CustomInput";
 export default function Login() {
   const router = useRouter();
   const { state, setState, teachersState } = useGlobalContext();
@@ -431,17 +430,16 @@ export default function Login() {
                 {userNameErr.length > 0 && (
                   <p className="text-danger my-2">{userNameErr}</p>
                 )}
-                <div className="input-group mb-3">
-                  <span className="input-group-text">Password</span>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password"
-                  />
-                </div>
+                
+                <CustomInput
+                title={'Password'}
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                />
                 {passwordErr.length > 0 && (
                   <p className="text-danger my-2">{passwordErr}</p>
                 )}
@@ -485,7 +483,7 @@ export default function Login() {
                     <div className="mb-3 mx-auto">
                       <h6 htmlFor="rank" className="text-danger text-break">
                         Your Default Username is Your Employeed ID and Your
-                        Default password is your PAN
+                        Default password is your PAN in Capital
                       </h6>
                       <h6 htmlFor="rank" className="text-danger text-break">
                         However You can Chage it anytime after login
