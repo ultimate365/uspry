@@ -378,6 +378,7 @@ export default function MDMmonthlyReport() {
                           className="form-control m-2 col-md-4"
                           id="newFormatZoom"
                           name="newFormatZoom"
+                          placeholder="New Format Zoom"
                           value={newFormatZoom}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -392,6 +393,7 @@ export default function MDMmonthlyReport() {
                           className="form-control m-2 col-md-4"
                           id="oldFormatZoom"
                           name="oldFormatZoom"
+                          placeholder="Old Format Zoom"
                           value={oldFormatZoom}
                           onChange={(e) => {
                             if (e.target.value !== "") {

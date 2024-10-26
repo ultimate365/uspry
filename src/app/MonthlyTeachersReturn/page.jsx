@@ -201,6 +201,7 @@ export default function MonthlyTeachersReturn() {
                         className="form-control m-2 col-md-4"
                         id="frontPageZoom"
                         name="frontPageZoom"
+                        placeholder="Front Page Zoom"
                         value={frontPageZoom}
                         onChange={(e) => {
                           if (e.target.value !== "") {
@@ -215,6 +216,7 @@ export default function MonthlyTeachersReturn() {
                         className="form-control m-2 col-md-4"
                         id="frontPageZoom"
                         name="frontPageZoom"
+                        placeholder="Back Page Zoom"
                         value={backPageZoom}
                         onChange={(e) => {
                           if (e.target.value !== "") {
