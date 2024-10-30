@@ -46,6 +46,7 @@ export default function MDMmonthlyReport() {
     year: "",
     financialYear: "",
     worrkingDays: "",
+    totalWorkingDays: "",
     ppTotal: "",
     pryTotal: "",
     monthlyPPCost: "",
@@ -82,6 +83,7 @@ export default function MDMmonthlyReport() {
     year: "",
     financialYear: "",
     worrkingDays: "",
+    totalWorkingDays: "",
     ppTotal: "",
     pryTotal: "",
     monthlyPPCost: "",
@@ -352,77 +354,77 @@ export default function MDMmonthlyReport() {
       ) : (
         <>
           <div className="noprint">
-          {showZoom && (
-            <div
-              className="modal fade show"
-              tabIndex="-1"
-              role="dialog"
-              style={{ display: "block" }}
-              aria-modal="true"
-            >
-              <div className="modal-dialog modal-sm">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                      Set Page Zoom
-                    </h1>
-                  </div>
-                  <div className="modal-body">
-                    <div className="mx-auto my-2 noprint">
-                      <div className="mb-3 mx-auto">
-                        <h5 htmlFor="rank" className="text-danger">
-                          ***Write percent without "%" e.g.(80, 90)
-                        </h5>
-                        <input
-                          type="number"
-                          className="form-control m-2 col-md-4"
-                          id="newFormatZoom"
-                          name="newFormatZoom"
-                          placeholder="New Format Zoom"
-                          value={newFormatZoom}
-                          onChange={(e) => {
-                            if (e.target.value !== "") {
-                              setNewFormatZoom(parseInt(e.target.value));
-                            } else {
-                              setNewFormatZoom("");
-                            }
-                          }}
-                        />
-                        <input
-                          type="number"
-                          className="form-control m-2 col-md-4"
-                          id="oldFormatZoom"
-                          name="oldFormatZoom"
-                          placeholder="Old Format Zoom"
-                          value={oldFormatZoom}
-                          onChange={(e) => {
-                            if (e.target.value !== "") {
-                              setOldFormatZoom(parseInt(e.target.value));
-                            } else {
-                              setOldFormatZoom("");
-                            }
-                          }}
-                        />
+            {showZoom && (
+              <div
+                className="modal fade show"
+                tabIndex="-1"
+                role="dialog"
+                style={{ display: "block" }}
+                aria-modal="true"
+              >
+                <div className="modal-dialog modal-sm">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                        Set Page Zoom
+                      </h1>
+                    </div>
+                    <div className="modal-body">
+                      <div className="mx-auto my-2 noprint">
+                        <div className="mb-3 mx-auto">
+                          <h5 htmlFor="rank" className="text-danger">
+                            ***Write percent without "%" e.g.(80, 90)
+                          </h5>
+                          <input
+                            type="number"
+                            className="form-control m-2 col-md-4"
+                            id="newFormatZoom"
+                            name="newFormatZoom"
+                            placeholder="New Format Zoom"
+                            value={newFormatZoom}
+                            onChange={(e) => {
+                              if (e.target.value !== "") {
+                                setNewFormatZoom(parseInt(e.target.value));
+                              } else {
+                                setNewFormatZoom("");
+                              }
+                            }}
+                          />
+                          <input
+                            type="number"
+                            className="form-control m-2 col-md-4"
+                            id="oldFormatZoom"
+                            name="oldFormatZoom"
+                            placeholder="Old Format Zoom"
+                            value={oldFormatZoom}
+                            onChange={(e) => {
+                              if (e.target.value !== "") {
+                                setOldFormatZoom(parseInt(e.target.value));
+                              } else {
+                                setOldFormatZoom("");
+                              }
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="modal-footer">
-                    {newFormatZoom > 0 && oldFormatZoom > 0 && (
-                      <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={() => {
-                          setShowZoom(false);
-                        }}
-                      >
-                        Save
-                      </button>
-                    )}
+                    <div className="modal-footer">
+                      {newFormatZoom > 0 && oldFormatZoom > 0 && (
+                        <button
+                          type="button"
+                          className="btn btn-success"
+                          onClick={() => {
+                            setShowZoom(false);
+                          }}
+                        >
+                          Save
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
             <button
               type="button"
               className="btn btn-primary m-2"
@@ -589,7 +591,7 @@ export default function MDMmonthlyReport() {
                   width: "100%",
                   overflowX: "scroll",
                   flexWrap: "wrap",
-                  zoom: newFormatZoom/100 || 100,
+                  zoom: newFormatZoom / 100 || 100,
                 }}
               >
                 <table
@@ -1715,7 +1717,7 @@ export default function MDMmonthlyReport() {
                   width: "100%",
                   overflowX: "scroll",
                   flexWrap: "wrap",
-                  zoom: oldFormatZoom/100 || 100,
+                  zoom: oldFormatZoom / 100 || 100,
                 }}
               >
                 <h4>Pradhan Mantri Poshan Shakti Nirman (PM POSHAN)</h4>
@@ -2022,7 +2024,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.worrkingDays}
+                        {thisMonthlyData.totalWorkingDays}
                       </td>
                       <td
                         style={{
@@ -2030,7 +2032,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.worrkingDays}
+                        {thisMonthlyData.totalWorkingDays}
                       </td>
 
                       <td
@@ -2895,8 +2897,6 @@ export default function MDMmonthlyReport() {
               </div>
             </div>
           )}
-
-          
         </div>
       )}
     </div>

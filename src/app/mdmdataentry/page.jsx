@@ -90,6 +90,7 @@ export default function MDMData() {
   const [monthToSubmit, setMonthToSubmit] = useState("");
   const [financialYear, setFinancialYear] = useState("");
   const [monthWorkingDays, setMonthWorkingDays] = useState("");
+  const [totalWorkingDays, setTotalWorkingDays] = useState("");
   const [monthPPTotal, setMonthPPTotal] = useState("");
   const [monthlyPPCost, setMonthlyPPCost] = useState("");
   const [monthPRYTotal, setMonthPRYTotal] = useState("");
@@ -300,6 +301,7 @@ export default function MDMData() {
 
   const filterMonthlyData = (entry) => {
     setMonthWorkingDays(entry.worrkingDays);
+    setTotalWorkingDays(entry.totalWorkingDays);
     setMonthPPTotal(entry.ppTotal);
     setMonthPRYTotal(entry.pryTotal);
     setMonthlyPPCost(entry.monthlyPPCost);
@@ -523,6 +525,7 @@ export default function MDMData() {
         year: selectedYear.toString(),
         financialYear: financialYear,
         worrkingDays: monthWorkingDays,
+        totalWorkingDays: totalWorkingDays,
         ppTotal: monthPPTotal,
         pryTotal: monthPRYTotal,
         monthlyPPCost: monthlyPPCost,
@@ -1192,7 +1195,7 @@ export default function MDMData() {
                         />
                       </div>
                       <div className="form-group m-2">
-                        <label className="m-2">Total Working Days</label>
+                        <label className="m-2">Total MDM Days</label>
                         <input
                           type="number"
                           className="form-control"
@@ -1203,6 +1206,22 @@ export default function MDMData() {
                               setMonthWorkingDays(parseInt(e.target.value));
                             } else {
                               setMonthWorkingDays("");
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">Total Working Days</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Total Working Days`}
+                          value={totalWorkingDays}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setTotalWorkingDays(parseInt(e.target.value));
+                            } else {
+                              setTotalWorkingDays("");
                             }
                           }}
                         />

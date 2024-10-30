@@ -448,8 +448,7 @@ export default function Transactions() {
   const columns = [
     {
       name: "Sl",
-      selector: (row, ind) =>
-        transactionState.findIndex((i) => i.id === row.id) + 1,
+      selector: (row, ind) => ind + 1,
       width: "7%",
     },
 
