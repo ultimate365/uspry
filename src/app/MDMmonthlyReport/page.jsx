@@ -77,6 +77,7 @@ export default function MDMmonthlyReport() {
   const [selectedMonthTransactions, setSelectedMonthTransactions] = useState(
     []
   );
+  const [showDash, setShowDash] = useState(false);
   const [prevMonthlyData, setPrevMonthData] = useState({
     id: "",
     month: "",
@@ -344,7 +345,7 @@ export default function MDMmonthlyReport() {
     allTransactions,
     thisMonthFromTransaction,
     thisMonthlyData,
-    showOldFormat,
+    showOldFormat,showDash
   ]);
 
   return (
@@ -597,7 +598,7 @@ export default function MDMmonthlyReport() {
                   zoom: newFormatZoom / 100 || 100,
                 }}
               >
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -1170,7 +1171,7 @@ export default function MDMmonthlyReport() {
                   flexWrap: "wrap",
                 }}
               >
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -1736,7 +1737,7 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   1. School Details
                 </h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -1970,7 +1971,7 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   2. Meals Availed Status
                 </h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2041,8 +2042,6 @@ export default function MDMmonthlyReport() {
                       <td
                         style={{
                           paddingInline: 2,
-
-                          color: "white",
                         }}
                         rowSpan={3}
                       >
@@ -2106,7 +2105,7 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   3. Fund Details (In Rs.)
                 </h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2405,7 +2404,7 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   4. Cook Cum Helper Payment Detail
                 </h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2541,7 +2540,7 @@ export default function MDMmonthlyReport() {
                 </table>
                 <div>
                   <h6 className="m-0 p-0">MID DAY MEAL REPORT (UC)</h6>
-                  <table
+                  <table suppressHydrationWarning={true}
                     style={{
                       width: "100%",
                       overflowX: "auto",
@@ -2615,7 +2614,7 @@ export default function MDMmonthlyReport() {
               </div>
               <div className="nobreak mt-2">
                 <h5 className="text-start">5. Food Grain Details (In KG.)</h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2770,7 +2769,7 @@ export default function MDMmonthlyReport() {
                   </tbody>
                 </table>
                 <h5 className="text-start">6. Children Health Status</h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2817,7 +2816,7 @@ export default function MDMmonthlyReport() {
                   </tbody>
                 </table>
                 <h5 className="text-start">7. School Inspection</h5>
-                <table
+                <table suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2832,8 +2831,14 @@ export default function MDMmonthlyReport() {
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
                         <div className="">
-                          Yes <input type="checkbox" /> No{" "}
-                          <input type="checkbox" />
+                          Yes{" "}
+                          <input
+                            type="checkbox"
+                            checked={showDash}
+                            onChange={(e) => setShowDash(e.target.checked)}
+                          />{" "}
+                          No <input type="checkbox" checked={!showDash}
+                            onChange={(e) => {}} />
                         </div>
                       </td>
                     </tr>
@@ -2843,7 +2848,7 @@ export default function MDMmonthlyReport() {
                       </td>
                       <td
                         style={{ border: "1px solid", paddingInline: 2 }}
-                      ></td>
+                      >{!showDash && "-"}</td>
                     </tr>
                     <tr>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
@@ -2851,7 +2856,7 @@ export default function MDMmonthlyReport() {
                       </td>
                       <td
                         style={{ border: "1px solid", paddingInline: 2 }}
-                      ></td>
+                      >{!showDash && "-"}</td>
                     </tr>
                     <tr>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
@@ -2859,7 +2864,7 @@ export default function MDMmonthlyReport() {
                       </td>
                       <td
                         style={{ border: "1px solid", paddingInline: 2 }}
-                      ></td>
+                      >{!showDash && "-"}</td>
                     </tr>
                     <tr>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
@@ -2867,7 +2872,7 @@ export default function MDMmonthlyReport() {
                       </td>
                       <td
                         style={{ border: "1px solid", paddingInline: 2 }}
-                      ></td>
+                      >{!showDash && "-"}</td>
                     </tr>
                     <tr style={{ height: 20, border: 0 }}></tr>
                     <tr>
