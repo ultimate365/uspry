@@ -518,6 +518,9 @@ export default function MDMmonthlyReport() {
               onClick={() => {
                 if (typeof window !== "undefined") {
                   window.print();
+                  document.title = `MDM RETURN ${thisMonthlyData?.month.toUpperCase()} ${
+                    thisMonthlyData?.year
+                  }`;
                 }
               }}
             >
@@ -2536,74 +2539,81 @@ export default function MDMmonthlyReport() {
                     ))}
                   </tbody>
                 </table>
-                <h5>MID DAY MEAL REPORT (UC)</h5>
-                <table
-                  style={{
-                    width: "100%",
-                    overflowX: "auto",
-                    marginBottom: "20px",
-                    border: "1px solid",
-                  }}
-                  className="nobreak my-4"
-                >
-                  <thead>
-                    <tr>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        Category
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        TOTAL NO OF STUDENTS
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        TOTAL MEAL SERVED
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        MDM RATE
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        EXPENDITURE
-                      </td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        BAL VATIKA
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {PP_STUDENTS}
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ppTotal}
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        ₹ {MDM_COST}
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        ₹ {thisMonthlyData.monthlyPPCost}
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        PRIMARY
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {PRIMARY_STUDENTS}
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.pryTotal}
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        ₹ {MDM_COST}
-                      </td>
-                      <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        ₹ {thisMonthlyData.monthlyPRYCost}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div>
+                  <h6 className="m-0 p-0">MID DAY MEAL REPORT (UC)</h6>
+                  <table
+                    style={{
+                      width: "100%",
+                      overflowX: "auto",
+                      marginBottom: "20px",
+                      border: "1px solid",
+                      zoom: 0.9,
+                    }}
+                    className="nobreak my-4"
+                  >
+                    <thead>
+                      <tr>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          Category
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          TOTAL NO OF STUDENTS
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          TOTAL MEAL SERVED
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          MDM RATE
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          EXPENDITURE
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          BAL VATIKA
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          {PP_STUDENTS}
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          {thisMonthlyData.ppTotal}
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          ₹ {MDM_COST}
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          {thisMonthlyData.ppTotal} × ₹ {MDM_COST} = ₹{" "}
+                          {/* {thisMonthlyData.monthlyPPCost} */}
+                          {Math.round(thisMonthlyData.ppTotal * MDM_COST)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          PRIMARY
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          {PRIMARY_STUDENTS}
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          {thisMonthlyData.pryTotal}
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          ₹ {MDM_COST}
+                        </td>
+                        <td style={{ border: "1px solid", paddingInline: 2 }}>
+                          {thisMonthlyData.pryTotal} × ₹ {MDM_COST} = ₹{" "}
+                          {/* {thisMonthlyData.monthlyPRYCost} */}
+                          {Math.round(thisMonthlyData.pryTotal * MDM_COST)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div className="nobreak">
+              <div className="nobreak mt-2">
                 <h5 className="text-start">5. Food Grain Details (In KG.)</h5>
                 <table
                   style={{
