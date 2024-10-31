@@ -48,7 +48,16 @@ export default function MonthlyTeachersReturn() {
   const [entryMonths, setEntryMonths] = useState("");
   const [showMonthSelection, setShowMonthSelection] = useState(false);
   const [showRemark, setShowRemark] = useState(true);
-  const [inspectionDate, setInspectionDate] = useState("");
+  const [inspection, setInspection] = useState({
+    inspectionDate: "",
+    pp: "",
+    i: "",
+    ii: "",
+    iii: "",
+    iv: "",
+    v: "",
+    total: "",
+  });
   const [showFrontPage, setShowFrontPage] = useState(true);
   const [showBackPage, setShowBackPage] = useState(false);
   const [frontPageZoom, setFrontPageZoom] = useState(93);
@@ -107,7 +116,7 @@ export default function MonthlyTeachersReturn() {
         setShowData(true);
         setRemarks(entry?.remarks);
         setWorkingDays(entry?.workingDays);
-        setInspectionDate(entry?.inspectionDate);
+        setInspection(entry?.inspection);
         setFilteredData(entry?.teachers);
         setStudents(entry?.students);
         setMonth(entry?.month);
@@ -400,12 +409,13 @@ export default function MonthlyTeachersReturn() {
       </div>
       {loader && <Loader />}
       {showData && (
-        <div style={{
-          width: "100%",
-          overflowX: "scroll",
-          flexWrap: "wrap",
-          
-        }}>
+        <div
+          style={{
+            width: "100%",
+            overflowX: "scroll",
+            flexWrap: "wrap",
+          }}
+        >
           {showFrontPage && (
             <div
               className="mx-auto nobreak p-2"
@@ -1580,25 +1590,25 @@ export default function MonthlyTeachersReturn() {
                         inspection
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.inspectionDateAttendance}
+                        {inspection?.pp}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.inspectionDateAttendance}
+                        {inspection?.i}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.inspectionDateAttendance}
+                        {inspection?.ii}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.inspectionDateAttendance}
+                        {inspection?.iii}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.inspectionDateAttendance}
+                        {inspection?.iv}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.inspectionDateAttendance}
+                        {inspection?.v>0?inspection?.v:"-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.inspectionDateAttendance}
+                        {inspection?.total}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1784,7 +1794,7 @@ export default function MonthlyTeachersReturn() {
                                 textDecorationStyle: "dotted",
                               }}
                             >
-                              {inspectionDate}
+                              {inspection?.inspectionDate}
                             </span>
                           </p>
                           <p className="m-0 p-0">

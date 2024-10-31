@@ -1,6 +1,8 @@
 "use client";
 import {
   createDownloadLink,
+  getCurrentDateInput,
+  getSubmitDateInput,
   monthNamesWithIndex,
   sortMonthwise,
   todayInString,
@@ -29,16 +31,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "../../context/Store";
 import { firestore } from "../../context/FirbaseContext";
-import {
-  getDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  query,
-  collection,
-  deleteDoc,
-} from "firebase/firestore";
+import { doc, setDoc, getDocs, query, collection } from "firebase/firestore";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -79,17 +72,16 @@ export default function Teachersreturn() {
   const [teachers, setTeachers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [students, setStudents] = useState({});
-  const [inspectionDate, setInspectionDate] = useState("");
   const [showAvrAtt, setShowAvrAtt] = useState(false);
   const [beforeSubmit, setBeforeSubmit] = useState(false);
   const currentDate = new Date();
   const month =
     monthNamesWithIndex[
-      currentDate.getDate() > 10
-        ? currentDate.getMonth()
-        : currentDate.getMonth() - 1
+      currentDate?.getDate() > 10
+        ? currentDate?.getMonth()
+        : currentDate?.getMonth() - 1
     ].monthName;
-  const year = currentDate.getFullYear();
+  const year = currentDate?.getFullYear();
 
   const getMonth = () => {
     return `${month.toUpperCase()} of ${year}`;
@@ -97,24 +89,30 @@ export default function Teachersreturn() {
   const getID = () => {
     return `${month}-${year}`;
   };
-  const [showModal, setShowModal] = useState(true);
-  const [yearArray, setYearArray] = useState([]);
-  const [allEnry, setAllEnry] = useState([]);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [filteredEntry, setFilteredEntry] = useState([]);
-  const [moreFilteredEntry, setMoreFilteredEntry] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [showInspectionModal, setShowInspectionModal] = useState(false);
   const [frontPageZoom, setFrontPageZoom] = useState(93);
   const [backPageZoom, setBackPageZoom] = useState(80);
   const [showZoom, setShowZoom] = useState(false);
+  const [inspection, setInspection] = useState({
+    inspectionDate: "",
+    pp: "",
+    i: "",
+    ii: "",
+    iii: "",
+    iv: "",
+    v: "",
+    total: "",
+  });
   const id = getID();
   const entry = {
     id,
     month,
     year,
-    inspectionDate,
     teachers: filteredData,
     students,
     workingDays,
+    inspection,
     date: todayInString(),
     remarks,
   };
@@ -139,8 +137,9 @@ export default function Teachersreturn() {
     setTeachers(data.teachers);
     setFilteredData(data.teachers);
     setStudents(data.students);
-    setInspectionDate(data.inspectionDate);
+    setInspection(data.inspection);
     setWorkingDays(data.workingDays);
+    setShowModal(true);
   };
   const calledData = (array) => {
     let x = [];
@@ -150,11 +149,8 @@ export default function Teachersreturn() {
       x = uniqArray(x);
       x = x.sort((a, b) => a - b);
     });
-    setYearArray(x);
 
     setLoader(false);
-    setAllEnry(array);
-    setFilteredEntry(array);
   };
 
   useEffect(() => {
@@ -204,7 +200,7 @@ export default function Teachersreturn() {
           <button
             type="button"
             id="launchModalTrigger"
-            className="btn btn-sm btn-primary m-1"
+            className="btn btn-sm btn-dark m-1"
             onClick={() => setBeforeSubmit(true)}
           >
             Submit Return Data
@@ -219,6 +215,14 @@ export default function Teachersreturn() {
           </button>
           <button
             type="button"
+            id="launchModalTrigger"
+            className="btn btn-sm btn-success m-1"
+            onClick={() => setShowInspectionModal(true)}
+          >
+            Edit Inspection Section
+          </button>
+          <button
+            type="button"
             className="btn btn-sm btn-dark m-1"
             onClick={() => {
               setShowAvrAtt(true);
@@ -230,6 +234,296 @@ export default function Teachersreturn() {
           </button>
         </div>
       </div>
+
+      {showInspectionModal && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                  Set Inspection Days
+                </h1>
+              </div>
+              <div className="modal-body">
+                <div className="col-md-6 mx-auto my-2 noprint">
+                  <div className="mb-3 mx-auto">
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Inspection Date
+                      </label>
+                      <input
+                        type="date"
+                        className="form-control"
+                        id="date"
+                        defaultValue={getCurrentDateInput(
+                          inspection?.inspectionDate
+                        )}
+                        onChange={(e) => {
+                          const date = getSubmitDateInput(e.target.value);
+                          setInspection({
+                            ...inspection,
+                            inspectionDate: date,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        PP Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter PP Attaindance"}
+                        value={inspection?.pp}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setInspection({
+                              ...inspection,
+                              pp: parseInt(e.target.value),
+                              total:
+                                parseInt(e.target.value) +
+                                inspection?.i +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          } else {
+                            setInspection({
+                              ...inspection,
+                              pp: "",
+                              total:
+                                inspection?.i +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Class I Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter Class I Attaindance"}
+                        value={inspection?.i}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setInspection({
+                              ...inspection,
+                              i: parseInt(e.target.value),
+                              total:
+                                parseInt(e.target.value) +
+                                inspection?.pp +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          } else {
+                            setInspection({
+                              ...inspection,
+                              i: "",
+                              total:
+                                inspection?.pp +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Class II Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter Class II Attaindance"}
+                        value={inspection?.ii}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setInspection({
+                              ...inspection,
+                              ii: parseInt(e.target.value),
+                              total:
+                                parseInt(e.target.value) +
+                                inspection?.pp +
+                                inspection?.i +
+                                inspection?.iii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          } else {
+                            setInspection({
+                              ...inspection,
+                              ii: "",
+                              total:
+                                inspection?.i +
+                                inspection?.pp +
+                                inspection?.iii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Class III Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter Class III Attaindance"}
+                        value={inspection?.iii}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setInspection({
+                              ...inspection,
+                              iii: parseInt(e.target.value),
+                              total:
+                                parseInt(e.target.value) +
+                                inspection?.pp +
+                                inspection?.i +
+                                inspection?.ii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          } else {
+                            setInspection({
+                              ...inspection,
+                              iii: "",
+                              total:
+                                inspection?.i +
+                                inspection?.pp +
+                                inspection?.ii +
+                                inspection?.iv +
+                                inspection?.v,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Class IV Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter Class IV Attaindance"}
+                        value={inspection?.iv}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setInspection({
+                              ...inspection,
+                              iv: parseInt(e.target.value),
+                              total:
+                                parseInt(e.target.value) +
+                                inspection?.pp +
+                                inspection?.i +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.v,
+                            });
+                          } else {
+                            setInspection({
+                              ...inspection,
+                              iv: "",
+                              total:
+                                inspection?.i +
+                                inspection?.pp +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.v,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Class V Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter Class V Attaindance"}
+                        value={inspection?.v}
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            setInspection({
+                              ...inspection,
+                              v: parseInt(e.target.value),
+                              total:
+                                parseInt(e.target.value) +
+                                inspection?.pp +
+                                inspection?.i +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.iv,
+                            });
+                          } else {
+                            setInspection({
+                              ...inspection,
+                              v: "",
+                              total:
+                                inspection?.i +
+                                inspection?.pp +
+                                inspection?.ii +
+                                inspection?.iii +
+                                inspection?.iv,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="date" className="form-label">
+                        Total Attaindance
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder={"Enter Class Total Attaindance"}
+                        value={inspection?.total}
+                        readOnly
+                        onChange={() => toast.error("Can't change Total")}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={() => setShowInspectionModal(false)}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {beforeSubmit && (
         <div
@@ -265,7 +559,7 @@ export default function Teachersreturn() {
                         <div key={index}>
                           <p>Name:{teacher?.tname}</p>
                           <p>
-                            Data:{JSON.stringify(teacher).split(`"`).join("")}
+                            Data:{JSON.stringify(teacher).split(`"`).join("").split("{").join("").split("}").join("")}
                           </p>
                         </div>
                       ))}
@@ -276,29 +570,29 @@ export default function Teachersreturn() {
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.pp)
                           .split(`"`)
-                          .join("")}
+                          .join("").split("{").join("").split("}").join("")}
                       </p>
                       <h5>Class I:</h5>
                       <p className="text-center text-break">
-                        {JSON.stringify(entry?.students?.i).split(`"`).join("")}
+                        {JSON.stringify(entry?.students?.i).split(`"`).join("").split("{").join("").split("}").join("")}
                       </p>
                       <h5>Class II:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.ii)
                           .split(`"`)
-                          .join("")}
+                          .join("").split("{").join("").split("}").join("")}
                       </p>
                       <h5>Class III:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.iii)
                           .split(`"`)
-                          .join("")}
+                          .join("").split("{").join("").split("}").join("")}
                       </p>
                       <h5>Class IV:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.iv)
                           .split(`"`)
-                          .join("")}
+                          .join("").split("{").join("").split("}").join("")}
                       </p>
                       {entry?.students?.v?.Total !== "-" && (
                         <div>
@@ -306,7 +600,7 @@ export default function Teachersreturn() {
                           <p className="text-center text-break">
                             {JSON.stringify(entry?.students?.iv)
                               .split(`"`)
-                              .join("")}
+                              .join("").split("{").join("").split("}").join("")}
                           </p>
                         </div>
                       )}
@@ -314,7 +608,46 @@ export default function Teachersreturn() {
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.total)
                           .split(`"`)
-                          .join("")}
+                          .join("").split("{").join("").split("}").join("")}
+                      </p>
+                    </div>
+                    <div className="my-2">
+                      <h5>Inspection:</h5>
+                      <p>Date:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.inspectionDate).split(`"`).join("").split("{").join("").split("}").join("")}
+                      </p>
+                      <p>PP:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.pp).split(`"`).join("").split("{").join("").split("}").join("")}
+                      </p>
+                      <p>Class I:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.i).split(`"`).join("").split("{").join("").split("}").join("")}
+                      </p>
+                      <p>Class II:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.ii).split(`"`).join("").split("{").join("").split("}").join("")}
+                      </p>
+                      <p>Class III:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.iii).split(`"`).join("").split("{").join("").split("}").join("")}
+                      </p>
+                      <p>Class IV:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.iv).split(`"`).join("").split("{").join("").split("}").join("")}
+                      </p>
+                      {inspection?.v?.Total !== "-" && (
+                        <div>
+                          <p>Class V:</p>
+                          <p className="text-center text-break">
+                            {JSON.stringify(inspection?.v).split(`"`).join("").split("{").join("").split("}").join("")}
+                          </p>
+                        </div>
+                      )}
+                      <p>Total Student:</p>
+                      <p className="text-center text-break">
+                        {JSON.stringify(inspection?.total).split(`"`).join("").split("{").join("").split("}").join("")}
                       </p>
                     </div>
                   </div>
@@ -422,10 +755,13 @@ export default function Teachersreturn() {
           </div>
         </div>
       ) : (
-        <div style={{
-          width: "100%",
-          overflowX: "scroll",
-          flexWrap: "wrap",}}>
+        <div
+          style={{
+            width: "100%",
+            overflowX: "scroll",
+            flexWrap: "wrap",
+          }}
+        >
           <div className="noprint">
             <button
               type="button"
@@ -583,8 +919,8 @@ export default function Teachersreturn() {
                     <button
                       type="button"
                       className="btn-close"
-                      
-                      aria-label="Close" onClick={()=>{
+                      aria-label="Close"
+                      onClick={() => {
                         setShowEditForm(false);
                         setShowBackPage(true);
                         setShowFrontPage(true);
@@ -623,13 +959,16 @@ export default function Teachersreturn() {
                                 ...editTeacher,
                                 clThisMonth: parseInt(e.target.value),
                                 workingDays:
-                                  workingDays - parseInt(e.target.value),
+                                  workingDays -
+                                  parseInt(e.target.value) -
+                                  editTeacher.olThisMonth,
                               });
                             } else {
                               setEditTeacher({
                                 ...editTeacher,
                                 clThisMonth: "",
-                                workingDays: workingDays,
+                                workingDays:
+                                  workingDays - editTeacher.olThisMonth,
                               });
                             }
                           }}
@@ -675,11 +1014,15 @@ export default function Teachersreturn() {
                               setEditTeacher({
                                 ...editTeacher,
                                 olThisMonth: parseInt(e.target.value),
+                                workingDays:
+                                  workingDays - parseInt(e.target.value),
                               });
                             } else {
                               setEditTeacher({
                                 ...editTeacher,
                                 olThisMonth: "",
+                                workingDays:
+                                  workingDays - editTeacher.clThisMonth,
                               });
                             }
                           }}
@@ -1180,7 +1523,7 @@ export default function Teachersreturn() {
                         rowSpan={3}
                         style={{ border: "1px solid", paddingInline: 2 }}
                       >
-                        S.C./ S.T./ O.B.C.-A/ O.B.C.-B/ PH
+                        S.C./ S.T./ O?.B.C.-A/ O?.B.C.-B/ PH
                       </th>
                       <th
                         colSpan={2}
@@ -1431,69 +1774,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.Boys}
-                      </td>
-                      <td style={{ border: "1px solid" }}>{students.i.Boys}</td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.ii.Boys}
+                        {students?.pp?.Boys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.Boys}
+                        {students?.i?.Boys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.Boys}
+                        {students?.ii?.Boys}
                       </td>
-                      <td style={{ border: "1px solid" }}>{students.v.Boys}</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.Boys}
+                        {students?.iii?.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        {students?.iv?.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        {students?.v?.Boys}
+                      </td>
+                      <td style={{ border: "1px solid" }}>
+                        {students?.total?.Boys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.Girls}
+                        {students?.pp?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.Girls}
+                        {students?.i?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.Girls}
+                        {students?.ii?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.Girls}
+                        {students?.iii?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.Girls}
+                        {students?.iv?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.Girls}
+                        {students?.v?.Girls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.Girls}
+                        {students?.total?.Girls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.Total}
+                        {students?.pp?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.Total}
+                        {students?.i?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.Total}
+                        {students?.ii?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.Total}
+                        {students?.iii?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.Total}
+                        {students?.iv?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.Total}
+                        {students?.v?.Total}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.Total}
+                        {students?.total?.Total}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1502,73 +1849,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.GeneralBoys}
+                        {students?.pp?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.GeneralBoys}
+                        {students?.i?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.GeneralBoys}
+                        {students?.ii?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.GeneralBoys}
+                        {students?.iii?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.GeneralBoys}
+                        {students?.iv?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.GeneralBoys}
+                        {students?.v?.GeneralBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.GeneralBoys}
+                        {students?.total?.GeneralBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.GeneralGirls}
+                        {students?.pp?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.GeneralGirls}
+                        {students?.i?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.GeneralGirls}
+                        {students?.ii?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.GeneralGirls}
+                        {students?.iii?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.GeneralGirls}
+                        {students?.iv?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.GeneralGirls}
+                        {students?.v?.GeneralGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.GeneralGirls}
+                        {students?.total?.GeneralGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.GeralTotal}
+                        {students?.pp?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.GeralTotal}
+                        {students?.i?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.GeralTotal}
+                        {students?.ii?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.GeralTotal}
+                        {students?.iii?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.GeralTotal}
+                        {students?.iv?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.GeralTotal}
+                        {students?.v?.GeralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.GeralTotal}
+                        {students?.total?.GeralTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1577,73 +1924,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ScBoys}
+                        {students?.pp?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ScBoys}
+                        {students?.i?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ScBoys}
+                        {students?.ii?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ScBoys}
+                        {students?.iii?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ScBoys}
+                        {students?.iv?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ScBoys}
+                        {students?.v?.ScBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ScBoys}
+                        {students?.total?.ScBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ScGirls}
+                        {students?.pp?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ScGirls}
+                        {students?.i?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ScGirls}
+                        {students?.ii?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ScGirls}
+                        {students?.iii?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ScGirls}
+                        {students?.iv?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ScGirls}
+                        {students?.v?.ScGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ScGirls}
+                        {students?.total?.ScGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ScTotal}
+                        {students?.pp?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ScTotal}
+                        {students?.i?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ScTotal}
+                        {students?.ii?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ScTotal}
+                        {students?.iii?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ScTotal}
+                        {students?.iv?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ScTotal}
+                        {students?.v?.ScTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ScTotal}
+                        {students?.total?.ScTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1652,298 +1999,298 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.StBoys}
+                        {students?.pp?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.StBoys}
+                        {students?.i?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.StBoys}
+                        {students?.ii?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.StBoys}
+                        {students?.iii?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.StBoys}
+                        {students?.iv?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.StBoys}
+                        {students?.v?.StBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.StBoys}
+                        {students?.total?.StBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.StGirls}
+                        {students?.pp?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.StGirls}
+                        {students?.i?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.StGirls}
+                        {students?.ii?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.StGirls}
+                        {students?.iii?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.StGirls}
+                        {students?.iv?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.StGirls}
+                        {students?.v?.StGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.StGirls}
+                        {students?.total?.StGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.StTotal}
+                        {students?.pp?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.StTotal}
+                        {students?.i?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.StTotal}
+                        {students?.ii?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.StTotal}
+                        {students?.iii?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.StTotal}
+                        {students?.iv?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.StTotal}
+                        {students?.v?.StTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.StTotal}
+                        {students?.total?.StTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        O.B.C. A Minority
+                        O?.B.C. A Minority
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcABoys}
+                        {students?.pp?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcABoys}
+                        {students?.i?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcABoys}
+                        {students?.ii?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcABoys}
+                        {students?.iii?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcABoys}
+                        {students?.iv?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcABoys}
+                        {students?.v?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcABoys}
+                        {students?.total?.ObcABoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcAGirls}
+                        {students?.pp?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcAGirls}
+                        {students?.i?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcAGirls}
+                        {students?.ii?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcAGirls}
+                        {students?.iii?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcAGirls}
+                        {students?.iv?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcAGirls}
+                        {students?.v?.ObcAGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcAGirls}
+                        {students?.total?.ObcAGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcATotal}
+                        {students?.pp?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcATotal}
+                        {students?.i?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcATotal}
+                        {students?.ii?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcATotal}
+                        {students?.iii?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcATotal}
+                        {students?.iv?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcATotal}
+                        {students?.v?.ObcATotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcATotal}
+                        {students?.total?.ObcATotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        O.B.C. B
+                        O?.B.C. B
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcBBoys}
+                        {students?.pp?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcABoys}
+                        {students?.i?.ObcABoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcBBoys}
+                        {students?.ii?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcBBoys}
+                        {students?.iii?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBBoys}
+                        {students?.iv?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcBBoys}
+                        {students?.v?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcBBoys}
+                        {students?.total?.ObcBBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcBGirls}
+                        {students?.pp?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcBGirls}
+                        {students?.i?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcBGirls}
+                        {students?.ii?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcBGirls}
+                        {students?.iii?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBGirls}
+                        {students?.iv?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcBGirls}
+                        {students?.v?.ObcBGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcBGirls}
+                        {students?.total?.ObcBGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.ObcBTotal}
+                        {students?.pp?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.ObcBTotal}
+                        {students?.i?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.ObcBTotal}
+                        {students?.ii?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.ObcBTotal}
+                        {students?.iii?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBTotal}
+                        {students?.iv?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.ObcBTotal}
+                        {students?.v?.ObcBTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.ObcBTotal}
+                        {students?.total?.ObcBTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        Minority Excluding O.B.C.-A
+                        Minority Excluding O?.B.C.-A
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.MinorityBoys}
+                        {students?.pp?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.MinorityBoys}
+                        {students?.i?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.MinorityBoys}
+                        {students?.ii?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.MinorityBoys}
+                        {students?.iii?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.ObcBBoys}
+                        {students?.iv?.ObcBBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.MinorityBoys}
+                        {students?.v?.MinorityBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.MinorityBoys}
+                        {students?.total?.MinorityBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.MinorityGirls}
+                        {students?.pp?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.MinorityGirls}
+                        {students?.i?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.MinorityGirls}
+                        {students?.ii?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.MinorityGirls}
+                        {students?.iii?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.MinorityGirls}
+                        {students?.iv?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.MinorityGirls}
+                        {students?.v?.MinorityGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.MinorityGirls}
+                        {students?.total?.MinorityGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.MinorityTotal}
+                        {students?.pp?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.MinorityTotal}
+                        {students?.i?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.MinorityTotal}
+                        {students?.ii?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.MinorityTotal}
+                        {students?.iii?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.MinorityTotal}
+                        {students?.iv?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.MinorityTotal}
+                        {students?.v?.MinorityTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.MinorityTotal}
+                        {students?.total?.MinorityTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1951,27 +2298,27 @@ export default function Teachersreturn() {
                         Average Attendance of the month
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.averageAttendance}
+                        {students?.pp?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.averageAttendance}
+                        {students?.i?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.averageAttendance}
+                        {students?.ii?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.averageAttendance}
+                        {students?.iii?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.averageAttendance}
+                        {students?.iv?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.averageAttendance > 0
-                          ? students.v.averageAttendance
+                        {students?.v?.averageAttendance > 0
+                          ? students?.v?.averageAttendance
                           : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.averageAttendance}
+                        {students?.total?.averageAttendance}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -1985,7 +2332,7 @@ export default function Teachersreturn() {
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.averageAttendance}
+                        {students?.v?.averageAttendance}
                       </td>
                       <td style={{ border: "1px solid" }}>-</td>
                     </tr>
@@ -2008,26 +2355,16 @@ export default function Teachersreturn() {
                         No. of Attendance of students on the date of last
                         inspection
                       </td>
+                      <td style={{ border: "1px solid" }}>{inspection?.pp}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.i}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.ii}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.iii}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.iv}</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.inspectionDateAttendance}
+                        {inspection?.v > 0 ? inspection?.v : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.inspectionDateAttendance}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.ii.inspectionDateAttendance}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.iii.inspectionDateAttendance}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.iv.inspectionDateAttendance}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.v.inspectionDateAttendance}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {students.total.inspectionDateAttendance}
+                        {inspection?.total}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2036,73 +2373,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.lastYearBoys}
+                        {students?.pp?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.lastYearBoys}
+                        {students?.i?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.lastYearBoys}
+                        {students?.ii?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.lastYearBoys}
+                        {students?.iii?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.lastYearBoys}
+                        {students?.iv?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.lastYearBoys}
+                        {students?.v?.lastYearBoys}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.lastYearBoys}
+                        {students?.total?.lastYearBoys}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.lastYearGirls}
+                        {students?.pp?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.lastYearGirls}
+                        {students?.i?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.lastYearGirls}
+                        {students?.ii?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.lastYearGirls}
+                        {students?.iii?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.lastYearGirls}
+                        {students?.iv?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.lastYearGirls}
+                        {students?.v?.lastYearGirls}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.lastYearGirls}
+                        {students?.total?.lastYearGirls}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students.pp.lastYearTotal}
+                        {students?.pp?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.i.lastYearTotal}
+                        {students?.i?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.ii.lastYearTotal}
+                        {students?.ii?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iii.lastYearTotal}
+                        {students?.iii?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.iv.lastYearTotal}
+                        {students?.iv?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.v.lastYearTotal}
+                        {students?.v?.lastYearTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students.total.lastYearTotal}
+                        {students?.total?.lastYearTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2213,7 +2550,7 @@ export default function Teachersreturn() {
                                 textDecorationStyle: "dotted",
                               }}
                             >
-                              {inspectionDate}
+                              {inspection?.inspectionDate}
                             </span>
                           </p>
                           <p className="m-0 p-0">
@@ -2424,9 +2761,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.pp?.averageAttendance !== undefined &&
-                            students.pp?.averageAttendance !== null
-                              ? students.pp.averageAttendance
+                            students?.pp?.averageAttendance !== undefined &&
+                            students?.pp?.averageAttendance !== null
+                              ? students?.pp?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2442,11 +2779,11 @@ export default function Teachersreturn() {
                                 ...students?.total,
                                 averageAttendance:
                                   parseInt(value) +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
+                                  students?.i?.averageAttendance +
+                                  students?.ii?.averageAttendance +
+                                  students?.iii?.averageAttendance +
+                                  students?.iv?.averageAttendance +
+                                  students?.v?.averageAttendance,
                               },
                             });
                           }}
@@ -2458,9 +2795,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.i?.averageAttendance !== undefined &&
-                            students.i?.averageAttendance !== null
-                              ? students.i.averageAttendance
+                            students?.i?.averageAttendance !== undefined &&
+                            students?.i?.averageAttendance !== null
+                              ? students?.i?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2475,12 +2812,12 @@ export default function Teachersreturn() {
                               total: {
                                 ...students?.total,
                                 averageAttendance:
-                                  students.pp.averageAttendance +
+                                  students?.pp?.averageAttendance +
                                   parseInt(value) +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
+                                  students?.ii?.averageAttendance +
+                                  students?.iii?.averageAttendance +
+                                  students?.iv?.averageAttendance +
+                                  students?.v?.averageAttendance,
                               },
                             });
                           }}
@@ -2493,9 +2830,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.ii?.averageAttendance !== undefined &&
-                            students.ii?.averageAttendance !== null
-                              ? students.ii.averageAttendance
+                            students?.ii?.averageAttendance !== undefined &&
+                            students?.ii?.averageAttendance !== null
+                              ? students?.ii?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2510,12 +2847,12 @@ export default function Teachersreturn() {
                               total: {
                                 ...students?.total,
                                 averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
+                                  students?.pp?.averageAttendance +
+                                  students?.i?.averageAttendance +
                                   parseInt(value) +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
+                                  students?.iii?.averageAttendance +
+                                  students?.iv?.averageAttendance +
+                                  students?.v?.averageAttendance,
                               },
                             });
                           }}
@@ -2527,9 +2864,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.iii?.averageAttendance !== undefined &&
-                            students.iii?.averageAttendance !== null
-                              ? students.iii.averageAttendance
+                            students?.iii?.averageAttendance !== undefined &&
+                            students?.iii?.averageAttendance !== null
+                              ? students?.iii?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2544,12 +2881,12 @@ export default function Teachersreturn() {
                               total: {
                                 ...students?.total,
                                 averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
+                                  students?.pp?.averageAttendance +
+                                  students?.i?.averageAttendance +
+                                  students?.ii?.averageAttendance +
                                   parseInt(value) +
-                                  students.iv.averageAttendance +
-                                  students.v.averageAttendance,
+                                  students?.iv?.averageAttendance +
+                                  students?.v?.averageAttendance,
                               },
                             });
                           }}
@@ -2562,9 +2899,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.iv?.averageAttendance !== undefined &&
-                            students.iv?.averageAttendance !== null
-                              ? students.iv.averageAttendance
+                            students?.iv?.averageAttendance !== undefined &&
+                            students?.iv?.averageAttendance !== null
+                              ? students?.iv?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2579,12 +2916,12 @@ export default function Teachersreturn() {
                               total: {
                                 ...students?.total,
                                 averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
+                                  students?.pp?.averageAttendance +
+                                  students?.i?.averageAttendance +
+                                  students?.ii?.averageAttendance +
+                                  students?.iii?.averageAttendance +
                                   parseInt(value) +
-                                  students.v.averageAttendance,
+                                  students?.v?.averageAttendance,
                               },
                             });
                           }}
@@ -2596,9 +2933,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.v?.averageAttendance !== undefined &&
-                            students.v?.averageAttendance !== null
-                              ? students.v.averageAttendance
+                            students?.v?.averageAttendance !== undefined &&
+                            students?.v?.averageAttendance !== null
+                              ? students?.v?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2613,11 +2950,11 @@ export default function Teachersreturn() {
                               total: {
                                 ...students?.total,
                                 averageAttendance:
-                                  students.pp.averageAttendance +
-                                  students.i.averageAttendance +
-                                  students.ii.averageAttendance +
-                                  students.iii.averageAttendance +
-                                  students.iv.averageAttendance +
+                                  students?.pp?.averageAttendance +
+                                  students?.i?.averageAttendance +
+                                  students?.ii?.averageAttendance +
+                                  students?.iii?.averageAttendance +
+                                  students?.iv?.averageAttendance +
                                   parseInt(value),
                               },
                             });
@@ -2630,9 +2967,9 @@ export default function Teachersreturn() {
                           type="number"
                           className="form-control"
                           value={
-                            students.total?.averageAttendance !== undefined &&
-                            students.total?.averageAttendance !== null
-                              ? students.total.averageAttendance
+                            students?.total?.averageAttendance !== undefined &&
+                            students?.total?.averageAttendance !== null
+                              ? students?.total?.averageAttendance
                               : ""
                           }
                           onChange={(e) => {
@@ -2640,7 +2977,7 @@ export default function Teachersreturn() {
                             setStudents({
                               ...students,
                               total: {
-                                ...students?.total, // Corrected this to use `students.total`
+                                ...students?.total, // Corrected this to use `students?.total`
                                 averageAttendance:
                                   value === "" ? null : parseInt(value, 10),
                               },
@@ -2686,7 +3023,7 @@ export default function Teachersreturn() {
                     <div className="mx-auto my-2 noprint">
                       <div className="mb-3 mx-auto">
                         <h5 htmlFor="rank" className="text-danger">
-                          ***Write percent without "%" e.g.(80, 90)
+                          ***Write percent without "%" e?.g.(80, 90)
                         </h5>
                         <input
                           type="number"
