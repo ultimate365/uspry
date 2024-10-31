@@ -857,7 +857,7 @@ export default function Teachersreturn() {
                 </div>
                 <div className="d-flex flex-wrap justify-content-between align-items-start mt-2">
                   <p>
-                    U. Dise Code No.{" "}
+                    U. Dise Code No.:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -909,7 +909,7 @@ export default function Teachersreturn() {
                 </div>
                 <div className="d-flex flex-wrap justify-content-between align-items-start mt-2">
                   <p>
-                    Name of School{" "}
+                    Name of School:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -952,7 +952,7 @@ export default function Teachersreturn() {
                   style={{ marginTop: -15 }}
                 >
                   <p>
-                    Vill.{" "}
+                    Vill.:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -964,7 +964,7 @@ export default function Teachersreturn() {
                     </span>
                   </p>
                   <p>
-                    P.O.{" "}
+                    P.O.:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1009,7 +1009,7 @@ export default function Teachersreturn() {
                   style={{ marginTop: -15 }}
                 >
                   <p>
-                    P.S.{" "}
+                    P.S.:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1036,7 +1036,7 @@ export default function Teachersreturn() {
                     </div>
                     <p className="m-0 p-0">
                       GP/<del>/Ward</del>
-                      &nbsp;&nbsp;
+                      :&nbsp;&nbsp;
                       <span
                         className="fw-bold"
                         style={{
@@ -1049,7 +1049,7 @@ export default function Teachersreturn() {
                     </p>
                   </div>
                   <p>
-                    Mouza{" "}
+                    Mouza:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1061,7 +1061,7 @@ export default function Teachersreturn() {
                     </span>
                   </p>
                   <p>
-                    J.L. No.{" "}
+                    J.L. No.:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1073,7 +1073,7 @@ export default function Teachersreturn() {
                     </span>
                   </p>
                   <p>
-                    School Sl. No.{" "}
+                    School Sl. No.:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1090,7 +1090,7 @@ export default function Teachersreturn() {
                   style={{ marginTop: -15 }}
                 >
                   <p>
-                    Circle{" "}
+                    Circle:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1103,7 +1103,7 @@ export default function Teachersreturn() {
                   </p>
 
                   <p style={{ marginLeft: 20 }}>
-                    Medium{" "}
+                    Medium:&nbsp;&nbsp;
                     <span
                       className="fw-bold"
                       style={{
@@ -1361,14 +1361,14 @@ export default function Teachersreturn() {
                 </table>
                 <div className="mt-5 mb-3 d-flex justify-content-between align-items-center">
                   <div>
-                    {" "}
+                    &nbsp;&nbsp;
                     <h6>
                       1..............................................................2.....................................................................
                     </h6>
                     <h6>Signature of two members of Committee</h6>
                   </div>
                   <div>
-                    {" "}
+                    &nbsp;&nbsp;
                     <h6>
                       …......................................................................
                     </h6>
@@ -2109,7 +2109,7 @@ export default function Teachersreturn() {
                       <td colSpan={9} style={{ border: "1px solid" }}>
                         <div className="d-flex justify-content-evenly align-items-center">
                           <p className="m-0 p-0">
-                            Source of drinking water :{" "}
+                            Source of drinking water :&nbsp;&nbsp;
                             <span
                               className="fw-bold"
                               style={{
@@ -2121,7 +2121,7 @@ export default function Teachersreturn() {
                             </span>
                           </p>
                           <p className="m-0 p-0">
-                            Water Supply in Toilets :{" "}
+                            Water Supply in Toilets :&nbsp;&nbsp;
                             <span
                               className="fw-bold"
                               style={{
@@ -2147,7 +2147,7 @@ export default function Teachersreturn() {
                             </span>
                           </p>
                           <p className="m-0 p-0">
-                            Own Electricity :{" "}
+                            Own Electricity :&nbsp;&nbsp;
                             <span
                               className="fw-bold"
                               style={{
