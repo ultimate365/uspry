@@ -1461,7 +1461,7 @@ export default function MDMmonthlyReport() {
                         Allotment of fund received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total Food grains received <br/(5+6(b))
+                        Total Food grains received <br/>(5+6(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -1635,7 +1635,7 @@ export default function MDMmonthlyReport() {
                         Allotment of fund received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total allotment received <br/(5+6(b))
+                        Total allotment received <br/>(5+6(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
