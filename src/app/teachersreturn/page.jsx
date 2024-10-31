@@ -1015,7 +1015,7 @@ export default function Teachersreturn() {
                                 ...editTeacher,
                                 olThisMonth: parseInt(e.target.value),
                                 workingDays:
-                                  workingDays - parseInt(e.target.value),
+                                  workingDays - parseInt(e.target.value)-editTeacher.clThisMonth,
                               });
                             } else {
                               setEditTeacher({
