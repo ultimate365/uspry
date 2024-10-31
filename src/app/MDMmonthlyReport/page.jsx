@@ -1248,7 +1248,7 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 8(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance (7-9)
+                        Closing Balance<br/>(7-9)
                       </td>
                     </tr>
                     <tr
@@ -1470,7 +1470,7 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 8(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance (7-9)
+                        Closing Balance<br/>(7-9)
                       </td>
                     </tr>
                     <tr
@@ -1644,7 +1644,7 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 8(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance (7-9)
+                        Closing Balance<br/>(7-9)
                       </td>
                     </tr>
                     <tr
