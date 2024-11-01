@@ -44,7 +44,8 @@ export default function CompDownloadAdmissionForm({ data }) {
     student_previous_school,
     student_addmission_date,
     student_addmission_dateAndTime,
-    updatedAt,student_previous_student_id
+    updatedAt,
+    student_previous_student_id,
   } = data;
 
   const scrWidth = (w) => (w * width) / 100;
@@ -163,14 +164,13 @@ export default function CompDownloadAdmissionForm({ data }) {
               <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
                 ছাত্র/ছাত্রীর পূর্বের বর্ষ: {student_previous_class_year}
               </Text>
-              
             </View>
           )}
           {student_previous_class !== "" && (
             <View style={styles.paraView}>
-            
               <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-                ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি: {student_previous_student_id}
+                ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি:{" "}
+                {student_previous_student_id}
               </Text>
             </View>
           )}
@@ -274,9 +274,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     color: "black",
+    fontFamily: "Times",
   },
 });
 Font.register({
   family: "Kalpurush",
   src: "https://raw.githubusercontent.com/usprys/usprysdata/main/kalpurush.ttf",
+});
+Font.register({
+  family: "Times",
+  src: "https://raw.githubusercontent.com/usprys/usprysdata/main/times.ttf",
 });

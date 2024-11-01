@@ -15,7 +15,6 @@ import {
 import { useGlobalContext } from "../../context/Store";
 import Loader from "@/components/Loader";
 import {
-  btnArray,
   createDownloadLink,
   getCurrentDateInput,
   getSubmitDateInput,

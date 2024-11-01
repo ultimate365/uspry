@@ -400,14 +400,14 @@ export default function PrintAddmissionForm() {
             <div className="d-flex justify-content-around my-1">
               <h5>
                 Updated At:{" "}
-                <h6
+                <span
                   style={{
                     textDecoration: "underline 1px dotted",
                     textUnderlineOffset: 4,
                   }}
                 >
                   {DateValueToSring(updatedAt)}
-                </h6>
+                </span>
               </h5>
             </div>
           )}

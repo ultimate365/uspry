@@ -10,7 +10,16 @@ import {
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import { firestore } from "../../context/FirbaseContext";
-import { getDoc, doc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  query,
+  collection,
+} from "firebase/firestore";
 import { BsClipboard, BsClipboard2Check } from "react-icons/bs";
 import { useGlobalContext } from "../../context/Store";
 import { DateValueToSring } from "../../modules/calculatefunctions";
@@ -22,7 +31,7 @@ export default function Admission() {
   const { setStateObject, setApplicationFormState, applicationFormState } =
     useGlobalContext();
   const router = useRouter();
-
+  const [admissionID, setAdmissionID] = useState("");
   const [inputField, setInputField] = useState({
     id: "",
     student_beng_name: "",
@@ -84,6 +93,7 @@ export default function Admission() {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [loader, setLoader] = useState(false);
   const [applicationNo, setAplicationNo] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [showErr, setShowErr] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showSearchedResult, setShowSearchedResult] = useState(false);
@@ -337,23 +347,53 @@ export default function Admission() {
     return formIsValid;
   };
 
+  const getAdmission = async () => {
+    try {
+      const querySnapshot = await getDocs(
+        query(collection(firestore, "admission"))
+      );
+      const data = querySnapshot.docs.map((doc) => ({
+        // doc.data() is never undefined for query doc snapshots
+        id: doc.id,
+        ...doc.data(),
+      }));
+      const YEAR = new Date().getFullYear();
+      const dataLength = data.length;
+      let countLength = dataLength;
+      if (dataLength <= 9) {
+        countLength = "0" + (countLength + 1);
+      } else {
+        countLength = countLength + 1;
+      }
+      const genID = `USPRYS-ONLINE-${YEAR}-${countLength}`;
+      setAdmissionID(genID);
+      return genID;
+    } catch (error) {
+      setLoader(false);
+      console.error("Error getting documents: ", error);
+    }
+  };
+
   const submitData = async (e) => {
     e.preventDefault();
     if (validForm()) {
       //submit
       try {
         setLoader(true);
-        const ID =
-          new Date().getFullYear().toString() +
-          (new Date().getMonth() + 1 > 9
-            ? new Date().getMonth()
-            : ("0" + (new Date().getMonth() + 1)).toString()) +
-          new Date().getDate().toString() +
-          new Date().getHours().toString() +
-          new Date().getMinutes().toString() +
-          new Date().getSeconds().toString();
-        await setDoc(doc(firestore, "admission", ID), {
-          id: ID,
+
+        // const ID =
+        //   new Date().getFullYear().toString() +
+        //   (new Date().getMonth() + 1 > 9
+        //     ? new Date().getMonth()
+        //     : ("0" + (new Date().getMonth() + 1)).toString()) +
+        //   new Date().getDate().toString() +
+        //   new Date().getHours().toString() +
+        //   new Date().getMinutes().toString() +
+        //   new Date().getSeconds().toString();
+        const genID = await getAdmission();
+        console.log(genID, "received during submission");
+        const entry = {
+          id: genID,
           student_beng_name: inputField.student_beng_name,
           student_eng_name: inputField.student_eng_name.toUpperCase(),
           father_beng_name: inputField.father_beng_name,
@@ -384,53 +424,72 @@ export default function Admission() {
           student_addmission_date: todayInString(),
           student_addmission_year: new Date().getFullYear(),
           student_addmission_dateAndTime: Date.now(),
-        });
+        };
+        await setDoc(doc(firestore, "admission", genID), entry)
+          .then(() => {
+            setLoader(false);
+            toast.success(
+              "Congrats! Form Has Been Submitted to Us Successfully!",
+              {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              }
+            );
+            setFormSubmitted(true);
+            setShowForm(false);
+            setStateObject(entry);
+            setInputField({
+              id: "",
+              student_beng_name: "",
+              student_eng_name: "",
+              father_beng_name: "",
+              father_eng_name: "",
+              mother_beng_name: "",
+              mother_eng_name: "",
+              guardian_beng_name: "",
+              guardian_eng_name: "",
+              student_birthday: `01-01-${new Date().getFullYear() - 5}`,
+              student_gender: "",
+              student_mobile: "",
+              student_aadhaar: "",
+              student_religion: "",
+              student_race: "GENERAL",
+              student_bpl_status: "NO",
+              student_bpl_number: "",
+              student_village: "SEHAGORI",
+              student_post_office: "KHOROP",
+              student_police_station: "JOYPUR",
+              student_pin_code: "711401",
+              student_addmission_class: "PRE PRIMARY",
+              student_previous_class: "FIRST TIME ADDMISSION",
+              student_previous_class_year: "",
+              student_previous_school: "",
+              student_previous_student_id: "",
+              student_addmission_date: todayInString(),
+              student_addmission_dateAndTime: Date.now(),
+            });
+          })
 
-        // console.log(result.id);
-        setLoader(false);
-        toast.success("Congrats! Form Has Been Submitted to Us Successfully!", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setFormSubmitted(true);
-        setShowForm(false);
-        setStateObject(inputField);
-        setInputField({
-          id: "",
-          student_beng_name: "",
-          student_eng_name: "",
-          father_beng_name: "",
-          father_eng_name: "",
-          mother_beng_name: "",
-          mother_eng_name: "",
-          guardian_beng_name: "",
-          guardian_eng_name: "",
-          student_birthday: `01-01-${new Date().getFullYear() - 5}`,
-          student_gender: "",
-          student_mobile: "",
-          student_aadhaar: "",
-          student_religion: "",
-          student_race: "GENERAL",
-          student_bpl_status: "NO",
-          student_bpl_number: "",
-          student_village: "SEHAGORI",
-          student_post_office: "KHOROP",
-          student_police_station: "JOYPUR",
-          student_pin_code: "711401",
-          student_addmission_class: "PRE PRIMARY",
-          student_previous_class: "FIRST TIME ADDMISSION",
-          student_previous_class_year: "",
-          student_previous_school: "",
-          student_previous_student_id: "",
-          student_addmission_date: todayInString(),
-          student_addmission_dateAndTime: Date.now(),
-        });
+          .catch((error) => {
+            setLoader(false);
+            toast.error("Something went Wrong", {
+              position: "top-right",
+              autoClose: 1500,
+              hideProgressBar: false,
+              closeOnClick: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            console.log(error);
+          });
       } catch (e) {
+        setLoader(false);
         toast.error("Something went Wrong", {
           position: "top-right",
           autoClose: 1500,
@@ -441,8 +500,10 @@ export default function Admission() {
           progress: undefined,
           theme: "light",
         });
+        console.log(e);
       }
     } else {
+      setLoader(false);
       toast.error("Please Fillup Required Details!", {
         position: "top-right",
         autoClose: 1500,
@@ -488,7 +549,7 @@ export default function Admission() {
       await getDoc(ref)
         .then((data) => {
           const adata = data.data();
-          if (adata) {
+          if (adata && adata.student_mobile === mobileNumber) {
             setSearchedApplicationNo(adata);
             setApplicationFormState(adata);
             setShowSearchedResult(true);
@@ -980,6 +1041,7 @@ export default function Admission() {
     errEditInputField,
     errInputField,
     applicationFormState,
+    admissionID,
   ]);
   useEffect(() => {
     getAdmissionStatus();
@@ -1000,7 +1062,8 @@ export default function Admission() {
           onClick={() => {
             setShowForm(!showForm);
             setShowUpdateForm(false);
-
+            setAplicationNo("");
+            setMobileNumber("");
             setShowSearchedResult(false);
             setShowEditForm(false);
           }}
@@ -1017,6 +1080,7 @@ export default function Admission() {
           setShowSearchedResult(false);
           setShowEditForm(false);
           setAplicationNo("");
+          setMobileNumber("");
         }}
       >
         {showUpdateForm ? "Close Form" : "Edit / Print Filled Form"}
@@ -1711,9 +1775,9 @@ export default function Admission() {
                     });
                     if (typeof window !== undefined) {
                       document.getElementById("student_gender").value = "";
-                      document.getElementById(
-                        "student_birthday"
-                      ).value = `01-01-${new Date().getFullYear() - 5}`;
+                      document.getElementById("student_birthday").value = `${
+                        new Date().getFullYear() - 5
+                      }-01-01`;
                       document.getElementById("student_religion").value = "";
                       document.getElementById("student_race").value = "";
                       document.getElementById("student_bpl_status").value = "";
@@ -1736,24 +1800,40 @@ export default function Admission() {
         <div className="my-4 mx-auto">
           <h5 className="text-danger ben">
             *** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনাকে প্রদত্ত ছাত্র/ছাত্রীর
-            প্রদত্ত অ্যাপ্লিকেশন নাম্বারটি নিজের কাছে রাখুন। e.g. 20240828143615
+            প্রদত্ত অ্যাপ্লিকেশন নাম্বারটি নিজের কাছে রাখুন। e.g.
+            USPRYS-ONLINE-2024-01
           </h5>
           <div className="my-4 mx-auto d-flex justify-content-center align-items-center">
             <form method="post" className="mb-3 col-md-6">
-              <label className="form-label">অ্যাপ্লিকেশন নাম্বার লিখুন*</label>
-              <input
-                type="text"
-                name=""
-                id=""
-                value={applicationNo}
-                placeholder="অ্যাপ্লিকেশন নাম্বার লিখুন"
-                className="form-control"
-                onChange={(e) => setAplicationNo(e.target.value)}
-              />
+              <div className="mb-3">
+                <label className="form-label">
+                  অ্যাপ্লিকেশন নাম্বার লিখুন*
+                </label>
+                <input
+                  type="text"
+                  value={applicationNo}
+                  placeholder="অ্যাপ্লিকেশন নাম্বার লিখুন"
+                  className="form-control"
+                  onChange={(e) => setAplicationNo(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">
+                  অ্যাপ্লিকেশনে দেওয়া মোবাইল নাম্বার লিখুন*
+                </label>
+                <input
+                  type="number"
+                  value={mobileNumber}
+                  placeholder="অ্যাপ্লিকেশনে দেওয়া মোবাইল নাম্বার লিখুন"
+                  className="form-control"
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                />
+              </div>
+
               <br />
               {showErr && (
                 <span className="error">
-                  দয়া করে অ্যাপ্লিকেশন নাম্বার লিখুন
+                  দয়া করে অ্যাপ্লিকেশন নাম্বার ও মোবাইল নাম্বার লিখুন
                 </span>
               )}
               <br />
@@ -1763,7 +1843,7 @@ export default function Admission() {
                 onClick={(e) => {
                   e.preventDefault();
                   setShowErr(true);
-                  if (applicationNo.length > 0) {
+                  if (applicationNo.length > 0 || mobileNumber.length > 0) {
                     searchApplication();
                     setShowErr(false);
                   } else {
@@ -1791,7 +1871,7 @@ export default function Admission() {
                 <div>
                   <BsClipboard
                     onClick={() => {
-                      navigator.clipboard.writeText(docId);
+                      navigator.clipboard.writeText(admissionID);
                       setSuccess(true);
                       setTimeout(() => setSuccess(false), 1500);
                     }}
@@ -1804,7 +1884,7 @@ export default function Admission() {
                 <div>
                   <BsClipboard2Check
                     onClick={() => {
-                      navigator.clipboard.writeText(docId);
+                      navigator.clipboard.writeText(admissionID);
                       setSuccess(true);
                       setTimeout(() => setSuccess(false), 1500);
                     }}
@@ -1817,7 +1897,9 @@ export default function Admission() {
                 </div>
               )}
             </div>
-            <h1 className="text-primary text-center timesNewRoman">{docId}</h1>
+            <h1 className="text-primary text-center timesNewRoman">
+              {admissionID}
+            </h1>
             {success ? (
               <h5 className="text-success" suppressHydrationWarning={true}>
                 Token Coppied to Clipboard
@@ -1831,9 +1913,6 @@ export default function Admission() {
                   setShowUpdateForm(false);
                   setShowForm(false);
                   setFormSubmitted(false);
-                  if (typeof window !== undefined) {
-                    window.location.reload();
-                  }
                 }}
               >
                 Close
@@ -1872,7 +1951,7 @@ export default function Admission() {
                   searchedApplicationNo?.student_addmission_dateAndTime
                 )}
               </td>
-              <td className="p-2">
+              <td className="p-2" suppressHydrationWarning={true}>
                 <div>
                   <button
                     type="button"
