@@ -251,7 +251,7 @@ export default function Admission() {
         student_gender: "দয়া করে ছাত্র/ছাত্রীর লিঙ্গ বেছে নিন",
       }));
     }
-    if (inputField.student_mobile === "") {
+    if (inputField.student_mobile === "" || inputField.student_mobile.length !==10) {
       formIsValid = false;
       setErrInputField((prevState) => ({
         ...prevState,
@@ -380,18 +380,7 @@ export default function Admission() {
       //submit
       try {
         setLoader(true);
-
-        // const ID =
-        //   new Date().getFullYear().toString() +
-        //   (new Date().getMonth() + 1 > 9
-        //     ? new Date().getMonth()
-        //     : ("0" + (new Date().getMonth() + 1)).toString()) +
-        //   new Date().getDate().toString() +
-        //   new Date().getHours().toString() +
-        //   new Date().getMinutes().toString() +
-        //   new Date().getSeconds().toString();
         const genID = await getAdmission();
-        console.log(genID, "received during submission");
         const entry = {
           id: genID,
           student_beng_name: inputField.student_beng_name,
@@ -957,82 +946,7 @@ export default function Admission() {
         toast.error("Failed to delete Application");
       });
   };
-  const [ageStatus, setAgeStatus] = useState("");
-  const [birthdayStatus, setBirthdayStatus] = useState(false);
-  const [calcAge, setCalcAge] = useState(5);
-  const calculateAge = (inputDate) => {
-    const birthDate = new Date(inputDate);
-    const today = new Date();
-
-    const month = today.getMonth() + 1;
-    let year = today.getFullYear();
-    if (month > 3) {
-      year = year + 1;
-    } else {
-      year = year;
-    }
-
-    // Validate if the birth date is in the future
-    if (birthDate > today) {
-      setAgeStatus("The birth date cannot be in the future.");
-      return;
-    }
-
-    const referenceDate = new Date(`${year}-01-01`);
-
-    // Calculate the difference in years, months, and days
-    let years = referenceDate.getFullYear() - birthDate.getFullYear();
-    let months = referenceDate.getMonth() - birthDate.getMonth();
-    let days = referenceDate.getDate() - birthDate.getDate();
-
-    // Adjust for negative days
-    if (days < 0) {
-      months--;
-      const lastMonth = new Date(
-        referenceDate.getFullYear(),
-        referenceDate.getMonth(),
-        0
-      ); // Get the last day of the previous month
-      days += lastMonth.getDate(); // Add the days from the last month
-    }
-
-    // Adjust for negative months
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-
-    // Prepare age status message
-    const ageMessage = `The age is ${years} years, ${months} months, and ${days} days.`;
-
-    // Check if age is equal or above 5 years
-    if (
-      years > 5 ||
-      (years === 5 && months > 0) ||
-      (years === 5 && months === 0 && days > 0)
-    ) {
-      setAgeStatus(ageMessage);
-    } else {
-      setAgeStatus(ageMessage);
-    }
-    setCalcAge(years);
-    if (years >= 5) {
-      setBirthdayStatus(true);
-    } else {
-      setBirthdayStatus(false);
-    }
-  };
-  const [validStudentClass, setValidStudentClass] = useState(false);
-  const validateAge = (students_class) => {
-    const validAge = classWiseAge.filter(
-      (item) => item.className === students_class
-    )[0].age;
-    if (validAge === calcAge) {
-      setValidStudentClass(true);
-    } else {
-      setValidStudentClass(false);
-    }
-  };
+  
   useEffect(() => {
     //eslint-disable-next-line
   }, [
@@ -1115,8 +1029,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.student_beng_name}
                   placeholder="ছাত্র/ছাত্রীর বাংলায় নাম"
                   className="form-control"
@@ -1139,8 +1051,6 @@ export default function Admission() {
                 </label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.student_eng_name}
                   placeholder="ছাত্র/ছাত্রীর ইংরাজীতে নাম"
                   className="form-control"
@@ -1192,8 +1102,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর আধার নাম্বার</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.student_aadhaar}
                   placeholder="ছাত্র/ছাত্রীর আধার নাম্বার"
                   className="form-control"
@@ -1233,8 +1141,6 @@ export default function Admission() {
                 <label className="form-label">অভিভাবকের মোবাইল নাম্বার*</label>
                 <input
                   type="number"
-                  name=""
-                  id=""
                   maxLength={10}
                   value={inputField.student_mobile}
                   placeholder="অভিভাবকের মোবাইল নাম্বার"
@@ -1257,8 +1163,6 @@ export default function Admission() {
                 <label className="form-label">পিতার বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.father_beng_name}
                   placeholder="পিতার বাংলায় নাম"
                   className="form-control"
@@ -1280,8 +1184,6 @@ export default function Admission() {
                 <label className="form-label">পিতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.father_eng_name}
                   placeholder="পিতার ইংরাজীতে নাম"
                   className="form-control"
@@ -1301,8 +1203,6 @@ export default function Admission() {
                 <label className="form-label">মাতার বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.mother_beng_name}
                   placeholder="মাতার বাংলায় নাম"
                   className="form-control"
@@ -1323,8 +1223,6 @@ export default function Admission() {
                 <label className="form-label">মাতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.mother_eng_name}
                   placeholder="মাতার ইংরাজীতে নাম"
                   className="form-control"
@@ -1343,8 +1241,6 @@ export default function Admission() {
                 <label className="form-label">অভিভাবকের বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.guardian_beng_name}
                   placeholder="অভিভাবকের বাংলায় নাম"
                   className="form-control"
@@ -1365,8 +1261,6 @@ export default function Admission() {
                 <label className="form-label">অভিভাবকের ইংরাজীতে নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.guardian_eng_name}
                   placeholder="অভিভাবকের ইংরাজীতে নাম"
                   className="form-control"
@@ -1494,8 +1388,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর গ্রামের নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.student_village}
                   placeholder="ছাত্র/ছাত্রীর গ্রামের নাম"
                   className="form-control"
@@ -1516,8 +1408,6 @@ export default function Admission() {
                 </label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.student_post_office}
                   placeholder="ছাত্র/ছাত্রীর পোস্ট অফিসের নাম"
                   className="form-control"
@@ -1540,8 +1430,6 @@ export default function Admission() {
                 </label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={inputField.student_police_station}
                   placeholder="ছাত্র/ছাত্রীর পুলিশ স্টেশনের নাম"
                   className="form-control"
@@ -1562,8 +1450,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর পিনকোড*</label>
                 <input
                   type="number"
-                  name=""
-                  id=""
                   maxLength={6}
                   value={inputField.student_pin_code}
                   placeholder="ছাত্র/ছাত্রীর পিনকোড"
@@ -1866,7 +1752,10 @@ export default function Admission() {
             অনুগ্রহ করে লিখে রাখবেন আপনার অ্যাপ্লিকেশন নাম্বারটি হলো।
           </h3>
           <div className="bg-light  mx-auto p-4 rounded">
-            <div className="float-end">
+          <h1 className="text-primary text-center timesNewRoman">
+              {admissionID}
+            </h1>
+            <div className="my-3">
               {!success ? (
                 <div>
                   <BsClipboard
@@ -1897,14 +1786,7 @@ export default function Admission() {
                 </div>
               )}
             </div>
-            <h1 className="text-primary text-center timesNewRoman">
-              {admissionID}
-            </h1>
-            {success ? (
-              <h5 className="text-success" suppressHydrationWarning={true}>
-                Token Coppied to Clipboard
-              </h5>
-            ) : null}
+           
             <div className="mx-auto mt-2">
               <button
                 className="btn btn-danger"
@@ -2056,8 +1938,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.student_beng_name}
                   placeholder="ছাত্র/ছাত্রীর বাংলায় নাম"
                   className="form-control"
@@ -2080,8 +1960,6 @@ export default function Admission() {
                 </label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.student_eng_name}
                   placeholder="ছাত্র/ছাত্রীর ইংরাজীতে নাম"
                   className="form-control"
@@ -2121,8 +1999,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর আধার নাম্বার</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.student_aadhaar}
                   placeholder="ছাত্র/ছাত্রীর আধার নাম্বার"
                   className="form-control"
@@ -2164,8 +2040,6 @@ export default function Admission() {
                 <label className="form-label">অভিভাবকের মোবাইল নাম্বার*</label>
                 <input
                   type="number"
-                  name=""
-                  id=""
                   maxLength={10}
                   value={editInputField.student_mobile}
                   placeholder="অভিভাবকের মোবাইল নাম্বার"
@@ -2190,8 +2064,6 @@ export default function Admission() {
                 <label className="form-label">পিতার বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.father_beng_name}
                   placeholder="পিতার বাংলায় নাম"
                   className="form-control"
@@ -2213,8 +2085,6 @@ export default function Admission() {
                 <label className="form-label">পিতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.father_eng_name}
                   placeholder="পিতার ইংরাজীতে নাম"
                   className="form-control"
@@ -2236,8 +2106,6 @@ export default function Admission() {
                 <label className="form-label">মাতার বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.mother_beng_name}
                   placeholder="মাতার বাংলায় নাম"
                   className="form-control"
@@ -2258,8 +2126,6 @@ export default function Admission() {
                 <label className="form-label">মাতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.mother_eng_name}
                   placeholder="মাতার ইংরাজীতে নাম"
                   className="form-control"
@@ -2280,8 +2146,6 @@ export default function Admission() {
                 <label className="form-label">অভিভাবকের বাংলায় নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.guardian_beng_name}
                   placeholder="অভিভাবকের বাংলায় নাম"
                   className="form-control"
@@ -2302,8 +2166,6 @@ export default function Admission() {
                 <label className="form-label">অভিভাবকের ইংরাজীতে নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.guardian_eng_name}
                   placeholder="অভিভাবকের ইংরাজীতে নাম"
                   className="form-control"
@@ -2433,8 +2295,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর গ্রামের নাম*</label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.student_village}
                   placeholder="ছাত্র/ছাত্রীর গ্রামের নাম"
                   className="form-control"
@@ -2457,8 +2317,6 @@ export default function Admission() {
                 </label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.student_post_office}
                   placeholder="ছাত্র/ছাত্রীর পোস্ট অফিসের নাম"
                   className="form-control"
@@ -2481,8 +2339,6 @@ export default function Admission() {
                 </label>
                 <input
                   type="text"
-                  name=""
-                  id=""
                   value={editInputField.student_police_station}
                   placeholder="ছাত্র/ছাত্রীর পুলিশ স্টেশনের নাম"
                   className="form-control"
@@ -2503,8 +2359,6 @@ export default function Admission() {
                 <label className="form-label">ছাত্র/ছাত্রীর পিনকোড*</label>
                 <input
                   type="number"
-                  name=""
-                  id=""
                   maxLength={6}
                   value={editInputField.student_pin_code}
                   placeholder="ছাত্র/ছাত্রীর পিনকোড"

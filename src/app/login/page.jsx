@@ -153,7 +153,6 @@ export default function Login() {
 
   const submitTeacherData = async (e) => {
     e.preventDefault();
-    e.preventDefault();
     if (validForm()) {
       try {
         setLoader(true);

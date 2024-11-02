@@ -8,6 +8,7 @@ import {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import Loader from "../../components/Loader";
 import { useGlobalContext } from "@/context/Store";
@@ -16,8 +17,10 @@ import { useRouter } from "next/navigation";
 import {
   btnArray,
   DateValueToSring,
+  getCurrentDateInput,
   uniqArray,
 } from "@/modules/calculatefunctions";
+import { classWiseAge } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
 export default function ViewAdmission() {
@@ -125,6 +128,68 @@ export default function ViewAdmission() {
       setLoader(false);
       toast.error("Something went Wrong!");
     }
+  };
+
+  const calculateAge = (inputDate, students_class) => {
+    const birthDate = new Date(inputDate);
+    const today = new Date();
+
+    const month = today.getMonth() + 1;
+    let year = today.getFullYear();
+    if (month > 3) {
+      year = year + 1;
+    } else {
+      year = year;
+    }
+
+    const referenceDate = new Date(`${year}-01-01`);
+
+    // Calculate the difference in years, months, and days
+    let years = referenceDate.getFullYear() - birthDate.getFullYear();
+    let months = referenceDate.getMonth() - birthDate.getMonth();
+    let days = referenceDate.getDate() - birthDate.getDate();
+
+    // Adjust for negative days
+    if (days < 0) {
+      months--;
+      const lastMonth = new Date(
+        referenceDate.getFullYear(),
+        referenceDate.getMonth(),
+        0
+      ); // Get the last day of the previous month
+      days += lastMonth.getDate(); // Add the days from the last month
+    }
+
+    // Adjust for negative months
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    const validAge = classWiseAge.filter(
+      (item) => item.className === students_class
+    )[0].age;
+    let ageMessage;
+    if (validAge === years) {
+      ageMessage = `Student is Valid (${validAge}Yrs), age is ${years} years, ${months} months, and ${days} days.`;
+    } else {
+      ageMessage = `Student is Invalid (${validAge}Yrs), age is ${years} years, ${months} months, and ${days} days.`;
+    }
+    return ageMessage;
+  };
+
+  const delEntry = async (id) => {
+    setLoader(true);
+    await deleteDoc(doc(firestore, "admission", id))
+      .then(() => {
+        toast.success("Application Deleted successfully");
+        getData();
+        setLoader(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoader(false);
+        toast.error("Failed to delete Application");
+      });
   };
 
   useEffect(() => {
@@ -242,8 +307,9 @@ export default function ViewAdmission() {
                 marginBottom: "20px",
                 border: "1px solid",
                 verticalAlign: "middle",
+                fontSize: "12px",
               }}
-              className="table table-responsive table-hover table-striped table-primary rounded-4 container px-lg-3 py-lg-2"
+              className="table table-responsive table-hover table-striped rounded-4 container px-lg-3 py-lg-2"
             >
               <thead>
                 <tr
@@ -291,6 +357,14 @@ export default function ViewAdmission() {
                     className="text-center p-1"
                   >
                     ADMISSION CLASS
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center p-1"
+                  >
+                    VALIDATION
                   </th>
                   <th
                     style={{
@@ -365,6 +439,17 @@ export default function ViewAdmission() {
                       }}
                       className="text-center p-1"
                     >
+                      {calculateAge(
+                        getCurrentDateInput(student?.student_birthday),
+                        student?.student_addmission_class
+                      )}
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
+                    >
                       {DateValueToSring(
                         student?.student_addmission_dateAndTime
                       )}
@@ -377,45 +462,61 @@ export default function ViewAdmission() {
                       )}
                     </td>
 
-                    <td className="p-2">
-                      <div className="d-flex justify-content-evenly align-items-center">
-                        <div>
-                          <button
-                            type="button"
-                            className="btn btn-success btn-sm m-2"
-                            onClick={() => {
-                              setStateObject(student);
-                              router.push("/printAdmissionForm");
-                            }}
-                          >
-                            View
-                          </button>
-                        </div>
+                    <td className="p-2" suppressHydrationWarning={true}>
+                      <div className="d-flex flex-column justify-content-center align-items-center">
+                        <button
+                          type="button"
+                          style={{ fontSize: "8px" }}
+                          className="btn btn-success mb-1"
+                          onClick={() => {
+                            setStateObject(student);
+                            router.push("/printAdmissionForm");
+                          }}
+                        >
+                          View
+                        </button>
 
-                        <div>
-                          {student?.id != "" && (
-                            <PDFDownloadLink
-                              document={
-                                <CompDownloadAdmissionForm data={student} />
-                              }
-                              fileName={`Apllication Form of ${student?.student_eng_name}.pdf`}
-                              style={{
-                                textDecoration: "none",
-                                padding: "10px",
-                                color: "#fff",
-                                backgroundColor: "navy",
-                                border: "1px solid #4a4a4a",
-                                width: "40%",
-                                borderRadius: 10,
-                              }}
-                              className="m-2"
-                            >
-                              {({ blob, url, loading, error }) =>
-                                loading ? "Loading..." : "Download"
-                              }
-                            </PDFDownloadLink>
-                          )}
-                        </div>
+                        {student?.id != "" && (
+                          <PDFDownloadLink
+                            document={
+                              <CompDownloadAdmissionForm data={student} />
+                            }
+                            fileName={`Apllication Form of ${student?.student_eng_name}.pdf`}
+                            style={{
+                              textDecoration: "none",
+                              padding: "10px",
+                              color: "#fff",
+                              backgroundColor: "navy",
+                              border: "1px solid #4a4a4a",
+                              fontSize: "8px",
+
+                              borderRadius: 10,
+                            }}
+                            className="mb-1 btn"
+                          >
+                            {({ blob, url, loading, error }) =>
+                              loading ? "Loading..." : "Download"
+                            }
+                          </PDFDownloadLink>
+                        )}
+
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          style={{ fontSize: "8px" }}
+                          onClick={() => {
+                            // eslint-disable-next-line no-alert
+                            if (
+                              window.confirm(
+                                "Are you sure, you want to delete your Application?"
+                              )
+                            ) {
+                              delEntry(student?.id);
+                            }
+                          }}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </td>
                   </tr>
