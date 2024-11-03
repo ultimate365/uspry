@@ -16,7 +16,7 @@ import { useGlobalContext } from "../../context/Store";
 import Loader from "@/components/Loader";
 import CustomInput from "@/components/CustomInput";
 import {
-  btnArray,
+  findEmptyValues,
   createDownloadLink,
   getCurrentDateInput,
   getSubmitDateInput,
@@ -24,23 +24,33 @@ import {
   monthNamesWithIndex,
   round2dec,
   todayInString,
+  compareObjects,
+  titleCase,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import DataTable from "react-data-table-component";
+import { v4 as uuid } from "uuid";
 export default function ExpensesTransactions() {
-  const { stateObject, setStateObject, state } = useGlobalContext();
+  const { stateObject, setStateObject, state, sourceState, setSourceState } =
+    useGlobalContext();
   const access = state?.ACCESS;
   const router = useRouter();
-
   const [loader, setLoader] = useState(false);
   const [allTransactions, setAllTransactions] = useState([]);
   const [allFTransactions, setAllFTransactions] = useState([]);
   const [showExpenseEntry, setShowExpenseEntry] = useState(false);
   const [showExpenseEdit, setShowExpenseEdit] = useState(false);
+  const [account, setAccount] = useState({
+    accountName: "",
+    accountNumber: "",
+    balance: 0,
+    date: todayInString(),
+  });
   const [expenseObj, setExpenseObj] = useState({
     id: "",
     amount: "",
     purpose: "",
+    sourceName: "",
     type: "DEBIT",
     date: todayInString(),
     openingBalance: parseFloat(stateObject?.balance),
@@ -50,12 +60,30 @@ export default function ExpensesTransactions() {
     id: "",
     amount: "",
     purpose: "",
-    type: "",
+    sourceName: "",
+    type: "DEBIT",
     date: todayInString(),
     openingBalance: "",
     closingBalance: "",
   });
-
+  const [editOrgexpenseObj, setEditOrgexpenseObj] = useState({
+    id: "",
+    amount: "",
+    purpose: "",
+    sourceName: "",
+    type: "DEBIT",
+    date: todayInString(),
+    openingBalance: "",
+    closingBalance: "",
+  });
+  const docId = uuid().split("-")[0];
+  const [allSources, setAllSources] = useState([]);
+  const [sources, setSources] = useState({
+    sourceName: "",
+    id: docId,
+    accountId: stateObject?.id,
+  });
+  const [addSource, setAddSource] = useState(false);
   const getId = () => {
     const currentDate = new Date();
     const month =
@@ -104,6 +132,21 @@ export default function ExpensesTransactions() {
     });
   };
 
+  const getSources = async () => {
+    const querySnapshot = await getDocs(
+      query(collection(firestore, "expensesources"))
+    );
+    const data = querySnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    setSourceState(data);
+    const filteredSources = data.filter(
+      (source) => source.accountId === stateObject?.id
+    );
+    setAllSources(filteredSources);
+  };
+
   const delTransaction = async (transaction) => {
     setLoader(true);
     await deleteDoc(doc(firestore, "expensesTransactions", transaction.id))
@@ -143,35 +186,37 @@ export default function ExpensesTransactions() {
 
   const handleVECSubmit = async (e) => {
     e.preventDefault();
+    if (findEmptyValues(expenseObj)) {
+      try {
+        setLoader(true);
+        await setDoc(
+          doc(firestore, "expensesTransactions", expenseObj.id),
+          expenseObj
+        );
 
-    try {
-      setLoader(true);
-      await setDoc(
-        doc(firestore, "expensesTransactions", expenseObj.id),
-        expenseObj
-      );
-
-      let thisAccount = stateObject;
-      thisAccount.balance = expenseObj.closingBalance;
-      thisAccount.date = expenseObj.date;
-      await updateDoc(doc(firestore, "expenses", stateObject.id), {
-        balance: thisAccount.balance,
-        date: thisAccount.date,
-      });
-      setStateObject(thisAccount);
-      setShowExpenseEntry(false);
-      getTransactions();
-      setLoader(false);
-      toast.success("Transaction added successfully");
-    } catch (error) {
-      setLoader(false);
-      console.log(error);
-      toast.error("Transaction addition failed");
+        let thisAccount = stateObject;
+        thisAccount.balance = expenseObj.closingBalance;
+        thisAccount.date = expenseObj.date;
+        await updateDoc(doc(firestore, "expenses", stateObject.id), {
+          balance: thisAccount.balance,
+          date: thisAccount.date,
+        });
+        setStateObject(thisAccount);
+        setShowExpenseEntry(false);
+        getTransactions();
+        setLoader(false);
+        toast.success("Transaction added successfully");
+      } catch (error) {
+        setLoader(false);
+        console.log(error);
+        toast.error("Transaction addition failed");
+      }
+    } else {
+      toast.error("Please fill all required fields");
     }
   };
 
-  const updateVec = async (e) => {
-    e.preventDefault();
+  const updateVec = async () => {
     try {
       setLoader(true);
       await updateDoc(
@@ -179,10 +224,161 @@ export default function ExpensesTransactions() {
         editexpenseObj
       );
 
+      const fetchedAmount = stateObject.balance;
+      let amount = 0;
+      if (
+        editOrgexpenseObj.type !== editexpenseObj.type &&
+        editOrgexpenseObj.amount !== editexpenseObj.amount
+      ) {
+        console.log("Case 1");
+        if (editOrgexpenseObj.type === "DEBIT") {
+          if (fetchedAmount + parseFloat(editexpenseObj.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount + parseFloat(editexpenseObj.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount + parseFloat(editexpenseObj.amount) * 2
+            );
+          }
+        } else {
+          if (fetchedAmount - parseFloat(editexpenseObj.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount - parseFloat(editexpenseObj.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount - parseFloat(editexpenseObj.amount) * 2
+            );
+          }
+        }
+      } else if (
+        editOrgexpenseObj.type !== editexpenseObj.type &&
+        editOrgexpenseObj.amount === editexpenseObj.amount
+      ) {
+        console.log("Case 2");
+        if (editOrgexpenseObj.type === "DEBIT") {
+          if (fetchedAmount + parseFloat(editexpenseObj.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount + parseFloat(editexpenseObj.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount + parseFloat(editexpenseObj.amount) * 2
+            );
+          }
+        } else {
+          if (fetchedAmount - parseFloat(editexpenseObj.amount) * 2 < 0) {
+            amount =
+              round2dec(
+                (fetchedAmount - parseFloat(editexpenseObj.amount) * 2) * -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount - parseFloat(editexpenseObj.amount) * 2
+            );
+          }
+        }
+      } else if (
+        editOrgexpenseObj.type === editexpenseObj.type &&
+        editOrgexpenseObj.amount !== editexpenseObj.amount
+      ) {
+        console.log("Case 3");
+        if (editOrgexpenseObj.type === "DEBIT") {
+          if (
+            fetchedAmount -
+              parseFloat(editOrgexpenseObj.amount) +
+              parseFloat(editexpenseObj.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount +
+                  parseFloat(editOrgexpenseObj.amount) -
+                  parseFloat(editexpenseObj.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount +
+                parseFloat(editOrgexpenseObj.amount) -
+                parseFloat(editexpenseObj.amount)
+            );
+          }
+        } else {
+          if (
+            fetchedAmount -
+              parseFloat(editOrgexpenseObj.amount) +
+              parseFloat(editexpenseObj.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount -
+                  parseFloat(editOrgexpenseObj.amount) +
+                  parseFloat(editexpenseObj.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount -
+                parseFloat(editOrgexpenseObj.amount) +
+                parseFloat(editexpenseObj.amount)
+            );
+          }
+        }
+      } else {
+        console.log("Case 4");
+        if (editOrgexpenseObj.type === "DEBIT") {
+          if (
+            fetchedAmount -
+              parseFloat(editOrgexpenseObj.amount) +
+              parseFloat(editexpenseObj.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount -
+                  parseFloat(editOrgexpenseObj.amount) +
+                  parseFloat(editexpenseObj.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount -
+                parseFloat(editOrgexpenseObj.amount) +
+                parseFloat(editexpenseObj.amount)
+            );
+          }
+        } else {
+          if (
+            fetchedAmount -
+              parseFloat(editOrgexpenseObj.amount) -
+              parseFloat(editexpenseObj.amount) <
+            0
+          ) {
+            amount =
+              round2dec(
+                (fetchedAmount -
+                  parseFloat(editOrgexpenseObj.amount) -
+                  parseFloat(editexpenseObj.amount)) *
+                  -1
+              ) * -1;
+          } else {
+            amount = round2dec(
+              fetchedAmount -
+                parseFloat(editOrgexpenseObj.amount) +
+                parseFloat(editexpenseObj.amount)
+            );
+          }
+        }
+      }
       let thisAccount = stateObject;
-
-      thisAccount.balance = editexpenseObj.closingBalance;
       thisAccount.date = editexpenseObj.date;
+      thisAccount.balance = amount;
       await updateDoc(doc(firestore, "expenses", stateObject.id), {
         balance: thisAccount.balance,
         date: thisAccount.date,
@@ -197,6 +393,62 @@ export default function ExpensesTransactions() {
       toast.error("VEC Transaction update failed");
     }
   };
+
+  const submitSource = async (e) => {
+    e.preventDefault();
+    try {
+      setLoader(true);
+      await setDoc(doc(firestore, "expensesources", sources.id), sources)
+        .then(() => {
+          let x = [];
+          x = [...sourceState, sources];
+          setSourceState(x);
+          setAllSources(x);
+          setAddSource(false);
+          setLoader(false);
+          setTimeout(() => {
+            setSources({
+              sourceName: "",
+              id: docId,
+              accountId: stateObject?.id,
+            });
+            toast.success("Source added successfully");
+          }, 600);
+        })
+        .catch((e) => {
+          setLoader(false);
+          toast.error("Source addition failed");
+        });
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      toast.error("Source addition failed");
+    }
+  };
+  const removeSource = async (id) => {
+    try {
+      setLoader(true);
+      await deleteDoc(doc(firestore, "expensesources", id))
+        .then(() => {
+          let x = sourceState;
+          x = sourceState.filter((s) => s.id !== id);
+          setSourceState(x);
+          setAllSources(x);
+          setAddSource(false);
+          setLoader(false);
+          toast.success("Source Deleted successfully");
+        })
+        .catch((e) => {
+          setLoader(false);
+          toast.error("Source Deletation failed");
+        });
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      toast.error("Source Deletation failed");
+    }
+  };
+
   const columns = [
     {
       name: "Sl",
@@ -214,8 +466,16 @@ export default function ExpensesTransactions() {
       width: "15%",
     },
     {
-      name: "Tran. Type",
-      selector: (row) => row.type,
+      name: "Type",
+      selector: (row) => (row.type === "DEBIT" ? "DR" : "CR"),
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      width: "9%",
+    },
+    {
+      name: "Source",
+      selector: (row) => row.sourceName,
       sortable: +true,
       wrap: +true,
       center: +true,
@@ -236,7 +496,7 @@ export default function ExpensesTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "12%",
+      width: "10%",
     },
     {
       name: "Opening Balance",
@@ -244,7 +504,7 @@ export default function ExpensesTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "13%",
+      width: "10%",
     },
     {
       name: "Closing Balance",
@@ -252,7 +512,7 @@ export default function ExpensesTransactions() {
       sortable: +true,
       wrap: +true,
       center: +true,
-      width: "13%",
+      width: "10%",
     },
     {
       name: "Action",
@@ -266,6 +526,7 @@ export default function ExpensesTransactions() {
               setShowExpenseEntry(false);
               setShowExpenseEdit(true);
               setEditexpenseObj(transaction);
+              setEditOrgexpenseObj(transaction);
             }}
           >
             Edit
@@ -315,11 +576,22 @@ export default function ExpensesTransactions() {
       toast.error("Unathorized access");
     }
     getTransactions();
+    setAccount(stateObject);
+    if (sourceState.length === 0) {
+      getSources();
+    } else {
+      const filteredSources = sourceState.filter(
+        (source) => source.accountId === stateObject?.id
+      );
+      setAllSources(filteredSources);
+    }
+
     //eslint-disable-next-line
   }, []);
   useEffect(() => {
     //eslint-disable-next-line
-  }, [stateObject, allTransactions, id]);
+  }, [stateObject, allTransactions, id, allSources]);
+
   return (
     <div className="container">
       {loader && <Loader />}
@@ -337,6 +609,17 @@ export default function ExpensesTransactions() {
             }}
           >
             Add New Transaction
+          </button>
+          <button
+            type="button"
+            className="btn btn-dark m-2"
+            onClick={() => {
+              setShowExpenseEntry(false);
+              setShowExpenseEdit(false);
+              setAddSource(true);
+            }}
+          >
+            Add{sourceState.length > 0 ? "/ Remove" : ""} Source
           </button>
           {allTransactions.length > 0 && (
             <button
@@ -579,11 +862,7 @@ export default function ExpensesTransactions() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form
-                    className="col-md-6 mx-auto"
-                    autoComplete="off"
-                    onSubmit={handleVECSubmit}
-                  >
+                  <form className="col-md-6 mx-auto" autoComplete="off">
                     {expenseObj.id && (
                       <div className="mb-3">
                         <label htmlFor="vec_id" className="form-label">
@@ -668,6 +947,39 @@ export default function ExpensesTransactions() {
                         }}
                       />
                     </div>
+                    <div className="mb-3">
+                      <label htmlFor="type" className="form-label">
+                        Select Source
+                      </label>
+                      <select
+                        className="form-select"
+                        id="type"
+                        defaultValue={""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value !== "") {
+                            setExpenseObj({
+                              ...expenseObj,
+                              sourceName: e.target.value,
+                            });
+                          } else {
+                            setExpenseObj({
+                              ...expenseObj,
+                              type: value,
+                              sourceName: "",
+                            });
+                            toast.error("Please Select a Source");
+                          }
+                        }}
+                      >
+                        <option value="">Select Sources</option>
+                        {allSources.map((item, index) => (
+                          <option value={item?.sourceName} key={index}>
+                            {item?.sourceName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
                     <CustomInput
                       title={"Purpose"}
@@ -676,7 +988,6 @@ export default function ExpensesTransactions() {
                       value={expenseObj.purpose}
                       placeholder="Enter purpose"
                       onChange={(e) => {
-                        console.log(expenseObj.date);
                         const inpMonth =
                           parseInt(expenseObj.date?.split("-")[1]) - 1;
                         const inpYear = expenseObj.date?.split("-")[2];
@@ -692,8 +1003,11 @@ export default function ExpensesTransactions() {
                         }
                         setExpenseObj({
                           ...expenseObj,
-                          purpose: e.target.value,
-                          id: e.target.value.split(" ").join("-") + "-" + newId,
+                          purpose: e.target.value.toUpperCase(),
+                          id:
+                            titleCase(e.target.value).split(" ").join("-") +
+                            "-" +
+                            newId,
                         });
                       }}
                     />
@@ -800,11 +1114,65 @@ export default function ExpensesTransactions() {
                     type="button"
                     className="btn-close"
                     aria-label="Close"
-                    onClick={() => setShowExpenseEdit(false)}
+                    onClick={() => {
+                      setShowExpenseEdit(false);
+                      setStateObject(account);
+                    }}
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form className="mx-auto col-md-6" onSubmit={updateVec}>
+                  <form className="mx-auto col-md-6" autoComplete="off">
+                    <div className="mb-3">
+                      <label htmlFor="type" className="form-label">
+                        Type
+                      </label>
+                      <select
+                        className="form-select"
+                        id="type"
+                        value={editexpenseObj.type}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "DEBIT") {
+                            if (editOrgexpenseObj.type === "DEBIT") {
+                              setEditexpenseObj({
+                                ...editexpenseObj,
+                                type: value,
+                                closingBalance:
+                                  editOrgexpenseObj.closingBalance,
+                              });
+                            } else {
+                              setEditexpenseObj({
+                                ...editexpenseObj,
+                                type: value,
+                                closingBalance:
+                                  editOrgexpenseObj.openingBalance -
+                                  editexpenseObj.amount,
+                              });
+                            }
+                          } else {
+                            if (editOrgexpenseObj.type === "CREDIT") {
+                              setEditexpenseObj({
+                                ...editexpenseObj,
+                                type: value,
+                                closingBalance:
+                                  editOrgexpenseObj.closingBalance,
+                              });
+                            } else {
+                              setEditexpenseObj({
+                                ...editexpenseObj,
+                                type: value,
+                                closingBalance:
+                                  editOrgexpenseObj.openingBalance +
+                                  editexpenseObj.amount,
+                              });
+                            }
+                          }
+                        }}
+                      >
+                        <option value="CREDIT">CREDIT</option>
+                        <option value="DEBIT">DEBIT</option>
+                      </select>
+                    </div>
                     <div className="mb-3">
                       <label htmlFor="vec_edit_balance" className="form-label">
                         Edit Amount
@@ -815,10 +1183,32 @@ export default function ExpensesTransactions() {
                         id="vec_edit_balance"
                         value={editexpenseObj.amount}
                         onChange={(e) => {
-                          setEditexpenseObj({
-                            ...editexpenseObj,
-                            amount: parseFloat(e.target.value),
-                          });
+                          const value = parseFloat(e.target.value);
+                          if (value) {
+                            if (editexpenseObj.type === "DEBIT") {
+                              setEditexpenseObj({
+                                ...editexpenseObj,
+                                amount: value,
+                                closingBalance:
+                                  editOrgexpenseObj.closingBalance +
+                                  editOrgexpenseObj.amount -
+                                  value,
+                              });
+                            } else {
+                              setEditexpenseObj({
+                                ...editexpenseObj,
+                                amount: value,
+                                closingBalance:
+                                  editexpenseObj.openingBalance + value,
+                              });
+                            }
+                          } else {
+                            setEditexpenseObj({
+                              ...editexpenseObj,
+                              amount: "",
+                              closingBalance: editOrgexpenseObj.openingBalance,
+                            });
+                          }
                         }}
                       />
                     </div>
@@ -838,6 +1228,39 @@ export default function ExpensesTransactions() {
                           });
                         }}
                       />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="type" className="form-label">
+                        Edit Source
+                      </label>
+                      <select
+                        className="form-select"
+                        id="type"
+                        value={editexpenseObj.sourceName}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value !== "") {
+                            setEditexpenseObj({
+                              ...editexpenseObj,
+                              sourceName: e.target.value,
+                            });
+                          } else {
+                            setEditexpenseObj({
+                              ...editexpenseObj,
+                              type: value,
+                              sourceName: "",
+                            });
+                            toast.error("Please Select a Source");
+                          }
+                        }}
+                      >
+                        <option value="">Select Sources</option>
+                        {allSources.map((item, index) => (
+                          <option value={item?.sourceName} key={index}>
+                            {item?.sourceName}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div className="mb-3">
                       <label htmlFor="vec_edit_purpose" className="form-label">
@@ -897,18 +1320,145 @@ export default function ExpensesTransactions() {
                     <button
                       type="submit"
                       className="btn btn-primary m-2"
-                      disabled={
-                        expenseObj.editBalance <= 0 ||
-                        expenseObj.editBalance > stateObject?.balance
-                      }
-                      onClick={updateVec}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (
+                          !compareObjects(editexpenseObj, editOrgexpenseObj)
+                        ) {
+                          if (editexpenseObj.amount < stateObject.balance) {
+                            updateVec();
+                          } else {
+                            toast.error("Amount is invalid");
+                          }
+                        } else {
+                          toast.error("Nothing to update");
+                        }
+                      }}
                     >
                       Save
                     </button>
                     <button
                       type="button"
                       className="btn btn-danger m-2"
-                      onClick={() => setShowExpenseEdit(false)}
+                      onClick={() => {
+                        setShowExpenseEdit(false);
+                        setStateObject(account);
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {addSource && (
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-md">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Add New Source
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => {
+                      setAddSource(false);
+                      setSources({
+                        sourceName: "",
+                        id: docId,
+                        accountId: stateObject?.id,
+                      });
+                    }}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <form
+                    className="col-md-6 mx-auto"
+                    autoComplete="off"
+                    onSubmit={submitSource}
+                  >
+                    <div className="mb-3">
+                      <label htmlFor="vec_id" className="form-label">
+                        Source Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="sourceName"
+                        value={sources.sourceName}
+                        placeholder="Enter Source Name"
+                        onChange={(e) => {
+                          setSources({
+                            ...sources,
+                            sourceName: e.target.value.toUpperCase(),
+                          });
+                        }}
+                      />
+                    </div>
+                  </form>
+                </div>
+                {sourceState.length > 0 && (
+                  <div>
+                    <div className="modal-header">
+                      <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                        Remove Source
+                      </h1>
+                    </div>
+                    <div className="modal-body">
+                      <div className="my-3">
+                        {sourceState.map((source, index) => (
+                          <div
+                            className="d-flex flex-row justify-content-center align-items-center"
+                            key={index}
+                          >
+                            <h5 className="m-2">{index + 1})</h5>
+                            <h5 className="m-2">{source?.sourceName}</h5>
+                            <button
+                              className="btn btn-danger btn-sm m-2"
+                              onClick={() => {
+                                removeSource(source.id);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="modal-footer">
+                  <div className="my-2">
+                    <button
+                      type="submit"
+                      className="btn btn-primary m-2"
+                      disabled={sources.sourceName === ""}
+                      onClick={submitSource}
+                    >
+                      Submit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger m-2"
+                      onClick={() => {
+                        setAddSource(false);
+                        setSources({
+                          sourceName: "",
+                          id: docId,
+                          accountId: stateObject?.id,
+                        });
+                      }}
                     >
                       Close
                     </button>

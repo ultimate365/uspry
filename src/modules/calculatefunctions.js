@@ -172,6 +172,7 @@ export const funcmhra = (basic) => {
 };
 
 export function findEmptyValues(obj) {
+  let isValid = true;
   const emptyValues = {};
 
   for (const key in obj) {
@@ -185,11 +186,12 @@ export function findEmptyValues(obj) {
         (typeof value === "object" && Object.keys(value).length === 0)
       ) {
         emptyValues[key] = value;
+        isValid = false;
       }
     }
   }
 
-  return emptyValues;
+  return isValid;
 }
 
 function isEmpty(value) {
