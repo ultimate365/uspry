@@ -1461,27 +1461,26 @@ export default function ExpensesTransactions() {
                         ))}
                       </div>
                     </div>
+                    <div className="modal-footer">
+                      <div className="my-2">
+                        <button
+                          type="button"
+                          className="btn btn-danger m-2"
+                          onClick={() => {
+                            setAddSource(false);
+                            setSources({
+                              sourceName: "",
+                              id: docId,
+                              accountId: stateObject?.id,
+                            });
+                          }}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
-
-                <div className="modal-footer">
-                  <div className="my-2">
-                    <button
-                      type="button"
-                      className="btn btn-danger m-2"
-                      onClick={() => {
-                        setAddSource(false);
-                        setSources({
-                          sourceName: "",
-                          id: docId,
-                          accountId: stateObject?.id,
-                        });
-                      }}
-                    >
-                      Close
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
