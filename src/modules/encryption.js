@@ -57,7 +57,7 @@ export const setCookie = (name, value, minutes) => {
 };
 
 // Function to delete a cookie by name
-const deleteCookie = (cookieName) => {
+export const deleteCookie = (cookieName) => {
   if (typeof window !== "undefined") {
     document.cookie =
       cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

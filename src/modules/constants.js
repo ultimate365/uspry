@@ -57,3 +57,4 @@ export const classWiseAge = [
   { className: "CLASS IV", benClassName:"চতুর্থ শ্রেনী", age: 9 },
   { className: "CLASS V", benClassName:"পঞ্চম শ্রেনী", age: 10 },
 ];
+export const TELEGRAM_TEACHER_GROUP = "https://t.me/+LZsOjnE9mBAxZjI9";

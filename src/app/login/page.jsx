@@ -25,6 +25,7 @@ export default function Login() {
   const [loader, setLoader] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [studentIDERR, setStudentIDERR] = useState("");
   const [userNameErr, setUserNameErr] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const [showTip, setShowTip] = useState(false);
@@ -176,7 +177,7 @@ export default function Login() {
               const sdata = querySnapshot2.docs[0].data();
               setLoader(false);
               toast.success(
-                `Congrats! ${sdata.tname} You are Logined Successfully!`,
+                `Congrats! ${sdata.tname} Your Data is Authenticated, Please verify Your Login!`,
                 {
                   position: "top-right",
                   autoClose: 1500,
@@ -196,14 +197,13 @@ export default function Login() {
                 username: data.username,
                 userType: data.access,
               };
-              setState({
-                USER: Obj,
-                LOGGEDAT: Date.now(),
-                ACCESS: data.access,
-              });
-              encryptObjData("uid", Obj, 10080);
-              setCookie("loggedAt", Date.now(), 10080);
-              router.push("/dashboard");
+              // setState({
+              //   USER: Obj,
+              //   LOGGEDAT: Date.now(),
+              //   ACCESS: data.access,
+              // });
+              encryptObjData("nonverifieduid", Obj, 10080);
+              router.push("/verifyLogin");
             }
           } else {
             setLoader(false);
@@ -390,6 +390,13 @@ export default function Login() {
                     onChange={(e) => setDob(getSubmitDateInput(e.target.value))}
                   />
                 </div>
+
+                {studentIDERR.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-danger">{studentIDERR}</p>
+                  </div>
+                )}
+
                 <div className="mb-3">
                   <button type="submit" className="btn btn-primary">
                     Login
@@ -429,9 +436,9 @@ export default function Login() {
                 {userNameErr.length > 0 && (
                   <p className="text-danger my-2">{userNameErr}</p>
                 )}
-                
+
                 <CustomInput
-                title={'Password'}
+                  title={"Password"}
                   type="password"
                   className="form-control"
                   id="password"
