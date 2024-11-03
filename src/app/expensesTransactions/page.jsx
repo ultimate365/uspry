@@ -1407,6 +1407,32 @@ export default function ExpensesTransactions() {
                     </div>
                   </form>
                 </div>
+                <div className="modal-footer">
+                  <div className="my-2">
+                    <button
+                      type="submit"
+                      className="btn btn-primary m-2"
+                      disabled={sources.sourceName === ""}
+                      onClick={submitSource}
+                    >
+                      Submit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger m-2"
+                      onClick={() => {
+                        setAddSource(false);
+                        setSources({
+                          sourceName: "",
+                          id: docId,
+                          accountId: stateObject?.id,
+                        });
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
                 {sourceState.length > 0 && (
                   <div>
                     <div className="modal-header">
@@ -1440,14 +1466,6 @@ export default function ExpensesTransactions() {
 
                 <div className="modal-footer">
                   <div className="my-2">
-                    <button
-                      type="submit"
-                      className="btn btn-primary m-2"
-                      disabled={sources.sourceName === ""}
-                      onClick={submitSource}
-                    >
-                      Submit
-                    </button>
                     <button
                       type="button"
                       className="btn btn-danger m-2"
