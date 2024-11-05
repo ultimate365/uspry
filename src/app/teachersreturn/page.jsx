@@ -559,7 +559,14 @@ export default function Teachersreturn() {
                         <div key={index}>
                           <p>Name:{teacher?.tname}</p>
                           <p>
-                            Data:{JSON.stringify(teacher).split(`"`).join("").split("{").join("").split("}").join("")}
+                            Data:
+                            {JSON.stringify(teacher)
+                              .split(`"`)
+                              .join("")
+                              .split("{")
+                              .join("")
+                              .split("}")
+                              .join("")}
                           </p>
                         </div>
                       ))}
@@ -570,29 +577,51 @@ export default function Teachersreturn() {
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.pp)
                           .split(`"`)
-                          .join("").split("{").join("").split("}").join("")}
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <h5>Class I:</h5>
                       <p className="text-center text-break">
-                        {JSON.stringify(entry?.students?.i).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(entry?.students?.i)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <h5>Class II:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.ii)
                           .split(`"`)
-                          .join("").split("{").join("").split("}").join("")}
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <h5>Class III:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.iii)
                           .split(`"`)
-                          .join("").split("{").join("").split("}").join("")}
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <h5>Class IV:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.iv)
                           .split(`"`)
-                          .join("").split("{").join("").split("}").join("")}
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       {entry?.students?.v?.Total !== "-" && (
                         <div>
@@ -600,7 +629,11 @@ export default function Teachersreturn() {
                           <p className="text-center text-break">
                             {JSON.stringify(entry?.students?.iv)
                               .split(`"`)
-                              .join("").split("{").join("").split("}").join("")}
+                              .join("")
+                              .split("{")
+                              .join("")
+                              .split("}")
+                              .join("")}
                           </p>
                         </div>
                       )}
@@ -608,46 +641,98 @@ export default function Teachersreturn() {
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.total)
                           .split(`"`)
-                          .join("").split("{").join("").split("}").join("")}
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                     </div>
                     <div className="my-2">
                       <h5>Inspection:</h5>
                       <p>Date:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.inspectionDate).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.inspectionDate)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <p>PP:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.pp).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.pp)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <p>Class I:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.i).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.i)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <p>Class II:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.ii).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.ii)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <p>Class III:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.iii).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.iii)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       <p>Class IV:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.iv).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.iv)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                       {inspection?.v?.Total !== "-" && (
                         <div>
                           <p>Class V:</p>
                           <p className="text-center text-break">
-                            {JSON.stringify(inspection?.v).split(`"`).join("").split("{").join("").split("}").join("")}
+                            {JSON.stringify(inspection?.v)
+                              .split(`"`)
+                              .join("")
+                              .split("{")
+                              .join("")
+                              .split("}")
+                              .join("")}
                           </p>
                         </div>
                       )}
                       <p>Total Student:</p>
                       <p className="text-center text-break">
-                        {JSON.stringify(inspection?.total).split(`"`).join("").split("{").join("").split("}").join("")}
+                        {JSON.stringify(inspection?.total)
+                          .split(`"`)
+                          .join("")
+                          .split("{")
+                          .join("")
+                          .split("}")
+                          .join("")}
                       </p>
                     </div>
                   </div>
@@ -1015,7 +1100,9 @@ export default function Teachersreturn() {
                                 ...editTeacher,
                                 olThisMonth: parseInt(e.target.value),
                                 workingDays:
-                                  workingDays - parseInt(e.target.value)-editTeacher.clThisMonth,
+                                  workingDays -
+                                  parseInt(e.target.value) -
+                                  editTeacher.clThisMonth,
                               });
                             } else {
                               setEditTeacher({
@@ -1128,6 +1215,31 @@ export default function Teachersreturn() {
                           }}
                         />
                       </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Working Days
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="WorkingDays"
+                          name="WorkingDays"
+                          value={editTeacher?.workingDays}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setEditTeacher({
+                                ...editTeacher,
+                                workingDays: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditTeacher({
+                                ...editTeacher,
+                                workingDays: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
                     </form>
                   </div>
                   <div className="modal-footer">
@@ -1171,6 +1283,7 @@ export default function Teachersreturn() {
                           fullPay: "",
                           halfPay: "",
                           WOPay: "",
+                          workingDays: workingDays,
                         });
                         setShowEditForm(false);
                         setShowBackPage(true);
