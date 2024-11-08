@@ -141,8 +141,8 @@ export default function Login() {
 
   const validFormStudent = () => {
     let isValid = false;
-    if (studentID.length === 0) {
-      setStudentIDERR("Student ID is required");
+    if (studentID.length !== 8) {
+      setStudentIDERR("8 Digit Student ID is required");
       isValid = false;
     } else {
       setStudentIDERR("");
@@ -369,11 +369,16 @@ export default function Login() {
                     028793
                   </span>
                   <input
-                    type="text"
+                    type="number"
                     className="form-control"
                     id="studentID"
+                    maxLength={8}
                     value={studentID}
-                    onChange={(e) => setStudentID(e.target.value)}
+                    onChange={(e) => {
+                      if(e.target.value.length<=8){
+                        setStudentID(e.target.value)
+                      }
+                    }}
                     placeholder="Last 8 Digits of Student ID"
                   />
                 </div>
