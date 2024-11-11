@@ -94,7 +94,12 @@ export default function DownloadAdmissionForm() {
           <div className="container">
             <table
               className="table table-bordered table-striped border-black border-1 my-4 p-4"
-              style={{ border: "1px solid black" }}
+              style={{
+                border: "1px solid",
+                width: "100%",
+                overflowX: "scroll",
+                flexWrap: "wrap",
+              }}
             >
               <thead>
                 <th style={{ border: "1px solid black" }}>Application No.</th>
@@ -149,6 +154,7 @@ export default function DownloadAdmissionForm() {
                           border: "1px solid #4a4a4a",
                           width: "40%",
                           borderRadius: 10,
+                          margin: 10,
                         }}
                       >
                         {({ blob, url, loading, error }) =>

@@ -251,7 +251,10 @@ export default function Admission() {
         student_gender: "দয়া করে ছাত্র/ছাত্রীর লিঙ্গ বেছে নিন",
       }));
     }
-    if (inputField.student_mobile === "" || inputField.student_mobile.length !==10) {
+    if (
+      inputField.student_mobile === "" ||
+      inputField.student_mobile.length !== 10
+    ) {
       formIsValid = false;
       setErrInputField((prevState) => ({
         ...prevState,
@@ -946,7 +949,7 @@ export default function Admission() {
         toast.error("Failed to delete Application");
       });
   };
-  
+
   useEffect(() => {
     //eslint-disable-next-line
   }, [
@@ -1752,7 +1755,7 @@ export default function Admission() {
             অনুগ্রহ করে লিখে রাখবেন আপনার অ্যাপ্লিকেশন নাম্বারটি হলো।
           </h3>
           <div className="bg-light  mx-auto p-4 rounded">
-          <h1 className="text-primary text-center timesNewRoman">
+            <h1 className="text-primary text-center timesNewRoman">
               {admissionID}
             </h1>
             <div className="my-3">
@@ -1786,7 +1789,7 @@ export default function Admission() {
                 </div>
               )}
             </div>
-           
+
             <div className="mx-auto mt-2">
               <button
                 className="btn btn-danger"
@@ -1807,7 +1810,12 @@ export default function Admission() {
         <div className="container">
           <table
             className="table table-bordered table-striped border-black border-1 my-4 p-4"
-            style={{ border: "1px solid black" }}
+            style={{
+              border: "1px solid",
+              width: "100%",
+              overflowX: "scroll",
+              flexWrap: "wrap",
+            }}
           >
             <thead>
               <th style={{ border: "1px solid black" }}>Application No.</th>
