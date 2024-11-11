@@ -87,7 +87,7 @@ export default function DownloadAdmissionForm() {
   }, []);
   return (
     <Suspense>
-      <div className="container">
+      <div className="container ben">
         {loader ? <Loader /> : null}
         <h3>Download Admission Form</h3>
         {showSearchedResult && (
