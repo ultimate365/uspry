@@ -1,1 +1,1 @@
-https://api.telegram.org/botTOKEN/deleteMessage?chat_id=CID&message_id=MID
+http://localhost:3000/downloadAdmissionForm?id=USPRYS-ONLINE-2024-01&mobile=9933684468
