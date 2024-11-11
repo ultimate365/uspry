@@ -77,7 +77,7 @@ export default function DownloadAdmissionForm() {
     }
   };
   useEffect(() => {
-    if (!id && !mobile) {
+    if (id && mobile) {
       searchApplication();
     } else {
       router.push("/");
