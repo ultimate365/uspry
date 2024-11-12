@@ -368,7 +368,11 @@ export default function Admission() {
       } else {
         countLength = countLength + 1;
       }
-      const genID = `USPRYS-ONLINE-${YEAR}-${countLength}`;
+      let genID = `USPRYS-ONLINE-${YEAR}-${countLength}`;
+      const checkDuplicate = data.filter((entry) => entry.id === genID);
+      if (checkDuplicate.length > 0) {
+        genID = genID + "-" + (checkDuplicate.length + 1);
+      }
       setAdmissionID(genID);
       return genID;
     } catch (error) {
