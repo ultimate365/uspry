@@ -587,11 +587,20 @@ export default function MDMData() {
     setLoader(true);
     try {
       await deleteDoc(doc(firestore, "mdmData", entry.id))
-        .then(() => {
+        .then(async() => {
+          try {
+            await deleteDoc(doc(firestore, "rice", entry.id))
+          } catch (error) {
+            console.log('Rice Data not Found', error);
+            toast.error( 'Rice Data not Found');
+          }
           setLoader(false);
           toast.success("MDM Data Deleted successfully");
-          let filteredEntry = mealState.filter((el) => el.id !== entry.id);
-          setMealState(filteredEntry);
+          getMainData();
+          getRiceData();
+          setShowMonthlyReport(false)
+          setShowMonthSelection(false)
+          setShowDataTable(false)
         })
         .catch((err) => {
           console.log(err);
