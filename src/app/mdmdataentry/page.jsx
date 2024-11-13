@@ -115,7 +115,17 @@ export default function MDMData() {
       })
         .then(() => {
           toast.success("Data submitted successfully");
-          getMainData();
+          let x = allEnry;
+          x = [
+            ...x,
+            { pp: parseInt(pp), pry: parseInt(pry), date: date, id: date },
+          ].sort(
+            (a, b) =>
+              Date.parse(getCurrentDateInput(a.date)) -
+              Date.parse(getCurrentDateInput(b.date))
+          );
+          setAllEnry(x);
+          setMealState(x);
           setPp("");
           setPry("");
           setDate(todayInString());
@@ -192,7 +202,21 @@ export default function MDMData() {
         })
           .then(() => {
             toast.success("Data updated successfully");
-            getMainData();
+            let x = [];
+            x = allEnry.map((entry) => {
+              if (entry.date === docId) {
+                return {
+                  pp: parseInt(pp),
+                  pry: parseInt(pry),
+                  date: docId,
+                  id: docId,
+                };
+              } else {
+                return entry;
+              }
+            });
+            setAllEnry(x);
+            setMealState(x);
             setPp("");
             setPry("");
             setDate(todayInString());
@@ -587,20 +611,27 @@ export default function MDMData() {
     setLoader(true);
     try {
       await deleteDoc(doc(firestore, "mdmData", entry.id))
-        .then(async() => {
+        .then(async () => {
           try {
-            await deleteDoc(doc(firestore, "rice", entry.id))
+            await deleteDoc(doc(firestore, "rice", entry.id));
           } catch (error) {
-            console.log('Rice Data not Found', error);
-            toast.error( 'Rice Data not Found');
+            console.log("Rice Data not Found", error);
+            toast.error("Rice Data not Found");
           }
           setLoader(false);
+          const filteredEntry = mealState.filter((el) => el.id !== entry.id);
+          setMealState(filteredEntry);
+          setAllEnry(filteredEntry);
+          setMoreFilteredData(
+            moreFilteredData.filter((el) => el.id !== entry.id)
+          );
+          setFilteredData(filteredData.filter((el) => el.id !== entry.id));
           toast.success("MDM Data Deleted successfully");
-          getMainData();
-          getRiceData();
-          setShowMonthlyReport(false)
-          setShowMonthSelection(false)
-          setShowDataTable(false)
+          // getMainData();
+          // getRiceData();
+          setShowMonthlyReport(false);
+          setShowMonthSelection(false);
+          setShowDataTable(false);
         })
         .catch((err) => {
           console.log(err);
@@ -1208,7 +1239,7 @@ export default function MDMData() {
                         <input
                           type="number"
                           className="form-control"
-                          placeholder={`Enter Total Working Days`}
+                          placeholder={`Enter Total MDM Days`}
                           value={monthWorkingDays}
                           onChange={(e) => {
                             if (e.target.value !== "") {
