@@ -50,6 +50,8 @@ export default function MDMData() {
   const [pry, setPry] = useState("");
   const [showEntry, setShowEntry] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
+  const [mdmDone, setMdmDone] = useState(false);
+  const [riceDone, setRiceDone] = useState(false);
   const [showMonthlyReport, setShowMonthlyReport] = useState(false);
   const [showRiceData, setShowRiceData] = useState(false);
   const [errPP, setErrPP] = useState("");
@@ -126,6 +128,7 @@ export default function MDMData() {
           );
           setAllEnry(x);
           setMealState(x);
+          setMdmDone(true);
           setPp("");
           setPry("");
           setDate(todayInString());
@@ -282,6 +285,14 @@ export default function MDMData() {
     setLoader(false);
     setAllEnry(data);
     setMealState(data);
+    findMDMEntry(data);
+  };
+  const findMDMEntry = array => {
+    if (array.filter(el => el?.id === todayInString()).length > 0) {
+      setMdmDone(true);
+    } else {
+      setMdmDone(false);
+    }
   };
   const getRiceData = async () => {
     setLoader(true);
@@ -301,6 +312,14 @@ export default function MDMData() {
     setRiceData(data);
     setRiceState(data);
     setRiceOB(data[data.length - 1].riceCB);
+    findRiceEntry(data);
+  };
+  const findRiceEntry = array => {
+    if (array.filter(el => el?.id === todayInString()).length > 0) {
+      setRiceDone(true);
+    } else {
+      setRiceDone(false);
+    }
   };
   const getMonthlyData = async () => {
     setLoader(true);
@@ -500,7 +519,25 @@ export default function MDMData() {
           toast.success("Rice Data added successfully");
           setRiceGiven(0);
           setRiceOB(riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend);
-          getRiceData();
+          let x = riceState;
+          x = [
+            ...x,
+            {
+              id: date,
+              date: date,
+              riceOB: riceOB,
+              riceGiven: riceGiven === '' ? 0 : riceGiven,
+              riceExpend: riceExpend,
+              riceCB: riceOB + (riceGiven === '' ? 0 : riceGiven) - riceExpend,
+            },
+          ].sort(
+            (a, b) =>
+              Date.parse(getCurrentDateInput(a.date)) -
+              Date.parse(getCurrentDateInput(b.date)),
+          );
+          setRiceState(x);
+          setRiceData(x);
+          // getRiceData();
           setDocId(todayInString());
           setDate(todayInString());
           setRiceExpend("");
@@ -511,6 +548,7 @@ export default function MDMData() {
           setShowMonthlyReport(false);
           setShowMonthSelection(false);
           setLoader(false);
+          setRiceDone(true);
         })
         .catch((e) => {
           console.log(e);
@@ -626,6 +664,7 @@ export default function MDMData() {
             moreFilteredData.filter((el) => el.id !== entry.id)
           );
           setFilteredData(filteredData.filter((el) => el.id !== entry.id));
+          findRiceEntry(filteredEntry)
           toast.success("MDM Data Deleted successfully");
           // getMainData();
           // getRiceData();
@@ -683,11 +722,13 @@ export default function MDMData() {
     } else {
       setRiceData(riceState);
       setRiceOB(riceState[riceState.length - 1].riceCB);
+      findRiceEntry(riceState);
     }
     if (mealState.length === 0) {
       getMainData();
     } else {
       setAllEnry(mealState);
+      findMDMEntry(mealState);
     }
     if (access !== "admin") {
       router.push("/");
@@ -703,7 +744,7 @@ export default function MDMData() {
 
       <button
         type="button"
-        className="btn btn-primary m-1"
+        className={`btn btn-${mdmDone ? 'danger' : 'success'} m-1`}
         onClick={() => {
           allEnry.map((entry) => {
             if (entry.date === todayInString()) {
@@ -747,7 +788,7 @@ export default function MDMData() {
       </button>
       <button
         type="button"
-        className="btn btn-dark m-1"
+        className={`btn btn-${!mdmDone ? 'danger' : 'success'} m-1`}
         onClick={() => {
           searchTodaysData();
         }}
@@ -763,7 +804,7 @@ export default function MDMData() {
       </button>
       <button
         type="button"
-        className="btn btn-info m-1"
+        className={`btn btn-${riceDone ? 'danger' : 'success'} m-1`}
         onClick={() => {
           setShowRiceData(true);
           setShowMonthlyReport(false);
