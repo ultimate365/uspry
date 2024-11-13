@@ -6,6 +6,7 @@ import {
   todayInString,
   setInputNumberMaxLength,
   compareObjects,
+  getRandomAlphabet,
 } from "../../modules/calculatefunctions";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
@@ -371,7 +372,7 @@ export default function Admission() {
       let genID = `USPRYS-ONLINE-${YEAR}-${countLength}`;
       const checkDuplicate = data.filter((entry) => entry.id === genID);
       if (checkDuplicate.length > 0) {
-        genID = genID + "-" + (checkDuplicate.length + 1);
+        genID = genID + "-" + getRandomAlphabet();
       }
       setAdmissionID(genID);
       return genID;

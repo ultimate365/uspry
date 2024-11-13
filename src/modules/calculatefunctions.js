@@ -740,3 +740,11 @@ export const sortMonthwise = (arr) => {
     return monthA - monthB;
   });
 };
+const alphabetArray = Array.from({length: 26}, (_, i) =>
+  String.fromCharCode(i + 65),
+);
+
+export function getRandomAlphabet() {
+  const randomIndex = Math.floor(Math.random() * alphabetArray.length);
+  return alphabetArray[randomIndex];
+}
