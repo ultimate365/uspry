@@ -923,7 +923,7 @@ export default function Transactions() {
                                   setPpCB(ppOB + parseFloat(e.target.value));
                                 } else {
                                   setPpRC("");
-                                  setPpCB(ppRC + ppOB);
+                                  setPpCB(ppOB);
                                 }
                               }}
                               placeholder="Enter PP Received"
@@ -1036,7 +1036,7 @@ export default function Transactions() {
                                   );
                                 } else {
                                   setPryRC("");
-                                  setPryCB(pryRC + pryOB);
+                                  setPryCB(pryOB);
                                 }
                               }}
                               placeholder="Enter Primary Expense"

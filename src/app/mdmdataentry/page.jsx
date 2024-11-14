@@ -287,8 +287,8 @@ export default function MDMData() {
     setMealState(data);
     findMDMEntry(data);
   };
-  const findMDMEntry = array => {
-    if (array.filter(el => el?.id === todayInString()).length > 0) {
+  const findMDMEntry = (array) => {
+    if (array.filter((el) => el?.id === todayInString()).length > 0) {
       setMdmDone(true);
     } else {
       setMdmDone(false);
@@ -314,8 +314,8 @@ export default function MDMData() {
     setRiceOB(data[data.length - 1].riceCB);
     findRiceEntry(data);
   };
-  const findRiceEntry = array => {
-    if (array.filter(el => el?.id === todayInString()).length > 0) {
+  const findRiceEntry = (array) => {
+    if (array.filter((el) => el?.id === todayInString()).length > 0) {
       setRiceDone(true);
     } else {
       setRiceDone(false);
@@ -526,14 +526,14 @@ export default function MDMData() {
               id: date,
               date: date,
               riceOB: riceOB,
-              riceGiven: riceGiven === '' ? 0 : riceGiven,
+              riceGiven: riceGiven === "" ? 0 : riceGiven,
               riceExpend: riceExpend,
-              riceCB: riceOB + (riceGiven === '' ? 0 : riceGiven) - riceExpend,
+              riceCB: riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend,
             },
           ].sort(
             (a, b) =>
               Date.parse(getCurrentDateInput(a.date)) -
-              Date.parse(getCurrentDateInput(b.date)),
+              Date.parse(getCurrentDateInput(b.date))
           );
           setRiceState(x);
           setRiceData(x);
@@ -664,7 +664,7 @@ export default function MDMData() {
             moreFilteredData.filter((el) => el.id !== entry.id)
           );
           setFilteredData(filteredData.filter((el) => el.id !== entry.id));
-          findRiceEntry(filteredEntry)
+          findRiceEntry(filteredEntry);
           toast.success("MDM Data Deleted successfully");
           // getMainData();
           // getRiceData();
@@ -744,7 +744,7 @@ export default function MDMData() {
 
       <button
         type="button"
-        className={`btn btn-${mdmDone ? 'danger' : 'success'} m-1`}
+        className={`btn btn-${mdmDone ? "danger" : "success"} m-1`}
         onClick={() => {
           allEnry.map((entry) => {
             if (entry.date === todayInString()) {
@@ -788,7 +788,7 @@ export default function MDMData() {
       </button>
       <button
         type="button"
-        className={`btn btn-${!mdmDone ? 'danger' : 'success'} m-1`}
+        className={`btn btn-${!mdmDone ? "danger" : "success"} m-1`}
         onClick={() => {
           searchTodaysData();
         }}
@@ -804,8 +804,11 @@ export default function MDMData() {
       </button>
       <button
         type="button"
-        className={`btn btn-${riceDone ? 'danger' : 'success'} m-1`}
+        className={`btn btn-${riceDone ? "danger" : "success"} m-1`}
         onClick={() => {
+          if (riceDone) {
+            toast.error("Todays Rice Entry Already Done!");
+          }
           setShowRiceData(true);
           setShowMonthlyReport(false);
           setShowDataTable(false);
