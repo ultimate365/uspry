@@ -70,7 +70,6 @@ export default function Expenses() {
     try {
       await updateDoc(doc(firestore, "expenses", account.id), {
         accountName: account.accountName,
-        accountNumber: account.accountNumber,
         balance: account.balance,
         date: todayInString(),
       });
