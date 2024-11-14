@@ -53,6 +53,7 @@ export default function VerifyLogin() {
       const res = await axios.post("/api/verifyMobileOTP", {
         phone,
         phoneCode: mobileOTP,
+        name: name,
       });
       const record = res.data;
       if (record.success) {

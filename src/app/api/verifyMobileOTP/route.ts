@@ -2,11 +2,12 @@ import dbConnect from "../../../lib/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 import PhoneOtp from "../../../models/phoneOtp";
 import deleteTelegramMessage from "../../../lib/deleteTelegramMessage";
+import sendToTelegram from "@/lib/sendToTelegram";
 dbConnect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { phone, phoneCode }: any = reqBody;
+    const { phone, phoneCode,name }: any = reqBody;
     console.log(reqBody);
     const phoneData = await PhoneOtp.findOne({ phone, code: phoneCode });
     if (phoneData) {
@@ -23,7 +24,9 @@ export async function POST(request: NextRequest) {
         );
       } else {
         await PhoneOtp.deleteMany({ phone });
-        await deleteTelegramMessage(phoneData.message_id)
+        await deleteTelegramMessage(phoneData.message_id);
+        const message = `Welcome ${name} To Our App.`;
+        const message_id = await sendToTelegram(message);
         return NextResponse.json(
           {
             message: "Mobile Verified Successfully",

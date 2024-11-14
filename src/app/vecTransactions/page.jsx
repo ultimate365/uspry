@@ -87,7 +87,7 @@ export default function VecTransactions() {
           Date.parse(getCurrentDateInput(b.date))
       );
     setLoader(false);
-    setAllTransactions(data);
+    setAllTransactions(data.reverse());
     setAllFTransactions(data);
     const x = data.filter((t) => t.id === id);
     if (x.length > 0) {
@@ -760,7 +760,9 @@ export default function VecTransactions() {
                       type="submit"
                       className="btn btn-primary m-2"
                       disabled={
-                        vecObj.closingBalance <= 0 || vecObj.purpose === ""
+                        vecObj.closingBalance <= 0 ||
+                        vecObj.amount === "" ||
+                        vecObj.purpose === ""
                       }
                       onClick={handleVECSubmit}
                     >

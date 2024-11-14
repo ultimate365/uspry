@@ -140,7 +140,7 @@ export default function Transactions() {
     setThisAccounTransactions(
       data.filter(
         (account) => account.accountNumber === stateObject.accountNumber
-      )
+      ).reverse()
     );
     setLoader(false);
     setAllTransactions(data);
@@ -189,7 +189,7 @@ export default function Transactions() {
       setThisAccounTransactions(
         x.filter(
           (account) => account.accountNumber === stateObject.accountNumber
-        )
+        ).reverse()
       );
       setTransactionState(x);
       await setDoc(doc(firestore, "transactions", y), transaction);
@@ -255,7 +255,7 @@ export default function Transactions() {
     setTransactionState(x);
     setThisAccounTransactions(
       x.filter((account) => account.accountNumber === stateObject.accountNumber)
-    );
+    ).reverse();
     let filteredAccounts = accountState.filter(
       (el) => el.id !== stateObject.id
     );
@@ -445,7 +445,7 @@ export default function Transactions() {
       setThisAccounTransactions(
         x.filter(
           (account) => account.accountNumber === stateObject.accountNumber
-        )
+        ).reverse()
       );
       toast.success("Transaction Updated successfully");
       setShowEdit(false);
@@ -1322,14 +1322,8 @@ export default function Transactions() {
                             type="text"
                             className="form-control"
                             id="ppRC"
-                            value={ppRC}
+                            value={editTransaction.ppRC}
                             onChange={(e) => {
-                              if (e.target.value !== "") {
-                                setPpRC(parseFloat(e.target.value));
-                                setPpCB(parseFloat(e.target.value) + ppOB);
-                              } else {
-                                setPpRC("");
-                              }
                               if (e.target.value !== "") {
                                 const parsedAmount = parseFloat(e.target.value);
                                 setEditTransaction({
