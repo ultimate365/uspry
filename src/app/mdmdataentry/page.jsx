@@ -177,6 +177,8 @@ export default function MDMData() {
       setDocId(data.date);
       setShowUpdate(true);
     } else {
+      setShowUpdate(true);
+      setDocId(todayInString());
       toast.error("Todays Enry Not Done Yet!", {
         position: "top-right",
         autoClose: 1500,
