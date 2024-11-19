@@ -6,7 +6,10 @@ import {
 } from "@/modules/calculatefunctions";
 import {
   BLOCK,
+  BUILDING,
   CIRCLE,
+  DRINKING_WATER,
+  GIRLS_TOILET,
   HOI_MOBILE_NO,
   JLNO,
   KHATIAN_NO,
@@ -30,10 +33,17 @@ import { getDocs, query, collection } from "firebase/firestore";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
+import dynamic from "next/dynamic";
+import ReturnPrint from "@/components/ReturnPrint";
 export default function MonthlyTeachersReturn() {
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   const { state, returnState, setReturnState } = useGlobalContext();
-
   const access = state?.ACCESS;
   const router = useRouter();
 
@@ -68,6 +78,7 @@ export default function MonthlyTeachersReturn() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [showData, setShowData] = useState(false);
+  const [thisMonthReturnData, setThisMonthReturnData] = useState({});
   const getMonth = () => {
     return `${month.toUpperCase()} of ${year}`;
   };
@@ -120,6 +131,7 @@ export default function MonthlyTeachersReturn() {
         setStudents(entry?.students);
         setMonth(entry?.month);
         setYear(entry?.year);
+        setThisMonthReturnData(entry);
         return x;
       }
     });
@@ -342,7 +354,42 @@ export default function MonthlyTeachersReturn() {
             >
               Download {month} {year} Return Data
             </button>
-
+            <button
+              type="button"
+              className="btn btn-primary m-2"
+              onClick={() => {
+                createDownloadLink(returnState, `monthlyTeachersReturn`);
+              }}
+            >
+              Download All Return Data
+            </button>
+            {/* <button
+              type="button"
+              className="btn btn-dark m-2"
+              onClick={() => {
+                const data = JSON.stringify(thisMonthReturnData);
+                router.push(`/downloadTeachersReturn?data=${data}`);
+              }}
+            >
+              Download {month} {year} PDF
+            </button> */}
+            <PDFDownloadLink
+              document={<ReturnPrint data={thisMonthReturnData} />}
+              fileName={`${filteredEntry[0]?.id} Teachers Return.pdf`}
+              style={{
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
+              }}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download Teachers Return PDF"
+              }
+            </PDFDownloadLink>
             <button
               type="button"
               className="btn btn-warning m-2"
@@ -1588,23 +1635,13 @@ export default function MonthlyTeachersReturn() {
                         No. of Attendance of students on the date of last
                         inspection
                       </td>
+                      <td style={{ border: "1px solid" }}>{inspection?.pp}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.i}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.ii}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.iii}</td>
+                      <td style={{ border: "1px solid" }}>{inspection?.iv}</td>
                       <td style={{ border: "1px solid" }}>
-                        {inspection?.pp}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {inspection?.i}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {inspection?.ii}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {inspection?.iii}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {inspection?.iv}
-                      </td>
-                      <td style={{ border: "1px solid" }}>
-                        {inspection?.v>0?inspection?.v:"-"}
+                        {inspection?.v > 0 ? inspection?.v : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {inspection?.total}
@@ -1697,7 +1734,7 @@ export default function MonthlyTeachersReturn() {
                                 textDecorationStyle: "dotted",
                               }}
                             >
-                              SUBMERSILE
+                              {DRINKING_WATER}
                             </span>
                           </p>
                           <p className="m-0 p-0">
@@ -1723,7 +1760,7 @@ export default function MonthlyTeachersReturn() {
                                 textDecorationStyle: "dotted",
                               }}
                             >
-                              4
+                              {GIRLS_TOILET}
                             </span>
                           </p>
                           <p className="m-0 p-0">
@@ -1761,7 +1798,7 @@ export default function MonthlyTeachersReturn() {
                                 textDecorationStyle: "dotted",
                               }}
                             >
-                              2
+                              {BUILDING}
                             </span>
                           </p>
                         </div>
@@ -1775,7 +1812,7 @@ export default function MonthlyTeachersReturn() {
                                 textDecorationStyle: "dotted",
                               }}
                             >
-                              Yes
+                              YES
                             </span>
                           </p>
                         </div>

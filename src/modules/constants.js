@@ -23,7 +23,6 @@ export const SCHOOL_TYPE = "GOVT. PRIMARY SCHOOL";
 export const CCH_NAME = [
   { name: "SHYAMALI MONDAL", gender: "FEMALE", cast: "GEN", payment: "BANK" },
   { name: "LAKSHMI DAS", gender: "FEMALE", cast: "OBC", payment: "BANK" },
-  ,
 ];
 export const UDISE_CODE = 19160213201;
 export const HOI_MOBILE_NO = "9933684468";
@@ -39,22 +38,26 @@ export const STUDENT_CLASSES = [
 export const VILL = "SEHAGORI";
 export const PO = "KHOROP";
 export const PS = "JOYPUR";
+export const DIST = "HOWRAH";
 export const MOUZA = "SEHAGORI";
 export const CIRCLE = "AMTA WEST";
 export const MEDIUM = "BENGALI";
 export const JLNO = "112";
 export const SCHNO = "72";
+export const DRINKING_WATER = "SUBMERSILE";
+export const GIRLS_TOILET = "4";
+export const BUILDING = "2";
 export const LAST_DAY_OF_INSPECTION = "13-08-2024";
 export const SCHOOL_RECOGNITION_DATE = "23-04-1980";
 export const SCHOOL_AREA = "0.05 Acre";
 export const KHATIAN_NO = "21";
 export const PLOT_NO = "755";
 export const classWiseAge = [
-  { className: "PRE PRIMARY", benClassName:"প্রাক প্রাথমিক", age: 5 },
-  { className: "CLASS I", benClassName:"প্রথম শ্রেনী", age: 6 },
-  { className: "CLASS II", benClassName:"দ্বিতীয় শ্রেনী", age: 7 },
-  { className: "CLASS III", benClassName:"তৃতীয় শ্রেনী", age: 8 },
-  { className: "CLASS IV", benClassName:"চতুর্থ শ্রেনী", age: 9 },
-  { className: "CLASS V", benClassName:"পঞ্চম শ্রেনী", age: 10 },
+  { className: "PRE PRIMARY", benClassName: "প্রাক প্রাথমিক", age: 5 },
+  { className: "CLASS I", benClassName: "প্রথম শ্রেনী", age: 6 },
+  { className: "CLASS II", benClassName: "দ্বিতীয় শ্রেনী", age: 7 },
+  { className: "CLASS III", benClassName: "তৃতীয় শ্রেনী", age: 8 },
+  { className: "CLASS IV", benClassName: "চতুর্থ শ্রেনী", age: 9 },
+  { className: "CLASS V", benClassName: "পঞ্চম শ্রেনী", age: 10 },
 ];
 export const TELEGRAM_TEACHER_GROUP = "https://t.me/+LZsOjnE9mBAxZjI9";

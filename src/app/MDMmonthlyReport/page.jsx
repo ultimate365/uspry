@@ -18,7 +18,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { firestore } from "../../context/FirbaseContext";
 import { getDocs, query, collection } from "firebase/firestore";
-
+import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
 import {
   createDownloadLink,
@@ -31,7 +31,7 @@ import {
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
-
+import MDMPrint from "@/components/MDMPrint";
 export default function MDMmonthlyReport() {
   const {
     transactionState,
@@ -40,6 +40,13 @@ export default function MDMmonthlyReport() {
     setMonthlyReportState,
     state,
   } = useGlobalContext();
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   const [thisMonthlyData, setThisMonthlyData] = useState({
     id: "",
     month: "",
@@ -233,7 +240,9 @@ export default function MDMmonthlyReport() {
         //   (transaction) => transaction.id === entry.id
         // )[0];
 
-        setThisMonthFromTransaction(debitThisMonth[0]);
+        if (debitThisMonth.length > 0) {
+          setThisMonthFromTransaction(debitThisMonth[0]);
+        }
         const creditTrThisMonth = selectedYearTransactions
           .filter((trmonth) => trmonth.month === month)
           .filter((trtype) => trtype.type === "CREDIT");
@@ -241,32 +250,36 @@ export default function MDMmonthlyReport() {
 
         if (creditTrThisMonth.length > 0) {
           setFtFound(true);
+          setThisMonthFromFirstTransaction(creditTrThisMonth[0]);
+          let cBalRCThisMonth = 0;
+          let cPryRCThisMonth = 0;
+          creditTrThisMonth.forEach((tr) => {
+            cBalRCThisMonth += tr.ppRC;
+            cPryRCThisMonth += tr.pryRC;
+          });
+          setBalRCThisMonth(cBalRCThisMonth);
+          setPryRCThisMonth(cPryRCThisMonth);
         } else {
           setFtFound(false);
         }
-        setThisMonthFromFirstTransaction(creditTrThisMonth[0]);
-        let cBalRCThisMonth = 0;
-        let cPryRCThisMonth = 0;
-        creditTrThisMonth.forEach((tr) => {
-          cBalRCThisMonth += tr.ppRC;
-          cPryRCThisMonth += tr.pryRC;
-        });
-        setBalRCThisMonth(cBalRCThisMonth);
-        setPryRCThisMonth(cPryRCThisMonth);
+
         const thisMonthName = entry.month;
         const prevMonthName = months[months.indexOf(thisMonthName) - 1];
         const creditTrPrevMonth = selectedYearTransactions
           .filter((trmonth) => trmonth.month === prevMonthName)
           .filter((trtype) => trtype.type === "CREDIT");
 
-        let cBalPrevMonth = 0;
-        let cPryPrevMonth = 0;
-        creditTrPrevMonth.forEach((tr) => {
-          cBalPrevMonth += tr.ppRC;
-          cPryPrevMonth += tr.pryRC;
-        });
-        setBalRCPrevMonth(cBalPrevMonth);
-        setPryRCPrevMonth(cPryPrevMonth);
+        if (creditTrPrevMonth.length > 0) {
+          let cBalPrevMonth = 0;
+          let cPryPrevMonth = 0;
+          creditTrPrevMonth.forEach((tr) => {
+            cBalPrevMonth += tr.ppRC;
+            cPryPrevMonth += tr.pryRC;
+          });
+          setBalRCPrevMonth(cBalPrevMonth);
+          setPryRCPrevMonth(cPryPrevMonth);
+        }
+
         return x;
       }
     });
@@ -345,7 +358,8 @@ export default function MDMmonthlyReport() {
     allTransactions,
     thisMonthFromTransaction,
     thisMonthlyData,
-    showOldFormat,showDash
+    showOldFormat,
+    showDash,
   ]);
 
   return (
@@ -514,6 +528,60 @@ export default function MDMmonthlyReport() {
         <div>
           <div className="noprint">
             <button
+              type="button"
+              className="btn btn-sm m-3 btn-primary"
+              onClick={() => {
+                const data = {
+                  ftFound: ftFound,
+                  thisMonthlyData: thisMonthlyData,
+                  thisMonthFromFirstTransaction: thisMonthFromFirstTransaction,
+                  thisMonthFromTransaction: thisMonthFromTransaction,
+                  prevMonthlyData: prevMonthlyData,
+                  balRCThisMonth: balRCThisMonth,
+                  pryRCThisMonth: pryRCThisMonth,
+                  balRCPrevMonth: balRCPrevMonth,
+                  pryRCPrevMonth: pryRCPrevMonth,
+                  remarks: remarks,
+                };
+                router.push(`/printMDMReport?data=${JSON.stringify(data)}`);
+              }}
+            >
+              Download Monthly Report
+            </button>
+            <PDFDownloadLink
+              document={
+                <MDMPrint
+                  data={{
+                    ftFound: ftFound,
+                    thisMonthlyData: thisMonthlyData,
+                    thisMonthFromFirstTransaction:
+                      thisMonthFromFirstTransaction,
+                    thisMonthFromTransaction: thisMonthFromTransaction,
+                    prevMonthlyData: prevMonthlyData,
+                    balRCThisMonth: balRCThisMonth,
+                    pryRCThisMonth: pryRCThisMonth,
+                    balRCPrevMonth: balRCPrevMonth,
+                    pryRCPrevMonth: pryRCPrevMonth,
+                    remarks: remarks,
+                  }}
+                />
+              }
+              fileName={`${thisMonthlyData.id} MDM Return.pdf`}
+              style={{
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
+              }}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download Monthly Report"
+              }
+            </PDFDownloadLink>
+            <button
               className={`btn btn-success m-2`}
               type="button"
               onClick={() => {
@@ -598,7 +666,8 @@ export default function MDMmonthlyReport() {
                   zoom: newFormatZoom / 100 || 100,
                 }}
               >
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -714,7 +783,8 @@ export default function MDMmonthlyReport() {
                         Allotment of fund received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total allotment received <br/>(2+3(b))
+                        Total allotment received <br />
+                        (2+3(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -724,7 +794,8 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 5(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance <br/>(4-6)
+                        Closing Balance <br />
+                        (4-6)
                       </td>
                     </tr>
                     <tr
@@ -923,7 +994,8 @@ export default function MDMmonthlyReport() {
                         Allotment of Food grains received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total Food grains received <br/>(2+3(b))
+                        Total Food grains received <br />
+                        (2+3(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -933,7 +1005,8 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 5(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance <br/>(4-6)
+                        Closing Balance <br />
+                        (4-6)
                       </td>
                     </tr>
                     <tr
@@ -975,28 +1048,28 @@ export default function MDMmonthlyReport() {
                     >
                       <td style={{ border: "1px solid" }}>Bal Vatika</td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPOB}
+                        {thisMonthlyData?.ricePPOB}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPRC}
+                        {thisMonthlyData?.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPOB + thisMonthlyData.ricePPRC}
+                        {thisMonthlyData?.ricePPOB + thisMonthlyData?.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPEX}
+                        {thisMonthlyData?.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPEX}
+                        {thisMonthlyData?.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPCB}
+                        {thisMonthlyData?.ricePPCB}
                       </td>
                     </tr>
                     <tr
@@ -1007,28 +1080,29 @@ export default function MDMmonthlyReport() {
                     >
                       <td style={{ border: "1px solid" }}>Primary</td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryOB}
+                        {thisMonthlyData?.ricePryOB}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryRC}
+                        {thisMonthlyData?.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryOB + thisMonthlyData.ricePryRC}
+                        {thisMonthlyData?.ricePryOB +
+                          thisMonthlyData?.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryEX}
+                        {thisMonthlyData?.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryEX}
+                        {thisMonthlyData?.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryCB}
+                        {thisMonthlyData?.ricePryCB}
                       </td>
                     </tr>
                     <tr
@@ -1085,7 +1159,8 @@ export default function MDMmonthlyReport() {
                         Allotment of Food grains received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total Food grains received <br/>(2+3(b))
+                        Total Food grains received <br />
+                        (2+3(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -1095,7 +1170,8 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 5(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance <br/>(4-6)
+                        Closing Balance <br />
+                        (4-6)
                       </td>
                     </tr>
                     <tr
@@ -1171,7 +1247,8 @@ export default function MDMmonthlyReport() {
                   flexWrap: "wrap",
                 }}
               >
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -1239,7 +1316,8 @@ export default function MDMmonthlyReport() {
                         Allotment of fund received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total allotment received <br/>(5+6(b))
+                        Total allotment received <br />
+                        (5+6(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -1248,7 +1326,9 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 8(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance<br/>(7-9)
+                        Closing Balance
+                        <br />
+                        (7-9)
                       </td>
                     </tr>
                     <tr
@@ -1294,10 +1374,10 @@ export default function MDMmonthlyReport() {
                       <td style={{ border: "1px solid" }}>Bal Vatika</td>
                       <td style={{ border: "1px solid" }}>{PP_STUDENTS}</td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ppTotal}
+                        {thisMonthlyData?.ppTotal}
                       </td>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        {thisMonthlyData.worrkingDays}
+                        {thisMonthlyData?.worrkingDays}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         ₹
@@ -1359,7 +1439,7 @@ export default function MDMmonthlyReport() {
                         {PRIMARY_STUDENTS}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.pryTotal}
+                        {thisMonthlyData?.pryTotal}
                       </td>
 
                       <td style={{ border: "1px solid" }}>
@@ -1461,7 +1541,8 @@ export default function MDMmonthlyReport() {
                         Allotment of fund received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total Food grains received <br/>(5+6(b))
+                        Total Food grains received <br />
+                        (5+6(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -1470,7 +1551,9 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 8(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance<br/>(7-9)
+                        Closing Balance
+                        <br />
+                        (7-9)
                       </td>
                     </tr>
                     <tr
@@ -1516,11 +1599,11 @@ export default function MDMmonthlyReport() {
                       <td style={{ border: "1px solid" }}>Bal Vatika</td>
                       <td style={{ border: "1px solid" }}>{PP_STUDENTS}</td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ppTotal}
+                        {thisMonthlyData?.ppTotal}
                       </td>
 
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        {thisMonthlyData.worrkingDays}
+                        {thisMonthlyData?.worrkingDays}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePPOB}
@@ -1529,22 +1612,22 @@ export default function MDMmonthlyReport() {
                         {prevMonthlyData.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPRC}
+                        {thisMonthlyData?.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPOB + thisMonthlyData.ricePPRC}
+                        {thisMonthlyData?.ricePPOB + thisMonthlyData?.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPEX}
+                        {thisMonthlyData?.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPEX}
+                        {thisMonthlyData?.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePPCB}
+                        {thisMonthlyData?.ricePPCB}
                       </td>
                     </tr>
                     <tr
@@ -1558,31 +1641,32 @@ export default function MDMmonthlyReport() {
                         {PRIMARY_STUDENTS}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.pryTotal}
+                        {thisMonthlyData?.pryTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryOB}
+                        {thisMonthlyData?.ricePryOB}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryRC}
+                        {thisMonthlyData?.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryOB + thisMonthlyData.ricePryRC}
+                        {thisMonthlyData?.ricePryOB +
+                          thisMonthlyData?.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {prevMonthlyData.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryEX}
+                        {thisMonthlyData?.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryEX}
+                        {thisMonthlyData?.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {thisMonthlyData.ricePryCB}
+                        {thisMonthlyData?.ricePryCB}
                       </td>
                     </tr>
                     <tr
@@ -1635,7 +1719,8 @@ export default function MDMmonthlyReport() {
                         Allotment of fund received
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Total allotment received <br/>(5+6(b))
+                        Total allotment received <br />
+                        (5+6(b))
                       </td>
                       <td colSpan={2} style={{ border: "1px solid" }}>
                         Expenditure
@@ -1644,7 +1729,9 @@ export default function MDMmonthlyReport() {
                         Total Expenditure 8(b)
                       </td>
                       <td rowSpan={2} style={{ border: "1px solid" }}>
-                        Closing Balance<br/>(7-9)
+                        Closing Balance
+                        <br />
+                        (7-9)
                       </td>
                     </tr>
                     <tr
@@ -1688,8 +1775,8 @@ export default function MDMmonthlyReport() {
                       className="text-center"
                     >
                       <td style={{ border: "1px solid" }}>-</td>
-                      <td style={{ border: "1px solid" }}>46</td>
-                      <td style={{ border: "1px solid" }}>2</td>
+                      <td style={{ border: "1px solid" }}>{TOTAL_STUDENTS}</td>
+                      <td style={{ border: "1px solid" }}>{CCH_NAME.length}</td>
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>-</td>
@@ -1737,7 +1824,8 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   1. School Details
                 </h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -1971,7 +2059,8 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   2. Meals Availed Status
                 </h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2028,7 +2117,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.totalWorkingDays}
+                        {thisMonthlyData?.totalWorkingDays}
                       </td>
                       <td
                         style={{
@@ -2036,7 +2125,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.totalWorkingDays}
+                        {thisMonthlyData?.totalWorkingDays}
                       </td>
 
                       <td
@@ -2063,7 +2152,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.worrkingDays}
+                        {thisMonthlyData?.worrkingDays}
                       </td>
                       <td
                         style={{
@@ -2071,7 +2160,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.worrkingDays}
+                        {thisMonthlyData?.worrkingDays}
                       </td>
                     </tr>
                     <tr>
@@ -2089,7 +2178,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.ppTotal}
+                        {thisMonthlyData?.ppTotal}
                       </td>
                       <td
                         style={{
@@ -2097,7 +2186,7 @@ export default function MDMmonthlyReport() {
                           paddingInline: 2,
                         }}
                       >
-                        {thisMonthlyData.pryTotal}
+                        {thisMonthlyData?.pryTotal}
                       </td>
                     </tr>
                   </tbody>
@@ -2105,7 +2194,8 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   3. Fund Details (In Rs.)
                 </h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2404,7 +2494,8 @@ export default function MDMmonthlyReport() {
                 <h5 className="text-start" style={{ marginLeft: 30 }}>
                   4. Cook Cum Helper Payment Detail
                 </h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2540,7 +2631,8 @@ export default function MDMmonthlyReport() {
                 </table>
                 <div>
                   <h6 className="m-0 p-0">MID DAY MEAL REPORT (UC)</h6>
-                  <table suppressHydrationWarning={true}
+                  <table
+                    suppressHydrationWarning={true}
                     style={{
                       width: "100%",
                       overflowX: "auto",
@@ -2578,15 +2670,15 @@ export default function MDMmonthlyReport() {
                           {PP_STUDENTS}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData.ppTotal}
+                          {thisMonthlyData?.ppTotal}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           ₹ {MDM_COST}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData.ppTotal} × ₹ {MDM_COST} = ₹{" "}
-                          {/* {thisMonthlyData.monthlyPPCost} */}
-                          {Math.round(thisMonthlyData.ppTotal * MDM_COST)}
+                          {thisMonthlyData?.ppTotal} × ₹ {MDM_COST} = ₹{" "}
+                          {/* {thisMonthlyData?.monthlyPPCost} */}
+                          {Math.round(thisMonthlyData?.ppTotal * MDM_COST)}
                         </td>
                       </tr>
                       <tr>
@@ -2597,15 +2689,15 @@ export default function MDMmonthlyReport() {
                           {PRIMARY_STUDENTS}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData.pryTotal}
+                          {thisMonthlyData?.pryTotal}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           ₹ {MDM_COST}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData.pryTotal} × ₹ {MDM_COST} = ₹{" "}
-                          {/* {thisMonthlyData.monthlyPRYCost} */}
-                          {Math.round(thisMonthlyData.pryTotal * MDM_COST)}
+                          {thisMonthlyData?.pryTotal} × ₹ {MDM_COST} = ₹{" "}
+                          {/* {thisMonthlyData?.monthlyPRYCost} */}
+                          {Math.round(thisMonthlyData?.pryTotal * MDM_COST)}
                         </td>
                       </tr>
                     </tbody>
@@ -2614,7 +2706,8 @@ export default function MDMmonthlyReport() {
               </div>
               <div className="nobreak mt-2">
                 <h5 className="text-start">5. Food Grain Details (In KG.)</h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2635,7 +2728,7 @@ export default function MDMmonthlyReport() {
                         Opening Balance
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        Received During
+                        Received During the Month
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
                         Consumption during the Month
@@ -2674,16 +2767,16 @@ export default function MDMmonthlyReport() {
                         Rice
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePPOB}
+                        {thisMonthlyData?.ricePPOB}
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePPRC}
+                        {thisMonthlyData?.ricePPRC}
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePPEX}
+                        {thisMonthlyData?.ricePPEX}
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePPCB}
+                        {thisMonthlyData?.ricePPCB}
                       </td>
                     </tr>
                     <tr>
@@ -2714,16 +2807,16 @@ export default function MDMmonthlyReport() {
                         Rice
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePryOB}
+                        {thisMonthlyData?.ricePryOB}
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePryRC}
+                        {thisMonthlyData?.ricePryRC}
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePryEX}
+                        {thisMonthlyData?.ricePryEX}
                       </td>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
-                        {thisMonthlyData.ricePryCB}
+                        {thisMonthlyData?.ricePryCB}
                       </td>
                     </tr>
                     <tr>
@@ -2769,7 +2862,8 @@ export default function MDMmonthlyReport() {
                   </tbody>
                 </table>
                 <h5 className="text-start">6. Children Health Status</h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2816,7 +2910,8 @@ export default function MDMmonthlyReport() {
                   </tbody>
                 </table>
                 <h5 className="text-start">7. School Inspection</h5>
-                <table suppressHydrationWarning={true}
+                <table
+                  suppressHydrationWarning={true}
                   style={{
                     width: "100%",
                     overflowX: "auto",
@@ -2837,8 +2932,12 @@ export default function MDMmonthlyReport() {
                             checked={showDash}
                             onChange={(e) => setShowDash(e.target.checked)}
                           />{" "}
-                          No <input type="checkbox" checked={!showDash}
-                            onChange={(e) => {}} />
+                          No{" "}
+                          <input
+                            type="checkbox"
+                            checked={!showDash}
+                            onChange={(e) => {}}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -2846,33 +2945,33 @@ export default function MDMmonthlyReport() {
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
                         By Members of Task Force
                       </td>
-                      <td
-                        style={{ border: "1px solid", paddingInline: 2 }}
-                      >{!showDash && "-"}</td>
+                      <td style={{ border: "1px solid", paddingInline: 2 }}>
+                        {!showDash && "-"}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
                         By District Officials
                       </td>
-                      <td
-                        style={{ border: "1px solid", paddingInline: 2 }}
-                      >{!showDash && "-"}</td>
+                      <td style={{ border: "1px solid", paddingInline: 2 }}>
+                        {!showDash && "-"}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
                         By Block/Taluka Level Officials
                       </td>
-                      <td
-                        style={{ border: "1px solid", paddingInline: 2 }}
-                      >{!showDash && "-"}</td>
+                      <td style={{ border: "1px solid", paddingInline: 2 }}>
+                        {!showDash && "-"}
+                      </td>
                     </tr>
                     <tr>
                       <td style={{ border: "1px solid", paddingInline: 2 }}>
                         By SMC Members
                       </td>
-                      <td
-                        style={{ border: "1px solid", paddingInline: 2 }}
-                      >{!showDash && "-"}</td>
+                      <td style={{ border: "1px solid", paddingInline: 2 }}>
+                        {!showDash && "-"}
+                      </td>
                     </tr>
                     <tr style={{ height: 20, border: 0 }}></tr>
                     <tr>
