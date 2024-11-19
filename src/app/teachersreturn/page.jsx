@@ -1037,6 +1037,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="clThisMonth"
                           name="clThisMonth"
+                          placeholder="CL This Month"
                           value={editTeacher?.clThisMonth}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1068,6 +1069,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="clThisYear"
                           name="clThisYear"
+                          placeholder="CL This Year"
                           value={editTeacher?.clThisYear}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1093,6 +1095,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="olThisMonth"
                           name="olThisMonth"
+                          placeholder="Other Leave This Month"
                           value={editTeacher?.olThisMonth}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1124,12 +1127,13 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="olThisYear"
                           name="olThisYear"
+                          placeholder="Other Leave This Year"
                           value={editTeacher?.olThisYear}
                           onChange={(e) => {
                             if (e.target.value !== "") {
                               setEditTeacher({
                                 ...editTeacher,
-                                olthisYear: parseInt(e.target.value),
+                                olThisYear: parseInt(e.target.value),
                               });
                             } else {
                               setEditTeacher({
@@ -1149,6 +1153,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="fullPay"
                           name="fullPay"
+                          placeholder="Full Pay"
                           value={editTeacher?.fullPay}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1174,6 +1179,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="halfPay"
                           name="halfPay"
+                          placeholder="Half Pay"
                           value={editTeacher?.halfPay}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1199,6 +1205,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="WOPay"
                           name="WOPay"
+                          placeholder="Without Pay"
                           value={editTeacher?.WOPay}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1224,6 +1231,7 @@ export default function Teachersreturn() {
                           className="form-control"
                           id="WorkingDays"
                           name="WorkingDays"
+                          placeholder="Working Days"
                           value={editTeacher?.workingDays}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -2623,7 +2631,7 @@ export default function Teachersreturn() {
                             </span>
                           </p>
                           <p className="m-0 p-0">
-                          No. of floor : (1 or 2 erected) : 
+                            No. of floor : (1 or 2 erected) :
                             <span
                               className="fw-bold"
                               style={{
