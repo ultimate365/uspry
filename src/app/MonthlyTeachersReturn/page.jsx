@@ -1790,7 +1790,7 @@ export default function MonthlyTeachersReturn() {
                             </span>
                           </p>
                           <p className="m-0 p-0">
-                            Note : (1 or 2 erected) :
+                          No. of floor : (1 or 2 erected) : 
                             <span
                               className="fw-bold"
                               style={{

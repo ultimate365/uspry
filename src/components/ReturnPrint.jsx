@@ -4719,7 +4719,7 @@ export default function ReturnPrint({ data }) {
                 </Text>
               </View>
               <View style={styles.rowFlexView}>
-                <Text style={styles.text5}>Note : (1 or 2 erected) :</Text>
+                <Text style={styles.text5}>No. of floor : (1 or 2 erected) : </Text>
                 <Text
                   style={[
                     styles.text,
