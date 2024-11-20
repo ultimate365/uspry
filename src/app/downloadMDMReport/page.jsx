@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 import MDMPrint from "@/components/MDMPrint";
@@ -27,7 +27,9 @@ export default function Page() {
     pryRCPrevMonth,
     remarks,
   } = data;
-
+  useEffect(() => {
+    console.log(data);
+  }, []);
   return (
     <Suspense>
       <div className="container-fluid">

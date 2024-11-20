@@ -18,6 +18,7 @@ const width = 900;
 export default function CompDownloadAdmissionForm({ data }) {
   const {
     id,
+    url,
     student_beng_name,
     student_eng_name,
     father_beng_name,
@@ -70,6 +71,11 @@ export default function CompDownloadAdmissionForm({ data }) {
           <Text style={styles.admText}>
             ভর্তির আবেদন পত্র (Online Admission)
           </Text>
+          <Image
+            src={url}
+            style={{ width: 70, height: 90 }}
+            alt="student_image"
+          />
           <View style={styles.paraView}>
             <Text style={styles.engparaText}>Application Form No.: {id}</Text>
             <Text style={[styles.engparaText, { paddingLeft: 30 }]}>
@@ -156,35 +162,33 @@ export default function CompDownloadAdmissionForm({ data }) {
               {student_addmission_class}
             </Text>
           </View>
-          {student_previous_class !== "" && (
-            <View style={styles.paraView}>
-              <Text style={styles.paraText}>
-                ছাত্র/ছাত্রীর পূর্বের শ্রেণী: {student_previous_class}
-              </Text>
-              <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-                ছাত্র/ছাত্রীর পূর্বের বর্ষ: {student_previous_class_year}
-              </Text>
-            </View>
-          )}
-          {student_previous_class !== "" && (
-            <View style={styles.paraView}>
-              <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-                ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি:{" "}
-                {student_previous_student_id}
-              </Text>
-            </View>
-          )}
-          {student_previous_class !== "" && (
-            <View
-              style={[
-                styles.paraView,
-                { flexWrap: "wrap", width: scrWidth(55) },
-              ]}
-            >
-              <Text style={styles.paraText}>
-                ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:{" "}
-                {student_previous_school}
-              </Text>
+          {student_previous_class !== "FIRST TIME ADDMISSION" && (
+            <View>
+              <View style={styles.paraView}>
+                <Text style={styles.paraText}>
+                  ছাত্র/ছাত্রীর পূর্বের শ্রেণী: {student_previous_class}
+                </Text>
+                <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
+                  ছাত্র/ছাত্রীর পূর্বের বর্ষ: {student_previous_class_year}
+                </Text>
+              </View>
+              <View style={styles.paraView}>
+                <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
+                  ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি:{" "}
+                  {student_previous_student_id}
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.paraView,
+                  { flexWrap: "wrap", width: scrWidth(55) },
+                ]}
+              >
+                <Text style={styles.paraText}>
+                  ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:{" "}
+                  {student_previous_school}
+                </Text>
+              </View>
             </View>
           )}
           {updatedAt !== undefined && (

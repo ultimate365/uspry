@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { ref, deleteObject } from "firebase/storage";
+import { storage } from "../../context/FirbaseContext";
 import { firestore } from "../../context/FirbaseContext";
 import {
   getDocs,
@@ -23,6 +25,7 @@ import {
 import { classWiseAge } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import Image from "next/image";
 export default function ViewAdmission() {
   const { state, setStateObject } = useGlobalContext();
   const user = state?.USER;
@@ -177,13 +180,23 @@ export default function ViewAdmission() {
     return ageMessage;
   };
 
-  const delEntry = async (id) => {
+  const delEntry = async (entry) => {
     setLoader(true);
-    await deleteDoc(doc(firestore, "admission", id))
-      .then(() => {
-        toast.success("Application Deleted successfully");
-        getData();
-        setLoader(false);
+    await deleteDoc(doc(firestore, "admission", entry.id))
+      .then(async () => {
+        const desertRef = ref(storage, `studentImages/${entry.photoName}`);
+        await deleteObject(desertRef)
+          .then(() => {
+            toast.success("Image deleted successfully");
+            toast.success("Application Deleted successfully");
+            getData();
+            setLoader(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoader(false);
+            toast.error("Failed to delete Image");
+          });
       })
       .catch((e) => {
         console.log(e);
@@ -332,6 +345,14 @@ export default function ViewAdmission() {
                     }}
                     className="text-center p-1"
                   >
+                    Photo
+                  </th>
+                  <th
+                    style={{
+                      border: "1px solid",
+                    }}
+                    className="text-center p-1"
+                  >
                     Application No
                   </th>
                   <th
@@ -406,9 +427,31 @@ export default function ViewAdmission() {
                         border: "1px solid",
                       }}
                       className="text-center p-1"
+                      suppressHydrationWarning
+                    >
+                      <Image
+                        src={student?.url}
+                        alt="uploadedImage"
+                        style={{
+                          width: 70,
+                          height: 90,
+                          alignSelf: "center",
+                        }}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="rounded-2 mx-auto text-center"
+                      />
+                    </td>
+                    <td
+                      style={{
+                        border: "1px solid",
+                      }}
+                      className="text-center p-1"
                     >
                       {student?.id}
                     </td>
+                    
                     <td
                       style={{
                         border: "1px solid",
@@ -511,7 +554,7 @@ export default function ViewAdmission() {
                                 "Are you sure, you want to delete your Application?"
                               )
                             ) {
-                              delEntry(student?.id);
+                              delEntry(student);
                             }
                           }}
                         >

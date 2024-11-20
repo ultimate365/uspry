@@ -21,6 +21,7 @@ export default function PrintAddmissionForm() {
   const router = useRouter();
   const {
     id,
+    url,
     student_beng_name,
     student_eng_name,
     father_beng_name,
@@ -47,7 +48,8 @@ export default function PrintAddmissionForm() {
     student_previous_school,
     student_addmission_date,
     student_addmission_dateAndTime,
-    updatedAt,student_previous_student_id
+    updatedAt,
+    student_previous_student_id,
   } = stateObject;
 
   useEffect(() => {
@@ -84,6 +86,19 @@ export default function PrintAddmissionForm() {
         </h2>
 
         <div className="mx-auto">
+          <Image
+            src={url}
+            alt="uploadedImage"
+            style={{
+              width: "20%",
+              height: "auto",
+              alignSelf: "center",
+            }}
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="rounded-2 mx-auto text-center"
+          />
           <div className="d-flex justify-content-around my-1 timesFont">
             <h5>
               Application Form No.:{" "}
@@ -367,7 +382,6 @@ export default function PrintAddmissionForm() {
           )}
           {student_previous_class !== "" && (
             <div className="d-flex justify-content-around my-1">
-              
               <h5>
                 ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি:{" "}
                 <span

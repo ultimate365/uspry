@@ -10,6 +10,13 @@ import {
 } from "../../modules/calculatefunctions";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+  deleteObject,
+} from "firebase/storage";
+import { storage } from "../../context/FirbaseContext";
 import { firestore } from "../../context/FirbaseContext";
 import {
   getDoc,
@@ -28,13 +35,20 @@ import { useRouter } from "next/navigation";
 import { SCHOOLNAME, classWiseAge } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import Image from "next/image";
 export default function Admission() {
   const { setStateObject, setApplicationFormState, applicationFormState } =
     useGlobalContext();
   const router = useRouter();
   const [admissionID, setAdmissionID] = useState("");
+  const [file, setFile] = useState({});
+  const [src, setSrc] = useState(null);
+  const [showPercent, setShowPercent] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [inputField, setInputField] = useState({
     id: "",
+    url: "",
+    photoName: "",
     student_beng_name: "",
     student_eng_name: "",
     father_beng_name: "",
@@ -65,6 +79,7 @@ export default function Admission() {
     student_addmission_dateAndTime: Date.now(),
   });
   const [errInputField, setErrInputField] = useState({
+    student_photo: "",
     student_beng_name: "",
     student_eng_name: "",
     father_beng_name: "",
@@ -102,6 +117,8 @@ export default function Admission() {
   const [admissionStatus, setAdmissionStatus] = useState(false);
   const [searchedApplicationNo, setSearchedApplicationNo] = useState({
     id: "",
+    url: "",
+    photoName: "",
     student_beng_name: "",
     student_eng_name: "",
     father_beng_name: "",
@@ -132,6 +149,8 @@ export default function Admission() {
   });
   const [searchedOrgApplicationNo, setSearchedOrgApplicationNo] = useState({
     id: "",
+    url: "",
+    photoName: "",
     student_beng_name: "",
     student_eng_name: "",
     father_beng_name: "",
@@ -166,6 +185,7 @@ export default function Admission() {
   const validForm = () => {
     let formIsValid = true;
     setErrInputField({
+      student_photo: "",
       student_beng_name: "",
       student_eng_name: "",
       father_beng_name: "",
@@ -189,6 +209,13 @@ export default function Admission() {
       student_previous_school: "",
       student_previous_student_id: "",
     });
+    if (src === null) {
+      formIsValid = false;
+      setErrInputField((prevState) => ({
+        ...prevState,
+        student_photo: "দয়া করে ছাত্র/ছাত্রীর ফটো সিলেক্ট করুন",
+      }));
+    }
     if (inputField.student_beng_name === "") {
       formIsValid = false;
       setErrInputField((prevState) => ({
@@ -389,102 +416,134 @@ export default function Admission() {
       try {
         setLoader(true);
         const genID = await getAdmission();
-        const entry = {
-          id: genID,
-          student_beng_name: inputField.student_beng_name,
-          student_eng_name: inputField.student_eng_name.toUpperCase(),
-          father_beng_name: inputField.father_beng_name,
-          father_eng_name: inputField.father_eng_name.toUpperCase(),
-          mother_beng_name: inputField.mother_beng_name,
-          mother_eng_name: inputField.mother_eng_name.toUpperCase(),
-          guardian_beng_name: inputField.guardian_beng_name,
-          guardian_eng_name: inputField.guardian_eng_name.toUpperCase(),
-          student_birthday: inputField.student_birthday,
-          student_gender: inputField.student_gender,
-          student_mobile: inputField.student_mobile,
-          student_aadhaar: inputField.student_aadhaar,
-          student_religion: inputField.student_religion,
-          student_race: inputField.student_race,
-          student_bpl_status: inputField.student_bpl_status,
-          student_bpl_number: inputField.student_bpl_number,
-          student_village: inputField.student_village.toUpperCase(),
-          student_post_office: inputField.student_post_office.toUpperCase(),
-          student_police_station:
-            inputField.student_police_station.toUpperCase(),
-          student_pin_code: inputField.student_pin_code,
-          student_addmission_class: inputField.student_addmission_class,
-          student_previous_class: inputField.student_previous_class,
-          student_previous_class_year: inputField.student_previous_class_year,
-          student_previous_school:
-            inputField.student_previous_school.toUpperCase(),
-          student_previous_student_id: inputField.student_previous_student_id,
-          student_addmission_date: todayInString(),
-          student_addmission_year: new Date().getFullYear(),
-          student_addmission_dateAndTime: Date.now(),
-        };
-        await setDoc(doc(firestore, "admission", genID), entry)
-          .then(() => {
-            setLoader(false);
-            toast.success(
-              "Congrats! Form Has Been Submitted to Us Successfully!",
-              {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              }
+        const filestorageRef = ref(
+          storage,
+          `/studentImages/${genID + "-" + file.name}`
+        );
+        const uploadTask = uploadBytesResumable(filestorageRef, file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            setShowPercent(true);
+            const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             );
-            setFormSubmitted(true);
-            setShowForm(false);
-            setStateObject(entry);
-            setInputField({
-              id: "",
-              student_beng_name: "",
-              student_eng_name: "",
-              father_beng_name: "",
-              father_eng_name: "",
-              mother_beng_name: "",
-              mother_eng_name: "",
-              guardian_beng_name: "",
-              guardian_eng_name: "",
-              student_birthday: `01-01-${new Date().getFullYear() - 5}`,
-              student_gender: "",
-              student_mobile: "",
-              student_aadhaar: "",
-              student_religion: "",
-              student_race: "GENERAL",
-              student_bpl_status: "NO",
-              student_bpl_number: "",
-              student_village: "SEHAGORI",
-              student_post_office: "KHOROP",
-              student_police_station: "JOYPUR",
-              student_pin_code: "711401",
-              student_addmission_class: "PRE PRIMARY",
-              student_previous_class: "FIRST TIME ADDMISSION",
-              student_previous_class_year: "",
-              student_previous_school: "",
-              student_previous_student_id: "",
-              student_addmission_date: todayInString(),
-              student_addmission_dateAndTime: Date.now(),
-            });
-          })
 
-          .catch((error) => {
-            setLoader(false);
-            toast.error("Something went Wrong", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
+            // // update progress
+            setProgress(percent);
+          },
+          (err) => console.log(err),
+          () => {
+            // download url
+            getDownloadURL(uploadTask.snapshot.ref).then(async (photourl) => {
+              // console.log(url);
+
+              const entry = {
+                id: genID,
+                url: photourl,
+                photoName: `${genID + "-" + file.name}`,
+                student_beng_name: inputField.student_beng_name,
+                student_eng_name: inputField.student_eng_name.toUpperCase(),
+                father_beng_name: inputField.father_beng_name,
+                father_eng_name: inputField.father_eng_name.toUpperCase(),
+                mother_beng_name: inputField.mother_beng_name,
+                mother_eng_name: inputField.mother_eng_name.toUpperCase(),
+                guardian_beng_name: inputField.guardian_beng_name,
+                guardian_eng_name: inputField.guardian_eng_name.toUpperCase(),
+                student_birthday: inputField.student_birthday,
+                student_gender: inputField.student_gender,
+                student_mobile: inputField.student_mobile,
+                student_aadhaar: inputField.student_aadhaar,
+                student_religion: inputField.student_religion,
+                student_race: inputField.student_race,
+                student_bpl_status: inputField.student_bpl_status,
+                student_bpl_number: inputField.student_bpl_number,
+                student_village: inputField.student_village.toUpperCase(),
+                student_post_office:
+                  inputField.student_post_office.toUpperCase(),
+                student_police_station:
+                  inputField.student_police_station.toUpperCase(),
+                student_pin_code: inputField.student_pin_code,
+                student_addmission_class: inputField.student_addmission_class,
+                student_previous_class: inputField.student_previous_class,
+                student_previous_class_year:
+                  inputField.student_previous_class_year,
+                student_previous_school:
+                  inputField.student_previous_school.toUpperCase(),
+                student_previous_student_id:
+                  inputField.student_previous_student_id,
+                student_addmission_date: todayInString(),
+                student_addmission_year: new Date().getFullYear(),
+                student_addmission_dateAndTime: Date.now(),
+              };
+              await setDoc(doc(firestore, "admission", genID), entry)
+                .then(() => {
+                  setLoader(false);
+                  toast.success(
+                    "Congrats! Form Has Been Submitted to Us Successfully!",
+                    {
+                      position: "top-right",
+                      autoClose: 1500,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: "light",
+                    }
+                  );
+                  setFormSubmitted(true);
+                  setShowForm(false);
+                  setStateObject(entry);
+                  setInputField({
+                    id: "",
+                    url: "",
+                    photoName: "",
+                    student_beng_name: "",
+                    student_eng_name: "",
+                    father_beng_name: "",
+                    father_eng_name: "",
+                    mother_beng_name: "",
+                    mother_eng_name: "",
+                    guardian_beng_name: "",
+                    guardian_eng_name: "",
+                    student_birthday: `01-01-${new Date().getFullYear() - 5}`,
+                    student_gender: "",
+                    student_mobile: "",
+                    student_aadhaar: "",
+                    student_religion: "",
+                    student_race: "GENERAL",
+                    student_bpl_status: "NO",
+                    student_bpl_number: "",
+                    student_village: "SEHAGORI",
+                    student_post_office: "KHOROP",
+                    student_police_station: "JOYPUR",
+                    student_pin_code: "711401",
+                    student_addmission_class: "PRE PRIMARY",
+                    student_previous_class: "FIRST TIME ADDMISSION",
+                    student_previous_class_year: "",
+                    student_previous_school: "",
+                    student_previous_student_id: "",
+                    student_addmission_date: todayInString(),
+                    student_addmission_dateAndTime: Date.now(),
+                  });
+                })
+
+                .catch((error) => {
+                  setLoader(false);
+                  toast.error("Something went Wrong", {
+                    position: "top-right",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                  console.log(error);
+                });
             });
-            console.log(error);
-          });
+          }
+        );
       } catch (e) {
         setLoader(false);
         toast.error("Something went Wrong", {
@@ -597,6 +656,8 @@ export default function Admission() {
 
   const [editInputField, setEditInputField] = useState({
     id: "",
+    url: "",
+    photoName: "",
     student_beng_name: "",
     student_eng_name: "",
     father_beng_name: "",
@@ -677,6 +738,8 @@ export default function Admission() {
               setLoader(false);
               setEditInputField({
                 id: "",
+                url: "",
+                photoName: "",
                 student_beng_name: "",
                 student_eng_name: "",
                 father_beng_name: "",
@@ -940,10 +1003,12 @@ export default function Admission() {
     return formIsValid;
   };
 
-  const delEntry = async (id) => {
+  const delEntry = async (entry) => {
     setLoader(true);
-    await deleteDoc(doc(firestore, "admission", id))
-      .then(() => {
+    await deleteDoc(doc(firestore, "admission", entry.id))
+      .then(async () => {
+        const desertRef = ref(storage, `studentImages/${entry.photoName}`);
+        await deleteObject(desertRef);
         toast.success("You Application Deleted successfully");
         setShowSearchedResult(false);
         setLoader(false);
@@ -1033,6 +1098,49 @@ export default function Admission() {
               autoComplete="off"
               onSubmit={submitData}
             >
+              <div className="mb-3 col-md-4">
+                <label htmlFor="aplicationNo" className="form-label">
+                  ছাত্র/ছাত্রীর ফটো সিলেক্ট করুন
+                </label>
+                <input
+                  type="file"
+                  id="student_img"
+                  className="form-control mb-3 mx-auto"
+                  onChange={(e) => {
+                    setFile(e.target.files[0]);
+                    setSrc(URL.createObjectURL(e.target.files[0]));
+                  }}
+                />
+                {src && (
+                  <Image
+                    src={src}
+                    alt="uploadedImage"
+                    style={{
+                      width: "20%",
+                      height: "auto",
+                    }}
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    className="rounded-2"
+                  />
+                )}
+                {errInputField.student_photo.length > 0 && (
+                  <span className="error">{errInputField.student_photo}</span>
+                )}
+                {showPercent && (
+                  <div
+                    className="progress-bar my-2"
+                    style={{
+                      width: progress + "%",
+                      height: "15px",
+                      backgroundColor: "purple",
+                      borderRadius: "10px",
+                      transformOrigin: "start",
+                    }}
+                  ></div>
+                )}
+              </div>
               <div className="mb-3 col-md-4">
                 <label className="form-label">ছাত্র/ছাত্রীর বাংলায় নাম*</label>
                 <input
@@ -1639,6 +1747,8 @@ export default function Admission() {
                   onClick={() => {
                     setInputField({
                       id: "",
+                      url: "",
+                      photoName: "",
                       student_beng_name: "",
                       student_eng_name: "",
                       father_beng_name: "",
@@ -1667,8 +1777,11 @@ export default function Admission() {
                       student_addmission_date: todayInString(),
                       student_addmission_dateAndTime: Date.now(),
                     });
+                    setFile({});
+                    setSrc(null);
                     if (typeof window !== undefined) {
                       document.getElementById("student_gender").value = "";
+                      document.getElementById("student_img").value = "";
                       document.getElementById("student_birthday").value = `${
                         new Date().getFullYear() - 5
                       }-01-01`;
@@ -1813,116 +1926,147 @@ export default function Admission() {
       )}
       {showSearchedResult && (
         <div className="container">
-          <table
-            className="table table-bordered table-striped border-black border-1 my-4 p-4"
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
             style={{
-              border: "1px solid",
               width: "100%",
               overflowX: "scroll",
               flexWrap: "wrap",
             }}
           >
-            <thead>
-              <th style={{ border: "1px solid black" }}>Application No.</th>
-              <th style={{ border: "1px solid black" }}>ছাত্র/ছাত্রীর নাম</th>
-              <th style={{ border: "1px solid black" }}>পিতার নাম</th>
-              <th style={{ border: "1px solid black" }}>
-                ফর্ম জমা দেওয়ার তারিখ
-              </th>
-              <th style={{ border: "1px solid black" }}>Action</th>
-            </thead>
-            <tbody style={{ verticalAlign: "center" }}>
-              <td className="p-2" style={{ border: "1px solid black" }}>
-                {searchedApplicationNo?.id}
-              </td>
-              <td className="p-2" style={{ border: "1px solid black" }}>
-                {searchedApplicationNo?.student_eng_name}
-              </td>
-              <td className="p-2" style={{ border: "1px solid black" }}>
-                {searchedApplicationNo?.father_eng_name}
-              </td>
-              <td className="p-2" style={{ border: "1px solid black" }}>
-                {DateValueToSring(
-                  searchedApplicationNo?.student_addmission_dateAndTime
-                )}
-              </td>
-              <td className="p-2" suppressHydrationWarning={true}>
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-success btn-sm m-2"
-                    onClick={() => {
-                      setStateObject(searchedApplicationNo);
-                      router.push("/printAdmissionForm");
+            <Image
+              src={searchedApplicationNo?.url}
+              alt="uploadedImage"
+              style={{
+                width: "20%",
+                height: "auto",
+                alignSelf: "center",
+              }}
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="rounded-2 mx-auto text-center"
+            />
+            <table
+              className="table table-bordered table-striped border-black border-1 my-4 p-4"
+              style={{
+                border: "1px solid",
+                width: "100%",
+                overflowX: "scroll",
+                flexWrap: "wrap",
+              }}
+            >
+              <thead>
+                <th style={{ border: "1px solid black" }}>Application No.</th>
+                <th style={{ border: "1px solid black" }}>ছাত্র/ছাত্রীর নাম</th>
+                <th style={{ border: "1px solid black" }}>পিতার নাম</th>
+                <th style={{ border: "1px solid black" }}>
+                  ফর্ম জমা দেওয়ার তারিখ
+                </th>
+                <th style={{ border: "1px solid black" }}>Action</th>
+              </thead>
+              <tbody style={{ verticalAlign: "center" }}>
+                <td className="p-2" style={{ border: "1px solid black" }}>
+                  {searchedApplicationNo?.id}
+                </td>
+                <td className="p-2" style={{ border: "1px solid black" }}>
+                  {searchedApplicationNo?.student_eng_name}
+                </td>
+                <td className="p-2" style={{ border: "1px solid black" }}>
+                  {searchedApplicationNo?.father_eng_name}
+                </td>
+                <td className="p-2" style={{ border: "1px solid black" }}>
+                  {DateValueToSring(
+                    searchedApplicationNo?.student_addmission_dateAndTime
+                  )}
+                </td>
+                <td className="p-2" suppressHydrationWarning={true}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      width: 150,
                     }}
                   >
-                    View
-                  </button>
-
-                  {searchedApplicationNo?.id != undefined && (
-                    <PDFDownloadLink
-                      document={
-                        <CompDownloadAdmissionForm
-                          data={searchedApplicationNo}
-                        />
-                      }
-                      fileName={`Apllication Form of ${searchedApplicationNo?.student_eng_name}.pdf`}
-                      style={{
-                        textDecoration: "none",
-                        padding: "10px",
-                        color: "#fff",
-                        backgroundColor: "navy",
-                        border: "1px solid #4a4a4a",
-                        width: "40%",
-                        borderRadius: 10,
+                    <button
+                      type="button"
+                      className="btn btn-success btn-sm m-2"
+                      onClick={() => {
+                        setStateObject(searchedApplicationNo);
+                        router.push("/printAdmissionForm");
                       }}
                     >
-                      {({ blob, url, loading, error }) =>
-                        loading ? "Loading..." : "Download"
-                      }
-                    </PDFDownloadLink>
-                  )}
-                  <button
-                    type="button"
-                    className="btn btn-warning btn-sm m-2"
-                    onClick={() => {
-                      setEditInputField(searchedApplicationNo);
-                      setSearchedOrgApplicationNo(searchedApplicationNo);
-                      setShowEditForm(true);
-                      setShowSearchedResult(false);
-                      setShowUpdateForm(false);
-                      if (typeof window !== "undefined") {
-                        setTimeout(() => {
-                          document.getElementById("student_birthday").value =
-                            getCurrentDateInput(
-                              searchedApplicationNo?.student_birthday
-                            );
-                        }, 500);
-                      }
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger btn-sm m-2"
-                    onClick={() => {
-                      // eslint-disable-next-line no-alert
-                      if (
-                        window.confirm(
-                          "Are you sure, you want to delete your Application?"
-                        )
-                      ) {
-                        delEntry(searchedApplicationNo?.id);
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tbody>
-          </table>
+                      View
+                    </button>
+
+                    {searchedApplicationNo?.id != undefined && (
+                      <PDFDownloadLink
+                        document={
+                          <CompDownloadAdmissionForm
+                            data={searchedApplicationNo}
+                          />
+                        }
+                        fileName={`Apllication Form of ${searchedApplicationNo?.student_eng_name}.pdf`}
+                        style={{
+                          textDecoration: "none",
+                          padding: "10px",
+                          color: "#fff",
+                          backgroundColor: "navy",
+                          border: "1px solid #4a4a4a",
+                          width: "60%",
+                          borderRadius: 10,
+                          fontSize: "12px",
+                        }}
+                      >
+                        {({ blob, url, loading, error }) =>
+                          loading ? "Loading..." : "Download"
+                        }
+                      </PDFDownloadLink>
+                    )}
+                    <button
+                      type="button"
+                      className="btn btn-warning btn-sm m-2"
+                      onClick={() => {
+                        setEditInputField(searchedApplicationNo);
+                        setSearchedOrgApplicationNo(searchedApplicationNo);
+                        setShowEditForm(true);
+                        setShowSearchedResult(false);
+                        setShowUpdateForm(false);
+                        if (typeof window !== "undefined") {
+                          setTimeout(() => {
+                            document.getElementById("student_birthday").value =
+                              getCurrentDateInput(
+                                searchedApplicationNo?.student_birthday
+                              );
+                          }, 500);
+                        }
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm m-2"
+                      onClick={() => {
+                        // eslint-disable-next-line no-alert
+                        if (
+                          window.confirm(
+                            "Are you sure, you want to delete your Application?"
+                          )
+                        ) {
+                          delEntry(searchedApplicationNo);
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
       {showEditForm && (
@@ -2553,6 +2697,8 @@ export default function Admission() {
                   onClick={() => {
                     setEditInputField({
                       id: "",
+                      url: "",
+                      photoName: "",
                       student_beng_name: "",
                       student_eng_name: "",
                       father_beng_name: "",
