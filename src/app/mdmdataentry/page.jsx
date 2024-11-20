@@ -199,27 +199,24 @@ export default function MDMData() {
     if (validForm()) {
       setLoader(true);
       try {
-        const docRef = doc(firestore, "mdmData", docId);
-        await updateDoc(docRef, {
+        await setDoc(doc(firestore, "mdmData", docId), {
           pp: parseInt(pp),
           pry: parseInt(pry),
           date: docId,
+          id: docId,
         })
           .then(() => {
             toast.success("Data updated successfully");
             let x = [];
-            x = allEnry.map((entry) => {
-              if (entry.date === docId) {
-                return {
-                  pp: parseInt(pp),
-                  pry: parseInt(pry),
-                  date: docId,
-                  id: docId,
-                };
-              } else {
-                return entry;
-              }
-            });
+            x = allEnry.filter((entry) => entry.id !== docId);
+            x = [
+              ...x,
+              { pp: parseInt(pp), pry: parseInt(pry), date: docId, id: docId },
+            ].sort(
+              (a, b) =>
+                Date.parse(getCurrentDateInput(a.date)) -
+                Date.parse(getCurrentDateInput(b.date))
+            );
             setAllEnry(x);
             setMealState(x);
             setPp("");
