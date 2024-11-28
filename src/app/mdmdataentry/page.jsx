@@ -4,6 +4,7 @@ import {
   PP_STUDENTS,
   PRIMARY_STUDENTS,
   SCHOOLNAME,
+  PREV_MDM_COST,
 } from "@/modules/constants";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -62,7 +63,8 @@ export default function MDMData() {
   const [filteredData, setFilteredData] = useState([]);
   const [moreFilteredData, setMoreFilteredData] = useState([]);
   const [monthlyReportData, setMonthlyReportData] = useState([]);
-
+  const [thisMonthMDMAllowance, setThisMonthMDMAllowance] =
+    useState(PREV_MDM_COST);
   const [ppTotalMeal, setPpTotalMeal] = useState("");
   const [pryTotalMeal, setPryTotalMeal] = useState("");
   const [showMonthSelection, setShowMonthSelection] = useState(false);
@@ -473,9 +475,21 @@ export default function MDMData() {
     setTotalRiceGiven(riceGiven);
     let ppTotal = 0;
     let pryTotal = 0;
+    let ppCost = 0;
+    let pryCost = 0;
     x.map((entry) => {
       ppTotal += entry.pp;
       pryTotal += entry.pry;
+      const entryMonth = entry.date.split("-")[1];
+      if (parseInt(selectedYear) <= 2024 && parseInt(entryMonth) <= 11) {
+        ppCost += ppCost * PREV_MDM_COST;
+        pryCost += pryCost * PREV_MDM_COST;
+        setThisMonthMDMAllowance(PREV_MDM_COST);
+      } else {
+        ppCost += ppCost * MDM_COST;
+        pryCost += pryCost * MDM_COST;
+        setThisMonthMDMAllowance(MDM_COST);
+      }
     });
     setPpTotalMeal(ppTotal);
     setPryTotalMeal(pryTotal);
@@ -483,13 +497,11 @@ export default function MDMData() {
     setMonthToSubmit(month.monthName);
     setMonthWorkingDays(x.length);
     setMonthPPTotal(ppTotal);
-    setMonthlyPPCost(Math.round(ppTotal * MDM_COST));
     setMonthPRYTotal(pryTotal);
-    setThisMonthTotalCost(Math.round((ppTotal + pryTotal) * MDM_COST));
-    setMonthlyPRYCost(
-      Math.round((ppTotal + pryTotal) * MDM_COST) -
-        Math.round(ppTotal * MDM_COST)
-    );
+
+    setMonthlyPPCost(Math.round(ppCost));
+    setThisMonthTotalCost(Math.round(ppCost + pryCost));
+    setMonthlyPRYCost(Math.round(pryCost));
     setMonthRiceOB(thisMonthRiceData[0]?.riceOB);
     setMonthRiceCB(thisMonthRiceData[0]?.riceCB);
     setMonthRiceGiven(riceGiven);
@@ -1225,7 +1237,7 @@ export default function MDMData() {
                       </p>
                       <p style={{ margin: 0, padding: 0 }}>
                         MDM Cost ={" "}
-                        {`${ppTotalMeal} X ₹ ${MDM_COST} + ${pryTotalMeal} X ₹${MDM_COST} = `}
+                        {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} + ${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}
                         ₹ {IndianFormat(thisMonthTotalCost)}
                       </p>
                       <p style={{ margin: 0, padding: 0 }}>

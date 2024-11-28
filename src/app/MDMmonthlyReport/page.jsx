@@ -13,6 +13,7 @@ import {
   TOTAL_STUDENTS,
   UDISE_CODE,
   WARD_NO,
+  PREV_MDM_COST,
 } from "@/modules/constants";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -147,7 +148,8 @@ export default function MDMmonthlyReport() {
       openingBalance: "",
       closingBalance: "",
     });
-
+  const [thisMonthMDMAllowance, setThisMonthMDMAllowance] =
+    useState(PREV_MDM_COST);
   const [balRCPrevMonth, setBalRCPrevMonth] = useState(0);
   const [balRCThisMonth, setBalRCThisMonth] = useState(0);
   const [pryRCThisMonth, setPryRCThisMonth] = useState(0);
@@ -264,6 +266,17 @@ export default function MDMmonthlyReport() {
         }
 
         const thisMonthName = entry.month;
+        let thisMonthsIndex = months.indexOf(thisMonthName) + 1;
+        if (thisMonthsIndex <= 9) {
+          thisMonthsIndex = "0" + thisMonthsIndex;
+        } else {
+          thisMonthsIndex = thisMonthsIndex;
+        }
+        if (parseInt(selectedYear) <= 2024 && thisMonthsIndex <= 11) {
+          setThisMonthMDMAllowance(PREV_MDM_COST);
+        } else {
+          setThisMonthMDMAllowance(MDM_COST);
+        }
         const prevMonthName = months[months.indexOf(thisMonthName) - 1];
         const creditTrPrevMonth = selectedYearTransactions
           .filter((trmonth) => trmonth.month === prevMonthName)
@@ -563,6 +576,7 @@ export default function MDMmonthlyReport() {
                     balRCPrevMonth: balRCPrevMonth,
                     pryRCPrevMonth: pryRCPrevMonth,
                     remarks: remarks,
+                    mdmCost: thisMonthMDMAllowance,
                   }}
                 />
               }
@@ -578,7 +592,9 @@ export default function MDMmonthlyReport() {
               }}
             >
               {({ blob, url, loading, error }) =>
-                loading ? "Loading..." : `Download ${thisMonthlyData.id} MDM Return PDF`
+                loading
+                  ? "Loading..."
+                  : `Download ${thisMonthlyData.id} MDM Return PDF`
               }
             </PDFDownloadLink>
             <button
@@ -2673,12 +2689,14 @@ export default function MDMmonthlyReport() {
                           {thisMonthlyData?.ppTotal}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          ₹ {MDM_COST}
+                          ₹ {thisMonthMDMAllowance}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData?.ppTotal} × ₹ {MDM_COST} = ₹{" "}
-                          {/* {thisMonthlyData?.monthlyPPCost} */}
-                          {Math.round(thisMonthlyData?.ppTotal * MDM_COST)}
+                          {thisMonthlyData?.ppTotal} × ₹ {thisMonthMDMAllowance}{" "}
+                          = ₹ {/* {thisMonthlyData?.monthlyPPCost} */}
+                          {Math.round(
+                            thisMonthlyData?.ppTotal * thisMonthMDMAllowance
+                          )}
                         </td>
                       </tr>
                       <tr>
@@ -2692,12 +2710,15 @@ export default function MDMmonthlyReport() {
                           {thisMonthlyData?.pryTotal}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          ₹ {MDM_COST}
+                          ₹ {thisMonthMDMAllowance}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData?.pryTotal} × ₹ {MDM_COST} = ₹{" "}
+                          {thisMonthlyData?.pryTotal} × ₹{" "}
+                          {thisMonthMDMAllowance} = ₹{" "}
                           {/* {thisMonthlyData?.monthlyPRYCost} */}
-                          {Math.round(thisMonthlyData?.pryTotal * MDM_COST)}
+                          {Math.round(
+                            thisMonthlyData?.pryTotal * thisMonthMDMAllowance
+                          )}
                         </td>
                       </tr>
                     </tbody>

@@ -17,7 +17,6 @@ import {
   BLOCK,
   CCH_NAME,
   DIST,
-  MDM_COST,
   NGO_SHG,
   PP_STUDENTS,
   PRIMARY_BOYS,
@@ -45,6 +44,7 @@ export default function MDMPrint({ data }) {
     balRCPrevMonth,
     pryRCPrevMonth,
     remarks,
+    mdmCost,
   } = data;
   // const screenSize = useScreenSize();
   //   const { width, height } = screenSize;
@@ -2279,13 +2279,13 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text2}>{thisMonthlyData?.ppTotal}</Text>
             </View>
             <View style={styles.view20Sec}>
-              <Text style={styles.text2}>₹ {MDM_COST}</Text>
+              <Text style={styles.text2}>₹ {mdmCost}</Text>
             </View>
             <View style={[styles.view20Sec, { borderRightWidth: 0 }]}>
               <Text style={styles.text2}>
-                {thisMonthlyData?.ppTotal} × ₹ {MDM_COST} = ₹{" "}
+                {thisMonthlyData?.ppTotal} × ₹ {mdmCost} = ₹{" "}
                 {/* {thisMonthlyData?.monthlyPPCost} */}
-                {Math.round(thisMonthlyData?.ppTotal * MDM_COST)}
+                {Math.round(thisMonthlyData?.ppTotal * mdmCost)}
               </Text>
             </View>
           </View>
@@ -2300,13 +2300,13 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text2}>{thisMonthlyData?.pryTotal}</Text>
             </View>
             <View style={styles.view20Sec}>
-              <Text style={styles.text2}>₹ {MDM_COST}</Text>
+              <Text style={styles.text2}>₹ {mdmCost}</Text>
             </View>
             <View style={[styles.view20Sec, { borderRightWidth: 0 }]}>
               <Text style={styles.text2}>
-                {thisMonthlyData?.pryTotal} × ₹ {MDM_COST} = ₹{" "}
+                {thisMonthlyData?.pryTotal} × ₹ {mdmCost} = ₹{" "}
                 {/* {thisMonthlyData?.monthlyPPCost} */}
-                {Math.round(thisMonthlyData?.pryTotal * MDM_COST)}
+                {Math.round(thisMonthlyData?.pryTotal * mdmCost)}
               </Text>
             </View>
           </View>

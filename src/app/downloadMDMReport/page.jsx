@@ -26,6 +26,7 @@ export default function Page() {
     balRCPrevMonth,
     pryRCPrevMonth,
     remarks,
+    mdmCost,
   } = data;
   useEffect(() => {
     console.log(data);
@@ -47,6 +48,7 @@ export default function Page() {
                 balRCPrevMonth: balRCPrevMonth,
                 pryRCPrevMonth: pryRCPrevMonth,
                 remarks: remarks,
+                mdmCost: mdmCost,
               }}
             />
           }
