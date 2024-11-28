@@ -76,6 +76,7 @@ export default function MDMData() {
   const [riceData, setRiceData] = useState([]);
   const [filteredRiceData, setFilteredRiceData] = useState([]);
   const [riceOB, setRiceOB] = useState("");
+  const [riceCB, setRiceCB] = useState("");
   const [ricePPOB, setRicePPOB] = useState("");
   const [ricePPRC, setRicePPRC] = useState("");
   const [ricePPEX, setRicePPEX] = useState("");
@@ -88,7 +89,6 @@ export default function MDMData() {
   const [totalRiceGiven, setTotalRiceGiven] = useState("");
   const [riceExpend, setRiceExpend] = useState("");
   const [errRice, setErrRice] = useState("");
-  const [showRiceBalance, setShowRiceBalance] = useState(false);
   const [showSubmitMonthlyReport, setShowSubmitMonthlyReport] = useState(false);
   const [remarks, setRemarks] = useState("");
   const [monthToSubmit, setMonthToSubmit] = useState("");
@@ -318,6 +318,10 @@ export default function MDMData() {
   const findRiceEntry = (array) => {
     if (array.filter((el) => el?.id === todayInString()).length > 0) {
       setRiceDone(true);
+      setRiceOB(array[array.length - 1].riceOB);
+      setRiceCB(array[array.length - 1].riceCB);
+      setRiceExpend(array[array.length - 1].riceExpend);
+      setRiceGiven(array[array.length - 1].riceGiven);
     } else {
       setRiceDone(false);
     }
@@ -523,7 +527,7 @@ export default function MDMData() {
         riceOB: riceOB,
         riceGiven: riceGiven === "" ? 0 : riceGiven,
         riceExpend: riceExpend,
-        riceCB: riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend,
+        riceCB: riceCB,
       })
         .then(() => {
           toast.success("Rice Data added successfully");
@@ -538,7 +542,7 @@ export default function MDMData() {
               riceOB: riceOB,
               riceGiven: riceGiven === "" ? 0 : riceGiven,
               riceExpend: riceExpend,
-              riceCB: riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend,
+              riceCB: riceCB,
             },
           ].sort(
             (a, b) =>
@@ -1694,6 +1698,27 @@ export default function MDMData() {
             <h4 className="m-2 text-success">Rice Balance {riceOB} Kg.</h4>
 
             <div className="form-group m-2 col-md-4 mx-auto">
+              <label className="m-2">Rice Opening Balance (in Kg.)</label>
+              <input
+                type="number"
+                className="form-control "
+                placeholder={`Enter Rice Opening Balance`}
+                value={riceOB}
+                onChange={(e) => {
+                  if (e.target.value !== "") {
+                    setRiceOB(parseInt(e.target.value));
+                    setRiceCB(
+                      parseInt(e.target.value) +
+                        (riceGiven === "" ? 0 : riceGiven) -
+                        (riceExpend === "" ? 0 : riceExpend)
+                    );
+                  } else {
+                    setRiceOB("");
+                  }
+                }}
+              />
+            </div>
+            <div className="form-group m-2 col-md-4 mx-auto">
               <label className="m-2">Rice Expenditure (in Kg.)</label>
               <input
                 type="number"
@@ -1703,10 +1728,13 @@ export default function MDMData() {
                 onChange={(e) => {
                   if (e.target.value !== "") {
                     setRiceExpend(parseInt(e.target.value));
-                    setShowRiceBalance(true);
+                    setRiceCB(
+                      riceOB -
+                        (riceGiven === "" ? 0 : riceGiven) -
+                        parseInt(text)
+                    );
                   } else {
                     setRiceExpend("");
-                    setShowRiceBalance(false);
                   }
                 }}
               />
@@ -1717,26 +1745,41 @@ export default function MDMData() {
               <input
                 type="number"
                 className="form-control "
-                placeholder={`Enter Rice Received`}
+                placeholder={`Enter Rice Received (in Kg.)`}
                 value={riceGiven}
                 onChange={(e) => {
                   if (e.target.value !== "") {
                     setRiceGiven(parseInt(e.target.value));
+                    setRiceCB(riceOB + parseInt(e.target.value) - riceExpend);
                   } else {
                     setRiceGiven("");
+                    setRiceCB(riceOB - riceExpend);
                   }
                 }}
               />
             </div>
-            {showRiceBalance && (
-              <h4 className="text-info m-2">
-                Closing Balance{" "}
-                {riceOB + (riceGiven === "" ? 0 : riceGiven) - riceExpend} Kg.
-              </h4>
-            )}
+            <div className="form-group m-2 col-md-4 mx-auto">
+              <label className="m-2">Rice Closing Balance (in Kg.)</label>
+              <input
+                type="number"
+                className="form-control "
+                placeholder={`Enter Rice Closing Balance (in Kg.)`}
+                value={riceCB}
+                onChange={(e) => {
+                  if (e.target.value !== "") {
+                    setRiceCB(parseInt(e.target.value));
+                  } else {
+                    setRiceCB("");
+                  }
+                }}
+              />
+            </div>
+
+            <h4 className="text-info m-2">Closing Balance {riceCB} Kg.</h4>
+
             <button
               type="submit"
-              className="btn btn-success"
+              className="btn btn-success m-2"
               onClick={(e) => {
                 e.preventDefault();
                 if (riceExpend === 0 || riceExpend === "") {
@@ -1749,6 +1792,15 @@ export default function MDMData() {
               }}
             >
               Submit
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger m-2"
+              onClick={() => {
+                setShowRiceData(false);
+              }}
+            >
+              Cancel
             </button>
           </form>
         </div>
