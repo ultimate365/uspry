@@ -475,22 +475,19 @@ export default function MDMData() {
     setTotalRiceGiven(riceGiven);
     let ppTotal = 0;
     let pryTotal = 0;
-    let ppCost = 0;
-    let pryCost = 0;
     x.map((entry) => {
       ppTotal += entry.pp;
       pryTotal += entry.pry;
-      const entryMonth = entry.date.split("-")[1];
-      if (parseInt(selectedYear) <= 2024 && parseInt(entryMonth) <= 11) {
-        ppCost += ppCost * PREV_MDM_COST;
-        pryCost += pryCost * PREV_MDM_COST;
-        setThisMonthMDMAllowance(PREV_MDM_COST);
-      } else {
-        ppCost += ppCost * MDM_COST;
-        pryCost += pryCost * MDM_COST;
-        setThisMonthMDMAllowance(MDM_COST);
-      }
     });
+    let mdmCost = PREV_MDM_COST;
+    const entryMonth = x[0]?.date.split("-")[1];
+    if (parseInt(selectedYear) <= 2024 && parseInt(entryMonth) <= 11) {
+      setThisMonthMDMAllowance(PREV_MDM_COST);
+      mdmCost = PREV_MDM_COST;
+    } else {
+      setThisMonthMDMAllowance(MDM_COST);
+      mdmCost = MDM_COST;
+    }
     setPpTotalMeal(ppTotal);
     setPryTotalMeal(pryTotal);
     setMonthYearID(`${month.monthName}-${selectedYear}`);
@@ -498,10 +495,12 @@ export default function MDMData() {
     setMonthWorkingDays(x.length);
     setMonthPPTotal(ppTotal);
     setMonthPRYTotal(pryTotal);
-
-    setMonthlyPPCost(Math.round(ppCost));
-    setThisMonthTotalCost(Math.round(ppCost + pryCost));
-    setMonthlyPRYCost(Math.round(pryCost));
+    setMonthlyPPCost(Math.round(ppTotal * mdmCost));
+    setThisMonthTotalCost(Math.round(ppTotal * mdmCost + pryTotal * mdmCost));
+    setMonthlyPRYCost(
+      Math.round(ppTotal * mdmCost + pryTotal * mdmCost) -
+        Math.round(ppTotal * mdmCost)
+    );
     setMonthRiceOB(thisMonthRiceData[0]?.riceOB);
     setMonthRiceCB(thisMonthRiceData[0]?.riceCB);
     setMonthRiceGiven(riceGiven);
