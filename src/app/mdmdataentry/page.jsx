@@ -313,6 +313,7 @@ export default function MDMData() {
     setRiceData(data);
     setRiceState(data);
     setRiceOB(data[data.length - 1].riceCB);
+    setRiceCB(data[data.length - 1].riceCB);
     findRiceEntry(data);
   };
   const findRiceEntry = (array) => {
@@ -823,6 +824,10 @@ export default function MDMData() {
           if (riceDone) {
             toast.error("Todays Rice Entry Already Done!");
           }
+          setRiceOB(riceState[riceState.length - 1].riceCB);
+          setRiceCB(riceState[riceState.length - 1].riceCB);
+          setRiceExpend("");
+          setRiceGiven("");
           setShowRiceData(true);
           setShowMonthlyReport(false);
           setShowDataTable(false);
@@ -1731,10 +1736,11 @@ export default function MDMData() {
                     setRiceCB(
                       riceOB -
                         (riceGiven === "" ? 0 : riceGiven) -
-                        parseInt(text)
+                        parseInt(e.target.value)
                     );
                   } else {
                     setRiceExpend("");
+                    setRiceCB(riceOB - (riceGiven === "" ? 0 : riceGiven));
                   }
                 }}
               />
