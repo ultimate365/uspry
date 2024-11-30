@@ -549,7 +549,7 @@ export default function Teachersreturn() {
                     <h5>ID:{entry?.id}</h5>
                     <h5>Year:{entry?.year}</h5>
                     <h5>Month:{entry?.month}</h5>
-                    <h5>InspectionDate:{entry?.inspectionDate}</h5>
+                    <h5>InspectionDate:{entry?.inspection?.inspectionDate}</h5>
                     <h5>WorkingDays:{entry?.workingDays}</h5>
                     <h5>Date:{entry?.date}</h5>
                     <h5>Remarks:{entry?.remarks}</h5>
@@ -1047,14 +1047,19 @@ export default function Teachersreturn() {
                                 workingDays:
                                   workingDays -
                                   parseInt(e.target.value) -
-                                  editTeacher.olThisMonth,
+                                  (editTeacher.olThisMonth
+                                    ? editTeacher.olThisMonth
+                                    : 0),
                               });
                             } else {
                               setEditTeacher({
                                 ...editTeacher,
                                 clThisMonth: "",
                                 workingDays:
-                                  workingDays - editTeacher.olThisMonth,
+                                  workingDays -
+                                  (editTeacher.olThisMonth
+                                    ? editTeacher.olThisMonth
+                                    : 0),
                               });
                             }
                           }}
@@ -1105,14 +1110,19 @@ export default function Teachersreturn() {
                                 workingDays:
                                   workingDays -
                                   parseInt(e.target.value) -
-                                  editTeacher.clThisMonth,
+                                  (editTeacher.clThisMonth
+                                    ? editTeacher.clThisMonth
+                                    : 0),
                               });
                             } else {
                               setEditTeacher({
                                 ...editTeacher,
                                 olThisMonth: "",
                                 workingDays:
-                                  workingDays - editTeacher.clThisMonth,
+                                  workingDays -
+                                  (editTeacher.clThisMonth
+                                    ? editTeacher.clThisMonth
+                                    : 0),
                               });
                             }
                           }}
