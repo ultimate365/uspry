@@ -1334,7 +1334,7 @@ export default function MDMData() {
                         <input
                           type="number"
                           className="form-control"
-                          placeholder={`Enter Total Working Days`}
+                          placeholder={`Enter Total PP Meals`}
                           value={monthPPTotal}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1350,7 +1350,7 @@ export default function MDMData() {
                         <input
                           type="number"
                           className="form-control"
-                          placeholder={`Enter Total Working Days`}
+                          placeholder={`Enter Total Primary Meals`}
                           value={monthPRYTotal}
                           onChange={(e) => {
                             if (e.target.value !== "") {
@@ -1398,7 +1398,7 @@ export default function MDMData() {
                         <input
                           type="number"
                           className="form-control"
-                          placeholder={`Enter Total Working Days`}
+                          placeholder={`Enter Total MDM Cost`}
                           value={monthTotalCost}
                           onChange={(e) => {
                             if (e.target.value !== "") {

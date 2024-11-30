@@ -159,7 +159,7 @@ export default function Transactions() {
     e.preventDefault();
     if (amount && purpose && type) {
       setLoader(true);
-      let y = purpose;
+      let y = `${id}-${purpose}`;
       let z = transactionState.filter((item) => item.id === y);
       if (z.length > 0) {
         y = y + `-${z.length}`;
