@@ -1781,7 +1781,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>{CCH_NAME.length}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>-</Text>
+              <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>-</Text>
