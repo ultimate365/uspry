@@ -189,6 +189,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/examSeat"
+              onClick={handleNavCollapse}
+            >
+              Exam Seat
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/userStudents"
               onClick={handleNavCollapse}
             >
