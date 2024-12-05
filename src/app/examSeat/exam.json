@@ -1,0 +1,295 @@
+[
+  {
+    "id": "student101",
+    "name": "SNEHA DAS",
+    "class": "PP",
+    "roll": 1
+  },
+  {
+    "id": "student102",
+    "name": "SHREYA MONDAL",
+    "class": "PP",
+    "roll": 2
+  },
+  {
+    "id": "student103",
+    "name": "ANNASA HAZRA",
+    "class": "PP",
+    "roll": 3
+  },
+  {
+    "id": "student104",
+    "name": "SHAHINI PRAMANICK",
+    "class": "PP",
+    "roll": 4
+  },
+  {
+    "id": "student105",
+    "name": "SK NASIMUDDIN",
+    "class": "PP",
+    "roll": 5
+  },
+  {
+    "id": "student106",
+    "name": "SK MASAD",
+    "class": "PP",
+    "roll": 6
+  },
+  {
+    "id": "student107",
+    "name": "ASMITA CHAKRABORTY",
+    "class": "CLASS I",
+    "roll": 1
+  },
+  {
+    "id": "student108",
+    "name": "DIYA DAS",
+    "class": "CLASS I",
+    "roll": 2
+  },
+  {
+    "id": "student109",
+    "name": "KRISH PARAMANICK",
+    "class": "CLASS I",
+    "roll": 3
+  },
+  {
+    "id": "student110",
+    "name": "RUNA KHATUN",
+    "class": "CLASS I",
+    "roll": 4
+  },
+  {
+    "id": "student111",
+    "name": "SOUMO ROY",
+    "class": "CLASS I",
+    "roll": 5
+  },
+  {
+    "id": "student112",
+    "name": "RIJU RAY",
+    "class": "CLASS I",
+    "roll": 6
+  },
+  {
+    "id": "student113",
+    "name": "SURAIYA KHATUN",
+    "class": "CLASS I",
+    "roll": 7
+  },
+  {
+    "id": "student114",
+    "name": "SUVO MAL",
+    "class": "CLASS I",
+    "roll": 8
+  },
+  {
+    "id": "student115",
+    "name": "REHANA KHATUN",
+    "class": "CLASS I",
+    "roll": 9
+  },
+  {
+    "id": "student116",
+    "name": "JULAKA KHATUN",
+    "class": "CLASS I",
+    "roll": 10
+  },
+  {
+    "id": "student117",
+    "name": "RAJ DOLUI",
+    "class": "CLASS I",
+    "roll": 11
+  },
+  {
+    "id": "student118",
+    "name": "SK INSAN",
+    "class": "CLASS I",
+    "roll": 12
+  },
+  {
+    "id": "student119",
+    "name": "ABHISHIKTA HAZRA",
+    "class": "CLASS II",
+    "roll": 1
+  },
+  {
+    "id": "student120",
+    "name": "ANGAN MONDAL",
+    "class": "CLASS II",
+    "roll": 2
+  },
+  {
+    "id": "student121",
+    "name": "AARADHYA METE",
+    "class": "CLASS II",
+    "roll": 3
+  },
+  {
+    "id": "student122",
+    "name": "DEBARGHA ROY",
+    "class": "CLASS II",
+    "roll": 4
+  },
+  {
+    "id": "student123",
+    "name": "SEKH YWASAIN",
+    "class": "CLASS II",
+    "roll": 5
+  },
+  {
+    "id": "student124",
+    "name": "DIBYANGAN ROY",
+    "class": "CLASS II",
+    "roll": 6
+  },
+  {
+    "id": "student125",
+    "name": "SAYAN MONDAL",
+    "class": "CLASS II",
+    "roll": 7
+  },
+  {
+    "id": "student126",
+    "name": "SURYA ADHIKARI",
+    "class": "CLASS II",
+    "roll": 8
+  },
+  {
+    "id": "student127",
+    "name": "SK.RAZIA AFREEN",
+    "class": "CLASS II",
+    "roll": 9
+  },
+  {
+    "id": "student128",
+    "name": "SK. ARIYAN",
+    "class": "CLASS II",
+    "roll": 10
+  },
+  {
+    "id": "student129",
+    "name": "ABIR MAKHAL",
+    "class": "CLASS II",
+    "roll": 11
+  },
+  {
+    "id": "student130",
+    "name": "NAMRATA MONDAL",
+    "class": "CLASS III",
+    "roll": 1,
+    "s6": 14
+  },
+  {
+    "id": "student131",
+    "name": "ARNA ROY",
+    "class": "CLASS III",
+    "roll": 2,
+    "s6": 16
+  },
+  {
+    "id": "student132",
+    "name": "PUROBI PRAMANICK",
+    "class": "CLASS III",
+    "roll": 3,
+    "s6": 15
+  },
+  {
+    "id": "student133",
+    "name": "RITIKA DAS",
+    "class": "CLASS III",
+    "roll": 4,
+    "s6": 19
+  },
+  {
+    "id": "student134",
+    "name": "SHUVOSHREE HAZRA",
+    "class": "CLASS III",
+    "roll": 5,
+    "s6": 17
+  },
+  {
+    "id": "student135",
+    "name": "ANANYA SAU",
+    "class": "CLASS III",
+    "roll": 6,
+    "s6": 14
+  },
+  {
+    "id": "student136",
+    "name": "ANKUSH ROY",
+    "class": "CLASS III",
+    "roll": 7,
+    "s6": 17
+  },
+  {
+    "id": "student137",
+    "name": "SEKH JISAN ALI",
+    "class": "CLASS III",
+    "roll": 8,
+    "s6": 10
+  },
+  {
+    "id": "student138",
+    "name": "ANKIT SAU",
+    "class": "CLASS III",
+    "roll": 9,
+    "s6": 15
+  },
+  {
+    "id": "student139",
+    "name": "ARITRI PRAMANIK",
+    "class": "CLASS IV",
+    "roll": 1,
+    "s6": 19
+  },
+  {
+    "id": "student140",
+    "name": "AHANA MAKHAL",
+    "class": "CLASS IV",
+    "roll": 2,
+    "s6": 19
+  },
+  {
+    "id": "student141",
+    "name": "ANIK HAZRA",
+    "class": "CLASS IV",
+    "roll": 3,
+    "s6": 20
+  },
+  {
+    "id": "student142",
+    "name": "ARYA KHANRA",
+    "class": "CLASS IV",
+    "roll": 4,
+    "s6": 15
+  },
+  {
+    "id": "student143",
+    "name": "MONALISHA ADHIKARY",
+    "class": "CLASS IV",
+    "roll": 5,
+    "s6": 15
+  },
+  {
+    "id": "student144",
+    "name": "ANKUSH DOLUI",
+    "class": "CLASS IV",
+    "roll": 6,
+    "s6": 13
+  },
+  {
+    "id": "student145",
+    "name": "SURYA KARAR",
+    "class": "CLASS IV",
+    "roll": 7,
+    "s6": 14
+  },
+  {
+    "id": "student146",
+    "name": "SK. MAHABUB",
+    "class": "CLASS IV",
+    "roll": 8,
+    "s6": 10
+  }
+]
