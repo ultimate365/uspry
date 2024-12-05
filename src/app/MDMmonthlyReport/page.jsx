@@ -597,7 +597,7 @@ export default function MDMmonthlyReport() {
                   : `Download ${thisMonthlyData.id} MDM Return PDF`
               }
             </PDFDownloadLink>
-            <button
+            {/* <button
               className={`btn btn-success m-2`}
               type="button"
               onClick={() => {
@@ -610,7 +610,7 @@ export default function MDMmonthlyReport() {
               }}
             >
               Print All
-            </button>
+            </button> */}
             <button
               className={`btn btn-primary m-2`}
               type="button"
@@ -626,7 +626,7 @@ export default function MDMmonthlyReport() {
             >
               Print New Format
             </button>
-            <button
+            {/* <button
               className={`btn btn-info m-2`}
               type="button"
               onClick={() => {
@@ -641,7 +641,7 @@ export default function MDMmonthlyReport() {
               }}
             >
               Print Old Format
-            </button>
+            </button> */}
             <button
               className={`btn btn-dark m-2`}
               type="button"
@@ -1816,7 +1816,7 @@ export default function MDMmonthlyReport() {
             </div>
           )}
 
-          {showOldFormat && (
+          {/* {showOldFormat && (
             <div className="mx-auto text-center">
               <div
                 className="nobreak"
@@ -2693,7 +2693,7 @@ export default function MDMmonthlyReport() {
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           {thisMonthlyData?.ppTotal} × ₹ {thisMonthMDMAllowance}{" "}
-                          = ₹ {/* {thisMonthlyData?.monthlyPPCost} */}
+                          = ₹ 
                           {Math.round(
                             thisMonthlyData?.ppTotal * thisMonthMDMAllowance
                           )}
@@ -2715,7 +2715,7 @@ export default function MDMmonthlyReport() {
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           {thisMonthlyData?.pryTotal} × ₹{" "}
                           {thisMonthMDMAllowance} = ₹{" "}
-                          {/* {thisMonthlyData?.monthlyPRYCost} */}
+                          
                           {Math.round(
                             thisMonthlyData?.pryTotal * thisMonthMDMAllowance
                           )}
@@ -3031,7 +3031,7 @@ export default function MDMmonthlyReport() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>

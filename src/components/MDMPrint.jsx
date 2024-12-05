@@ -1832,7 +1832,7 @@ export default function MDMPrint({ data }) {
           </View>
         </View>
       </Page>
-      <Page size="A4" style={styles.page} orientation="portrait">
+      {/* <Page size="A4" style={styles.page} orientation="portrait">
         <View style={styles.pageMainView}>
           <Text style={styles.title}>
             Pradhan Mantri Poshan Shakti Nirman (PM POSHAN)
@@ -2284,7 +2284,6 @@ export default function MDMPrint({ data }) {
             <View style={[styles.view20Sec, { borderRightWidth: 0 }]}>
               <Text style={styles.text2}>
                 {thisMonthlyData?.ppTotal} × ₹ {mdmCost} = ₹{" "}
-                {/* {thisMonthlyData?.monthlyPPCost} */}
                 {Math.round(thisMonthlyData?.ppTotal * mdmCost)}
               </Text>
             </View>
@@ -2305,7 +2304,6 @@ export default function MDMPrint({ data }) {
             <View style={[styles.view20Sec, { borderRightWidth: 0 }]}>
               <Text style={styles.text2}>
                 {thisMonthlyData?.pryTotal} × ₹ {mdmCost} = ₹{" "}
-                {/* {thisMonthlyData?.monthlyPPCost} */}
                 {Math.round(thisMonthlyData?.pryTotal * mdmCost)}
               </Text>
             </View>
@@ -2639,7 +2637,7 @@ export default function MDMPrint({ data }) {
             <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
           </View>
         </View>
-      </Page>
+      </Page> */}
     </Document>
   );
 }
