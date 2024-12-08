@@ -13,11 +13,11 @@ export const PRIMARY_BOYS = 22;
 export const PRIMARY_GIRLS = 18;
 export const TOTAL_STUDENTS = 46;
 export const SCHOOLNAME = "UTTAR SEHAGORI PRIMARY SCHOOL";
-export const SCHOOLBENGALINAME = "উত্তর সেহাগড়ি প্রাথমিক বিদ্যালয়";
+export const SCHOOLBENGALINAME = "উত্তর সেহাগড়ী প্রাথমিক বিদ্যালয়";
 export const SCHOOLADDRESS =
   "Vill.- Sehagori, P.O.- Khorop, P.S.- JoyPur, District- Howrah, PIN- 711401";
 export const SCHOOLBENGALIADDRESS =
-  "গ্রামঃ সেহাগড়ি, পোঃ- খড়িয়প, থানা- জয়পুর, জেলা- হাওড়া, পিন- ৭১১৪০১, আমতা পশ্চিমচক্র";
+  "গ্রামঃ সেহাগড়ী, পোঃ- খড়িয়প, থানা- জয়পুর, জেলা- হাওড়া, পিন- ৭১১৪০১, আমতা পশ্চিমচক্র";
 export const WARD_NO = "THALIA VEC-V";
 export const BLOCK = "AMTA-II";
 export const SCHOOL_TYPE = "GOVT. PRIMARY SCHOOL";
