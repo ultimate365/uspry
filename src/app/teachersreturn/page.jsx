@@ -1104,16 +1104,25 @@ export default function Teachersreturn() {
                           value={editTeacher?.olThisMonth}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setEditTeacher({
-                                ...editTeacher,
-                                olThisMonth: parseInt(e.target.value),
-                                workingDays:
-                                  workingDays -
-                                  parseInt(e.target.value) -
-                                  (editTeacher.clThisMonth
-                                    ? editTeacher.clThisMonth
-                                    : 0),
-                              });
+                              const leave =
+                                workingDays -
+                                parseInt(e.target.value) -
+                                (editTeacher.clThisMonth
+                                  ? editTeacher.clThisMonth
+                                  : 0);
+                              if (leave >= 0) {
+                                setEditTeacher({
+                                  ...editTeacher,
+                                  olThisMonth: parseInt(e.target.value),
+                                  workingDays: leave,
+                                });
+                              } else {
+                                setEditTeacher({
+                                  ...editTeacher,
+                                  olThisMonth: parseInt(e.target.value),
+                                  workingDays: 0,
+                                });
+                              }
                             } else {
                               setEditTeacher({
                                 ...editTeacher,
