@@ -13,7 +13,7 @@ export const PRIMARY_BOYS = 22;
 export const PRIMARY_GIRLS = 18;
 export const TOTAL_STUDENTS = 46;
 export const SCHOOLNAME = "UTTAR SEHAGORI PRIMARY SCHOOL";
-export const SCHOOLBENGALINAME = "উত্তর সেহাগড়ী প্রাথমিক বিদ্যালয়";
+export const SCHOOLBENGALINAME = "উত্তর সেহাগড়ি প্রাথমিক বিদ্যালয়";
 export const SCHOOLADDRESS =
   "Vill.- Sehagori, P.O.- Khorop, P.S.- JoyPur, District- Howrah, PIN- 711401";
 export const SCHOOLBENGALIADDRESS =
