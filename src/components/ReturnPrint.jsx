@@ -62,7 +62,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>U.Dise Code No.:</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -87,7 +87,7 @@ export default function ReturnPrint({ data }) {
               <Text style={[styles.text]}>:</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -111,31 +111,18 @@ export default function ReturnPrint({ data }) {
           </View>
           <View style={[styles.rowFlexView, { justifyContent: "flex-end" }]}>
             <View style={styles.rowFlexView}>
-              <Text style={styles.text}> Month:{"  "}</Text>
+              <Text style={[styles.textBold, { fontSize: 12 }]}> Month:</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
-                    paddingRight: 78,
+                    fontSize: 12,
                   },
                 ]}
               >
-                {month}
-              </Text>
-              <Text style={styles.text}> of:{"  "}</Text>
-              <Text
-                style={[
-                  styles.text,
-                  {
-                    textDecoration: "underline",
-                    textDecorationStyle: "dotted",
-                    paddingRight: 78,
-                  },
-                ]}
-              >
-                {year}
+                {`${month} of ${year}`}
               </Text>
             </View>
           </View>
@@ -144,7 +131,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>Name of School:{"  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -168,7 +155,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>/Day Section time{"  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -194,7 +181,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>Vill:{"  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -208,7 +195,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>P.O.:{"  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -233,7 +220,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>{" :  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -259,7 +246,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>P.S.:{"  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -284,7 +271,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>{"  "}</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -309,7 +296,7 @@ export default function ReturnPrint({ data }) {
 
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -324,7 +311,7 @@ export default function ReturnPrint({ data }) {
 
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -339,7 +326,7 @@ export default function ReturnPrint({ data }) {
 
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -355,7 +342,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>Circle:&nbsp;&nbsp;</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -369,7 +356,7 @@ export default function ReturnPrint({ data }) {
               <Text style={styles.text}>Medium:&nbsp;&nbsp;</Text>
               <Text
                 style={[
-                  styles.text,
+                  styles.textBold,
                   {
                     textDecoration: "underline",
                     textDecorationStyle: "dotted",
@@ -4988,7 +4975,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: "ultrabold",
-    fontFamily: "Times",
+    fontFamily: "TimesBold",
     textAlign: "center",
   },
   title2: {
@@ -5000,13 +4987,20 @@ const styles = StyleSheet.create({
   titleMain: {
     fontSize: 20,
     fontWeight: "bold",
-    fontFamily: "Times",
+    fontFamily: "TimesBold",
     textAlign: "center",
   },
   text: {
     fontSize: 10,
     fontWeight: "bold",
     fontFamily: "Times",
+    textAlign: "center",
+    padding: 2,
+  },
+  textBold: {
+    fontSize: 10,
+    fontWeight: "bold",
+    fontFamily: "TimesBold",
     textAlign: "center",
     padding: 2,
   },
@@ -5324,4 +5318,8 @@ Font.register({
 Font.register({
   family: "Times",
   src: "https://raw.githubusercontent.com/usprys/usprysdata/main/times.ttf",
+});
+Font.register({
+  family: "TimesBold",
+  src: "https://raw.githubusercontent.com/amtawestwbtpta/awwbtptadata/main/timesBold.ttf",
 });
