@@ -5038,8 +5038,8 @@ const styles = StyleSheet.create({
   },
   tableStartView: {
     borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
     borderBottomWidth: 1,
     width: "100%",
     height: "auto",
