@@ -134,19 +134,25 @@ const Footer = () => {
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
-          href="mailto: westamta@gmail.com"
+          href="mailto: usprys@gmail.com"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <i className="bi bi-envelope-at-fill"></i> Email Us
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
           href="https://wbresults.nic.in"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <i className="bi bi-browser-chrome"></i> WB Results
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
           href="https://drive.google.com/file/d/1FDcOHPETUb5iOA32SnOEUqPUiUkrljKE/view?usp=drive_link"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <i className="bi bi-android2"></i> Our App
         </Link>
