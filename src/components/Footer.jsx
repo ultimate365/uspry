@@ -146,7 +146,7 @@ const Footer = () => {
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
-          href="https://drive.google.com/drive/folders/1QQzBMJjI_MXTKxP3_ayTo7QflGD0vbVP?usp=sharing"
+          href="https://drive.google.com/file/d/1FDcOHPETUb5iOA32SnOEUqPUiUkrljKE/view?usp=drive_link"
         >
           <i className="bi bi-android2"></i> Our App
         </Link>
