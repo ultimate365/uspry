@@ -73,7 +73,7 @@ export default function CompDownloadAdmissionForm({ data }) {
           </Text>
           <Image
             src={url}
-            style={{ width: 70, height: 90 }}
+            style={{ width: 70, height: 90, borderRadius: 5 }}
             alt="student_image"
           />
           <View style={styles.paraView}>
