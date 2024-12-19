@@ -54,7 +54,7 @@ export default function ViewAdmission() {
         }))
         .sort(
           (a, b) =>
-            b.student_addmission_dateAndTime - a.student_addmission_dateAndTime
+            a.student_addmission_dateAndTime - b.student_addmission_dateAndTime
         );
       setAllData(datas);
       setFilteredData(datas);
@@ -173,6 +173,8 @@ export default function ViewAdmission() {
     )[0].age;
     let ageMessage;
     if (validAge === years) {
+      ageMessage = `Student is Valid (${validAge}Yrs), age is ${years} years, ${months} months, and ${days} days.`;
+    } else if (validAge - 1 === years && months >= 8) {
       ageMessage = `Student is Valid (${validAge}Yrs), age is ${years} years, ${months} months, and ${days} days.`;
     } else {
       ageMessage = `Student is Invalid (${validAge}Yrs), age is ${years} years, ${months} months, and ${days} days.`;
@@ -406,7 +408,7 @@ export default function ViewAdmission() {
                 </tr>
               </thead>
               <tbody>
-                {filteredData.reverse().map((student, index) => (
+                {filteredData.map((student, index) => (
                   <tr
                     key={student?.id}
                     style={{
@@ -451,7 +453,6 @@ export default function ViewAdmission() {
                     >
                       {student?.id}
                     </td>
-                    
                     <td
                       style={{
                         border: "1px solid",
