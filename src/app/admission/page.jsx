@@ -44,6 +44,9 @@ export default function Admission() {
   const [file, setFile] = useState({});
   const [src, setSrc] = useState(null);
   const [showPercent, setShowPercent] = useState(false);
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const YEAR = month > 10 ? today.getFullYear() + 1 : today.getFullYear();
   const [progress, setProgress] = useState(0);
   const [inputField, setInputField] = useState({
     id: "",
@@ -75,7 +78,7 @@ export default function Admission() {
     student_previous_school: "",
     student_previous_student_id: "",
     student_addmission_date: todayInString(),
-    student_addmission_year: new Date().getFullYear(),
+    student_addmission_year: YEAR,
     student_addmission_dateAndTime: Date.now(),
   });
   const [errInputField, setErrInputField] = useState({
@@ -388,7 +391,6 @@ export default function Admission() {
         id: doc.id,
         ...doc.data(),
       }));
-      const YEAR = new Date().getFullYear();
       const dataLength = data.length;
       let countLength = dataLength;
       if (dataLength <= 9) {
@@ -473,23 +475,14 @@ export default function Admission() {
                 student_previous_student_id:
                   inputField.student_previous_student_id,
                 student_addmission_date: todayInString(),
-                student_addmission_year: new Date().getFullYear(),
+                student_addmission_year: YEAR,
                 student_addmission_dateAndTime: Date.now(),
               };
               await setDoc(doc(firestore, "admission", genID), entry)
                 .then(() => {
                   setLoader(false);
                   toast.success(
-                    "Congrats! Form Has Been Submitted to Us Successfully!",
-                    {
-                      position: "top-right",
-                      autoClose: 1500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: "light",
-                    }
+                    "Congrats! Form Has Been Submitted to Us Successfully!"
                   );
                   setFormSubmitted(true);
                   setShowForm(false);
@@ -525,20 +518,13 @@ export default function Admission() {
                     student_previous_student_id: "",
                     student_addmission_date: todayInString(),
                     student_addmission_dateAndTime: Date.now(),
+                    student_addmission_year: YEAR,
                   });
                 })
 
                 .catch((error) => {
                   setLoader(false);
-                  toast.error("Something went Wrong", {
-                    position: "top-right",
-                    autoClose: 1500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                  });
+                  toast.error("Something went Wrong");
                   console.log(error);
                 });
             });
@@ -546,29 +532,12 @@ export default function Admission() {
         );
       } catch (e) {
         setLoader(false);
-        toast.error("Something went Wrong", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went Wrong");
         console.log(e);
       }
     } else {
       setLoader(false);
-      toast.error("Please Fillup Required Details!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Please Fillup Required Details!");
     }
   };
 
@@ -586,15 +555,7 @@ export default function Admission() {
       }
       setLoader(false);
     } catch (error) {
-      toast.error("Application Not Found!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Application Not Found!");
       setLoader(false);
     }
   };
@@ -613,42 +574,18 @@ export default function Admission() {
             setLoader(false);
           } else {
             setShowSearchedResult(false);
-            toast.error("Application Not Found!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            toast.error("Application Not Found!");
             setLoader(false);
           }
         })
         .catch((error) => {
-          toast.error("Application Not Found!", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error("Application Not Found!");
           setShowSearchedResult(false);
           setLoader(false);
           console.log(error);
         });
     } catch (error) {
-      toast.error("Application Not Found!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Application Not Found!");
       setShowSearchedResult(false);
       setLoader(false);
     }
@@ -725,15 +662,7 @@ export default function Admission() {
           const docRef = doc(firestore, "admission", editInputField.id);
           await updateDoc(docRef, editInputField)
             .then(() => {
-              toast.success("Form Has Been Updated Successfully!", {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
+              toast.success("Form Has Been Updated Successfully!");
               setShowEditForm(false);
               setLoader(false);
               setEditInputField({
@@ -772,50 +701,18 @@ export default function Admission() {
             .catch((e) => {
               console.log(e);
               setLoader(false);
-              toast.error("Something went Wrong!", {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
+              toast.error("Something went Wrong!");
             });
         } catch (error) {
           console.log(error);
           setLoader(false);
-          toast.error("Something went Wrong!", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error("Something went Wrong!");
         }
       } else {
-        toast.error("No Changes Detected!", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("No Changes Detected!");
       }
     } else {
-      toast.error("Please Fillup Required Details!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Please Fillup Required Details!");
     }
   };
   const validEditForm = () => {
