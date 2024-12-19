@@ -3677,7 +3677,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.v?.averageAttendance}
+                    {students?.v?.averageAttendance !== 0
+                      ? students?.v?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -4205,7 +4207,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{inspection?.v}</Text>
+                  <Text style={styles.text5}>
+                    {inspection?.v !== 0 ? inspection?.v : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -4609,7 +4613,7 @@ export default function ReturnPrint({ data }) {
               </View>
             </View>
           </View>
-          <View style={styles.headingView}>
+          <View style={[styles.headingView, { marginTop: 5 }]}>
             <View style={styles.rowFlexViewEvenly}>
               <View style={styles.rowFlexView}>
                 <Text style={styles.text5}>
