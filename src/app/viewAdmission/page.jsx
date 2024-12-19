@@ -406,7 +406,7 @@ export default function ViewAdmission() {
                 </tr>
               </thead>
               <tbody>
-                {filteredData.map((student, index) => (
+                {filteredData.reverse().map((student, index) => (
                   <tr
                     key={student?.id}
                     style={{
