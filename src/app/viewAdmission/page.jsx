@@ -431,19 +431,33 @@ export default function ViewAdmission() {
                       className="text-center p-1"
                       suppressHydrationWarning
                     >
-                      <Image
-                        src={student?.url}
-                        alt="uploadedImage"
-                        style={{
-                          width: 70,
-                          height: 90,
-                          alignSelf: "center",
-                        }}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="rounded-2 mx-auto text-center"
-                      />
+                      <div className="d-flex flex-column">
+                        <Image
+                          src={student?.url}
+                          alt="uploadedImage"
+                          style={{
+                            width: 70,
+                            height: 90,
+                            alignSelf: "center",
+                          }}
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="rounded-2 mx-auto text-center"
+                        />
+
+                        <a
+                          href={student?.url}
+                          className="text-decoration-none"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <i
+                            className="bi bi-download btn btn-success btn-sm mt-2"
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                        </a>
+                      </div>
                     </td>
                     <td
                       style={{
