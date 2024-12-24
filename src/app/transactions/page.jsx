@@ -38,8 +38,13 @@ export default function Transactions() {
   const access = state?.ACCESS;
   const router = useRouter();
   const [date, setDate] = useState(todayInString());
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
+  const today = new Date();
+  const thisMonth =
+    monthNamesWithIndex[
+      today.getDate() > 10 ? today.getMonth() : today.getMonth() - 1
+    ].monthName;
+  const [month, setMonth] = useState(thisMonth);
+  const [year, setYear] = useState(today.getFullYear().toString());
   const [transactionPurpose, setTransactionPurpose] =
     useState("MDM WITHDRAWAL");
   const [loader, setLoader] = useState(false);
@@ -176,11 +181,11 @@ export default function Transactions() {
         transactionPurpose,
         id: y,
         ppOB,
-        ppRC,
+        ppRC: ppRC !== "" ? ppRC : 0,
         ppEX,
         ppCB,
         pryOB,
-        pryRC,
+        pryRC: pryRC !== "" ? pryRC : 0,
         pryEX,
         pryCB,
         openingBalance,
