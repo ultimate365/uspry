@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 import DataTable from "react-data-table-component";
-
+import { createDownloadLink } from "@/modules/calculatefunctions";
 import Loader from "@/components/Loader";
 import { firestore } from "@/context/FirbaseContext";
 import { collection, getDocs, query } from "firebase/firestore";
@@ -129,6 +129,15 @@ export default function StudentData() {
   return (
     <div className="container text-center my-3">
       <h2 className="text-center text-success">{SCHOOLNAME}</h2>
+      <button
+        type="button"
+        className="btn btn-primary m-2"
+        onClick={() => {
+          createDownloadLink(data, "students");
+        }}
+      >
+        Download Data
+      </button>
       {showTable ? (
         <>
           <h3 className="text-center text-primary">Student&apos;s Deatails</h3>
