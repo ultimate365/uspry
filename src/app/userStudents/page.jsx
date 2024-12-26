@@ -7,6 +7,7 @@ import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import DataTable from "react-data-table-component";
+import bcrypt from "bcryptjs";
 export default function UserStudents() {
   const { state, studentState, setStudentState, setStudentUpdateTime } =
     useGlobalContext();
@@ -36,7 +37,22 @@ export default function UserStudents() {
     setStudentUpdateTime(Date.now());
     setShowTable(true);
   };
-
+  const getStudentHassedPasswords = async () => {
+    let allData = [];
+    const fd = studentState.map(async (student) => {
+      const hashedPassword = bcrypt.hashSync(student.birthdate, 10);
+      allData = [
+        ...allData,
+        {
+          dob: hashedPassword,
+          id: student.id,
+          studentID: student.student_id,
+          userType: "student",
+        },
+      ];
+    });
+    await Promise.all(fd).then(() => console.log(allData));
+  };
   const columns = [
     {
       name: "Sl",
@@ -88,10 +104,12 @@ export default function UserStudents() {
     }
     if (studentState.length === 0) {
       getStudentData();
+      // getStudentHassedPasswords();
     } else {
       setAllStudents(studentState);
       setFiltedStudents(studentState);
       setShowTable(true);
+      // getStudentHassedPasswords();
     }
     //eslint-disable-next-line
   }, []);

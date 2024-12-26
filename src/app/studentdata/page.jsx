@@ -10,13 +10,14 @@ import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 export default function StudentData() {
   const {
+    state,
     studentState,
     studentUpdateTime,
     setStudentState,
     setStudentUpdateTime,
   } = useGlobalContext();
   const [showTable, setShowTable] = useState(false);
-
+  const access = state.ACCESS;
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -106,6 +107,8 @@ export default function StudentData() {
           <p>No Data</p>
         ) : row.mobile === "7679230482" ? (
           <p>No Data</p>
+        ) : row.mobile === "9933684468" ? (
+          <p>No Data</p>
         ) : (
           <p>
             <a
@@ -125,6 +128,7 @@ export default function StudentData() {
   ];
   return (
     <div className="container text-center my-3">
+      <h2 className="text-center text-success">{SCHOOLNAME}</h2>
       {showTable ? (
         <>
           <h3 className="text-center text-primary">Student&apos;s Deatails</h3>

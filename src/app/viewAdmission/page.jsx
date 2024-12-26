@@ -18,14 +18,20 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import {
   btnArray,
-  DateValueToSring,
+  formatDateAndTime,
   getCurrentDateInput,
+  todayInString,
   uniqArray,
 } from "@/modules/calculatefunctions";
-import { classWiseAge } from "@/modules/constants";
+import {
+  classWiseAge,
+  SCHOOLBENGALIADDRESS,
+  SCHOOLBENGALINAME,
+} from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
 import Image from "next/image";
+import schoolLogo from "@/../public/assets/images/logoweb.png";
 export default function ViewAdmission() {
   const { state, setStateObject } = useGlobalContext();
   const user = state?.USER;
@@ -41,6 +47,40 @@ export default function ViewAdmission() {
   const [showData, setShowData] = useState(false);
   const [admissionStatus, setAdmissionStatus] = useState(true);
   const statusID = process.env.NEXT_PUBLIC_ADMISSION_STATUS;
+  const [showDetails, setShowDetails] = useState(false);
+  const [studentDetails, setStudentDetails] = useState({
+    id: "",
+    url: "",
+    photoName: "",
+    student_beng_name: "",
+    student_eng_name: "",
+    father_beng_name: "",
+    father_eng_name: "",
+    mother_beng_name: "",
+    mother_eng_name: "",
+    guardian_beng_name: "",
+    guardian_eng_name: "",
+    student_birthday: `01-01-${new Date().getFullYear() - 5}`,
+    student_gender: "",
+    student_mobile: "",
+    student_aadhaar: "",
+    student_religion: "",
+    student_race: "GENERAL",
+    student_bpl_status: "NO",
+    student_bpl_number: "",
+    student_village: "SEHAGORI",
+    student_post_office: "KHOROP",
+    student_police_station: "JOYPUR",
+    student_pin_code: "711401",
+    student_addmission_class: "PRE PRIMARY",
+    student_previous_class: "FIRST TIME ADDMISSION",
+    student_previous_class_year: "",
+    student_previous_school: "",
+    student_previous_student_id: "",
+    student_addmission_date: todayInString(),
+    student_addmission_year: "",
+    student_addmission_dateAndTime: Date.now(),
+  });
   const getData = async () => {
     setLoader(true);
     const q = query(collection(firestore, "admission"));
@@ -448,12 +488,16 @@ export default function ViewAdmission() {
 
                         <a
                           href={student?.url}
-                          className="text-decoration-none"
+                          // className="text-decoration-none"
                           target="_blank"
                           rel="noopener noreferrer"
+                          style={{
+                            marginTop: -30,
+                            marginLeft: 40,
+                          }}
                         >
                           <i
-                            className="bi bi-download btn btn-success btn-sm mt-2"
+                            className="bi bi-arrow-down-square-fill text-white fs-5"
                             style={{ cursor: "pointer" }}
                           ></i>
                         </a>
@@ -508,14 +552,14 @@ export default function ViewAdmission() {
                       }}
                       className="text-center p-1"
                     >
-                      {DateValueToSring(
+                      {formatDateAndTime(
                         student?.student_addmission_dateAndTime
                       )}
 
                       {student?.updatedAt && (
                         <p>
                           Updated At:
-                          <br /> {DateValueToSring(student?.updatedAt)}
+                          <br /> {formatDateAndTime(student?.updatedAt)}
                         </p>
                       )}
                     </td>
@@ -527,14 +571,14 @@ export default function ViewAdmission() {
                           style={{ fontSize: "8px" }}
                           className="btn btn-success mb-1"
                           onClick={() => {
-                            setStateObject(student);
-                            router.push("/printAdmissionForm");
+                            setStudentDetails(student);
+                            setShowDetails(true);
                           }}
                         >
                           View
                         </button>
 
-                        {student?.id != "" && (
+                        {/* {student?.id != "" && (
                           <PDFDownloadLink
                             document={
                               <CompDownloadAdmissionForm data={student} />
@@ -556,7 +600,7 @@ export default function ViewAdmission() {
                               loading ? "Loading..." : "Download"
                             }
                           </PDFDownloadLink>
-                        )}
+                        )} */}
 
                         <button
                           type="button"
@@ -566,7 +610,7 @@ export default function ViewAdmission() {
                             // eslint-disable-next-line no-alert
                             if (
                               window.confirm(
-                                "Are you sure, you want to delete your Application?"
+                                "Are you sure, you want to delete this Application?"
                               )
                             ) {
                               delEntry(student);
@@ -581,6 +625,467 @@ export default function ViewAdmission() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+        {showDetails && (
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    Details of {studentDetails.student_eng_name}
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => {
+                      setShowDetails(false);
+                    }}
+                  ></button>
+                </div>
+                <div className="modal-body ben">
+                  <div className="d-flex flex-column justify-content-start align-items-start flex-wrap">
+                    <div className="mx-auto d-flex justify-content-between align-items-center">
+                      <Image
+                        // src="https://raw.githubusercontent.com/usprys/usprysdata/main/logoweb.png"
+                        src={schoolLogo}
+                        alt="LOGO"
+                        style={{ width: 100, height: 100 }}
+                      />
+                      <div>
+                        <h3 className="mx-4 fw-bold" style={{ fontSize: 35 }}>
+                          {SCHOOLBENGALINAME}
+                        </h3>
+                        <h6 className="text-center my-1">
+                          {SCHOOLBENGALIADDRESS}
+                        </h6>
+                      </div>
+                      <Image
+                        src={`https://api.qrserver.com/v1/create-qr-code/?data=UTTAR SEHAGORI PRIMARY SCHOOL: STUDENT NAME:${" "}${
+                          studentDetails?.student_eng_name
+                        }, Father's name:${" "}${
+                          studentDetails?.father_eng_name
+                        },Mother's name:${" "}${
+                          studentDetails?.mother_eng_name
+                        }, Mobile Number:${" "}${
+                          studentDetails?.student_mobile
+                        }, Gender:${" "}${
+                          studentDetails?.student_gender
+                        },  Addmission Class:${" "} ${
+                          studentDetails?.student_addmission_class
+                        }, Application Number:${" "} ${
+                          studentDetails?.id
+                        }, Application Date:${" "} ${
+                          studentDetails?.student_addmission_date
+                        }`}
+                        className="m-0 p-0"
+                        width={100}
+                        height={100}
+                        alt="QRCode"
+                      />
+                    </div>
+                    <h2 className="mx-auto text-center ben my-2">
+                      ভর্তির আবেদন পত্র (Online Admission)
+                    </h2>
+
+                    <div className="mx-auto">
+                      <div className="d-flex flex-column justify-content-center">
+                        <Image
+                          src={studentDetails?.url}
+                          alt="uploadedImage"
+                          style={{
+                            width: "20%",
+                            height: "auto",
+                            alignSelf: "center",
+                          }}
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          className="rounded-2 mx-auto text-center"
+                        />
+                        <a
+                          href={studentDetails?.url}
+                          // className="text-decoration-none"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            marginTop: 5,
+                          }}
+                        >
+                          <i
+                            className="bi bi-arrow-down-square-fill text-primary fs-5"
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                        </a>
+                      </div>
+                      <div className="d-flex justify-content-around my-1 timesFont">
+                        <h5>
+                          Application Form No.:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.id}
+                          </span>
+                        </h5>
+                        <h5>&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+
+                        <h5>
+                          Application Date:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {formatDateAndTime(
+                              studentDetails?.student_addmission_dateAndTime
+                            )}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          ছাত্র / ছাত্রীর নাম (বাংলায়):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_beng_name}
+                          </span>
+                        </h5>
+                        <h5>&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+
+                        <h5>
+                          (ইংরাজীতে):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_eng_name}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5 className="text-start">
+                          অভিভাবকের মোবাইল নাম্বার:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_mobile}
+                          </span>
+                        </h5>
+
+                        <h5>
+                          ছাত্র/ছাত্রীর লিঙ্গ:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_gender}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5 className="text-start">
+                          জন্ম তারিখ:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_birthday}
+                          </span>
+                        </h5>
+
+                        <h5>
+                          আধার নং:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_aadhaar}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          পিতার নাম (বাংলায়):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.father_beng_name}
+                          </span>
+                        </h5>
+
+                        <h5>
+                          (ইংরাজীতে):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.father_eng_name}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          মাতার নাম (বাংলায়):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.mother_beng_name}
+                          </span>
+                        </h5>
+
+                        <h5>
+                          (ইংরাজীতে):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.mother_eng_name}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          অভিভাবকের নাম (বাংলায়):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.guardian_beng_name}
+                          </span>
+                        </h5>
+
+                        <h5>
+                          (ইংরাজীতে):{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.guardian_eng_name}
+                          </span>
+                        </h5>
+                      </div>
+
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          ছাত্র/ছাত্রীর ধর্ম:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_religion}
+                          </span>
+                        </h5>
+
+                        <h5>
+                          ছাত্র/ছাত্রীর জাতি:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_race}
+                          </span>
+                        </h5>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          ছাত্র/ছাত্রী বি.পি.এল. কিনা?:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_bpl_status}
+                          </span>
+                        </h5>
+                        {studentDetails?.student_bpl_status === "YES" && (
+                          <h5>
+                            অভিভাবকের বি.পি.এল. নাম্বার:{" "}
+                            <span
+                              style={{
+                                textDecoration: "underline 1px dotted",
+                                textUnderlineOffset: 6,
+                              }}
+                            >
+                              {studentDetails?.student_bpl_number}
+                            </span>
+                          </h5>
+                        )}
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>ছাত্র/ছাত্রীর ঠিকানা: </h5>
+                        <h5>&nbsp;&nbsp;</h5>
+                        <span
+                          style={{
+                            textDecoration: "underline 1px dotted",
+                            textUnderlineOffset: 6,
+                          }}
+                        >
+                          Vill.: {studentDetails?.student_village},P.O.:{" "}
+                          {studentDetails?.student_post_office}
+                          ,P.S.: {studentDetails?.student_police_station}, PIN:
+                          {studentDetails?.student_pin_code}
+                        </span>
+                      </div>
+                      <div className="d-flex justify-content-around my-1">
+                        <h5>
+                          ছাত্র/ছাত্রীর বর্তমান ভর্তি হওয়ার শ্রেণী:{" "}
+                          <span
+                            style={{
+                              textDecoration: "underline 1px dotted",
+                              textUnderlineOffset: 6,
+                            }}
+                          >
+                            {studentDetails?.student_addmission_class}
+                          </span>
+                        </h5>
+                      </div>
+                      {studentDetails?.student_previous_class !== "" && (
+                        <div className="d-flex justify-content-around my-1">
+                          <h5>
+                            ছাত্র/ছাত্রীর পূর্বের শ্রেণী:{" "}
+                            <span
+                              style={{
+                                textDecoration: "underline 1px dotted",
+                                textUnderlineOffset: 6,
+                              }}
+                            >
+                              {studentDetails?.student_previous_class}
+                            </span>
+                          </h5>
+                          <h5>
+                            ছাত্র/ছাত্রীর পূর্বের বর্ষ:{" "}
+                            <span
+                              style={{
+                                textDecoration: "underline 1px dotted",
+                                textUnderlineOffset: 6,
+                              }}
+                            >
+                              {studentDetails?.student_previous_class_year}
+                            </span>
+                          </h5>
+                        </div>
+                      )}
+                      {studentDetails?.student_previous_class !== "" && (
+                        <div className="d-flex justify-content-around my-1">
+                          <h5>
+                            ছাত্র/ছাত্রীর পূর্বের স্টুডেন্ট আইডি:{" "}
+                            <span
+                              style={{
+                                textDecoration: "underline 1px dotted",
+                                textUnderlineOffset: 6,
+                              }}
+                            >
+                              {studentDetails?.student_previous_student_id}
+                            </span>
+                          </h5>
+                        </div>
+                      )}
+                      {studentDetails?.student_previous_class !== "" && (
+                        <div className="d-flex justify-content-around my-1">
+                          <h5>
+                            ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:{" "}
+                            <h6
+                              style={{
+                                textDecoration: "underline 1px dotted",
+                                textUnderlineOffset: 4,
+                              }}
+                            >
+                              {studentDetails?.student_previous_school}
+                            </h6>
+                          </h5>
+                        </div>
+                      )}
+                      {studentDetails?.updatedAt && (
+                        <div className="d-flex justify-content-around my-1">
+                          <h5>
+                            Updated At:{" "}
+                            <span
+                              style={{
+                                textDecoration: "underline 1px dotted",
+                                textUnderlineOffset: 4,
+                              }}
+                            >
+                              {formatDateAndTime(studentDetails?.updatedAt)}
+                            </span>
+                          </h5>
+                        </div>
+                      )}
+                      <div className="mx-auto">
+                        <PDFDownloadLink
+                          document={
+                            <CompDownloadAdmissionForm data={studentDetails} />
+                          }
+                          fileName={`Apllication Form of ${studentDetails?.student_eng_name}.pdf`}
+                          className="m-2 btn btn-success"
+                        >
+                          {({ blob, url, loading, error }) =>
+                            loading ? "Loading..." : "Download"
+                          }
+                        </PDFDownloadLink>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <div className="my-2">
+                    <button
+                      type="button"
+                      className="btn btn-danger m-2"
+                      onClick={() => {
+                        setShowDetails(false);
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

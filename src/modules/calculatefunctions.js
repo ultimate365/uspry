@@ -325,7 +325,8 @@ export const IndianFormat = (x) => {
   if (x !== undefined || x !== null || typeof x !== "number") {
     x = x?.toString();
     var afterPoint = "";
-    if (x?.indexOf(".") > 0) afterPoint = x?.substring(x?.indexOf("."), x?.length);
+    if (x?.indexOf(".") > 0)
+      afterPoint = x?.substring(x?.indexOf("."), x?.length);
     x = Math.floor(x);
     x = x?.toString();
     var lastThree = x?.substring(x?.length - 3);
@@ -749,4 +750,23 @@ const alphabetArray = Array.from({ length: 26 }, (_, i) =>
 export function getRandomAlphabet() {
   const randomIndex = Math.floor(Math.random() * alphabetArray.length);
   return alphabetArray[randomIndex];
+}
+export function formatDate(timestamp) {
+  const input = !isNaN(timestamp) ? parseInt(timestamp, 10) : timestamp;
+  const date = new Date(input);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+export function formatDateAndTime(timestamp) {
+  const input = !isNaN(timestamp) ? parseInt(timestamp, 10) : timestamp;
+  const date = new Date(input);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = date.getHours() % 12 || 12; // Handle 0 (midnight) as 12
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const ampm = date.getHours() >= 12 ? "PM" : "AM";
+  return `${day}-${month}-${year} At ${hours}:${minutes} ${ampm}`;
 }

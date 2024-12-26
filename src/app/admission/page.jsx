@@ -199,7 +199,7 @@ export default function Admission() {
       guardian_eng_name: "",
       student_gender: "",
       student_mobile: "",
-
+      student_aadhaar: "",
       student_religion: "",
       student_race: "",
       student_bpl_number: "",
@@ -290,6 +290,16 @@ export default function Admission() {
       setErrInputField((prevState) => ({
         ...prevState,
         student_mobile: "দয়া করে অভিভাবকের মোবাইল নাম্বার লিখুন",
+      }));
+    }
+    if (
+      inputField.student_aadhaar !== "" &&
+      inputField.student_aadhaar.length !== 12
+    ) {
+      formIsValid = false;
+      setErrInputField((prevState) => ({
+        ...prevState,
+        student_aadhaar: "দয়া করে ছাত্র/ছাত্রীর সঠিক আধার নাম্বার লিখুন",
       }));
     }
     if (inputField.student_religion === "") {
@@ -728,7 +738,7 @@ export default function Admission() {
       guardian_eng_name: "",
       student_gender: "",
       student_mobile: "",
-
+      student_aadhaar: "",
       student_religion: "",
       student_race: "",
       student_bpl_number: "",
@@ -804,11 +814,24 @@ export default function Admission() {
         student_gender: "দয়া করে ছাত্র/ছাত্রীর লিঙ্গ বেছে নিন",
       }));
     }
-    if (editInputField.student_mobile === "") {
+    if (
+      editInputField.student_mobile === "" ||
+      editInputField.student_mobile !== 10
+    ) {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_mobile: "দয়া করে অভিভাবকের মোবাইল নাম্বার লিখুন",
+      }));
+    }
+    if (
+      editInputField.student_aadhaar !== "" &&
+      editInputField.student_aadhaar.length !== 12
+    ) {
+      formIsValid = false;
+      setErrEditInputField((prevState) => ({
+        ...prevState,
+        student_aadhaar: "দয়া করে ছাত্র/ছাত্রীর সঠিক আধার নাম্বার লিখুন",
       }));
     }
     if (editInputField.student_religion === "") {
@@ -1118,6 +1141,22 @@ export default function Admission() {
                   value={inputField.student_aadhaar}
                   placeholder="ছাত্র/ছাত্রীর আধার নাম্বার"
                   className="form-control"
+                  onBlur={() => {
+                    if (
+                      inputField.student_aadhaar.length > 0 &&
+                      inputField.student_aadhaar.length !== 12
+                    ) {
+                      setErrInputField({
+                        ...errInputField,
+                        student_aadhaar: "সঠিক আধার নাম্বার লিখুন",
+                      });
+                    } else {
+                      setErrInputField({
+                        ...errInputField,
+                        student_aadhaar: "",
+                      });
+                    }
+                  }}
                   onChange={(e) =>
                     setInputField({
                       ...inputField,
@@ -1125,6 +1164,9 @@ export default function Admission() {
                     })
                   }
                 />
+                {inputField.student_aadhaar.length > 0 && (
+                  <span className="error">{errInputField.student_aadhaar}</span>
+                )}
               </div>
               <div className="mb-3 col-md-4">
                 <label className="form-label">ছাত্র/ছাত্রীর লিঙ্গ*</label>
@@ -1158,6 +1200,19 @@ export default function Admission() {
                   value={inputField.student_mobile}
                   placeholder="অভিভাবকের মোবাইল নাম্বার"
                   className="form-control"
+                  onBlur={() => {
+                    if (inputField.student_mobile.length !== 10) {
+                      setErrInputField({
+                        ...errInputField,
+                        student_mobile: "সঠিক মোবাইল নাম্বার লিখুন",
+                      });
+                    } else {
+                      setErrInputField({
+                        ...errInputField,
+                        student_mobile: "",
+                      });
+                    }
+                  }}
                   onChange={(e) => {
                     setInputField({
                       ...inputField,
@@ -2056,6 +2111,22 @@ export default function Admission() {
                   value={editInputField.student_aadhaar}
                   placeholder="ছাত্র/ছাত্রীর আধার নাম্বার"
                   className="form-control"
+                  onBlur={() => {
+                    if (
+                      editInputField.student_aadhaar.length > 0 &&
+                      editInputField.student_aadhaar.length !== 12
+                    ) {
+                      setErrEditInputField({
+                        ...errEditInputField,
+                        student_aadhaar: "সঠিক আধার নাম্বার লিখুন",
+                      });
+                    } else {
+                      setErrEditInputField({
+                        ...errEditInputField,
+                        student_aadhaar: "",
+                      });
+                    }
+                  }}
                   onChange={(e) =>
                     setEditInputField({
                       ...editInputField,
@@ -2063,6 +2134,11 @@ export default function Admission() {
                     })
                   }
                 />
+                {errEditInputField.student_aadhaar.length > 0 && (
+                  <span className="error">
+                    {errEditInputField.student_aadhaar}
+                  </span>
+                )}
               </div>
               <div className="mb-3 col-md-4">
                 <label className="form-label">ছাত্র/ছাত্রীর লিঙ্গ*</label>
@@ -2098,6 +2174,19 @@ export default function Admission() {
                   value={editInputField.student_mobile}
                   placeholder="অভিভাবকের মোবাইল নাম্বার"
                   className="form-control"
+                  onBlur={() => {
+                    if (editInputField.student_mobile.length !== 10) {
+                      setErrEditInputField({
+                        ...errEditInputField,
+                        student_mobile: "সঠিক মোবাইল নাম্বার লিখুন",
+                      });
+                    } else {
+                      setErrEditInputField({
+                        ...errEditInputField,
+                        student_mobile: "",
+                      });
+                    }
+                  }}
                   onChange={(e) => {
                     setEditInputField({
                       ...editInputField,
