@@ -124,7 +124,7 @@ export default function Transactions() {
     const cyear = currentDate.getFullYear();
     return `${cmonth}-${cyear}`;
   };
-  const [id, setId] = useState(getId());
+  const [id, setId] = useState("");
   const [purpose, setPurpose] = useState("MDM WITHDRAWAL");
   const getTransactions = async () => {
     setLoader(true);

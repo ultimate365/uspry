@@ -129,17 +129,17 @@ export default function StudentData() {
   return (
     <div className="container text-center my-3">
       <h2 className="text-center text-success">{SCHOOLNAME}</h2>
-      <button
-        type="button"
-        className="btn btn-primary m-2"
-        onClick={() => {
-          createDownloadLink(data, "students");
-        }}
-      >
-        Download Data
-      </button>
       {showTable ? (
         <>
+          <button
+            type="button"
+            className="btn btn-primary m-2"
+            onClick={() => {
+              createDownloadLink(data, "students");
+            }}
+          >
+            Download Data
+          </button>
           <h3 className="text-center text-primary">Student&apos;s Deatails</h3>
           <DataTable
             columns={columns}

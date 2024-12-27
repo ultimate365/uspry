@@ -36,10 +36,11 @@ export default function UserStudents() {
     setStudentState(data);
     setStudentUpdateTime(Date.now());
     setShowTable(true);
+    // await getStudentHassedPasswords(data);
   };
-  const getStudentHassedPasswords = async () => {
+  const getStudentHassedPasswords = async (data) => {
     let allData = [];
-    const fd = studentState.map(async (student) => {
+    const fd = data.map(async (student) => {
       const hashedPassword = bcrypt.hashSync(student.birthdate, 10);
       allData = [
         ...allData,
@@ -104,12 +105,11 @@ export default function UserStudents() {
     }
     if (studentState.length === 0) {
       getStudentData();
-      // getStudentHassedPasswords();
     } else {
       setAllStudents(studentState);
       setFiltedStudents(studentState);
       setShowTable(true);
-      // getStudentHassedPasswords();
+      // getStudentHassedPasswords(studentState);
     }
     //eslint-disable-next-line
   }, []);
