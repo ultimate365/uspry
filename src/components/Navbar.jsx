@@ -216,6 +216,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/cchPhotoCorner"
+              onClick={handleNavCollapse}
+            >
+             CCH Photo Corner
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/userStudents"
               onClick={handleNavCollapse}
             >

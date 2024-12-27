@@ -1,0 +1,18 @@
+[
+  {
+    "id": "cch101",
+    "name": "SHYAMALI MONDAL",
+    "mobile": "8145924464",
+    "address1": "Vill.- Sehagori, P.O.- Khorop, P.S.- Joypur",
+    "address2": "Dist.- Howrah, Pin- 711401",
+    "url": "https://raw.githubusercontent.com/usprys/usprysdata/main/shyamali.jpg"
+  },
+  {
+    "id": "cch102",
+    "name": "LAKSHMI DAS",
+    "mobile": "8967132774",
+    "address1": "Vill.- Sehagori, P.O.- Khorop, P.S.- Joypur",
+    "address2": "Dist.- Howrah, Pin- 711401",
+    "url": "https://raw.githubusercontent.com/usprys/usprysdata/main/laxmi.jpg"
+  }
+]
