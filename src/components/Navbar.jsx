@@ -114,7 +114,7 @@ export default function Navbar() {
               Result
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link
               className="nav-link"
               href="/autoresult"
@@ -122,7 +122,7 @@ export default function Navbar() {
             >
               Auto Table
             </Link>
-          </li>
+          </li> */}
           <li className="nav-item">
             <Link
               className="nav-link"
@@ -193,6 +193,24 @@ export default function Navbar() {
               onClick={handleNavCollapse}
             >
               Exam Seat
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/photocorner"
+              onClick={handleNavCollapse}
+            >
+             Student Photo Corner
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/TeacherPhotoCorner"
+              onClick={handleNavCollapse}
+            >
+             Teacher Photo Corner
             </Link>
           </li>
           <li className="nav-item">
