@@ -347,7 +347,7 @@ const Downloads = () => {
                 {allData.map((el, ind) => {
                   return (
                     <tr key={ind}>
-                      <td>{ind + 2}</td>
+                      <td>{ind + 1}</td>
                       <td>{el.fileName.toUpperCase()}</td>
                       <td>
                         {el.fileType === "application/pdf"
@@ -381,6 +381,9 @@ const Downloads = () => {
                           : el.fileType ===
                             "application/vnd.openxmlformats-officedocument.presentationml.presentation"
                           ? "POWERPOINT"
+                          : el.fileType ===
+                            "application/vnd.android.package-archive"
+                          ? "APK"
                           : ""}
                       </td>
                       <td>

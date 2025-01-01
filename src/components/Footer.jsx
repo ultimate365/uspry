@@ -126,7 +126,7 @@ const Footer = () => {
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
-          href="https://www.facebook.com/amtawestwbtpta"
+          href="https://www.facebook.com/share/1MAgAPj49x/"
           target="_blank"
           rel="noopener noreferrer"
         >
