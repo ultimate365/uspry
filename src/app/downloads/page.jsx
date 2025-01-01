@@ -348,7 +348,6 @@ const Downloads = () => {
                   return (
                     <tr key={ind}>
                       <td>{ind + 1}</td>
-                      <td>{el.fileName.toUpperCase()}</td>
                       <td>
                         {el.fileType === "application/pdf"
                           ? "PDF"
@@ -386,6 +385,7 @@ const Downloads = () => {
                           ? "APK"
                           : ""}
                       </td>
+                      <td>{el.fileName.toUpperCase()}</td>
                       <td>
                         <a
                           href={el.url}
