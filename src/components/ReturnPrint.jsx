@@ -98,6 +98,7 @@ export default function ReturnPrint({ data }) {
                 {HOI_MOBILE_NO}
               </Text>
               <Image
+                alt={"tickmark"}
                 source={tick.src}
                 style={{
                   width: 10,
@@ -166,6 +167,7 @@ export default function ReturnPrint({ data }) {
               </Text>
             </View>
             <Image
+              alt={"tickmark"}
               source={tick.src}
               style={{
                 width: 10,
@@ -231,6 +233,7 @@ export default function ReturnPrint({ data }) {
               </Text>
             </View>
             <Image
+              alt={"tickmark"}
               source={tick.src}
               style={{
                 width: 10,
@@ -281,6 +284,7 @@ export default function ReturnPrint({ data }) {
                 {WARD_NO}
               </Text>
               <Image
+                alt={"tickmark"}
                 source={tick.src}
                 style={{
                   width: 10,

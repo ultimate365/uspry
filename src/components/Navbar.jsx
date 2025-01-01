@@ -12,11 +12,7 @@ import Image from "next/image";
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 export default function Navbar() {
   const { state, setState } = useGlobalContext();
-  const router = useRouter();
-  let userdetails, loggedAt;
   let details = getCookie("uid");
-
-  const [showLoader, setShowLoader] = useState(false);
   const handleNavCollapse = () => {
     if (typeof window !== "undefined") {
       // browser code
@@ -34,12 +30,10 @@ export default function Navbar() {
 
   useEffect(() => {
     if (details) {
-      userdetails = decryptObjData("uid");
-      loggedAt = getCookie("loggedAt");
       setState({
-        USER: userdetails,
-        loggedAt: loggedAt,
-        ACCESS: userdetails?.userType,
+        USER: decryptObjData("uid"),
+        loggedAt: getCookie("loggedAt"),
+        ACCESS: decryptObjData("uid")?.userType,
       });
     }
     // eslint-disable-next-line
@@ -129,7 +123,7 @@ export default function Navbar() {
               href="/teachersreturn"
               onClick={handleNavCollapse}
             >
-             Create Teacher&#8217;s Return
+              Create Teacher&#8217;s Return
             </Link>
           </li>
           <li className="nav-item">
@@ -201,7 +195,7 @@ export default function Navbar() {
               href="/photocorner"
               onClick={handleNavCollapse}
             >
-             Student Photo Corner
+              Student Photo Corner
             </Link>
           </li>
           <li className="nav-item">
@@ -210,7 +204,7 @@ export default function Navbar() {
               href="/TeacherPhotoCorner"
               onClick={handleNavCollapse}
             >
-             Teacher Photo Corner
+              Teacher Photo Corner
             </Link>
           </li>
           <li className="nav-item">
@@ -219,7 +213,7 @@ export default function Navbar() {
               href="/cchPhotoCorner"
               onClick={handleNavCollapse}
             >
-             CCH Photo Corner
+              CCH Photo Corner
             </Link>
           </li>
           <li className="nav-item">
