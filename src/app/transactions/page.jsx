@@ -41,7 +41,11 @@ export default function Transactions() {
   const today = new Date();
   const thisMonth =
     monthNamesWithIndex[
-      today.getDate() > 10 ? today.getMonth() : today.getMonth() - 1
+      today.getDate() > 10
+        ? today.getMonth()
+        : today.getMonth() === 0
+        ? 11
+        : today.getMonth() - 1
     ].monthName;
   const [month, setMonth] = useState(thisMonth);
   const [year, setYear] = useState(today.getFullYear().toString());
@@ -106,9 +110,11 @@ export default function Transactions() {
     const currentDate = new Date();
     const month =
       monthNamesWithIndex[
-        currentDate.getDate() > 10
-          ? currentDate.getMonth()
-          : currentDate.getMonth() - 1
+        today.getDate() > 10
+          ? today.getMonth()
+          : today.getMonth() === 0
+          ? 11
+          : today.getMonth() - 1
       ].monthName;
     const year = currentDate.getFullYear();
     return `${month}-${year}`;

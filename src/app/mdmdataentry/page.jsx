@@ -1239,12 +1239,36 @@ export default function MDMData() {
                     </th>
                     <th>{ppTotalMeal}</th>
                     <th>{pryTotalMeal}</th>
-                    <th colSpan={2} style={{ verticalAlign: "center" }}>
+                    <th
+                      colSpan={2}
+                      style={{ verticalAlign: "center" }}
+                      suppressHydrationWarning={true}
+                    >
+                      <p style={{ margin: 0, padding: 0 }}>
+                        Total PP Meal- {ppTotalMeal}
+                      </p>
+                      <p style={{ margin: 0, padding: 0 }}>
+                        Total Primary Meal- {pryTotalMeal}
+                      </p>
                       <p style={{ margin: 0, padding: 0 }}>
                         Total Meal- {ppTotalMeal + pryTotalMeal}
                       </p>
                       <p style={{ margin: 0, padding: 0 }}>
-                        MDM Cost ={" "}
+                        PP MDM Cost ={" "}
+                        {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} = `}₹{" "}
+                        {IndianFormat(
+                          Math.round(ppTotalMeal * thisMonthMDMAllowance)
+                        )}
+                      </p>
+                      <p style={{ margin: 0, padding: 0 }}>
+                        Primary MDM Cost ={" "}
+                        {`${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}₹{" "}
+                        {IndianFormat(
+                          Math.round(pryTotalMeal * thisMonthMDMAllowance)
+                        )}
+                      </p>
+                      <p style={{ margin: 0, padding: 0 }}>
+                        Total MDM Cost ={" "}
                         {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} + ${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}
                         ₹ {IndianFormat(thisMonthTotalCost)}
                       </p>
