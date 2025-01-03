@@ -1044,14 +1044,14 @@ export default function MDMData() {
           </div>
           {selectedYear && showMonthSelection ? (
             <div className="noprint">
-              {entryMonths.length > 1 && (
+              {entryMonths.length > 0 && (
                 <h4 className="text-center text-primary">Filter By Month</h4>
               )}
             </div>
           ) : null}
           {showMonthSelection && (
             <div className="row d-flex justify-content-center noprint">
-              {entryMonths.length > 1 && (
+              {entryMonths.length > 0 && (
                 <div className="col-md-4 mx-auto mb-3 noprint">
                   <select
                     className="form-select"
