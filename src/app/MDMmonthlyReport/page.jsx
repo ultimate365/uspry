@@ -350,7 +350,7 @@ export default function MDMmonthlyReport() {
         <div>
           <div className="noprint">
             <PDFDownloadLink
-              document={<MDMPrint data={{thisMonthlyData}} />}
+              document={<MDMPrint data={{ thisMonthlyData }} />}
               fileName={`${thisMonthlyData.id} MDM Return.pdf`}
               style={{
                 textDecoration: "none",
@@ -423,7 +423,8 @@ export default function MDMmonthlyReport() {
                   </tr>
                   <tr>
                     <td colSpan={2} style={{ border: "1px solid" }}>
-                      Name of the Month:- {thisMonthlyData?.id}
+                      Name of the Month:- {thisMonthlyData?.month}&#8217;
+                      {thisMonthlyData?.year}
                     </td>
                     <td colSpan={2} style={{ border: "1px solid" }}>
                       Financial Year:- {thisMonthlyData?.financialYear}
@@ -961,7 +962,8 @@ export default function MDMmonthlyReport() {
                   </tr>
                   <tr>
                     <td colSpan={4} style={{ border: "1px solid" }}>
-                      Name of the Month:- {thisMonthlyData?.id}
+                      Name of the Month:- {thisMonthlyData?.month}&#8217;
+                      {thisMonthlyData?.year}
                     </td>
                     <td colSpan={3} style={{ border: "1px solid" }}>
                       Financial Year:- {thisMonthlyData?.financialYear}
@@ -1497,7 +1499,8 @@ export default function MDMmonthlyReport() {
                       }}
                       colSpan={2}
                     >
-                      {thisMonthlyData?.id}
+                      {thisMonthlyData?.month}&#8217;
+                {thisMonthlyData?.year}
                     </td>
                     <td
                       style={{

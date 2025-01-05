@@ -49,7 +49,8 @@ export default function MDMPrint({ data }) {
           <View style={styles.tableStartView}>
             <View style={styles.view25}>
               <Text style={styles.title}>
-                Name of the Month:- {thisMonthlyData?.id}
+                Name of the Month:- {thisMonthlyData?.month}&#8217;
+                {thisMonthlyData?.year}
               </Text>
             </View>
             <View style={styles.view25}>
@@ -1008,7 +1009,8 @@ export default function MDMPrint({ data }) {
           <View style={styles.tableStartView}>
             <View style={styles.view16}>
               <Text style={styles.title}>
-                Name of the Month:- {thisMonthlyData?.id}
+                Name of the Month:- {thisMonthlyData?.month}&#8217;
+                {thisMonthlyData?.year}
               </Text>
             </View>
             <View style={styles.view16}>
