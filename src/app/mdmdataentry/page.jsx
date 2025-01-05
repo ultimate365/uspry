@@ -108,6 +108,24 @@ export default function MDMData() {
     useState("");
   const [monthRiceCB, setMonthRiceCB] = useState("");
   const [monthYearID, setMonthYearID] = useState("");
+  const [mdmTransaction, setMdmTransaction] = useState({
+    ppOB: "",
+    pryOB: "",
+    ppRC: "",
+    pryRC: "",
+    ppCB: "",
+    pryCB: "",
+    prevPpRC: "",
+    prevPryRC: "",
+    prevMonthlyPPCost: "",
+    prevMonthlyPRYCost: "",
+  });
+  const [mdmRice, setMdmRice] = useState({
+    prevRicePPRC: "",
+    prevRicePryRC: "",
+    prevRicePPEX: "",
+    prevRicePryEX: "",
+  });
   const submitData = async () => {
     if (validForm()) {
       setLoader(true);
@@ -620,6 +638,20 @@ export default function MDMData() {
         riceCB: monthRiceCB,
         riceConsunption: monthRiceConsunption,
         riceGiven: monthRiceGiven,
+        ppOB: mdmTransaction.ppOB,
+        pryOB: mdmTransaction.pryOB,
+        ppRC: mdmTransaction.ppRC,
+        pryRC: mdmTransaction.pryRC,
+        ppCB: mdmTransaction.ppCB,
+        pryCB: mdmTransaction.pryCB,
+        prevPpRC: mdmTransaction.prevPpRC,
+        prevPryRC: mdmTransaction.prevPryRC,
+        prevMonthlyPPCost: mdmTransaction.prevMonthlyPPCost,
+        prevMonthlyPRYCost: mdmTransaction.prevMonthlyPRYCost,
+        prevRicePPRC: mdmRice.prevRicePPRC,
+        prevRicePryRC: mdmRice.prevRicePryRC,
+        prevRicePPEX: mdmRice.prevRicePPEX,
+        prevRicePryEX: mdmRice.prevRicePryEX,
         remarks: remarks,
         date: todayInString(),
       };
@@ -1433,7 +1465,244 @@ export default function MDMData() {
                           }}
                         />
                       </div>
-
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          This Month PP A/C Opening Balance
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PP A/C OB This Month`}
+                          value={mdmTransaction.ppOB}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                ppOB: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                ppOB: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          This Month PRIMARY A/C Opening Balance
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PRIMARY A/C OB This Month`}
+                          value={mdmTransaction.pryOB}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                pryOB: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                pryOB: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          This Month PP A/C Total Credit
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PP A/C Total Credit This Month`}
+                          value={mdmTransaction.ppRC}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                ppRC: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                ppRC: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          This Month PRIMARY A/C Total Credit
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PRIMARY A/C Total Credit This Month`}
+                          value={mdmTransaction.pryRC}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                pryRC: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                pryRC: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          This Month PP A/C Closing Balance
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PP A/C Closing Balance This Month`}
+                          value={mdmTransaction.ppCB}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                ppCB: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                ppCB: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          This Month PRIMARY A/C Closing Balance
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PRIMARY A/C Closing Balance This Month`}
+                          value={mdmTransaction.pryCB}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                pryCB: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                pryCB: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PP A/C Total Credit
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PP A/C Total Credit Previous Month`}
+                          value={mdmTransaction.prevPpRC}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevPpRC: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevPpRC: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PRIMARY A/C Total Credit
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PRIMARY A/C Total Credit Previous Month`}
+                          value={mdmTransaction.prevPryRC}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevPryRC: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevPryRC: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">Previous Month PP Expense</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Previous Month PP Expense`}
+                          value={mdmTransaction.prevMonthlyPPCost}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevMonthlyPPCost: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevMonthlyPPCost: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PRIMARY Expense
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Previous Month PRIMARY Expense`}
+                          value={mdmTransaction.prevMonthlyPRYCost}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevMonthlyPRYCost: parseFloat(e.target.value),
+                              });
+                            } else {
+                              setMdmTransaction({
+                                ...mdmTransaction,
+                                prevMonthlyPRYCost: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
                       <div className="form-group m-2">
                         <label className="m-2">PP Rice Opening Balance</label>
                         <input
@@ -1634,6 +1903,103 @@ export default function MDMData() {
                           }}
                         />
                       </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PP Rice Received
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Previous Month PP Rice Received`}
+                          value={mdmRice.prevRicePPRC}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePPRC: parseInt(e.target.value),
+                              });
+                            } else {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePPRC: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PRIMARY Rice Received
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Previous Month PRIMARY Rice Received`}
+                          value={mdmRice.prevRicePryRC}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePryRC: parseInt(e.target.value),
+                              });
+                            } else {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePryRC: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PP Rice Expense
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Previous Month PP Rice Expense`}
+                          value={mdmRice.prevRicePPEX}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePPEX: parseInt(e.target.value),
+                              });
+                            } else {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePPEX: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">
+                          Previous Month PRIMARY Rice Expense
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter Previous Month PRIMARY Rice Expense`}
+                          value={mdmRice.prevRicePryEX}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePryEX: parseInt(e.target.value),
+                              });
+                            } else {
+                              setMdmRice({
+                                ...mdmRice,
+                                prevRicePryEX: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+
                       <div className="form-group m-2">
                         <label className="m-2">Remarks</label>
                         <textarea

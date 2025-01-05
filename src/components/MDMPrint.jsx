@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Page,
   Text,
@@ -33,2006 +33,1895 @@ import { IndianFormat, round2dec } from "@/modules/calculatefunctions";
 const width = 2480;
 const height = 3508;
 export default function MDMPrint({ data }) {
-  const {
-    ftFound,
-    thisMonthlyData,
-    thisMonthFromFirstTransaction,
-    thisMonthFromTransaction,
-    prevMonthlyData,
-    balRCThisMonth,
-    pryRCThisMonth,
-    balRCPrevMonth,
-    pryRCPrevMonth,
-    remarks,
-    mdmCost,
-  } = data;
-  // const screenSize = useScreenSize();
-  //   const { width, height } = screenSize;
-
-  const [allStudents, setAllStudents] = useState([]);
-  useEffect(() => {
-    setAllStudents(data);
-  }, []);
+  const { thisMonthlyData } = data;
   return (
-      <Document
-        style={{ margin: 5, padding: 5 }}
-        title={`MDM REPORT OF ${thisMonthlyData?.id}`}
-      >
-        <Page size="A4" orientation="landscape" style={styles.page}>
-          <View style={styles.pageMainView}>
-            <View style={styles.headingView}>
-              <Text style={styles.title}>
-                Monthly Progress Report of Mid Day Meal
-              </Text>
-            </View>
-            <View style={styles.tableStartView}>
-              <View style={styles.view25}>
-                <Text style={styles.title}>
-                  Name of the Month:- {thisMonthlyData?.id}
-                </Text>
-              </View>
-              <View style={styles.view25}>
-                <Text style={styles.title}>
-                  Financial Year:- {thisMonthlyData?.financialYear}
-                </Text>
-              </View>
-              <View style={styles.view25}>
-                <Text style={styles.title}>Ward No.:- {WARD_NO}</Text>
-              </View>
-              <View
-                style={{
-                  borderTopWidth: 0,
-                  borderLeftWidth: 0,
-                  borderRightWidth: 0,
-                  borderBottomWidth: 0,
-                  paddingRight: 1,
-                  width: "25%",
-                }}
-              >
-                <Text style={styles.title}>Municipality/ Corporation (HMC)</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view25}>
-                <Text style={styles.title}>Name of the School:-</Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  paddingRight: 1,
-                  width: "50%",
-                }}
-              >
-                <Text style={styles.title}>{SCHOOLNAME}</Text>
-              </View>
-
-              <View
-                style={{
-                  borderTopWidth: 0,
-                  borderLeftWidth: 0,
-                  borderRightWidth: 0,
-                  borderBottomWidth: 0,
-                  paddingRight: 0,
-                  width: "25%",
-                }}
-              >
-                <Text style={styles.title}> </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view25}>
-                <Text style={styles.title}>Basic Information of School:-</Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  paddingRight: 1,
-                  width: "50%",
-                }}
-              >
-                <Text style={styles.title}>{SCHOOL_TYPE}</Text>
-              </View>
-
-              <View
-                style={{
-                  borderTopWidth: 0,
-                  borderLeftWidth: 0,
-                  borderRightWidth: 0,
-                  borderBottomWidth: 0,
-                  paddingRight: 0,
-                  width: "25%",
-                }}
-              >
-                <Text style={styles.title}> </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  paddingRight: 1,
-                  width: "37.5%",
-                }}
-              >
-                <Text style={styles.title}>
-                  Total no. of the Students Bal Vatika:- {PP_STUDENTS}
-                </Text>
-                <Text style={styles.title}>
-                  Total no. of the Students Primary:- {PRIMARY_STUDENTS}
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  paddingRight: 1,
-                  width: "37.5%",
-                  height: "100%",
-                }}
-              >
-                <Text style={[styles.title, { paddingTop: 5 }]}>
-                  Total Mid Day meal Served:-
-                  {thisMonthlyData?.ppTotal + thisMonthlyData?.pryTotal}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  borderTopWidth: 0,
-                  borderLeftWidth: 0,
-                  borderRightWidth: 0,
-                  borderBottomWidth: 0,
-                  paddingRight: 0,
-                  width: "25%",
-                }}
-              >
-                <Text style={styles.title}>
-                  No. of days Mid Day Meal Served:-{" "}
-                  {thisMonthlyData?.worrkingDays}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.break}></View>
-            <View style={styles.rowStartView}>
-              <Text style={styles.title}>
-                Utilization Certificate (COOKING COST)
-              </Text>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>Class</Text>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>Opening{"\n"} Balance</Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.text}>Allotment of fund received</Text>
-                </View>
-                <View style={styles.rowWrapView}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRightWidth: 1,
-                      height: 24,
-                      width: "50%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>
-                      Previous month{"\n"}allotment received
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 24,
-                      width: "49%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>
-                      Current month{"\n"}allotment received
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>
-                  Total allotment{"\n"}
-                  received{"\n"} (2+3(b))
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.text}>Expenditure</Text>
-                </View>
-                <View style={styles.view20}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRightWidth: 1,
-                      height: 24,
-                      width: "50%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>Previous month</Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 24,
-                      width: "49%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>Current month</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>
-                  Total Expenditure{"\n"}
-                  5(b)
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 35,
-                }}
-              >
-                <Text style={styles.text}>
-                  Closing Balance{"\n"}
-                  (4-6)
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>1</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>2</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>3(a)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>3(b)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>4</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>5(a)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>5(b)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>6</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>7</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>Bal Vatika</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹{" "}
-                  {IndianFormat(
-                    ftFound
-                      ? thisMonthFromFirstTransaction?.ppOB
-                      : thisMonthFromTransaction?.ppOB
-                  )}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(balRCPrevMonth)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {" "}
-                  ₹ {IndianFormat(balRCThisMonth)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹{" "}
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.ppOB + balRCThisMonth
-                        : thisMonthFromTransaction?.ppOB + balRCThisMonth
-                    )
-                  )}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(prevMonthlyData?.monthlyPPCost)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>
-                  ₹{" "}
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.ppOB +
-                            balRCThisMonth -
-                            thisMonthlyData?.monthlyPPCost
-                        : thisMonthFromTransaction?.ppOB +
-                            balRCThisMonth -
-                            thisMonthlyData?.monthlyPPCost
-                    )
-                  )}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>Primary</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹{" "}
-                  {IndianFormat(
-                    ftFound
-                      ? thisMonthFromFirstTransaction?.pryOB
-                      : thisMonthFromTransaction?.pryOB
-                  )}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(pryRCPrevMonth)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {" "}
-                  ₹ {IndianFormat(pryRCThisMonth)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹{" "}
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.pryOB + pryRCThisMonth
-                        : thisMonthFromTransaction?.pryOB + pryRCThisMonth
-                    )
-                  )}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(prevMonthlyData?.monthlyPRYCost)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(thisMonthlyData?.monthlyPRYCost)}
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  ₹ {IndianFormat(thisMonthlyData?.monthlyPRYCost)}
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>
-                  ₹{" "}
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.pryOB +
-                            pryRCThisMonth -
-                            thisMonthlyData?.monthlyPRYCost
-                        : thisMonthFromTransaction?.pryOB +
-                            pryRCThisMonth -
-                            thisMonthlyData?.monthlyPRYCost
-                    )
-                  )}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>Up-Primary</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>-</Text>
-              </View>
-            </View>
-            <View style={styles.break}></View>
-            <View style={styles.rowStartView}>
-              <Text style={styles.title}>
-                Utilization Certificate (FOOD GRAINS)
-              </Text>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>Class</Text>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>Opening{"\n"} Balance</Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={[styles.text, { fontSize: 9 }]}>
-                    Allotment of Food grains received
-                  </Text>
-                </View>
-                <View style={styles.rowWrapView}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRightWidth: 1,
-                      height: 24,
-                      width: "50%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={[styles.text, { fontSize: 9 }]}>
-                      Previous month{"\n"}Food grains received
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 24,
-                      width: "49%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={[styles.text, { fontSize: 9 }]}>
-                      Current month Food{"\n"} grains received
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>
-                  Total Food grains{"\n"}
-                  received{"\n"} (2+3(b))
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.text}>Expenditure</Text>
-                </View>
-                <View style={styles.view20}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRightWidth: 1,
-                      height: 24,
-                      width: "50%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>Previous month</Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 24,
-                      width: "49%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>Current month</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>
-                  Total Expenditure{"\n"}
-                  5(b)
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 35,
-                }}
-              >
-                <Text style={styles.text}>
-                  Closing Balance{"\n"}
-                  (4-6)
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>1</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>2</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>3(a)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>3(b)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>4</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>5(a)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>5(b)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>6</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>7</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>Bal Vatika</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPOB} KG.</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>{prevMonthlyData?.ricePPRC} KG.</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPRC} KG.</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePPOB + thisMonthlyData?.ricePPRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>{prevMonthlyData?.ricePPEX} KG.</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>{thisMonthlyData?.ricePPCB} KG.</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>Primary</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryOB} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {prevMonthlyData?.ricePryRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryOB + thisMonthlyData?.ricePryRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {prevMonthlyData?.ricePryEX} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryEX} KG.
-                </Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryEX} KG.
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryCB} KG.
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>Up-Primary</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>-</Text>
-              </View>
-            </View>
-            <View style={styles.break}></View>
-            <View style={styles.rowStartView}>
-              <Text style={styles.title}>
-                Utilization Certificate (HONORARIUM TO COOK)
-              </Text>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>Class</Text>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>Opening{"\n"} Balance</Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.text}>Allotment of fund received</Text>
-                </View>
-                <View style={styles.rowWrapView}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRightWidth: 1,
-                      height: 24,
-                      width: "50%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>
-                      Previous month{"\n"}allotment received
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 24,
-                      width: "49%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>
-                      Current month{"\n"}allotment received
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>
-                  Total allotment{"\n"}
-                  received{"\n"} (2+3(b))
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.text}>Expenditure</Text>
-                </View>
-                <View style={styles.view20}>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRightWidth: 1,
-                      height: 24,
-                      width: "50%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>Previous month</Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: 24,
-                      width: "49%",
-                      padding: 0,
-                    }}
-                  >
-                    <Text style={styles.text}>Current month</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H35}>
-                <Text style={styles.text}>
-                  Total Expenditure{"\n"}
-                  5(b)
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 35,
-                }}
-              >
-                <Text style={styles.text}>
-                  Closing Balance{"\n"}
-                  (4-6)
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125}>
-                <Text style={styles.text}>1</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>2</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>3(a)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>3(b)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>4</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>5(a)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>5(b)</Text>
-              </View>
-              <View style={styles.view125}>
-                <Text style={styles.text}>6</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                }}
-              >
-                <Text style={styles.text}>7</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>
-                  Bal Vatika & Primary & Up-Primary
-                </Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view125H30}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 30,
-                }}
-              >
-                <Text style={styles.text}>-</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-
-                justifyContent: "center",
-                alignItems: "flex-end",
-                alignContent: "center",
-                marginTop: 60,
-                paddingRight: 70,
-              }}
-            >
-              <Text style={[styles.title, { marginBottom: 5 }]}>
-                ..............................................................................
-              </Text>
-              <Text
-                style={[styles.title, { paddingRight: 70, marginBottom: 10 }]}
-              >
-                Signature
-              </Text>
-              <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
-            </View>
-            {remarks && (
-              <View
-                style={{
-                  width: "70%",
-                  height: "auto",
-
-                  justifyContent: "center",
-                  alignItems: "center",
-                  alignContent: "center",
-                  marginTop: 5,
-                }}
-              >
-                <Text style={[styles.title, { marginBottom: 5 }]}>
-                  Remarks:- {remarks}
-                </Text>
-              </View>
-            )}
+    <Document
+      style={{ margin: 5, padding: 5 }}
+      title={`MDM REPORT OF ${thisMonthlyData?.id}`}
+    >
+      <Page size="A4" orientation="landscape" style={styles.page}>
+        <View style={styles.pageMainView}>
+          <View style={styles.headingView}>
+            <Text style={styles.title}>
+              Monthly Progress Report of Mid Day Meal
+            </Text>
           </View>
-        </Page>
-        <Page size="A4" style={styles.page} orientation="landscape">
-          <View style={styles.pageMainView}>
-            <View
-              style={{
-                border: "1px solid",
-                borderWidth: 1,
-                width: "100%",
-                height: "auto",
-              }}
-            >
+          <View style={styles.tableStartView}>
+            <View style={styles.view25}>
               <Text style={styles.title}>
-                Utilization Certificate (COOKING COST)
+                Name of the Month:- {thisMonthlyData?.id}
               </Text>
             </View>
-            <View style={styles.tableStartView}>
-              <View style={styles.view16}>
-                <Text style={styles.title}>
-                  Name of the Month:- {thisMonthlyData?.id}
-                </Text>
-              </View>
-              <View style={styles.view16}>
-                <Text style={styles.title}>
-                  Financial Year:- {thisMonthlyData?.financialYear}
-                </Text>
-              </View>
-              <View style={styles.view16}>
-                <Text style={styles.title}>Ward No.:- {WARD_NO}</Text>
-              </View>
-              <View style={[styles.view16,{borderRightWidth:0}]}>
-                <Text style={styles.title}>Municipality/ Corporation (HMC)</Text>
-              </View>
+            <View style={styles.view25}>
+              <Text style={styles.title}>
+                Financial Year:- {thisMonthlyData?.financialYear}
+              </Text>
             </View>
-            <View style={styles.rowStartView}>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  paddingRight: 1,
-                  width: "50%",
-                  height: 15,
-                }}
-              >
-                <Text style={styles.title}>School Name:- {SCHOOLNAME}</Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "50%",
-                  height: 15,
-                }}
-              >
-                <Text style={styles.title}>BLOCK:- {BLOCK}</Text>
-              </View>
+            <View style={styles.view25}>
+              <Text style={styles.title}>Ward No.:- {WARD_NO}</Text>
             </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Class</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Total no of Students</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>
-                  Total Meal Served during the month
-                </Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>No of Days Mid day meal Served</Text>
-              </View>
-
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Opening{"\n"} Balance</Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-                  width: "34%",
-                  flexDirection: "column",
-                  height: 40,
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={[styles.text]}>Allotment of fund received</Text>
-                </View>
-                <View style={styles.rowWrapView}>
-                  <View
-                    style={{
-                      borderRightWidth: 1,
-                      padding: 0,
-                      height: 30,
-                      width: "48%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text
-                      style={[styles.text, { fontSize: 10, paddingRight: 4 }]}
-                    >
-                      Previous month{"\n"}allotment received
-                    </Text>
-                  </View>
-                  <View style={{}}>
-                    <Text
-                      style={[styles.text, { fontSize: 10, paddingLeft: 4 }]}
-                    >
-                      Current month{"\n"}allotment received
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H40}>
-              <Text style={[styles.text, { fontSize: 10 }]}>
-                  Total allotment 
-                  received (5+6(b))
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 40,
-                  justifyContent: "space-evenly",
-                  alignItems: "stretch",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                  }}
-                >
-                  <Text style={styles.text}>Expenditure</Text>
-                </View>
-                <View style={styles.view20}>
-                  <View
-                    style={{
-                      borderRightWidth: 1,
-                      padding: 0,
-                      height: 25,
-                      width: "50%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={[styles.text, { paddingRight: 2 }]}>
-                      Previous{"\n"} month
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      padding: 0,
-                      height: 25,
-                      width: "48%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.text}>Current{"\n"} month</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Total{"\n"}Expenditure{"\n"}
-                  8(b)
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 40,
-                }}
-              >
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Closing{"\n"}Balance{"\n"}
-                  (7-9)
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>1</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>2</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>3</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>4</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>5</Text>
-              </View>
-              <View style={[styles.view88, { width: "12%" }]}>
-                <Text style={styles.text}>6(a)</Text>
-              </View>
-              <View style={[styles.view88, { width: "12%" }]}>
-                <Text style={styles.text}>6(b)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>7</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>8(a)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>8(b)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>9</Text>
-              </View>
-              <View style={[styles.view88, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>10</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>Bal Vatika</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{PP_STUDENTS}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.ppTotal}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>
-                  ₹
-                  {IndianFormat(
-                    ftFound
-                      ? thisMonthFromFirstTransaction?.ppOB
-                      : thisMonthFromTransaction?.ppOB
-                  )}
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>₹{IndianFormat(balRCPrevMonth)}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>₹{IndianFormat(balRCThisMonth)}</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.ppOB + balRCThisMonth
-                        : thisMonthFromTransaction?.ppOB + balRCThisMonth
-                    )
-                  )}
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹{IndianFormat(prevMonthlyData?.monthlyPPCost)}
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹{IndianFormat(thisMonthlyData?.monthlyPPCost)}
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹{IndianFormat(thisMonthlyData?.monthlyPPCost)}
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>
-                  ₹
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.ppOB +
-                            balRCThisMonth -
-                            thisMonthlyData?.monthlyPPCost
-                        : thisMonthFromTransaction?.ppOB +
-                            balRCThisMonth -
-                            thisMonthlyData?.monthlyPPCost
-                    )
-                  )}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>Primary</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{PRIMARY_STUDENTS}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>
-                  ₹
-                  {IndianFormat(
-                    ftFound
-                      ? thisMonthFromFirstTransaction?.pryOB
-                      : thisMonthFromTransaction?.pryOB
-                  )}
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>₹{IndianFormat(pryRCPrevMonth)}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>₹{IndianFormat(pryRCThisMonth)}</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.pryOB + pryRCThisMonth
-                        : thisMonthFromTransaction?.pryOB + pryRCThisMonth
-                    )
-                  )}
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹{IndianFormat(prevMonthlyData?.monthlyPRYCost)}
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹{IndianFormat(thisMonthlyData?.monthlyPRYCost)}
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  ₹{IndianFormat(thisMonthlyData?.monthlyPRYCost)}
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>
-                  ₹
-                  {IndianFormat(
-                    round2dec(
-                      ftFound
-                        ? thisMonthFromFirstTransaction?.pryOB +
-                            pryRCThisMonth -
-                            thisMonthlyData?.monthlyPRYCost
-                        : thisMonthFromTransaction?.pryOB +
-                            pryRCThisMonth -
-                            thisMonthlyData?.monthlyPRYCost
-                    )
-                  )}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>Up-Primary</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-            </View>
-            <View style={styles.break}></View>
             <View
               style={{
-                border: "1px solid",
-                borderWidth: 1,
                 borderTopWidth: 0,
-                width: "100%",
-                height: "auto",
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                borderBottomWidth: 0,
+                paddingRight: 1,
+                width: "25%",
+              }}
+            >
+              <Text style={styles.title}>Municipality/ Corporation (HMC)</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view25}>
+              <Text style={styles.title}>Name of the School:-</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                paddingRight: 1,
+                width: "50%",
+              }}
+            >
+              <Text style={styles.title}>{SCHOOLNAME}</Text>
+            </View>
+
+            <View
+              style={{
+                borderTopWidth: 0,
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                borderBottomWidth: 0,
+                paddingRight: 0,
+                width: "25%",
+              }}
+            >
+              <Text style={styles.title}> </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view25}>
+              <Text style={styles.title}>Basic Information of School:-</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                paddingRight: 1,
+                width: "50%",
+              }}
+            >
+              <Text style={styles.title}>{SCHOOL_TYPE}</Text>
+            </View>
+
+            <View
+              style={{
+                borderTopWidth: 0,
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                borderBottomWidth: 0,
+                paddingRight: 0,
+                width: "25%",
+              }}
+            >
+              <Text style={styles.title}> </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View
+              style={{
+                borderRightWidth: 1,
+                paddingRight: 1,
+                width: "37.5%",
               }}
             >
               <Text style={styles.title}>
-                Utilization Certificate (FOOD GRAINS)
+                Total no. of the Students Bal Vatika:- {PP_STUDENTS}
+              </Text>
+              <Text style={styles.title}>
+                Total no. of the Students Primary:- {PRIMARY_STUDENTS}
               </Text>
             </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Class</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Total no of Students</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>
-                  Total Meal Served during the month
-                </Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>No of Days Mid day meal Served</Text>
-              </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                paddingRight: 1,
+                width: "37.5%",
+                height: "100%",
+              }}
+            >
+              <Text style={[styles.title, { paddingTop: 5 }]}>
+                Total Mid Day meal Served:-
+                {thisMonthlyData?.ppTotal + thisMonthlyData?.pryTotal}
+              </Text>
+            </View>
 
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Opening{"\n"} Balance</Text>
-              </View>
+            <View
+              style={{
+                borderTopWidth: 0,
+                borderLeftWidth: 0,
+                borderRightWidth: 0,
+                borderBottomWidth: 0,
+                paddingRight: 0,
+                width: "25%",
+              }}
+            >
+              <Text style={styles.title}>
+                No. of days Mid Day Meal Served:-{" "}
+                {thisMonthlyData?.worrkingDays}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.break}></View>
+          <View style={styles.rowStartView}>
+            <Text style={styles.title}>
+              Utilization Certificate (COOKING COST)
+            </Text>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>Class</Text>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>Opening{"\n"} Balance</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "25%",
+                flexDirection: "column",
+                height: 35,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
               <View
                 style={{
-                  borderRightWidth: 1,
-                  width: "34%",
-                  flexDirection: "column",
-                  height: 40,
-                  justifyContent: "center",
-                  alignItems: "stretch",
+                  borderBottomWidth: 1,
                 }}
               >
+                <Text style={styles.text}>Allotment of fund received</Text>
+              </View>
+              <View style={styles.rowWrapView}>
                 <View
                   style={{
-                    borderBottomWidth: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRightWidth: 1,
+                    height: 24,
+                    width: "50%",
+                    padding: 0,
                   }}
                 >
-                  <Text style={[styles.text, { fontSize: 9 }]}>
-                    Allotment of Food grains received
+                  <Text style={styles.text}>
+                    Previous month{"\n"}allotment received
                   </Text>
                 </View>
-                <View style={styles.rowWrapView}>
-                  <View
-                    style={{
-                      borderRightWidth: 1,
-                      padding: 0,
-                      height: 28,
-                      width: "50%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={[styles.text, { fontSize: 9 }]}>
-                      Previous month{"\n"}Food grains received
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      padding: 0,
-                      height: 25,
-                      width: "48%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={[styles.text, { fontSize: 9 }]}>
-                      Current month Food{"\n"} grains received
-                    </Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Total Food grains received (5+6(b))
-                </Text>
-              </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 40,
-                  justifyContent: "space-evenly",
-                  alignItems: "stretch",
-                }}
-              >
                 <View
                   style={{
-                    borderBottomWidth: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 24,
+                    width: "49%",
+                    padding: 0,
                   }}
                 >
-                  <Text style={styles.text}>Expenditure</Text>
-                </View>
-                <View style={styles.view20}>
-                  <View
-                    style={{
-                      borderRightWidth: 1,
-                      padding: 0,
-                      height: 25,
-                      width: "50%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={[styles.text, { paddingRight: 2 }]}>
-                      Previous{"\n"} month
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      padding: 0,
-                      height: 25,
-                      width: "48%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.text}>Current{"\n"} month</Text>
-                  </View>
+                  <Text style={styles.text}>
+                    Current month{"\n"}allotment received
+                  </Text>
                 </View>
               </View>
-              <View style={styles.view125H40}>
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Total{"\n"}Expenditure{"\n"}
-                  8(b)
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 40,
-                }}
-              >
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Closing{"\n"}Balance{"\n"}
-                  (7-9)
-                </Text>
-              </View>
             </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>1</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>2</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>3</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>4</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>5</Text>
-              </View>
-              <View style={[styles.view88, { width: "12%" }]}>
-                <Text style={styles.text}>6(a)</Text>
-              </View>
-              <View style={[styles.view88, { width: "12%" }]}>
-                <Text style={styles.text}>6(b)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>7</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>8(a)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>8(b)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>9</Text>
-              </View>
-              <View style={[styles.view88, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>10</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>Bal Vatika</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{PP_STUDENTS}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.ppTotal}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{prevMonthlyData?.ricePPOB} KG.</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>{prevMonthlyData?.ricePPRC} KG.</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPRC} KG.</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePPOB + thisMonthlyData?.ricePPRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>{prevMonthlyData?.ricePPEX} KG.</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>{thisMonthlyData?.ricePPCB} KG.</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>Primary</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{PRIMARY_STUDENTS}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>
-                  {prevMonthlyData?.ricePryOB} KG.
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>
-                  {prevMonthlyData?.ricePryRC} KG.
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryOB + thisMonthlyData?.ricePryRC} KG.
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  {prevMonthlyData?.ricePryEX} KG.
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryEX} KG.
-                </Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryEX} KG.
-                </Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>
-                  {thisMonthlyData?.ricePryCB} KG.
-                </Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>Up-Primary</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-            </View>
-            <View style={styles.break}></View>
-            <View
-              style={{
-                border: "1px solid",
-                borderWidth: 1,
-                borderTopWidth: 0,
-                width: "100%",
-                height: "auto",
-              }}
-            >
-              <Text style={styles.title}>
-                Utilization Certificate (HONORARIUM TO COOK)
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>
+                Total allotment{"\n"}
+                received{"\n"} (2+3(b))
               </Text>
             </View>
-            <View style={styles.rowStartView}>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Class</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Total no of Students</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>No of Cook engaged</Text>
-              </View>
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>No of Days Mid day meal Served</Text>
-              </View>
-
-              <View style={styles.view125H40}>
-                <Text style={styles.text}>Opening{"\n"} Balance</Text>
-              </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "25%",
+                flexDirection: "column",
+                height: 35,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
               <View
                 style={{
-                  borderRightWidth: 1,
-                  width: "34%",
-                  flexDirection: "column",
-                  height: 40,
-                  justifyContent: "center",
-                  alignItems: "stretch",
+                  borderBottomWidth: 1,
                 }}
               >
+                <Text style={styles.text}>Expenditure</Text>
+              </View>
+              <View style={styles.view20}>
                 <View
                   style={{
-                    borderBottomWidth: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRightWidth: 1,
+                    height: 24,
+                    width: "50%",
+                    padding: 0,
                   }}
                 >
-                  <Text style={[styles.text]}>Allotment of fund received</Text>
+                  <Text style={styles.text}>Previous month</Text>
                 </View>
-                <View style={styles.rowWrapView}>
-                  <View
-                    style={{
-                      borderRightWidth: 1,
-                      padding: 0,
-                      height: 30,
-                      width: "48%",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text
-                      style={[styles.text, { fontSize: 10, paddingRight: 4 }]}
-                    >
-                      Previous month{"\n"}allotment received
-                    </Text>
-                  </View>
-                  <View style={{}}>
-                    <Text
-                      style={[styles.text, { fontSize: 10, paddingLeft: 4 }]}
-                    >
-                      Current month{"\n"}allotment received
-                    </Text>
-                  </View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 24,
+                    width: "49%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>Current month</Text>
                 </View>
               </View>
-              <View style={styles.view125H40}>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>
+                Total Expenditure{"\n"}
+                5(b)
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 35,
+              }}
+            >
+              <Text style={styles.text}>
+                Closing Balance{"\n"}
+                (4-6)
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>1</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>2</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>3(a)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>3(b)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>4</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>5(a)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>5(b)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>6</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>7</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>Bal Vatika</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.ppOB)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.prevPpRC)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {" "}
+                ₹ {IndianFormat(thisMonthlyData?.ppRC)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹{" "}
+                {IndianFormat(
+                  round2dec(thisMonthlyData?.ppOB + thisMonthlyData?.ppRC)
+                )}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.prevMonthlyPPCost)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.monthlyPPCost)}
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.ppCB)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>Primary</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.pryOB)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.prevPryRC)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.pryRC)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹{" "}
+                {IndianFormat(
+                  round2dec(thisMonthlyData?.pryOB + thisMonthlyData?.pryRC)
+                )}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.prevMonthlyPRYCost)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.monthlyPRYCost)}
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.monthlyPRYCost)}
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>
+                ₹ {IndianFormat(thisMonthlyData?.pryCB)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>Up-Primary</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>-</Text>
+            </View>
+          </View>
+          <View style={styles.break}></View>
+          <View style={styles.rowStartView}>
+            <Text style={styles.title}>
+              Utilization Certificate (FOOD GRAINS)
+            </Text>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>Class</Text>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>Opening{"\n"} Balance</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "25%",
+                flexDirection: "column",
+                height: 35,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
                 <Text style={[styles.text, { fontSize: 9 }]}>
-                  Total allotment{"\n"}
-                  received{"\n"} (5+6(b))
+                  Allotment of Food grains received
                 </Text>
               </View>
-              <View
-                style={{
-                  borderRightWidth: 1,
-
-                  width: "25%",
-                  flexDirection: "column",
-                  height: 40,
-                  justifyContent: "space-evenly",
-                  alignItems: "stretch",
-                }}
-              >
+              <View style={styles.rowWrapView}>
                 <View
                   style={{
-                    borderBottomWidth: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRightWidth: 1,
+                    height: 24,
+                    width: "50%",
+                    padding: 0,
                   }}
                 >
-                  <Text style={styles.text}>Expenditure</Text>
+                  <Text style={[styles.text, { fontSize: 9 }]}>
+                    Previous month{"\n"}Food grains received
+                  </Text>
                 </View>
-                <View style={styles.view20}>
-                  <View
-                    style={{
-                      borderRightWidth: 1,
-                      padding: 0,
-                      height: 25,
-                      width: "50%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={[styles.text, { paddingRight: 2 }]}>
-                      Previous{"\n"} month
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      padding: 0,
-                      height: 25,
-                      width: "48%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.text}>Current{"\n"} month</Text>
-                  </View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 24,
+                    width: "49%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={[styles.text, { fontSize: 9 }]}>
+                    Current month Food{"\n"} grains received
+                  </Text>
                 </View>
               </View>
-              <View style={styles.view125H40}>
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Total{"\n"}Expenditure{"\n"}
-                  8(b)
-                </Text>
-              </View>
-              <View
-                style={{
-                  paddingRight: 1,
-                  width: "12.5%",
-                  height: 40,
-                }}
-              >
-                <Text style={[styles.text, { fontSize: 10 }]}>
-                  Closing{"\n"}Balance{"\n"}
-                  (7-9)
-                </Text>
-              </View>
             </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>1</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>2</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>3</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>4</Text>
-              </View>
-              <View style={[styles.view88, { width: "8.8%" }]}>
-                <Text style={styles.text}>5</Text>
-              </View>
-              <View style={[styles.view88, { width: "12%" }]}>
-                <Text style={styles.text}>6(a)</Text>
-              </View>
-              <View style={[styles.view88, { width: "12%" }]}>
-                <Text style={styles.text}>6(b)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>7</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>8(a)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>8(b)</Text>
-              </View>
-              <View style={styles.view88}>
-                <Text style={styles.text}>9</Text>
-              </View>
-              <View style={[styles.view88, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>10</Text>
-              </View>
-            </View>
-            <View style={styles.rowStartView}>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{TOTAL_STUDENTS}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{CCH_NAME.length}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "8.8%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { width: "12%" }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={styles.view88H20}>
-                <Text style={styles.text}>-</Text>
-              </View>
-              <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
-                <Text style={styles.text}>-</Text>
-              </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>
+                Total Food grains{"\n"}
+                received{"\n"} (2+3(b))
+              </Text>
             </View>
             <View
               style={{
-                width: "100%",
+                borderRightWidth: 1,
+                width: "25%",
+                flexDirection: "column",
+                height: 35,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={styles.text}>Expenditure</Text>
+              </View>
+              <View style={styles.view20}>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRightWidth: 1,
+                    height: 24,
+                    width: "50%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>Previous month</Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 24,
+                    width: "49%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>Current month</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>
+                Total Expenditure{"\n"}
+                5(b)
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 35,
+              }}
+            >
+              <Text style={styles.text}>
+                Closing Balance{"\n"}
+                (4-6)
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>1</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>2</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>3(a)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>3(b)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>4</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>5(a)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>5(b)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>6</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>7</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>Bal Vatika</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPOB} KG.</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePPRC} KG.
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPRC} KG.</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.ricePPOB + thisMonthlyData?.ricePPRC} KG.
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePPEX} KG.
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>{thisMonthlyData?.ricePPCB} KG.</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>Primary</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryOB} KG.</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePryRC} KG.
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryRC} KG.</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.ricePryOB + thisMonthlyData?.ricePryRC} KG.
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePryEX} KG.
+              </Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryEX} KG.</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryEX} KG.</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>{thisMonthlyData?.ricePryCB} KG.</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>Up-Primary</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>-</Text>
+            </View>
+          </View>
+          <View style={styles.break}></View>
+          <View style={styles.rowStartView}>
+            <Text style={styles.title}>
+              Utilization Certificate (HONORARIUM TO COOK)
+            </Text>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>Class</Text>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>Opening{"\n"} Balance</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "25%",
+                flexDirection: "column",
+                height: 35,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={styles.text}>Allotment of fund received</Text>
+              </View>
+              <View style={styles.rowWrapView}>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRightWidth: 1,
+                    height: 24,
+                    width: "50%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>
+                    Previous month{"\n"}allotment received
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 24,
+                    width: "49%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>
+                    Current month{"\n"}allotment received
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>
+                Total allotment{"\n"}
+                received{"\n"} (2+3(b))
+              </Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "25%",
+                flexDirection: "column",
+                height: 35,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={styles.text}>Expenditure</Text>
+              </View>
+              <View style={styles.view20}>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRightWidth: 1,
+                    height: 24,
+                    width: "50%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>Previous month</Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: 24,
+                    width: "49%",
+                    padding: 0,
+                  }}
+                >
+                  <Text style={styles.text}>Current month</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H35}>
+              <Text style={styles.text}>
+                Total Expenditure{"\n"}
+                5(b)
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 35,
+              }}
+            >
+              <Text style={styles.text}>
+                Closing Balance{"\n"}
+                (4-6)
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125}>
+              <Text style={styles.text}>1</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>2</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>3(a)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>3(b)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>4</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>5(a)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>5(b)</Text>
+            </View>
+            <View style={styles.view125}>
+              <Text style={styles.text}>6</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+              }}
+            >
+              <Text style={styles.text}>7</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>Bal Vatika & Primary & Up-Primary</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view125H30}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 30,
+              }}
+            >
+              <Text style={styles.text}>-</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              width: "100%",
+              height: "auto",
+
+              justifyContent: "center",
+              alignItems: "flex-end",
+              alignContent: "center",
+              marginTop: 60,
+              paddingRight: 70,
+            }}
+          >
+            <Text style={[styles.title, { marginBottom: 5 }]}>
+              ..............................................................................
+            </Text>
+            <Text
+              style={[styles.title, { paddingRight: 70, marginBottom: 10 }]}
+            >
+              Signature
+            </Text>
+            <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
+          </View>
+          {thisMonthlyData?.remarks && (
+            <View
+              style={{
+                width: "70%",
                 height: "auto",
 
                 justifyContent: "center",
-                alignItems: "flex-end",
+                alignItems: "center",
                 alignContent: "center",
-                marginTop: 60,
-                paddingRight: 70,
+                marginTop: 5,
               }}
             >
               <Text style={[styles.title, { marginBottom: 5 }]}>
-                ..............................................................................
+                Remarks:- {thisMonthlyData?.remarks}
               </Text>
-              <Text
-                style={[styles.title, { paddingRight: 70, marginBottom: 10 }]}
-              >
-                Signature
+            </View>
+          )}
+        </View>
+      </Page>
+      <Page size="A4" style={styles.page} orientation="landscape">
+        <View style={styles.pageMainView}>
+          <View
+            style={{
+              border: "1px solid",
+              borderWidth: 1,
+              width: "100%",
+              height: "auto",
+            }}
+          >
+            <Text style={styles.title}>
+              Utilization Certificate (COOKING COST)
+            </Text>
+          </View>
+          <View style={styles.tableStartView}>
+            <View style={styles.view16}>
+              <Text style={styles.title}>
+                Name of the Month:- {thisMonthlyData?.id}
               </Text>
-              <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
+            </View>
+            <View style={styles.view16}>
+              <Text style={styles.title}>
+                Financial Year:- {thisMonthlyData?.financialYear}
+              </Text>
+            </View>
+            <View style={styles.view16}>
+              <Text style={styles.title}>Ward No.:- {WARD_NO}</Text>
+            </View>
+            <View style={[styles.view16, { borderRightWidth: 0 }]}>
+              <Text style={styles.title}>Municipality/ Corporation (HMC)</Text>
             </View>
           </View>
-        </Page>
-        {/* <Page size="A4" style={styles.page} orientation="portrait">
+          <View style={styles.rowStartView}>
+            <View
+              style={{
+                borderRightWidth: 1,
+                paddingRight: 1,
+                width: "50%",
+                height: 15,
+              }}
+            >
+              <Text style={styles.title}>School Name:- {SCHOOLNAME}</Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "50%",
+                height: 15,
+              }}
+            >
+              <Text style={styles.title}>BLOCK:- {BLOCK}</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Class</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Total no of Students</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>
+                Total Meal Served during the month
+              </Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>No of Days Mid day meal Served</Text>
+            </View>
+
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Opening{"\n"} Balance</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "34%",
+                flexDirection: "column",
+                height: 40,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={[styles.text]}>Allotment of fund received</Text>
+              </View>
+              <View style={styles.rowWrapView}>
+                <View
+                  style={{
+                    borderRightWidth: 1,
+                    padding: 0,
+                    height: 30,
+                    width: "48%",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={[styles.text, { fontSize: 10, paddingRight: 4 }]}
+                  >
+                    Previous month{"\n"}allotment received
+                  </Text>
+                </View>
+                <View style={{}}>
+                  <Text style={[styles.text, { fontSize: 10, paddingLeft: 4 }]}>
+                    Current month{"\n"}allotment received
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Total allotment received (5+6(b))
+              </Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+
+                width: "25%",
+                flexDirection: "column",
+                height: 40,
+                justifyContent: "space-evenly",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={styles.text}>Expenditure</Text>
+              </View>
+              <View style={styles.view20}>
+                <View
+                  style={{
+                    borderRightWidth: 1,
+                    padding: 0,
+                    height: 25,
+                    width: "50%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[styles.text, { paddingRight: 2 }]}>
+                    Previous{"\n"} month
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    padding: 0,
+                    height: 25,
+                    width: "48%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text}>Current{"\n"} month</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Total{"\n"}Expenditure{"\n"}
+                8(b)
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 40,
+              }}
+            >
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Closing{"\n"}Balance{"\n"}
+                (7-9)
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>1</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>2</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>3</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>4</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>5</Text>
+            </View>
+            <View style={[styles.view88, { width: "12%" }]}>
+              <Text style={styles.text}>6(a)</Text>
+            </View>
+            <View style={[styles.view88, { width: "12%" }]}>
+              <Text style={styles.text}>6(b)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>7</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>8(a)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>8(b)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>9</Text>
+            </View>
+            <View style={[styles.view88, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>10</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>Bal Vatika</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{PP_STUDENTS}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ppTotal}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.ppOB)}
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.prevPpRC)}
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.ppRC)}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹
+                {IndianFormat(
+                  round2dec(thisMonthlyData?.ppOB + thisMonthlyData?.ppRC)
+                )}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.prevMonthlyPPCost)}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.monthlyPPCost)}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.monthlyPPCost)}
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.ppCB)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>Primary</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{PRIMARY_STUDENTS}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.pryOB)}
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.prevPryRC)}
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.pryRC)}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹
+                {IndianFormat(
+                  round2dec(thisMonthlyData?.pryOB + thisMonthlyData?.pryRC)
+                )}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.prevMonthlyPRYCost)}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.monthlyPRYCost)}
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.monthlyPRYCost)}
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>
+                ₹{IndianFormat(thisMonthlyData?.pryCB)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>Up-Primary</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+          </View>
+          <View style={styles.break}></View>
+          <View
+            style={{
+              border: "1px solid",
+              borderWidth: 1,
+              borderTopWidth: 0,
+              width: "100%",
+              height: "auto",
+            }}
+          >
+            <Text style={styles.title}>
+              Utilization Certificate (FOOD GRAINS)
+            </Text>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Class</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Total no of Students</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>
+                Total Meal Served during the month
+              </Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>No of Days Mid day meal Served</Text>
+            </View>
+
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Opening{"\n"} Balance</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "34%",
+                flexDirection: "column",
+                height: 40,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={[styles.text, { fontSize: 9 }]}>
+                  Allotment of Food grains received
+                </Text>
+              </View>
+              <View style={styles.rowWrapView}>
+                <View
+                  style={{
+                    borderRightWidth: 1,
+                    padding: 0,
+                    height: 28,
+                    width: "50%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[styles.text, { fontSize: 9 }]}>
+                    Previous month{"\n"}Food grains received
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    padding: 0,
+                    height: 25,
+                    width: "48%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[styles.text, { fontSize: 9 }]}>
+                    Current month Food{"\n"} grains received
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Total Food grains received (5+6(b))
+              </Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+
+                width: "25%",
+                flexDirection: "column",
+                height: 40,
+                justifyContent: "space-evenly",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={styles.text}>Expenditure</Text>
+              </View>
+              <View style={styles.view20}>
+                <View
+                  style={{
+                    borderRightWidth: 1,
+                    padding: 0,
+                    height: 25,
+                    width: "50%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[styles.text, { paddingRight: 2 }]}>
+                    Previous{"\n"} month
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    padding: 0,
+                    height: 25,
+                    width: "48%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text}>Current{"\n"} month</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Total{"\n"}Expenditure{"\n"}
+                8(b)
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 40,
+              }}
+            >
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Closing{"\n"}Balance{"\n"}
+                (7-9)
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>1</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>2</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>3</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>4</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>5</Text>
+            </View>
+            <View style={[styles.view88, { width: "12%" }]}>
+              <Text style={styles.text}>6(a)</Text>
+            </View>
+            <View style={[styles.view88, { width: "12%" }]}>
+              <Text style={styles.text}>6(b)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>7</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>8(a)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>8(b)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>9</Text>
+            </View>
+            <View style={[styles.view88, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>10</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>Bal Vatika</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{PP_STUDENTS}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ppTotal}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPOB} KG.</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePPRC} KG.
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPRC} KG.</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.ricePPOB + thisMonthlyData?.ricePPRC} KG.
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePPEX} KG.
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPEX} KG.</Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePPCB} KG.</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>Primary</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{PRIMARY_STUDENTS}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryOB} KG.</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePryRC} KG.
+              </Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryRC} KG.</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.ricePryOB + thisMonthlyData?.ricePryRC} KG.
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>
+                {thisMonthlyData?.prevRicePryEX} KG.
+              </Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryEX} KG.</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryEX} KG.</Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>{thisMonthlyData?.ricePryCB} KG.</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>Up-Primary</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+          </View>
+          <View style={styles.break}></View>
+          <View
+            style={{
+              border: "1px solid",
+              borderWidth: 1,
+              borderTopWidth: 0,
+              width: "100%",
+              height: "auto",
+            }}
+          >
+            <Text style={styles.title}>
+              Utilization Certificate (HONORARIUM TO COOK)
+            </Text>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Class</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Total no of Students</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>No of Cook engaged</Text>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>No of Days Mid day meal Served</Text>
+            </View>
+
+            <View style={styles.view125H40}>
+              <Text style={styles.text}>Opening{"\n"} Balance</Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                width: "34%",
+                flexDirection: "column",
+                height: 40,
+                justifyContent: "center",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={[styles.text]}>Allotment of fund received</Text>
+              </View>
+              <View style={styles.rowWrapView}>
+                <View
+                  style={{
+                    borderRightWidth: 1,
+                    padding: 0,
+                    height: 30,
+                    width: "48%",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={[styles.text, { fontSize: 10, paddingRight: 4 }]}
+                  >
+                    Previous month{"\n"}allotment received
+                  </Text>
+                </View>
+                <View style={{}}>
+                  <Text style={[styles.text, { fontSize: 10, paddingLeft: 4 }]}>
+                    Current month{"\n"}allotment received
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={[styles.text, { fontSize: 9 }]}>
+                Total allotment{"\n"}
+                received{"\n"} (5+6(b))
+              </Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+
+                width: "25%",
+                flexDirection: "column",
+                height: 40,
+                justifyContent: "space-evenly",
+                alignItems: "stretch",
+              }}
+            >
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text style={styles.text}>Expenditure</Text>
+              </View>
+              <View style={styles.view20}>
+                <View
+                  style={{
+                    borderRightWidth: 1,
+                    padding: 0,
+                    height: 25,
+                    width: "50%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={[styles.text, { paddingRight: 2 }]}>
+                    Previous{"\n"} month
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    padding: 0,
+                    height: 25,
+                    width: "48%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text}>Current{"\n"} month</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.view125H40}>
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Total{"\n"}Expenditure{"\n"}
+                8(b)
+              </Text>
+            </View>
+            <View
+              style={{
+                paddingRight: 1,
+                width: "12.5%",
+                height: 40,
+              }}
+            >
+              <Text style={[styles.text, { fontSize: 10 }]}>
+                Closing{"\n"}Balance{"\n"}
+                (7-9)
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>1</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>2</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>3</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>4</Text>
+            </View>
+            <View style={[styles.view88, { width: "8.8%" }]}>
+              <Text style={styles.text}>5</Text>
+            </View>
+            <View style={[styles.view88, { width: "12%" }]}>
+              <Text style={styles.text}>6(a)</Text>
+            </View>
+            <View style={[styles.view88, { width: "12%" }]}>
+              <Text style={styles.text}>6(b)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>7</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>8(a)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>8(b)</Text>
+            </View>
+            <View style={styles.view88}>
+              <Text style={styles.text}>9</Text>
+            </View>
+            <View style={[styles.view88, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>10</Text>
+            </View>
+          </View>
+          <View style={styles.rowStartView}>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{TOTAL_STUDENTS}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{CCH_NAME.length}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>{thisMonthlyData?.worrkingDays}</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "8.8%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { width: "12%" }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={styles.view88H20}>
+              <Text style={styles.text}>-</Text>
+            </View>
+            <View style={[styles.view88H20, { borderRightWidth: 0 }]}>
+              <Text style={styles.text}>-</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              width: "100%",
+              height: "auto",
+
+              justifyContent: "center",
+              alignItems: "flex-end",
+              alignContent: "center",
+              marginTop: 60,
+              paddingRight: 70,
+            }}
+          >
+            <Text style={[styles.title, { marginBottom: 5 }]}>
+              ..............................................................................
+            </Text>
+            <Text
+              style={[styles.title, { paddingRight: 70, marginBottom: 10 }]}
+            >
+              Signature
+            </Text>
+            <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
+          </View>
+        </View>
+      </Page>
+      {/* <Page size="A4" style={styles.page} orientation="portrait">
         <View style={styles.pageMainView}>
           <Text style={styles.title}>
             Pradhan Mantri Poshan Shakti Nirman (PM POSHAN)
@@ -2838,7 +2727,7 @@ export default function MDMPrint({ data }) {
           </View>
         </View>
       </Page> */}
-      </Document>
+    </Document>
   );
 }
 
