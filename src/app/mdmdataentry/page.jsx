@@ -70,7 +70,7 @@ export default function MDMData() {
   const [showMonthSelection, setShowMonthSelection] = useState(false);
   const [monthText, setMonthText] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [entryMonths, setEntryYears] = useState([]);
+  const [entryMonths, setEntryMonths] = useState([]);
   const [serviceArray, setServiceArray] = useState([]);
   const [showDataTable, setShowDataTable] = useState(false);
   const [riceData, setRiceData] = useState([]);
@@ -363,32 +363,32 @@ export default function MDMData() {
     if (thisMonthlyData.length > 0) {
       filterMonthlyData(thisMonthlyData[0]);
     }
-    const thisMonthIndex = monthlyReportState.findIndex(
+    const thisMonthIndex = monthwiseSorted.findIndex(
       (data) => data.id === monthYearID
     );
-    let prevMonthIndex = monthlyReportState[monthlyReportState.length - 1];
+    let prevMonthData = monthwiseSorted[monthwiseSorted.length - 1];
     if (thisMonthIndex !== -1) {
-      prevMonthIndex = monthlyReportState[thisMonthIndex - 1];
+      prevMonthData = monthwiseSorted[monthwiseSorted.length - 1];
     }
     setMdmTransaction({
       ...mdmTransaction,
-      ppOB: prevMonthIndex?.ppCB,
-      pryOB: prevMonthIndex?.pryCB,
-      prevPpRC: prevMonthIndex?.ppRC,
-      prevPryRC: prevMonthIndex?.pryRC,
-      prevMonthlyPPCost: prevMonthIndex?.monthlyPPCost,
-      prevMonthlyPRYCost: prevMonthIndex?.monthlyPRYCost,
+      ppOB: prevMonthData?.ppCB,
+      pryOB: prevMonthData?.pryCB,
+      prevPpRC: prevMonthData?.ppRC,
+      prevPryRC: prevMonthData?.pryRC,
+      prevMonthlyPPCost: prevMonthData?.monthlyPPCost,
+      prevMonthlyPRYCost: prevMonthData?.monthlyPRYCost,
     });
     setMdmRice({
       ...mdmRice,
-      prevRicePPRC: prevMonthIndex?.ricePPRC,
-      prevRicePryRC: prevMonthIndex?.ricePryRC,
-      prevRicePPEX: prevMonthIndex?.ricePPCB,
-      prevRicePryEX: prevMonthIndex?.ricePryCB,
+      prevRicePPRC: prevMonthData?.ricePPRC,
+      prevRicePryRC: prevMonthData?.ricePryRC,
+      prevRicePPEX: prevMonthData?.ricePPCB,
+      prevRicePryEX: prevMonthData?.ricePryCB,
     });
-    setRicePPOB(prevMonthIndex?.ricePPCB);
-    setRicePryOB(prevMonthIndex?.ricePryCB);
-    setRiceOB(prevMonthIndex?.riceCB);
+    setRicePPOB(prevMonthData?.ricePPCB);
+    setRicePryOB(prevMonthData?.ricePryCB);
+    setRiceOB(prevMonthData?.riceCB);
 
     setLoader(false);
   };
@@ -414,6 +414,25 @@ export default function MDMData() {
     setRicePryCB(entry.ricePryCB);
     setMonthRiceCB(entry.riceCB);
     setRemarks(entry.remarks);
+
+    setMdmTransaction({
+      ppOB: entry.ppOB,
+      pryOB: entry.pryOB,
+      ppRC: entry.ppRC,
+      pryRC: entry.pryRC,
+      ppCB: entry.ppCB,
+      pryCB: entry.pryCB,
+      prevPpRC: entry.prevPpRC,
+      prevPryRC: entry.prevPryRC,
+      prevMonthlyPPCost: entry.prevMonthlyPPCost,
+      prevMonthlyPRYCost: entry.prevMonthlyPRYCost,
+    });
+    setMdmRice({
+      prevRicePPRC: entry.prevRicePPRC,
+      prevRicePryRC: entry.prevRicePryRC,
+      prevRicePPEX: entry.prevRicePPEX,
+      prevRicePryEX: entry.prevRicePryEX,
+    });
   };
 
   const calledData = (array) => {
@@ -473,7 +492,7 @@ export default function MDMData() {
       setShowMonthSelection(true);
       setFilteredData(x);
       setMoreFilteredData(x);
-      setEntryYears(uniqArray(y));
+      setEntryMonths(uniqArray(y));
     } else {
       setFilteredData([]);
       setSelectedYear("");
@@ -1361,36 +1380,59 @@ export default function MDMData() {
                       const thisMonthlyData = monthlyReportState.filter(
                         (data) => data.id === monthYearID
                       );
+                      console.log(thisMonthlyData);
+                      console.log(monthYearID);
                       if (thisMonthlyData.length > 0) {
                         filterMonthlyData(thisMonthlyData[0]);
                       }
                       const thisMonthIndex = monthlyReportState.findIndex(
                         (data) => data.id === monthYearID
                       );
-                      let prevMonthIndex =
+                      let prevMonthData =
                         monthlyReportState[monthlyReportState.length - 1];
                       if (thisMonthIndex !== -1) {
-                        prevMonthIndex = monthlyReportState[thisMonthIndex - 1];
+                        prevMonthData =
+                          monthlyReportState[monthlyReportState.length - 1];
+                      } else {
+                        setMdmTransaction({
+                          ...mdmTransaction,
+                          ppOB: prevMonthData?.ppCB,
+                          pryOB: prevMonthData?.pryCB,
+                          prevPpRC: prevMonthData?.ppRC,
+                          prevPryRC: prevMonthData?.pryRC,
+                          prevMonthlyPPCost: prevMonthData?.monthlyPPCost,
+                          prevMonthlyPRYCost: prevMonthData?.monthlyPRYCost,
+                        });
+                        setMdmRice({
+                          ...mdmRice,
+                          prevRicePPRC: prevMonthData?.ricePPRC,
+                          prevRicePryRC: prevMonthData?.ricePryRC,
+                          prevRicePPEX: prevMonthData?.ricePPCB,
+                          prevRicePryEX: prevMonthData?.ricePryCB,
+                        });
+                        setRicePPOB(prevMonthData?.ricePPCB);
+                        setRicePryOB(prevMonthData?.ricePryCB);
+                        setRiceOB(prevMonthData?.riceCB);
+                        setMonthlyPPCost(
+                          Math.round(ppTotalMeal * thisMonthMDMAllowance)
+                        );
+                        setMonthlyPRYCost(
+                          Math.round(pryTotalMeal * thisMonthMDMAllowance)
+                        );
+                        setMonthTotalCost(
+                          Math.round(
+                            ppTotalMeal * thisMonthMDMAllowance +
+                              pryTotalMeal * thisMonthMDMAllowance
+                          )
+                        );
+                        setMonthRiceConsunption(thisMonthTotalRiceConsumption);
+                        setMonthRiceGiven(totalRiceGiven);
+                        setMonthRiceCB(
+                          prevMonthData?.riceCB +
+                            totalRiceGiven -
+                            thisMonthTotalRiceConsumption
+                        );
                       }
-                      setMdmTransaction({
-                        ...mdmTransaction,
-                        ppOB: prevMonthIndex?.ppCB,
-                        pryOB: prevMonthIndex?.pryCB,
-                        prevPpRC: prevMonthIndex?.ppRC,
-                        prevPryRC: prevMonthIndex?.pryRC,
-                        prevMonthlyPPCost: prevMonthIndex?.monthlyPPCost,
-                        prevMonthlyPRYCost: prevMonthIndex?.monthlyPRYCost,
-                      });
-                      setMdmRice({
-                        ...mdmRice,
-                        prevRicePPRC: prevMonthIndex?.ricePPRC,
-                        prevRicePryRC: prevMonthIndex?.ricePryRC,
-                        prevRicePPEX: prevMonthIndex?.ricePPCB,
-                        prevRicePryEX: prevMonthIndex?.ricePryCB,
-                      });
-                      setRicePPOB(prevMonthIndex?.ricePPCB);
-                      setRicePryOB(prevMonthIndex?.ricePryCB);
-                      setRiceOB(prevMonthIndex?.riceCB);
                     }
                   }}
                 >
