@@ -363,6 +363,33 @@ export default function MDMData() {
     if (thisMonthlyData.length > 0) {
       filterMonthlyData(thisMonthlyData[0]);
     }
+    const thisMonthIndex = monthlyReportState.findIndex(
+      (data) => data.id === monthYearID
+    );
+    let prevMonthIndex = monthlyReportState[monthlyReportState.length - 1];
+    if (thisMonthIndex !== -1) {
+      prevMonthIndex = monthlyReportState[thisMonthIndex - 1];
+    }
+    setMdmTransaction({
+      ...mdmTransaction,
+      ppOB: prevMonthIndex?.ppCB,
+      pryOB: prevMonthIndex?.pryCB,
+      prevPpRC: prevMonthIndex?.ppRC,
+      prevPryRC: prevMonthIndex?.pryRC,
+      prevMonthlyPPCost: prevMonthIndex?.monthlyPPCost,
+      prevMonthlyPRYCost: prevMonthIndex?.monthlyPRYCost,
+    });
+    setMdmRice({
+      ...mdmRice,
+      prevRicePPRC: prevMonthIndex?.ricePPRC,
+      prevRicePryRC: prevMonthIndex?.ricePryRC,
+      prevRicePPEX: prevMonthIndex?.ricePPCB,
+      prevRicePryEX: prevMonthIndex?.ricePryCB,
+    });
+    setRicePPOB(prevMonthIndex?.ricePPCB);
+    setRicePryOB(prevMonthIndex?.ricePryCB);
+    setRiceOB(prevMonthIndex?.riceCB);
+
     setLoader(false);
   };
 
@@ -619,39 +646,46 @@ export default function MDMData() {
         month: monthToSubmit,
         year: selectedYear.toString(),
         financialYear: financialYear,
-        worrkingDays: monthWorkingDays,
-        totalWorkingDays: totalWorkingDays,
-        ppTotal: monthPPTotal,
-        pryTotal: monthPRYTotal,
-        monthlyPPCost: monthlyPPCost,
-        monthlyPRYCost: monthlyPRYCost,
-        totalCost: monthTotalCost,
-        ricePPOB,
-        ricePryOB,
-        riceOB: monthRiceOB,
-        ricePPRC,
-        ricePryRC,
-        ricePPEX,
-        ricePryEX,
-        ricePPCB,
-        ricePryCB,
-        riceCB: monthRiceCB,
-        riceConsunption: monthRiceConsunption,
-        riceGiven: monthRiceGiven,
-        ppOB: mdmTransaction.ppOB,
-        pryOB: mdmTransaction.pryOB,
-        ppRC: mdmTransaction.ppRC,
-        pryRC: mdmTransaction.pryRC,
-        ppCB: mdmTransaction.ppCB,
-        pryCB: mdmTransaction.pryCB,
-        prevPpRC: mdmTransaction.prevPpRC,
-        prevPryRC: mdmTransaction.prevPryRC,
-        prevMonthlyPPCost: mdmTransaction.prevMonthlyPPCost,
-        prevMonthlyPRYCost: mdmTransaction.prevMonthlyPRYCost,
-        prevRicePPRC: mdmRice.prevRicePPRC,
-        prevRicePryRC: mdmRice.prevRicePryRC,
-        prevRicePPEX: mdmRice.prevRicePPEX,
-        prevRicePryEX: mdmRice.prevRicePryEX,
+        worrkingDays: monthWorkingDays !== "" ? monthWorkingDays : 0,
+        totalWorkingDays: totalWorkingDays !== "" ? totalWorkingDays : 0,
+        ppTotal: monthPPTotal !== "" ? monthPPTotal : 0,
+        pryTotal: monthPRYTotal !== "" ? monthPRYTotal : 0,
+        monthlyPPCost: monthlyPPCost !== "" ? monthlyPPCost : 0,
+        monthlyPRYCost: monthlyPRYCost !== "" ? monthlyPRYCost : 0,
+        totalCost: monthTotalCost !== "" ? monthTotalCost : 0,
+        ricePPOB: ricePPOB !== "" ? ricePPOB : 0,
+        ricePryOB: ricePryOB !== "" ? ricePryOB : 0,
+        riceOB: monthRiceOB !== "" ? monthRiceOB : 0,
+        ricePPRC: ricePPRC !== "" ? ricePPRC : 0,
+        ricePryRC: ricePryRC !== "" ? ricePryRC : 0,
+        ricePPEX: ricePPEX !== "" ? ricePPEX : 0,
+        ricePryEX: ricePryEX !== "" ? ricePryEX : 0,
+        ricePPCB: ricePPCB !== "" ? ricePPCB : 0,
+        ricePryCB: ricePryCB !== "" ? ricePryCB : 0,
+        riceCB: monthRiceCB !== "" ? monthRiceCB : 0,
+        riceConsunption: monthRiceConsunption !== "" ? monthRiceConsunption : 0,
+        riceGiven: monthRiceGiven !== "" ? monthRiceGiven : 0,
+        ppOB: mdmTransaction.ppOB !== "" ? mdmTransaction.ppOB : 0,
+        pryOB: mdmTransaction.pryOB !== "" ? mdmTransaction.pryOB : 0,
+        ppRC: mdmTransaction.ppRC !== "" ? mdmTransaction.ppRC : 0,
+        pryRC: mdmTransaction.pryRC !== "" ? mdmTransaction.pryRC : 0,
+        ppCB: mdmTransaction.ppCB !== "" ? mdmTransaction.ppCB : 0,
+        pryCB: mdmTransaction.pryCB !== "" ? mdmTransaction.pryCB : 0,
+        prevPpRC: mdmTransaction.prevPpRC !== "" ? mdmTransaction.prevPpRC : 0,
+        prevPryRC:
+          mdmTransaction.prevPryRC !== "" ? mdmTransaction.prevPryRC : 0,
+        prevMonthlyPPCost:
+          mdmTransaction.prevMonthlyPPCost !== ""
+            ? mdmTransaction.prevMonthlyPPCost
+            : 0,
+        prevMonthlyPRYCost:
+          mdmTransaction.prevMonthlyPRYCost !== ""
+            ? mdmTransaction.prevMonthlyPRYCost
+            : 0,
+        prevRicePPRC: mdmRice.prevRicePPRC !== "" ? mdmRice.prevRicePPRC : 0,
+        prevRicePryRC: mdmRice.prevRicePryRC !== "" ? mdmRice.prevRicePryRC : 0,
+        prevRicePPEX: mdmRice.prevRicePPEX !== "" ? mdmRice.prevRicePPEX : 0,
+        prevRicePryEX: mdmRice.prevRicePryEX !== "" ? mdmRice.prevRicePryEX : 0,
         remarks: remarks,
         date: todayInString(),
       };
@@ -1330,6 +1364,33 @@ export default function MDMData() {
                       if (thisMonthlyData.length > 0) {
                         filterMonthlyData(thisMonthlyData[0]);
                       }
+                      const thisMonthIndex = monthlyReportState.findIndex(
+                        (data) => data.id === monthYearID
+                      );
+                      let prevMonthIndex =
+                        monthlyReportState[monthlyReportState.length - 1];
+                      if (thisMonthIndex !== -1) {
+                        prevMonthIndex = monthlyReportState[thisMonthIndex - 1];
+                      }
+                      setMdmTransaction({
+                        ...mdmTransaction,
+                        ppOB: prevMonthIndex?.ppCB,
+                        pryOB: prevMonthIndex?.pryCB,
+                        prevPpRC: prevMonthIndex?.ppRC,
+                        prevPryRC: prevMonthIndex?.pryRC,
+                        prevMonthlyPPCost: prevMonthIndex?.monthlyPPCost,
+                        prevMonthlyPRYCost: prevMonthIndex?.monthlyPRYCost,
+                      });
+                      setMdmRice({
+                        ...mdmRice,
+                        prevRicePPRC: prevMonthIndex?.ricePPRC,
+                        prevRicePryRC: prevMonthIndex?.ricePryRC,
+                        prevRicePPEX: prevMonthIndex?.ricePPCB,
+                        prevRicePryEX: prevMonthIndex?.ricePryCB,
+                      });
+                      setRicePPOB(prevMonthIndex?.ricePPCB);
+                      setRicePryOB(prevMonthIndex?.ricePryCB);
+                      setRiceOB(prevMonthIndex?.riceCB);
                     }
                   }}
                 >
