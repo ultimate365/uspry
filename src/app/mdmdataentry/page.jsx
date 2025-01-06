@@ -369,26 +369,40 @@ export default function MDMData() {
     let prevMonthData = monthwiseSorted[monthwiseSorted.length - 1];
     if (thisMonthIndex !== -1) {
       prevMonthData = monthwiseSorted[monthwiseSorted.length - 1];
+    } else {
+      setMdmTransaction({
+        ...mdmTransaction,
+        ppOB: prevMonthData?.ppCB,
+        pryOB: prevMonthData?.pryCB,
+        prevPpRC: prevMonthData?.ppRC,
+        prevPryRC: prevMonthData?.pryRC,
+        prevMonthlyPPCost: prevMonthData?.monthlyPPCost,
+        prevMonthlyPRYCost: prevMonthData?.monthlyPRYCost,
+      });
+      setMdmRice({
+        ...mdmRice,
+        prevRicePPRC: prevMonthData?.ricePPRC,
+        prevRicePryRC: prevMonthData?.ricePryRC,
+        prevRicePPEX: prevMonthData?.ricePPCB,
+        prevRicePryEX: prevMonthData?.ricePryCB,
+      });
+      setRicePPOB(prevMonthData?.ricePPCB);
+      setRicePryOB(prevMonthData?.ricePryCB);
+      setRiceOB(prevMonthData?.riceCB);
+      setMonthlyPPCost(Math.round(ppTotalMeal * thisMonthMDMAllowance));
+      setMonthlyPRYCost(Math.round(pryTotalMeal * thisMonthMDMAllowance));
+      setMonthTotalCost(
+        Math.round(
+          ppTotalMeal * thisMonthMDMAllowance +
+            pryTotalMeal * thisMonthMDMAllowance
+        )
+      );
+      setMonthRiceConsunption(thisMonthTotalRiceConsumption);
+      setMonthRiceGiven(totalRiceGiven);
+      setMonthRiceCB(
+        prevMonthData?.riceCB + totalRiceGiven - thisMonthTotalRiceConsumption
+      );
     }
-    setMdmTransaction({
-      ...mdmTransaction,
-      ppOB: prevMonthData?.ppCB,
-      pryOB: prevMonthData?.pryCB,
-      prevPpRC: prevMonthData?.ppRC,
-      prevPryRC: prevMonthData?.pryRC,
-      prevMonthlyPPCost: prevMonthData?.monthlyPPCost,
-      prevMonthlyPRYCost: prevMonthData?.monthlyPRYCost,
-    });
-    setMdmRice({
-      ...mdmRice,
-      prevRicePPRC: prevMonthData?.ricePPRC,
-      prevRicePryRC: prevMonthData?.ricePryRC,
-      prevRicePPEX: prevMonthData?.ricePPCB,
-      prevRicePryEX: prevMonthData?.ricePryCB,
-    });
-    setRicePPOB(prevMonthData?.ricePPCB);
-    setRicePryOB(prevMonthData?.ricePryCB);
-    setRiceOB(prevMonthData?.riceCB);
 
     setLoader(false);
   };
