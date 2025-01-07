@@ -1394,8 +1394,6 @@ export default function MDMData() {
                       const thisMonthlyData = monthlyReportState.filter(
                         (data) => data.id === monthYearID
                       );
-                      console.log(thisMonthlyData);
-                      console.log(monthYearID);
                       if (thisMonthlyData.length > 0) {
                         filterMonthlyData(thisMonthlyData[0]);
                       }

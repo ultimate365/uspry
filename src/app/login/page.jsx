@@ -42,96 +42,50 @@ export default function Login() {
     if (validFormStudent()) {
       try {
         setLoader(true);
-        const collectionRef = collection(firestore, "userStudents");
-        const q = query(
-          collectionRef,
-          where("studentID", "==", `028793${studentID}`)
-        );
+        const collectionRef = collection(firestore, "students");
+        const q = query(collectionRef, where("student_id", "==", studentID));
         const querySnapshot = await getDocs(q);
         // console.log(querySnapshot.docs[0].data().pan);
         if (querySnapshot.docs.length > 0) {
           const data = querySnapshot.docs[0].data();
 
           // if (data.password === password) {
-          if (await comparePassword(dob, data.dob)) {
-            const collectionRef2 = collection(firestore, "students");
-            const q2 = query(collectionRef2, where("id", "==", data.id));
-            const querySnapshot2 = await getDocs(q2);
-            if (querySnapshot2.docs.length > 0) {
-              const sdata = querySnapshot2.docs[0].data();
-              setLoader(false);
-              toast.success(
-                `Congrats! ${sdata.student_name} You are Logined Successfully!`,
-                {
-                  position: "top-right",
-                  autoClose: 1500,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-
-                  draggable: true,
-                  progress: undefined,
-                  theme: "light",
-                }
-              );
-              const Obj = {
-                name: sdata.student_name,
-                class: sdata.class,
-                roll: sdata.roll_no,
-                father_name: sdata.father_name,
-                mother_name: sdata.mother_name,
-                student_id: sdata.student_id,
-                mobile: sdata.mobile,
-                id: data.id,
-                birthdate: data.birthdate,
-                userType: data.userType,
-              };
-              setState({
-                USER: Obj,
-                LOGGEDAT: Date.now(),
-                ACCESS: data.userType,
-              });
-              encryptObjData("uid", Obj, 10080);
-              setCookie("loggedAt", Date.now(), 10080);
-              router.push("/dashboard");
-            }
+          if (dob === data.birthdate) {
+            setLoader(false);
+            toast.success(
+              `Congrats! ${data.student_name} You are Logined Successfully!`
+            );
+            const Obj = {
+              name: data.student_name,
+              class: data.class,
+              roll: data.roll_no,
+              father_name: data.father_name,
+              mother_name: data.mother_name,
+              student_id: data.student_id,
+              mobile: data.mobile,
+              id: data.id,
+              birthdate: data.birthdate,
+              userType: data.userType,
+            };
+            setState({
+              USER: Obj,
+              LOGGEDAT: Date.now(),
+              ACCESS: "student",
+            });
+            encryptObjData("uid", Obj, 10080);
+            setCookie("loggedAt", Date.now(), 10080);
+            router.push("/dashboard");
           } else {
             setLoader(false);
-            toast.error("Wrong Date of Birth!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            toast.error("Wrong Date of Birth!");
           }
         } else {
           setLoader(false);
-          toast.error("Invalid Student ID!", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error("Invalid Student ID!");
         }
       } catch (error) {
         setLoader(false);
-        toast.error("Something Went Wrong!", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something Went Wrong!");
         console.log(error);
       }
     } else {
@@ -141,8 +95,8 @@ export default function Login() {
 
   const validFormStudent = () => {
     let isValid = false;
-    if (studentID.length !== 8) {
-      setStudentIDERR("8 Digit Student ID is required");
+    if (studentID.length !== 14) {
+      setStudentIDERR("14 Digit Student ID is required");
       isValid = false;
     } else {
       setStudentIDERR("");
@@ -174,10 +128,10 @@ export default function Login() {
             const q2 = query(collectionRef2, where("id", "==", data.id));
             const querySnapshot2 = await getDocs(q2);
             if (querySnapshot2.docs.length > 0) {
-              const sdata = querySnapshot2.docs[0].data();
+              const data = querySnapshot2.docs[0].data();
               setLoader(false);
               toast.success(
-                `Congrats! ${sdata.tname} Your Data is Authenticated, Please verify Your Login!`,
+                `Congrats! ${data.tname} Your Data is Authenticated, Please verify Your Login!`,
                 {
                   position: "top-right",
                   autoClose: 1500,
@@ -190,9 +144,9 @@ export default function Login() {
                 }
               );
               const Obj = {
-                name: sdata.tname,
-                desig: sdata.desig,
-                mobile: sdata.phone,
+                name: data.tname,
+                desig: data.desig,
+                mobile: data.phone,
                 id: data.id,
                 username: data.username,
                 userType: data.access,
@@ -362,12 +316,12 @@ export default function Login() {
                   Student&#8217;s Login
                 </h4>
                 <label className="form-label my-3 fs-5">
-                  Last 8 Digits of Student ID
+                  Plese Enter Your 14 Digit Student ID
                 </label>
                 <div className="input-group mb-3">
-                  <span className="input-group-text" id="basic-addon1">
-                    028793
-                  </span>
+                  {/* <span className="input-group-text" id="basic-addon1">
+                    <i className="bi bi-input-cursor-text"></i>
+                  </span> */}
                   <input
                     type="number"
                     className="form-control"
@@ -375,11 +329,11 @@ export default function Login() {
                     maxLength={8}
                     value={studentID}
                     onChange={(e) => {
-                      if(e.target.value.length<=8){
-                        setStudentID(e.target.value)
+                      if (e.target.value.length <= 14) {
+                        setStudentID(e.target.value);
                       }
                     }}
-                    placeholder="Last 8 Digits of Student ID"
+                    placeholder="14 Digits of Student ID"
                   />
                 </div>
                 <div className="mb-3">
