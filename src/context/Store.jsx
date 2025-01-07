@@ -83,6 +83,8 @@ const GlobalContext = createContext({
   setExpensesUpdateTime: () => "",
   sourceState: [],
   setSourceState: () => [],
+  StudentDataState:[],
+  setStudentDataState: () => [],
 });
 export const GlobalContextProvider = ({ children }) => {
   const [state, setState] = useState({
@@ -142,6 +144,7 @@ export const GlobalContextProvider = ({ children }) => {
     Date.now() - 1000
   );
   const [sourceState, setSourceState] = useState([]);
+  const [StudentDataState, setStudentDataState] = useState([]);
 
   return (
     <GlobalContext.Provider
@@ -192,6 +195,8 @@ export const GlobalContextProvider = ({ children }) => {
         setExpensesUpdateTime,
         sourceState,
         setSourceState,
+        StudentDataState,
+        setStudentDataState,
       }}
     >
       <FirebaseProvider>{children}</FirebaseProvider>

@@ -2,7 +2,6 @@
 import {
   BLOCK,
   CCH_NAME,
-  PP_STUDENTS,
   PRIMARY_STUDENTS,
   SCHOOL_TYPE,
   SCHOOLNAME,
@@ -75,6 +74,9 @@ export default function MDMmonthlyReport() {
     prevRicePPEX: "",
     prevRicePryEX: "",
     remarks: "",
+    ppStudent: "",
+    pryStudent: "",
+    totalStudent: "",
     date: todayInString(),
   });
   const access = state?.ACCESS;
@@ -466,10 +468,12 @@ export default function MDMmonthlyReport() {
                       }}
                     >
                       <p>
-                        Total no. of the Students Bal Vatika:- {PP_STUDENTS}
+                        Total no. of the Students Bal Vatika:-{" "}
+                        {thisMonthlyData?.ppStudent}
                       </p>
                       <p>
-                        Total no. of the Students Primary:- {PRIMARY_STUDENTS}
+                        Total no. of the Students Primary:-{" "}
+                        {thisMonthlyData?.pryStudent}
                       </p>
                     </td>
                     <td colSpan={3} style={{ border: "1px solid" }}>
@@ -1065,7 +1069,9 @@ export default function MDMmonthlyReport() {
                     className="text-center"
                   >
                     <td style={{ border: "1px solid" }}>Bal Vatika</td>
-                    <td style={{ border: "1px solid" }}>{PP_STUDENTS}</td>
+                    <td style={{ border: "1px solid" }}>
+                      {thisMonthlyData?.ppStudent}
+                    </td>
                     <td style={{ border: "1px solid" }}>
                       {thisMonthlyData?.ppTotal}
                     </td>
@@ -1107,7 +1113,9 @@ export default function MDMmonthlyReport() {
                     className="text-center"
                   >
                     <td style={{ border: "1px solid" }}>Primary</td>
-                    <td style={{ border: "1px solid" }}>{PRIMARY_STUDENTS}</td>
+                    <td style={{ border: "1px solid" }}>
+                      {thisMonthlyData?.pryStudent}
+                    </td>
                     <td style={{ border: "1px solid" }}>
                       {thisMonthlyData?.pryTotal}
                     </td>
@@ -1246,7 +1254,9 @@ export default function MDMmonthlyReport() {
                     className="text-center"
                   >
                     <td style={{ border: "1px solid" }}>Bal Vatika</td>
-                    <td style={{ border: "1px solid" }}>{PP_STUDENTS}</td>
+                    <td style={{ border: "1px solid" }}>
+                      {thisMonthlyData?.ppStudent}
+                    </td>
                     <td style={{ border: "1px solid" }}>
                       {thisMonthlyData?.ppTotal}
                     </td>
@@ -1286,7 +1296,9 @@ export default function MDMmonthlyReport() {
                     className="text-center"
                   >
                     <td style={{ border: "1px solid" }}>Primary</td>
-                    <td style={{ border: "1px solid" }}>{PRIMARY_STUDENTS}</td>
+                    <td style={{ border: "1px solid" }}>
+                      {thisMonthlyData?.pryStudent}
+                    </td>
                     <td style={{ border: "1px solid" }}>
                       {thisMonthlyData?.pryTotal}
                     </td>
@@ -1421,7 +1433,9 @@ export default function MDMmonthlyReport() {
                     className="text-center"
                   >
                     <td style={{ border: "1px solid" }}>-</td>
-                    <td style={{ border: "1px solid" }}>{TOTAL_STUDENTS}</td>
+                    <td style={{ border: "1px solid" }}>
+                      {thisMonthlyData?.totalStudent}
+                    </td>
                     <td style={{ border: "1px solid" }}>{CCH_NAME.length}</td>
                     <td style={{ border: "1px solid" }}>-</td>
                     <td style={{ border: "1px solid" }}>-</td>
@@ -1698,7 +1712,7 @@ export default function MDMmonthlyReport() {
                         paddingInline: 2,
                       }}
                     >
-                      {TOTAL_STUDENTS}
+                      {thisMonthlyData?.totalStudent}
                     </td>
                   </tr>
                 </table>
@@ -2313,7 +2327,7 @@ export default function MDMmonthlyReport() {
                           BAL VATIKA
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {PP_STUDENTS}
+                          {thisMonthlyData?.ppStudent}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           {thisMonthlyData?.ppTotal}
@@ -2334,7 +2348,7 @@ export default function MDMmonthlyReport() {
                           PRIMARY
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {PRIMARY_STUDENTS}
+                          {thisMonthlyData?.pryStudent}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           {thisMonthlyData?.pryTotal}

@@ -137,10 +137,12 @@ export default function MDMPrint({ data }) {
               }}
             >
               <Text style={styles.title}>
-                Total no. of the Students Bal Vatika:- {PP_STUDENTS}
+                Total no. of the Students Bal Vatika:-{" "}
+                {thisMonthlyData?.ppStudent}
               </Text>
               <Text style={styles.title}>
-                Total no. of the Students Primary:- {PRIMARY_STUDENTS}
+                Total no. of the Students Primary:-{" "}
+                {thisMonthlyData?.pryStudent}
               </Text>
             </View>
             <View
@@ -1218,7 +1220,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>Bal Vatika</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>{PP_STUDENTS}</Text>
+              <Text style={styles.text}>{thisMonthlyData?.ppStudent}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{thisMonthlyData?.ppTotal}</Text>
@@ -1275,7 +1277,9 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>Primary</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>{PRIMARY_STUDENTS}</Text>
+              <Text style={styles.text}>
+                {thisMonthlyData?.pryStudent}
+              </Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
@@ -1560,7 +1564,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>Bal Vatika</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>{PP_STUDENTS}</Text>
+              <Text style={styles.text}>{thisMonthlyData?.ppStudent}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{thisMonthlyData?.ppTotal}</Text>
@@ -1604,7 +1608,9 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>Primary</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>{PRIMARY_STUDENTS}</Text>
+              <Text style={styles.text}>
+                {thisMonthlyData?.pryStudent}
+              </Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
@@ -2364,7 +2370,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text2}>BAL VATIKA</Text>
             </View>
             <View style={styles.view20Sec}>
-              <Text style={styles.text2}>{PP_STUDENTS}</Text>
+              <Text style={styles.text2}>{thisMonthlyData?.ppStudent}</Text>
             </View>
             <View style={styles.view20Sec}>
               <Text style={styles.text2}>{thisMonthlyData?.ppTotal}</Text>
@@ -2384,7 +2390,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text2}>PRIMARY</Text>
             </View>
             <View style={styles.view20Sec}>
-              <Text style={styles.text2}>{PRIMARY_STUDENTS}</Text>
+              <Text style={styles.text2}>{thisMonthlyData?.pryStudent}</Text>
             </View>
             <View style={styles.view20Sec}>
               <Text style={styles.text2}>{thisMonthlyData?.pryTotal}</Text>

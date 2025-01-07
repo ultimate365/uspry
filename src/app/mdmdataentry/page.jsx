@@ -43,6 +43,8 @@ export default function MDMData() {
     setRiceState,
     monthlyReportState,
     setMonthlyReportState,
+    StudentDataState,
+    setStudentDataState,
   } = useGlobalContext();
   const router = useRouter();
   const access = state?.ACCESS;
@@ -126,6 +128,15 @@ export default function MDMData() {
     prevRicePPEX: "",
     prevRicePryEX: "",
   });
+  const [StudentData, setStudentData] = useState({
+    PP_STUDENTS: 8,
+    PRIMARY_BOYS: 21,
+    PRIMARY_GIRLS: 25,
+    PRIMARY_STUDENTS: 40,
+    TOTAL_STUDENTS: 46,
+    YEAR: "2025",
+    id: "2025",
+  });
   const submitData = async () => {
     if (validForm()) {
       setLoader(true);
@@ -199,15 +210,7 @@ export default function MDMData() {
     } else {
       setShowUpdate(true);
       setDocId(todayInString());
-      toast.error("Todays Enry Not Done Yet!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Todays Enry Not Done Yet!");
     }
     setShowDataTable(false);
     setShowMonthSelection(false);
@@ -249,39 +252,15 @@ export default function MDMData() {
           .catch((e) => {
             console.log(e);
             setLoader(false);
-            toast.error("Something went Wrong!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
+            toast.error("Something went Wrong!");
           });
       } catch (error) {
         console.log(error);
         setLoader(false);
-        toast.error("Something went Wrong!", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error("Something went Wrong!");
       }
     } else {
-      toast.error("Please Fillup Required Details!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Please Fillup Required Details!");
     }
   };
 
@@ -333,6 +312,21 @@ export default function MDMData() {
     setRiceOB(data[data.length - 1].riceCB);
     setRiceCB(data[data.length - 1].riceCB);
     findRiceEntry(data);
+  };
+  const getStudentData = async () => {
+    if (StudentDataState.length !== 0) {
+      const querySnapshot = await getDocs(
+        query(collection(firestore, "studentYearData"))
+      );
+      const data = querySnapshot.docs.map((doc) => ({
+        // doc.data() is never undefined for query doc snapshots
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setStudentDataState(data);
+      const year = date?.split("-")[2];
+      setStudentData(StudentDataState.filter((s) => s.year === year)[0]);
+    }
   };
   const findRiceEntry = (array) => {
     if (array.filter((el) => el?.id === todayInString()).length > 0) {
@@ -576,6 +570,7 @@ export default function MDMData() {
     setMonthYearID(`${month.monthName}-${selectedYear}`);
     setMonthToSubmit(month.monthName);
     setMonthWorkingDays(x.length);
+    setTotalWorkingDays(x.length);
     setMonthPPTotal(ppTotal);
     setMonthPRYTotal(pryTotal);
     setMonthlyPPCost(Math.round(ppTotal * mdmCost));
@@ -720,6 +715,9 @@ export default function MDMData() {
         prevRicePPEX: mdmRice.prevRicePPEX !== "" ? mdmRice.prevRicePPEX : 0,
         prevRicePryEX: mdmRice.prevRicePryEX !== "" ? mdmRice.prevRicePryEX : 0,
         remarks: remarks,
+        ppStudent: StudentData.PP_STUDENTS,
+        pryStudent: StudentData.PRIMARY_STUDENTS,
+        totalStudent: StudentData.TOTAL_STUDENTS,
         date: todayInString(),
       };
       await setDoc(doc(firestore, "mothlyMDMData", monthYearID), entry)
@@ -848,8 +846,16 @@ export default function MDMData() {
       router.push("/");
       toast.error("Unathorized access");
     }
+    getStudentData();
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    const year = date?.split("-")[2];
+    if (StudentDataState.length !== 0) {
+      setStudentData(StudentDataState.filter((s) => s.year === year)[0]);
+    }
+  }, [date]);
 
   return (
     <div className="container">
@@ -956,12 +962,12 @@ export default function MDMData() {
             <input
               type="number"
               className="form-control"
-              placeholder={`Max Limit: ${PP_STUDENTS}`}
+              placeholder={`Max Limit: ${StudentData?.PP_STUDENTS}`}
               value={pp}
               onChange={(e) => {
-                if (e.target.value > PP_STUDENTS) {
+                if (e.target.value > StudentData?.PP_STUDENTS) {
                   toast.error("PP Limit Exceeded!");
-                  setPp(PP_STUDENTS);
+                  setPp(StudentData?.PP_STUDENTS);
                 } else {
                   setPp(e.target.value);
                 }
@@ -974,12 +980,12 @@ export default function MDMData() {
             <input
               type="number"
               className="form-control"
-              placeholder={`Max Limit: ${PRIMARY_STUDENTS}`}
+              placeholder={`Max Limit: ${StudentData?.PRIMARY_STUDENTS}`}
               value={pry}
               onChange={(e) => {
-                if (e.target.value > PRIMARY_STUDENTS) {
+                if (e.target.value > StudentData?.PRIMARY_STUDENTS) {
                   toast.error("Primary Limit Exceeded!");
-                  setPry(PRIMARY_STUDENTS);
+                  setPry(StudentData?.PRIMARY_STUDENTS);
                 } else {
                   setPry(e.target.value);
                 }
@@ -1049,12 +1055,12 @@ export default function MDMData() {
             <input
               type="number"
               className="form-control"
-              placeholder={`Max Limit: ${PP_STUDENTS}`}
+              placeholder={`Max Limit: ${StudentData?.PP_STUDENTS}`}
               value={pp}
               onChange={(e) => {
-                if (e.target.value > PP_STUDENTS) {
+                if (e.target.value > StudentData?.PP_STUDENTS) {
                   toast.error("PP Limit Exceeded!");
-                  setPp(PP_STUDENTS);
+                  setPp(StudentData?.PP_STUDENTS);
                 } else {
                   setPp(e.target.value);
                 }
@@ -1067,12 +1073,12 @@ export default function MDMData() {
             <input
               type="number"
               className="form-control"
-              placeholder={`Max Limit: ${PRIMARY_STUDENTS}`}
+              placeholder={`Max Limit: ${StudentData?.PRIMARY_STUDENTS}`}
               value={pry}
               onChange={(e) => {
-                if (e.target.value > PRIMARY_STUDENTS) {
+                if (e.target.value > StudentData?.PRIMARY_STUDENTS) {
                   toast.error("Primary Limit Exceeded!");
-                  setPry(PRIMARY_STUDENTS);
+                  setPry(StudentData?.PRIMARY_STUDENTS);
                 } else {
                   setPry(e.target.value);
                 }
@@ -1480,6 +1486,50 @@ export default function MDMData() {
                               setMonthWorkingDays(parseInt(e.target.value));
                             } else {
                               setMonthWorkingDays("");
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">PP Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PP Students`}
+                          value={StudentData.PP_STUDENTS}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setStudentData({
+                                ...StudentData,
+                                PP_STUDENTS: e.target.value,
+                              });
+                            } else {
+                              setStudentData({
+                                ...StudentData,
+                                PP_STUDENTS: "",
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">PRIMARY Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder={`Enter PRIMARY Students`}
+                          value={StudentData.PRIMARY_STUDENTS}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              setStudentData({
+                                ...StudentData,
+                                PRIMARY_STUDENTS: e.target.value,
+                              });
+                            } else {
+                              setStudentData({
+                                ...StudentData,
+                                PRIMARY_STUDENTS: "",
+                              });
                             }
                           }}
                         />
