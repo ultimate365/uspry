@@ -128,7 +128,29 @@ export default function MDMData() {
     prevRicePPEX: "",
     prevRicePryEX: "",
   });
+  const [showStudentDataEntryForm, setShowStudentDataEntryForm] =
+    useState(false);
+    const [showStudentDataAddForm, setShowStudentDataAddForm] = useState(false)
+  const [showStudentDataEditForm, setShowStudentDataEditForm] = useState(false);
   const [StudentData, setStudentData] = useState({
+    PP_STUDENTS: 8,
+    PRIMARY_BOYS: 21,
+    PRIMARY_GIRLS: 25,
+    PRIMARY_STUDENTS: 40,
+    TOTAL_STUDENTS: 46,
+    YEAR: "2025",
+    id: "2025",
+  });
+  const [StudentEditData, setStudentEditData] = useState({
+    PP_STUDENTS: 8,
+    PRIMARY_BOYS: 21,
+    PRIMARY_GIRLS: 25,
+    PRIMARY_STUDENTS: 40,
+    TOTAL_STUDENTS: 46,
+    YEAR: "2025",
+    id: "2025",
+  });
+  const [StudentEntryData, setStudentEntryData] = useState({
     PP_STUDENTS: 8,
     PRIMARY_BOYS: 21,
     PRIMARY_GIRLS: 25,
@@ -314,7 +336,8 @@ export default function MDMData() {
     findRiceEntry(data);
   };
   const getStudentData = async () => {
-    if (StudentDataState.length !== 0) {
+    const year = date?.split("-")[2];
+    if (StudentDataState.length === 0) {
       const querySnapshot = await getDocs(
         query(collection(firestore, "studentYearData"))
       );
@@ -324,7 +347,9 @@ export default function MDMData() {
         id: doc.id,
       }));
       setStudentDataState(data);
-      const year = date?.split("-")[2];
+
+      setStudentData(data.filter((s) => s.year === year)[0]);
+    } else {
       setStudentData(StudentDataState.filter((s) => s.year === year)[0]);
     }
   };
@@ -733,28 +758,12 @@ export default function MDMData() {
         .catch((e) => {
           console.log(e);
           setLoader(false);
-          toast.error("Something went Wrong!", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error("Something went Wrong!");
         });
     } catch (e) {
       console.log(e);
       setLoader(false);
-      toast.error("Something went Wrong!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went Wrong!");
     }
   };
   const delEntry = async (entry) => {
@@ -787,31 +796,89 @@ export default function MDMData() {
         .catch((err) => {
           console.log(err);
           setLoader(false);
-          toast.error("Something went Wrong!", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error("Something went Wrong!");
         });
     } catch (e) {
       console.log(e);
       setLoader(false);
-      toast.error("Something went Wrong!", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("Something went Wrong!");
     }
   };
-
+  const handleStudentDataEditSubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true);
+    try {
+      await updateDoc(
+        doc(firestore, "studentYearData", StudentEditData.id),
+        StudentEditData
+      ).then(() => {
+        toast.success("Student Data Updated successfully");
+        setLoader(false);
+        setStudentEditData({
+          PP_STUDENTS: 8,
+          PRIMARY_BOYS: 21,
+          PRIMARY_GIRLS: 25,
+          PRIMARY_STUDENTS: 40,
+          TOTAL_STUDENTS: 46,
+          YEAR: "2025",
+          id: "2025",
+        });
+        setShowStudentDataEditForm(false);
+        getStudentData();
+      });
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      toast.error("Something went Wrong!");
+    }
+  };
+  const handleStudentDataNewAddSubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true);
+    try {
+      
+      await setDoc(
+        doc(firestore, "studentYearData", StudentEntryData.YEAR),
+        StudentEntryData
+      )
+        .then(() => {
+          toast.success("Student Data Submitted successfully");
+          setLoader(false);
+          setShowStudentDataAddForm(false);
+          getStudentData();
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoader(false);
+          toast.error("Something went Wrong!");
+        });
+    } catch (error) {
+      console.log(StudentEntryData)
+      console.log(error);
+      setLoader(false);
+      toast.error("Something went Wrong!");
+    }
+  };
+  const deleteStudentData = async (id) => {
+    setLoader(true);
+    try {
+      await deleteDoc(doc(firestore, "studentYearData", id))
+        .then(() => {
+          toast.success("Student Data Deleted successfully");
+          setLoader(false);
+          getStudentData();
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoader(false);
+          toast.error("Something went Wrong!");
+        });
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      toast.error("Something went Wrong!");
+    }
+  };
   useEffect(() => {}, [
     allEnry,
     filteredData,
@@ -880,6 +947,7 @@ export default function MDMData() {
               setShowEntry(true);
               setShowUpdate(false);
               setShowMonthlyReport(false);
+              setShowStudentDataEntryForm(false);
               setPp("");
               setPry("");
               setErrPP("");
@@ -911,6 +979,7 @@ export default function MDMData() {
         className={`btn btn-${!mdmDone ? "danger" : "success"} m-1`}
         onClick={() => {
           searchTodaysData();
+          setShowStudentDataEntryForm(false);
         }}
       >
         Coverage Update
@@ -918,7 +987,10 @@ export default function MDMData() {
       <button
         type="button"
         className="btn btn-success m-1"
-        onClick={() => calledData(allEnry)}
+        onClick={() => {
+          calledData(allEnry);
+          setShowStudentDataEntryForm(false);
+        }}
       >
         Monthly Report
       </button>
@@ -939,11 +1011,27 @@ export default function MDMData() {
           setShowMonthSelection(false);
           setShowEntry(false);
           setShowUpdate(false);
+          setShowStudentDataEntryForm(false);
           setDate(todayInString());
           setDocId(todayInString());
         }}
       >
         Rice Data
+      </button>
+      <button
+        type="button"
+        className={`btn btn-dark m-1`}
+        onClick={() => {
+          setShowStudentDataEntryForm(true);
+          setShowRiceData(false);
+          setShowMonthlyReport(false);
+          setShowDataTable(false);
+          setShowMonthSelection(false);
+          setShowEntry(false);
+          setShowUpdate(false);
+        }}
+      >
+        Student Data Entry
       </button>
       {showEntry && (
         <form>
@@ -2364,6 +2452,371 @@ export default function MDMData() {
               Cancel
             </button>
           </form>
+        </div>
+      )}
+      {showStudentDataEntryForm && (
+        <div className="my-3 mx-auto">
+          <h4 className="my-3">Student Data Entry</h4>
+          <button
+            className="btn btn-warning m-2"
+            onClick={() => {
+              setShowStudentDataAddForm(true);
+            }}
+          >
+            New Entry
+          </button>
+          <table
+            className="table table-responsive table-bordered table-striped"
+            style={{
+              width: "100%",
+              overflowX: "auto",
+              marginBottom: "20px",
+              border: "1px solid",
+            }}
+          >
+            <thead>
+              <tr>
+                <th>Sl</th>
+                <th>Year</th>
+                <th>PP</th>
+                <th>Primary</th>
+                <th>Total</th>
+                <th>Boys</th>
+                <th>Girls</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {StudentDataState.map((student, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{student.YEAR}</td>
+                  <td>{student.PP_STUDENTS}</td>
+                  <td>{student.PRIMARY_STUDENTS}</td>
+                  <td>{student.TOTAL_STUDENTS}</td>
+                  <td>{student.PRIMARY_BOYS}</td>
+                  <td>{student.PRIMARY_GIRLS}</td>
+                  <td suppressHydrationWarning={true}>
+                    <button
+                      className="btn btn-warning m-2"
+                      onClick={() => {
+                        setStudentEditData(student);
+                        setShowStudentDataEditForm(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger m-2"
+                      onClick={() => {
+                        // eslint-disable-next-line no-alert
+                        if (
+                          window.confirm(
+                            `Are you sure you want to delete student data for ${student.YEAR}`
+                          )
+                        ) {
+                          deleteStudentData(student.id);
+                        } else {
+                          toast.success("Student data Not deleted");
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {showStudentDataEditForm && (
+            <div className="my-3 ax-auto">
+              <h4>Student Data Edit Form</h4>
+              <form onSubmit={handleStudentDataEditSubmit}>
+                <div className="form-group mb-3">
+                  <label>Year</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEditData.YEAR}
+                    onChange={(e) =>
+                      setStudentEditData({
+                        ...StudentEditData,
+                        YEAR: e.target.value,
+                        id: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>PP Students</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEditData.PP_STUDENTS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PP_STUDENTS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PP_STUDENTS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Primary Students</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEditData.PRIMARY_STUDENTS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PRIMARY_STUDENTS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PRIMARY_STUDENTS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Total Students</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEditData.TOTAL_STUDENTS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          TOTAL_STUDENTS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          TOTAL_STUDENTS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Primary Boys</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEditData.PRIMARY_BOYS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PRIMARY_BOYS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PRIMARY_BOYS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Primary Girls</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEditData.PRIMARY_GIRLS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PRIMARY_GIRLS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEditData({
+                          ...StudentEditData,
+                          PRIMARY_GIRLS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <button type="submit" className="btn btn-success m-2">
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-dark m-2"
+                  onClick={() => {
+                    setShowStudentDataEditForm(false);
+                  }}
+                >
+                  Close Form
+                </button>
+              </form>
+            </div>
+          )}
+          {showStudentDataAddForm && (
+            <div className="my-3 ax-auto">
+              <h4>Student Data Entry Form</h4>
+              <form onSubmit={handleStudentDataNewAddSubmit}>
+                <div className="form-group mb-3">
+                  <label>Year</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEntryData.YEAR}
+                    onChange={(e) =>
+                      setStudentEntryData({
+                        ...StudentEntryData,
+                        YEAR: e.target.value,
+                        id: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>PP Students</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEntryData.PP_STUDENTS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PP_STUDENTS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PP_STUDENTS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Primary Students</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEntryData.PRIMARY_STUDENTS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PRIMARY_STUDENTS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PRIMARY_STUDENTS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Total Students</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEntryData.TOTAL_STUDENTS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          TOTAL_STUDENTS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          TOTAL_STUDENTS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Primary Boys</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEntryData.PRIMARY_BOYS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PRIMARY_BOYS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PRIMARY_BOYS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label>Primary Girls</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={StudentEntryData.PRIMARY_GIRLS}
+                    onChange={(e) => {
+                      if (e.target.value !== "") {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PRIMARY_GIRLS: parseInt(e.target.value),
+                        });
+                      } else {
+                        setStudentEntryData({
+                          ...StudentEntryData,
+                          PRIMARY_GIRLS: "",
+                        });
+                      }
+                    }}
+                  />
+                </div>
+                <button type="submit" className="btn btn-success m-2">
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-dark m-2"
+                  onClick={() => {
+                    setShowStudentDataAddForm(false);
+                  }}
+                >
+                  Close Form
+                </button>
+              </form>
+            </div>
+          )}
+          <button
+            type="button"
+            className="btn btn-danger"
+            onClick={() => {
+              setShowStudentDataEntryForm(false);
+              setShowStudentDataEditForm(false);
+              setShowStudentDataAddForm(false);
+            }}
+          >
+            Close
+          </button>
         </div>
       )}
     </div>
