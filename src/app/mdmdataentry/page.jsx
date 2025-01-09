@@ -130,7 +130,7 @@ export default function MDMData() {
   });
   const [showStudentDataEntryForm, setShowStudentDataEntryForm] =
     useState(false);
-    const [showStudentDataAddForm, setShowStudentDataAddForm] = useState(false)
+  const [showStudentDataAddForm, setShowStudentDataAddForm] = useState(false);
   const [showStudentDataEditForm, setShowStudentDataEditForm] = useState(false);
   const [StudentData, setStudentData] = useState({
     PP_STUDENTS: 8,
@@ -813,7 +813,6 @@ export default function MDMData() {
         StudentEditData
       ).then(() => {
         toast.success("Student Data Updated successfully");
-        setLoader(false);
         setStudentEditData({
           PP_STUDENTS: 8,
           PRIMARY_BOYS: 21,
@@ -824,7 +823,12 @@ export default function MDMData() {
           id: "2025",
         });
         setShowStudentDataEditForm(false);
-        getStudentData();
+        const filteredEntry = StudentDataState.filter(
+          (el) => el.id !== StudentEntryData.id
+        );
+        const updatedEntry = [...filteredEntry, StudentEntryData];
+        setStudentDataState(updatedEntry);
+        setLoader(false);
       });
     } catch (error) {
       console.log(error);
@@ -836,16 +840,16 @@ export default function MDMData() {
     e.preventDefault();
     setLoader(true);
     try {
-      
       await setDoc(
         doc(firestore, "studentYearData", StudentEntryData.YEAR),
         StudentEntryData
       )
         .then(() => {
           toast.success("Student Data Submitted successfully");
-          setLoader(false);
           setShowStudentDataAddForm(false);
-          getStudentData();
+          const updatedEntry = [...StudentDataState, StudentEntryData];
+          setStudentDataState(updatedEntry);
+          setLoader(false);
         })
         .catch((err) => {
           console.log(err);
@@ -853,7 +857,7 @@ export default function MDMData() {
           toast.error("Something went Wrong!");
         });
     } catch (error) {
-      console.log(StudentEntryData)
+      console.log(StudentEntryData);
       console.log(error);
       setLoader(false);
       toast.error("Something went Wrong!");
@@ -866,7 +870,8 @@ export default function MDMData() {
         .then(() => {
           toast.success("Student Data Deleted successfully");
           setLoader(false);
-          getStudentData();
+          const filteredEntry = StudentDataState.filter((el) => el.id !== id);
+          setStudentDataState(filteredEntry);
         })
         .catch((err) => {
           console.log(err);
@@ -935,40 +940,24 @@ export default function MDMData() {
         onClick={() => {
           allEnry.map((entry) => {
             if (entry.date === todayInString()) {
-              toast.error("Todays Entry Already Done!", {
-                position: "top-right",
-                autoClose: 1500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-              setShowEntry(true);
-              setShowUpdate(false);
-              setShowMonthlyReport(false);
-              setShowStudentDataEntryForm(false);
-              setPp("");
-              setPry("");
+              toast.error("Todays Entry Already Done!");
+              setPp(entry.pp);
+              setPry(entry.pry);
               setErrPP("");
               setErrPry("");
-              setDate(todayInString());
-              setShowDataTable(false);
-              setShowMonthSelection(false);
-              setShowRiceData(false);
             } else {
-              setShowEntry(true);
-              setShowUpdate(false);
-              setShowMonthlyReport(false);
               setPp("");
               setPry("");
               setErrPP("");
               setErrPry("");
-              setDate(todayInString());
-              setShowDataTable(false);
-              setShowMonthSelection(false);
-              setShowRiceData(false);
             }
+            setShowEntry(true);
+            setShowUpdate(false);
+            setShowMonthlyReport(false);
+            setDate(todayInString());
+            setShowDataTable(false);
+            setShowMonthSelection(false);
+            setShowRiceData(false);
           });
         }}
       >
