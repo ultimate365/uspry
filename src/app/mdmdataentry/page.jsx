@@ -348,9 +348,9 @@ export default function MDMData() {
       }));
       setStudentDataState(data);
 
-      setStudentData(data.filter((s) => s.year === year)[0]);
+      setStudentData(data.filter((s) => s.YEAR === year)[0]);
     } else {
-      setStudentData(StudentDataState.filter((s) => s.year === year)[0]);
+      setStudentData(StudentDataState.filter((s) => s.YEAR === year)[0]);
     }
   };
   const findRiceEntry = (array) => {
@@ -925,7 +925,7 @@ export default function MDMData() {
   useEffect(() => {
     const year = date?.split("-")[2];
     if (StudentDataState.length !== 0) {
-      setStudentData(StudentDataState.filter((s) => s.year === year)[0]);
+      setStudentData(StudentDataState.filter((s) => s.YEAR === year)[0]);
     }
   }, [date]);
 
