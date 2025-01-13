@@ -89,6 +89,14 @@ export default function StudentData() {
       center: +true,
     },
     {
+      name: "Birth Date",
+      selector: (row) => row.birthdate,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      omit: access !== "admin",
+    },
+    {
       name: "Gurdian's Name",
       selector: (row) => row.guardians_name,
       sortable: +true,
