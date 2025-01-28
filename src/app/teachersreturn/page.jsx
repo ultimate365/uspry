@@ -73,6 +73,7 @@ export default function Teachersreturn() {
   const [filteredData, setFilteredData] = useState([]);
   const [students, setStudents] = useState({});
   const [showAvrAtt, setShowAvrAtt] = useState(false);
+  const [showEditStudentData, setShowEditStudentData] = useState(false);
   const [beforeSubmit, setBeforeSubmit] = useState(false);
   const currentDate = new Date();
   const month =
@@ -230,9 +231,22 @@ export default function Teachersreturn() {
               setShowAvrAtt(true);
               setShowBackPage(false);
               setShowFrontPage(false);
+              setShowEditStudentData(false);
             }}
           >
             Edit Average Attaindance
+          </button>
+          <button
+            type="button"
+            className="btn btn-sm btn-info m-1"
+            onClick={() => {
+              setShowEditStudentData(true);
+              setShowAvrAtt(false);
+              setShowBackPage(false);
+              setShowFrontPage(false);
+            }}
+          >
+            Edit Student Data
           </button>
         </div>
       </div>
@@ -3135,6 +3149,4093 @@ export default function Teachersreturn() {
                       className="btn btn-success"
                       onClick={() => {
                         setShowAvrAtt(false);
+                        setShowBackPage(true);
+                        setShowFrontPage(true);
+                      }}
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {showEditStudentData && (
+            <div
+              className="modal fade show"
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: "block" }}
+              aria-modal="true"
+            >
+              <div className="modal-dialog modal-xl">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                      Set Student Data
+                    </h1>
+                  </div>
+                  <div className="modal-body">
+                    <h5 className="my-3">Total Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.Boys !== undefined &&
+                            students?.total?.Boys !== null
+                              ? students?.total?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.Girls !== undefined &&
+                            students?.total?.Girls !== null
+                              ? students?.total?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.Total !== undefined &&
+                            students?.total?.Total !== null
+                              ? students?.total?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.GeneralBoys !== undefined &&
+                            students?.total?.GeneralBoys !== null
+                              ? students?.total?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.GeneralGirls !== undefined &&
+                            students?.total?.GeneralGirls !== null
+                              ? students?.total?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.GeneralTotal !== undefined &&
+                            students?.total?.GeneralTotal !== null
+                              ? students?.total?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ScBoys !== undefined &&
+                            students?.total?.ScBoys !== null
+                              ? students?.total?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ScGirls !== undefined &&
+                            students?.total?.ScGirls !== null
+                              ? students?.total?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ScTotal !== undefined &&
+                            students?.total?.ScTotal !== null
+                              ? students?.total?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.StBoys !== undefined &&
+                            students?.total?.StBoys !== null
+                              ? students?.total?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.StGirls !== undefined &&
+                            students?.total?.StGirls !== null
+                              ? students?.total?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.StTotal !== undefined &&
+                            students?.total?.StTotal !== null
+                              ? students?.total?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ObcABoys !== undefined &&
+                            students?.total?.ObcABoys !== null
+                              ? students?.total?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ObcAGirls !== undefined &&
+                            students?.total?.ObcAGirls !== null
+                              ? students?.total?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ObcATotal !== undefined &&
+                            students?.total?.ObcATotal !== null
+                              ? students?.total?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ObcBBoys !== undefined &&
+                            students?.total?.ObcBBoys !== null
+                              ? students?.total?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ObcBGirls !== undefined &&
+                            students?.total?.ObcBGirls !== null
+                              ? students?.total?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.ObcBTotal !== undefined &&
+                            students?.total?.ObcBTotal !== null
+                              ? students?.total?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.MinorityBoys !== undefined &&
+                            students?.total?.MinorityBoys !== null
+                              ? students?.total?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.MinorityGirls !== undefined &&
+                            students?.total?.MinorityGirls !== null
+                              ? students?.total?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.MinorityTotal !== undefined &&
+                            students?.total?.MinorityTotal !== null
+                              ? students?.total?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.lastYearBoys !== undefined &&
+                            students?.total?.lastYearBoys !== null
+                              ? students?.total?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.lastYearGirls !== undefined &&
+                            students?.total?.lastYearGirls !== null
+                              ? students?.total?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.total?.lastYearTotal !== undefined &&
+                            students?.total?.lastYearTotal !== null
+                              ? students?.total?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              total: {
+                                ...students?.total,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <h5 className="my-3">Pre Primary Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.Boys !== undefined &&
+                            students?.pp?.Boys !== null
+                              ? students?.pp?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.Girls !== undefined &&
+                            students?.pp?.Girls !== null
+                              ? students?.pp?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.Total !== undefined &&
+                            students?.pp?.Total !== null
+                              ? students?.pp?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.GeneralBoys !== undefined &&
+                            students?.pp?.GeneralBoys !== null
+                              ? students?.pp?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.GeneralGirls !== undefined &&
+                            students?.pp?.GeneralGirls !== null
+                              ? students?.pp?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.GeneralTotal !== undefined &&
+                            students?.pp?.GeneralTotal !== null
+                              ? students?.pp?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ScBoys !== undefined &&
+                            students?.pp?.ScBoys !== null
+                              ? students?.pp?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ScGirls !== undefined &&
+                            students?.pp?.ScGirls !== null
+                              ? students?.pp?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ScTotal !== undefined &&
+                            students?.pp?.ScTotal !== null
+                              ? students?.pp?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.StBoys !== undefined &&
+                            students?.pp?.StBoys !== null
+                              ? students?.pp?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.StGirls !== undefined &&
+                            students?.pp?.StGirls !== null
+                              ? students?.pp?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.StTotal !== undefined &&
+                            students?.pp?.StTotal !== null
+                              ? students?.pp?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ObcABoys !== undefined &&
+                            students?.pp?.ObcABoys !== null
+                              ? students?.pp?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ObcAGirls !== undefined &&
+                            students?.pp?.ObcAGirls !== null
+                              ? students?.pp?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ObcATotal !== undefined &&
+                            students?.pp?.ObcATotal !== null
+                              ? students?.pp?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ObcBBoys !== undefined &&
+                            students?.pp?.ObcBBoys !== null
+                              ? students?.pp?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ObcBGirls !== undefined &&
+                            students?.pp?.ObcBGirls !== null
+                              ? students?.pp?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.ObcBTotal !== undefined &&
+                            students?.pp?.ObcBTotal !== null
+                              ? students?.pp?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.MinorityBoys !== undefined &&
+                            students?.pp?.MinorityBoys !== null
+                              ? students?.pp?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.MinorityGirls !== undefined &&
+                            students?.pp?.MinorityGirls !== null
+                              ? students?.pp?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.MinorityTotal !== undefined &&
+                            students?.pp?.MinorityTotal !== null
+                              ? students?.pp?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.lastYearBoys !== undefined &&
+                            students?.pp?.lastYearBoys !== null
+                              ? students?.pp?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.lastYearGirls !== undefined &&
+                            students?.pp?.lastYearGirls !== null
+                              ? students?.pp?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.pp?.lastYearTotal !== undefined &&
+                            students?.pp?.lastYearTotal !== null
+                              ? students?.pp?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              pp: {
+                                ...students?.pp,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <h5 className="my-3">Class I Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.Boys !== undefined &&
+                            students?.i?.Boys !== null
+                              ? students?.i?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.Girls !== undefined &&
+                            students?.i?.Girls !== null
+                              ? students?.i?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.Total !== undefined &&
+                            students?.i?.Total !== null
+                              ? students?.i?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.GeneralBoys !== undefined &&
+                            students?.i?.GeneralBoys !== null
+                              ? students?.i?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.GeneralGirls !== undefined &&
+                            students?.i?.GeneralGirls !== null
+                              ? students?.i?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.GeneralTotal !== undefined &&
+                            students?.i?.GeneralTotal !== null
+                              ? students?.i?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ScBoys !== undefined &&
+                            students?.i?.ScBoys !== null
+                              ? students?.i?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ScGirls !== undefined &&
+                            students?.i?.ScGirls !== null
+                              ? students?.i?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ScTotal !== undefined &&
+                            students?.i?.ScTotal !== null
+                              ? students?.i?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.StBoys !== undefined &&
+                            students?.i?.StBoys !== null
+                              ? students?.i?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.StGirls !== undefined &&
+                            students?.i?.StGirls !== null
+                              ? students?.i?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.StTotal !== undefined &&
+                            students?.i?.StTotal !== null
+                              ? students?.i?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ObcABoys !== undefined &&
+                            students?.i?.ObcABoys !== null
+                              ? students?.i?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ObcAGirls !== undefined &&
+                            students?.i?.ObcAGirls !== null
+                              ? students?.i?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ObcATotal !== undefined &&
+                            students?.i?.ObcATotal !== null
+                              ? students?.i?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ObcBBoys !== undefined &&
+                            students?.i?.ObcBBoys !== null
+                              ? students?.i?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ObcBGirls !== undefined &&
+                            students?.i?.ObcBGirls !== null
+                              ? students?.i?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.ObcBTotal !== undefined &&
+                            students?.i?.ObcBTotal !== null
+                              ? students?.i?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.MinorityBoys !== undefined &&
+                            students?.i?.MinorityBoys !== null
+                              ? students?.i?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.MinorityGirls !== undefined &&
+                            students?.i?.MinorityGirls !== null
+                              ? students?.i?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.MinorityTotal !== undefined &&
+                            students?.i?.MinorityTotal !== null
+                              ? students?.i?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.lastYearBoys !== undefined &&
+                            students?.i?.lastYearBoys !== null
+                              ? students?.i?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.lastYearGirls !== undefined &&
+                            students?.i?.lastYearGirls !== null
+                              ? students?.i?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.i?.lastYearTotal !== undefined &&
+                            students?.i?.lastYearTotal !== null
+                              ? students?.i?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              i: {
+                                ...students?.i,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <h5 className="my-3">Class II Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.Boys !== undefined &&
+                            students?.ii?.Boys !== null
+                              ? students?.ii?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.Girls !== undefined &&
+                            students?.ii?.Girls !== null
+                              ? students?.ii?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.Total !== undefined &&
+                            students?.ii?.Total !== null
+                              ? students?.ii?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.GeneralBoys !== undefined &&
+                            students?.ii?.GeneralBoys !== null
+                              ? students?.ii?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.GeneralGirls !== undefined &&
+                            students?.ii?.GeneralGirls !== null
+                              ? students?.ii?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.GeneralTotal !== undefined &&
+                            students?.ii?.GeneralTotal !== null
+                              ? students?.ii?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ScBoys !== undefined &&
+                            students?.ii?.ScBoys !== null
+                              ? students?.ii?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ScGirls !== undefined &&
+                            students?.ii?.ScGirls !== null
+                              ? students?.ii?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ScTotal !== undefined &&
+                            students?.ii?.ScTotal !== null
+                              ? students?.ii?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.StBoys !== undefined &&
+                            students?.ii?.StBoys !== null
+                              ? students?.ii?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.StGirls !== undefined &&
+                            students?.ii?.StGirls !== null
+                              ? students?.ii?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.StTotal !== undefined &&
+                            students?.ii?.StTotal !== null
+                              ? students?.ii?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ObcABoys !== undefined &&
+                            students?.ii?.ObcABoys !== null
+                              ? students?.ii?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ObcAGirls !== undefined &&
+                            students?.ii?.ObcAGirls !== null
+                              ? students?.ii?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ObcATotal !== undefined &&
+                            students?.ii?.ObcATotal !== null
+                              ? students?.ii?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ObcBBoys !== undefined &&
+                            students?.ii?.ObcBBoys !== null
+                              ? students?.ii?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ObcBGirls !== undefined &&
+                            students?.ii?.ObcBGirls !== null
+                              ? students?.ii?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.ObcBTotal !== undefined &&
+                            students?.ii?.ObcBTotal !== null
+                              ? students?.ii?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.MinorityBoys !== undefined &&
+                            students?.ii?.MinorityBoys !== null
+                              ? students?.ii?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.MinorityGirls !== undefined &&
+                            students?.ii?.MinorityGirls !== null
+                              ? students?.ii?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.MinorityTotal !== undefined &&
+                            students?.ii?.MinorityTotal !== null
+                              ? students?.ii?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.lastYearBoys !== undefined &&
+                            students?.ii?.lastYearBoys !== null
+                              ? students?.ii?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.lastYearGirls !== undefined &&
+                            students?.ii?.lastYearGirls !== null
+                              ? students?.ii?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.ii?.lastYearTotal !== undefined &&
+                            students?.ii?.lastYearTotal !== null
+                              ? students?.ii?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              ii: {
+                                ...students?.ii,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <h5 className="my-3">Class III Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.Boys !== undefined &&
+                            students?.iii?.Boys !== null
+                              ? students?.iii?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.Girls !== undefined &&
+                            students?.iii?.Girls !== null
+                              ? students?.iii?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.Total !== undefined &&
+                            students?.iii?.Total !== null
+                              ? students?.iii?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.GeneralBoys !== undefined &&
+                            students?.iii?.GeneralBoys !== null
+                              ? students?.iii?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.GeneralGirls !== undefined &&
+                            students?.iii?.GeneralGirls !== null
+                              ? students?.iii?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.GeneralTotal !== undefined &&
+                            students?.iii?.GeneralTotal !== null
+                              ? students?.iii?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ScBoys !== undefined &&
+                            students?.iii?.ScBoys !== null
+                              ? students?.iii?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ScGirls !== undefined &&
+                            students?.iii?.ScGirls !== null
+                              ? students?.iii?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ScTotal !== undefined &&
+                            students?.iii?.ScTotal !== null
+                              ? students?.iii?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.StBoys !== undefined &&
+                            students?.iii?.StBoys !== null
+                              ? students?.iii?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.StGirls !== undefined &&
+                            students?.iii?.StGirls !== null
+                              ? students?.iii?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.StTotal !== undefined &&
+                            students?.iii?.StTotal !== null
+                              ? students?.iii?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ObcABoys !== undefined &&
+                            students?.iii?.ObcABoys !== null
+                              ? students?.iii?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ObcAGirls !== undefined &&
+                            students?.iii?.ObcAGirls !== null
+                              ? students?.iii?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ObcATotal !== undefined &&
+                            students?.iii?.ObcATotal !== null
+                              ? students?.iii?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ObcBBoys !== undefined &&
+                            students?.iii?.ObcBBoys !== null
+                              ? students?.iii?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ObcBGirls !== undefined &&
+                            students?.iii?.ObcBGirls !== null
+                              ? students?.iii?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.ObcBTotal !== undefined &&
+                            students?.iii?.ObcBTotal !== null
+                              ? students?.iii?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.MinorityBoys !== undefined &&
+                            students?.iii?.MinorityBoys !== null
+                              ? students?.iii?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.MinorityGirls !== undefined &&
+                            students?.iii?.MinorityGirls !== null
+                              ? students?.iii?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.MinorityTotal !== undefined &&
+                            students?.iii?.MinorityTotal !== null
+                              ? students?.iii?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.lastYearBoys !== undefined &&
+                            students?.iii?.lastYearBoys !== null
+                              ? students?.iii?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.lastYearGirls !== undefined &&
+                            students?.iii?.lastYearGirls !== null
+                              ? students?.iii?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iii?.lastYearTotal !== undefined &&
+                            students?.iii?.lastYearTotal !== null
+                              ? students?.iii?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iii: {
+                                ...students?.iii,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <h5 className="my-3">Class IV Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.Boys !== undefined &&
+                            students?.iv?.Boys !== null
+                              ? students?.iv?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.Girls !== undefined &&
+                            students?.iv?.Girls !== null
+                              ? students?.iv?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.Total !== undefined &&
+                            students?.iv?.Total !== null
+                              ? students?.iv?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.GeneralBoys !== undefined &&
+                            students?.iv?.GeneralBoys !== null
+                              ? students?.iv?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.GeneralGirls !== undefined &&
+                            students?.iv?.GeneralGirls !== null
+                              ? students?.iv?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.GeneralTotal !== undefined &&
+                            students?.iv?.GeneralTotal !== null
+                              ? students?.iv?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ScBoys !== undefined &&
+                            students?.iv?.ScBoys !== null
+                              ? students?.iv?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ScGirls !== undefined &&
+                            students?.iv?.ScGirls !== null
+                              ? students?.iv?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ScTotal !== undefined &&
+                            students?.iv?.ScTotal !== null
+                              ? students?.iv?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.StBoys !== undefined &&
+                            students?.iv?.StBoys !== null
+                              ? students?.iv?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.StGirls !== undefined &&
+                            students?.iv?.StGirls !== null
+                              ? students?.iv?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.StTotal !== undefined &&
+                            students?.iv?.StTotal !== null
+                              ? students?.iv?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ObcABoys !== undefined &&
+                            students?.iv?.ObcABoys !== null
+                              ? students?.iv?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ObcAGirls !== undefined &&
+                            students?.iv?.ObcAGirls !== null
+                              ? students?.iv?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ObcATotal !== undefined &&
+                            students?.iv?.ObcATotal !== null
+                              ? students?.iv?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ObcBBoys !== undefined &&
+                            students?.iv?.ObcBBoys !== null
+                              ? students?.iv?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ObcBGirls !== undefined &&
+                            students?.iv?.ObcBGirls !== null
+                              ? students?.iv?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.ObcBTotal !== undefined &&
+                            students?.iv?.ObcBTotal !== null
+                              ? students?.iv?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.MinorityBoys !== undefined &&
+                            students?.iv?.MinorityBoys !== null
+                              ? students?.iv?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.MinorityGirls !== undefined &&
+                            students?.iv?.MinorityGirls !== null
+                              ? students?.iv?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.MinorityTotal !== undefined &&
+                            students?.iv?.MinorityTotal !== null
+                              ? students?.iv?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.lastYearBoys !== undefined &&
+                            students?.iv?.lastYearBoys !== null
+                              ? students?.iv?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.lastYearGirls !== undefined &&
+                            students?.iv?.lastYearGirls !== null
+                              ? students?.iv?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.iv?.lastYearTotal !== undefined &&
+                            students?.iv?.lastYearTotal !== null
+                              ? students?.iv?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              iv: {
+                                ...students?.iv,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <h5 className="my-3">Class V Students Section</h5>
+                    <div className="row">
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.Boys !== undefined &&
+                            students?.v?.Boys !== null
+                              ? students?.v?.Boys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                Boys: value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.Girls !== undefined &&
+                            students?.v?.Girls !== null
+                              ? students?.v?.Girls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                Girls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Total Students</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.Total !== undefined &&
+                            students?.v?.Total !== null
+                              ? students?.v?.Total
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                Total:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.GeneralBoys !== undefined &&
+                            students?.v?.GeneralBoys !== null
+                              ? students?.v?.GeneralBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                GeneralBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.GeneralGirls !== undefined &&
+                            students?.v?.GeneralGirls !== null
+                              ? students?.v?.GeneralGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                GeneralGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">General Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.GeneralTotal !== undefined &&
+                            students?.v?.GeneralTotal !== null
+                              ? students?.v?.GeneralTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                GeneralTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ScBoys !== undefined &&
+                            students?.v?.ScBoys !== null
+                              ? students?.v?.ScBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ScBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ScGirls !== undefined &&
+                            students?.v?.ScGirls !== null
+                              ? students?.v?.ScGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ScGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">SC Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ScTotal !== undefined &&
+                            students?.v?.ScTotal !== null
+                              ? students?.v?.ScTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ScTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.StBoys !== undefined &&
+                            students?.v?.StBoys !== null
+                              ? students?.v?.StBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                StBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.StGirls !== undefined &&
+                            students?.v?.StGirls !== null
+                              ? students?.v?.StGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                StGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">ST Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.StTotal !== undefined &&
+                            students?.v?.StTotal !== null
+                              ? students?.v?.StTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                StTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ObcABoys !== undefined &&
+                            students?.v?.ObcABoys !== null
+                              ? students?.v?.ObcABoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ObcABoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ObcAGirls !== undefined &&
+                            students?.v?.ObcAGirls !== null
+                              ? students?.v?.ObcAGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ObcAGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc A Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ObcATotal !== undefined &&
+                            students?.v?.ObcATotal !== null
+                              ? students?.v?.ObcATotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ObcATotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ObcBBoys !== undefined &&
+                            students?.v?.ObcBBoys !== null
+                              ? students?.v?.ObcBBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ObcBBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ObcBGirls !== undefined &&
+                            students?.v?.ObcBGirls !== null
+                              ? students?.v?.ObcBGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ObcBGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Obc B Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.ObcBTotal !== undefined &&
+                            students?.v?.ObcBTotal !== null
+                              ? students?.v?.ObcBTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                ObcBTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.MinorityBoys !== undefined &&
+                            students?.v?.MinorityBoys !== null
+                              ? students?.v?.MinorityBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                MinorityBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.MinorityGirls !== undefined &&
+                            students?.v?.MinorityGirls !== null
+                              ? students?.v?.MinorityGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                MinorityGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Minority Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.MinorityTotal !== undefined &&
+                            students?.v?.MinorityTotal !== null
+                              ? students?.v?.MinorityTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                MinorityTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Boys</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.lastYearBoys !== undefined &&
+                            students?.v?.lastYearBoys !== null
+                              ? students?.v?.lastYearBoys
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                lastYearBoys:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Girls</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.lastYearGirls !== undefined &&
+                            students?.v?.lastYearGirls !== null
+                              ? students?.v?.lastYearGirls
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                lastYearGirls:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group col-md-3">
+                        <label htmlFor="avgAttaindance">Last Year Total</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={
+                            students?.v?.lastYearTotal !== undefined &&
+                            students?.v?.lastYearTotal !== null
+                              ? students?.v?.lastYearTotal
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setStudents({
+                              ...students,
+                              v: {
+                                ...students?.v,
+                                lastYearTotal:
+                                  value === "" ? null : parseInt(value, 10),
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => {
+                        setShowEditStudentData(false);
                         setShowBackPage(true);
                         setShowFrontPage(true);
                       }}
