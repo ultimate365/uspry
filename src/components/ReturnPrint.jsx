@@ -4136,6 +4136,574 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={[
+                styles.view25Height0,
+                { width: "8.33%", borderRightWidth: 0 },
+              ]}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>-</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.rowStartBorderView}>
+            <View
+              style={{
+                width: "12.5%",
+                height: 50,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+
+                borderRightWidth: 1,
+              }}
+            >
+              <Text style={styles.text5}>Remarks</Text>
+            </View>
+            <View
+              style={[
+                styles.view25,
+                { width: "88.5%", height: 50, borderRightWidth: 0 },
+              ]}
+            >
+              <Text
+                style={[styles.text5, { textAlign: "left", paddingLeft: 2 }]}
+              >
+                {remarks.length > 0 && remarks}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.rowStartBorderView}>
+            <View
+              style={{
+                width: "41.65%",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View style={[styles.view25Height0, { width: "100%" }]}>
+                <Text style={styles.text5}>
+                  No. of Attendance of students on the date of last inspection
+                </Text>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {inspection?.pp ? inspection?.pp : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {inspection?.i ? inspection?.i : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {inspection?.ii ? inspection?.ii : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {inspection?.iii ? inspection?.iii : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {inspection?.iv ? inspection?.iv : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {inspection?.v !== 0 ? inspection?.v : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={[
+                styles.view25Height0,
+                { width: "8.33%", borderRightWidth: 0 },
+              ]}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>{inspection?.total}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={styles.rowStartBorderView}>
+            <View
+              style={{
+                width: "41.65%",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={[styles.view25Height0, { width: "75%", height: 33 }]}
+              >
+                <Text style={styles.text5}>Total as on last December</Text>
+              </View>
+              <View style={[styles.view25Height0, { width: "25%" }]}>
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.text5}>Boys</Text>
+                  </View>
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.text5}>Girls</Text>
+                  </View>
+                  <View
+                    style={{
+                      borderBottomWidth: 0,
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.text5}>Total</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.pp?.lastYearBoys
+                      ? students?.pp?.lastYearBoys
+                      : "-"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.pp?.lastYearGirls
+                      ? students?.pp?.lastYearGirls
+                      : "-"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.pp?.lastYearTotal
+                      ? students?.pp?.lastYearTotal
+                      : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <Text style={styles.text5}>
                     {students?.i?.lastYearBoys
                       ? students?.i?.lastYearBoys
@@ -4438,576 +5006,6 @@ export default function ReturnPrint({ data }) {
                     {students?.total?.lastYearTotal
                       ? students?.total?.lastYearTotal
                       : "-"}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={styles.rowStartBorderView}>
-            <View
-              style={{
-                width: "12.5%",
-                height: 50,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-
-                borderRightWidth: 1,
-              }}
-            >
-              <Text style={styles.text5}>Remarks</Text>
-            </View>
-            <View
-              style={[
-                styles.view25,
-                { width: "88.5%", height: 50, borderRightWidth: 0 },
-              ]}
-            >
-              <Text
-                style={[styles.text5, { textAlign: "left", paddingLeft: 2 }]}
-              >
-                {remarks.length > 0 && remarks}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.rowStartBorderView}>
-            <View
-              style={{
-                width: "41.65%",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View style={[styles.view25Height0, { width: "100%" }]}>
-                <Text style={styles.text5}>
-                  No. of Attendance of students on the date of last inspection
-                </Text>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{inspection?.pp}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{inspection?.i}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{inspection?.ii}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{inspection?.iii}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{inspection?.iv}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {inspection?.v !== 0 ? inspection?.v : "-"}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View
-              style={[
-                styles.view25Height0,
-                { width: "8.33%", borderRightWidth: 0 },
-              ]}
-            >
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{inspection?.total}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={styles.rowStartBorderView}>
-            <View
-              style={{
-                width: "41.65%",
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View
-                style={[styles.view25Height0, { width: "75%", height: 33 }]}
-              >
-                <Text style={styles.text5}>Total as on last December</Text>
-              </View>
-              <View style={[styles.view25Height0, { width: "25%" }]}>
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <View
-                    style={{
-                      borderBottomWidth: 1,
-                      width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.text5}>Boys</Text>
-                  </View>
-                  <View
-                    style={{
-                      borderBottomWidth: 1,
-                      width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.text5}>Girls</Text>
-                  </View>
-                  <View
-                    style={{
-                      borderBottomWidth: 0,
-                      width: "100%",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.text5}>Total</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.pp?.lastYearBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.pp?.lastYearGirls}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.pp?.lastYearTotal}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.lastYearBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.lastYearGirls}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.lastYearTotal}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.ii?.lastYearBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.ii?.lastYearGirls}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.ii?.lastYearTotal}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.iii?.lastYearBoys}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.iii?.lastYearGirls}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.iii?.lastYearTotal}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.iv?.lastYearBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.iv?.lastYearGirls}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.iv?.lastYearTotal}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.v?.lastYearBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.v?.lastYearGirls}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.v?.lastYearTotal}</Text>
-                </View>
-              </View>
-            </View>
-            <View
-              style={[
-                styles.view25Height0,
-                { width: "8.33%", borderRightWidth: 0 },
-              ]}
-            >
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.total?.lastYearBoys}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.total?.lastYearGirls}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>
-                    {students?.total?.lastYearTotal}
                   </Text>
                 </View>
               </View>
