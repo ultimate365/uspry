@@ -1129,7 +1129,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.Boys ? students?.pp?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1139,7 +1141,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.Girls ? students?.pp?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1149,7 +1153,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.Total ? students?.pp?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1170,7 +1176,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.Boys ? students?.i?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1180,7 +1188,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.Girls ? students?.i?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1190,7 +1200,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.Total ? students?.i?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1211,7 +1223,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.Boys ? students?.ii?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1221,7 +1235,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.Girls ? students?.ii?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1231,7 +1247,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.Total ? students?.ii?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1252,7 +1270,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.Boys ? students?.iii?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1262,7 +1282,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.Girls ? students?.iii?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1272,7 +1294,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.Total ? students?.iii?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1293,7 +1317,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.Boys ? students?.iv?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1303,7 +1329,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.Girls ? students?.iv?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1313,7 +1341,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.Total ? students?.iv?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1334,7 +1364,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.Boys ? students?.v?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1344,7 +1376,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.Girls ? students?.v?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1354,7 +1388,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.Total ? students?.v?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1380,7 +1416,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.Boys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.Boys ? students?.total?.Boys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1390,7 +1428,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.Girls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.Girls ? students?.total?.Girls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1401,7 +1441,7 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.Total}
+                    {students?.total?.Total ? students?.total?.Total : "-"}
                   </Text>
                 </View>
               </View>
@@ -1480,7 +1520,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.GeneralBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.GeneralBoys
+                      ? students?.pp?.GeneralBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1490,7 +1534,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.GeneralGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.GeneralGirls
+                      ? students?.pp?.GeneralGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1500,7 +1548,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.Total ? students?.pp?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1521,7 +1571,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.GeneralBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.GeneralBoys ? students?.i?.GeneralBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1531,7 +1583,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.GeneralGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.GeneralGirls
+                      ? students?.i?.GeneralGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1541,7 +1597,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.Total ? students?.i?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1562,7 +1620,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.GeneralBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.GeneralBoys
+                      ? students?.ii?.GeneralBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1572,7 +1634,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.GeneralGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.GeneralGirls
+                      ? students?.ii?.GeneralGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1582,7 +1648,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.Total ? students?.ii?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1603,7 +1671,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.GeneralBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.GeneralBoys
+                      ? students?.iii?.GeneralBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1625,7 +1697,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.Total ? students?.iii?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1646,7 +1720,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.GeneralBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.GeneralBoys
+                      ? students?.iv?.GeneralBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1656,7 +1734,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.GeneralGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.GeneralGirls
+                      ? students?.iv?.GeneralGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1666,7 +1748,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.Total ? students?.iv?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1687,7 +1771,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.GeneralBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.GeneralBoys ? students?.v?.GeneralBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1697,7 +1783,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.GeneralGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.GeneralGirls
+                      ? students?.v?.GeneralGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1707,7 +1797,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.Total}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.Total ? students?.v?.Total : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1734,7 +1826,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.GeneralBoys}
+                    {students?.total?.GeneralBoys
+                      ? students?.total?.GeneralBoys
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -1746,7 +1840,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.GeneralGirls}
+                    {students?.total?.GeneralGirls
+                      ? students?.total?.GeneralGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -1758,7 +1854,7 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.Total}
+                    {students?.total?.Total ? students?.total?.Total : "-"}
                   </Text>
                 </View>
               </View>
@@ -1837,7 +1933,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ScBoys ? students?.pp?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1847,7 +1945,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ScGirls ? students?.pp?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1857,7 +1957,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ScTotal ? students?.pp?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1878,7 +1980,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ScBoys ? students?.i?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1888,7 +1992,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ScGirls ? students?.i?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1898,7 +2004,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ScTotal ? students?.i?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1919,7 +2027,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ScBoys ? students?.ii?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1929,7 +2039,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ScGirls ? students?.ii?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1939,7 +2051,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ScTotal ? students?.ii?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1960,7 +2074,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ScBoys ? students?.iii?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1970,7 +2086,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ScGirls ? students?.iii?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -1980,7 +2098,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ScTotal ? students?.iii?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2001,7 +2121,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ScBoys ? students?.iv?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2011,7 +2133,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ScGirls ? students?.iv?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2021,7 +2145,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ScTotal ? students?.iv?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2042,7 +2168,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ScBoys ? students?.v?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2052,7 +2180,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ScGirls ? students?.v?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2062,7 +2192,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ScTotal ? students?.v?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2088,7 +2220,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ScBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ScBoys ? students?.total?.ScBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2098,7 +2232,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ScGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ScGirls ? students?.total?.ScGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2108,7 +2244,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ScTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ScTotal ? students?.total?.ScTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2186,7 +2324,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.StBoys ? students?.pp?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2196,7 +2336,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.StGirls ? students?.pp?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2206,7 +2348,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.StTotal ? students?.pp?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2227,7 +2371,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.StBoys ? students?.i?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2237,7 +2383,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.StGirls ? students?.i?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2247,7 +2395,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.StTotal ? students?.i?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2268,7 +2418,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.StBoys ? students?.ii?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2278,7 +2430,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.StGirls ? students?.ii?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2288,7 +2442,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.StTotal ? students?.ii?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2309,7 +2465,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.StBoys ? students?.iii?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2319,7 +2477,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.StGirls ? students?.iii?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2329,7 +2489,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.StTotal ? students?.iii?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2350,7 +2512,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.StBoys ? students?.iv?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2360,7 +2524,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.StGirls ? students?.iv?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2370,7 +2536,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.StTotal ? students?.iv?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2391,7 +2559,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.StBoys ? students?.v?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2401,7 +2571,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.StGirls ? students?.v?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2411,7 +2583,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.StTotal ? students?.v?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2437,7 +2611,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.StBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.StBoys ? students?.total?.StBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2447,7 +2623,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.StGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.StGirls ? students?.total?.StGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2457,7 +2635,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.StTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.StTotal ? students?.total?.StTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2535,7 +2715,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ObcABoys ? students?.pp?.ObcABoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2545,7 +2727,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ObcAGirls ? students?.pp?.ObcAGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2555,7 +2739,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ObcATotal ? students?.pp?.ObcATotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2576,7 +2762,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ObcABoys ? students?.i?.ObcABoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2586,7 +2774,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ObcAGirls ? students?.i?.ObcAGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2596,7 +2786,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ObcATotal ? students?.i?.ObcATotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2617,7 +2809,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ObcABoys ? students?.ii?.ObcABoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2627,7 +2821,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ObcAGirls ? students?.ii?.ObcAGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2637,7 +2833,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ObcATotal ? students?.ii?.ObcATotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2658,7 +2856,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ObcABoys ? students?.iii?.ObcABoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2668,7 +2868,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ObcAGirls ? students?.iii?.ObcAGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2678,7 +2880,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ObcATotal ? students?.iii?.ObcATotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2699,7 +2903,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ObcABoys ? students?.iv?.ObcABoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2709,7 +2915,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ObcAGirls ? students?.iv?.ObcAGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2719,7 +2927,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ObcATotal ? students?.iv?.ObcATotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2740,7 +2950,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ObcABoys ? students?.v?.ObcABoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2750,7 +2962,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ObcAGirls ? students?.v?.ObcAGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2760,7 +2974,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ObcATotal ? students?.v?.ObcATotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2786,7 +3002,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ObcABoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ObcABoys
+                      ? students?.total?.ObcABoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2796,7 +3016,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ObcAGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ObcAGirls
+                      ? students?.total?.ObcAGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2806,7 +3030,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ObcATotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ObcATotal
+                      ? students?.total?.ObcATotal
+                      : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2884,7 +3112,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ObcBBoys ? students?.pp?.ObcBBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2894,7 +3124,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ObcBGirls ? students?.pp?.ObcBGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2904,7 +3136,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.ObcBTotal ? students?.pp?.ObcBTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2925,7 +3159,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ObcBBoys ? students?.i?.ObcBBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2935,7 +3171,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ObcBGirls ? students?.i?.ObcBGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2945,7 +3183,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.ObcBTotal ? students?.i?.ObcBTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -2966,7 +3206,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ObcBBoys ? students?.ii?.ObcBBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2976,7 +3218,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ObcBGirls ? students?.ii?.ObcBGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -2986,7 +3230,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.ii?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.ii?.ObcBTotal ? students?.ii?.ObcBTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3007,7 +3253,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ObcBBoys ? students?.iii?.ObcBBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3017,7 +3265,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ObcBGirls ? students?.iii?.ObcBGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3027,7 +3277,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iii?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.ObcBTotal ? students?.iii?.ObcBTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3048,7 +3300,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ObcBBoys ? students?.iv?.ObcBBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3058,7 +3312,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ObcBGirls ? students?.iv?.ObcBGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3068,7 +3324,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.ObcBTotal ? students?.iv?.ObcBTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3089,7 +3347,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ObcBBoys ? students?.v?.ObcBBoys : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3099,7 +3359,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ObcBGirls ? students?.v?.ObcBGirls : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3109,7 +3371,9 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.v?.ObcBTotal ? students?.v?.ObcBTotal : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3135,7 +3399,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ObcBBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ObcBBoys
+                      ? students?.total?.ObcBBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3145,7 +3413,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ObcBGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ObcBGirls
+                      ? students?.total?.ObcBGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3155,7 +3427,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.total?.ObcBTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.total?.ObcBTotal
+                      ? students?.total?.ObcBTotal
+                      : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3233,7 +3509,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.pp?.MinorityBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.pp?.MinorityBoys
+                      ? students?.pp?.MinorityBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3278,48 +3558,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.MinorityBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.MinorityGirls}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.MinorityTotal}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.ii?.MinorityBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.MinorityBoys
+                      ? students?.i?.MinorityBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3330,7 +3573,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.ii?.MinorityGirls}
+                    {students?.i?.MinorityGirls
+                      ? students?.i?.MinorityGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3342,7 +3587,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.ii?.MinorityTotal}
+                    {students?.i?.MinorityTotal
+                      ? students?.i?.MinorityTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3365,7 +3612,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.MinorityBoys}
+                    {students?.ii?.MinorityBoys
+                      ? students?.ii?.MinorityBoys
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3377,7 +3626,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.MinorityGirls}
+                    {students?.ii?.MinorityGirls
+                      ? students?.ii?.MinorityGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3389,7 +3640,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.MinorityTotal}
+                    {students?.ii?.MinorityTotal
+                      ? students?.ii?.MinorityTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3411,7 +3664,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.MinorityBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.MinorityBoys
+                      ? students?.iii?.MinorityBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3422,7 +3679,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iv?.MinorityGirls}
+                    {students?.iii?.MinorityGirls
+                      ? students?.iii?.MinorityGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3434,7 +3693,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iv?.MinorityTotal}
+                    {students?.iii?.MinorityTotal
+                      ? students?.iii?.MinorityTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3456,7 +3717,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.MinorityBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.MinorityBoys
+                      ? students?.iv?.MinorityBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3466,7 +3731,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.MinorityGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.MinorityGirls
+                      ? students?.iv?.MinorityGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3476,7 +3745,64 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.MinorityTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.MinorityTotal
+                      ? students?.iv?.MinorityTotal
+                      : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.v?.MinorityBoys
+                      ? students?.v?.MinorityBoys
+                      : "-"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.v?.MinorityGirls
+                      ? students?.v?.MinorityGirls
+                      : "-"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.v?.MinorityTotal
+                      ? students?.v?.MinorityTotal
+                      : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -3503,7 +3829,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.MinorityBoys}
+                    {students?.total?.MinorityBoys
+                      ? students?.total?.MinorityBoys
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3515,7 +3843,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.MinorityGirls}
+                    {students?.total?.MinorityGirls
+                      ? students?.total?.MinorityGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3527,7 +3857,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.MinorityTotal}
+                    {students?.total?.MinorityTotal
+                      ? students?.total?.MinorityTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3566,7 +3898,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.pp?.averageAttendance}
+                    {students?.pp?.averageAttendance
+                      ? students?.pp?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3589,7 +3923,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.i?.averageAttendance}
+                    {students?.i?.averageAttendance
+                      ? students?.i?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3612,7 +3948,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.ii?.averageAttendance}
+                    {students?.ii?.averageAttendance
+                      ? students?.ii?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3635,7 +3973,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.averageAttendance}
+                    {students?.iii?.averageAttendance
+                      ? students?.iii?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3658,7 +3998,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iv?.averageAttendance}
+                    {students?.iv?.averageAttendance
+                      ? students?.iv?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3711,7 +4053,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.averageAttendance}
+                    {students?.total?.averageAttendance
+                      ? students?.total?.averageAttendance
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3792,48 +4136,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.i?.lastYearBoys}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.lastYearGirls}</Text>
-                </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.i?.lastYearTotal}</Text>
-                </View>
-              </View>
-            </View>
-            <View style={[styles.view25Height0, { width: "8.33%" }]}>
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    borderBottomWidth: 1,
-                    width: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text style={styles.text5}>{students?.ii?.lastYearBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.i?.lastYearBoys
+                      ? students?.i?.lastYearBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3844,7 +4151,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.ii?.lastYearGirls}
+                    {students?.i?.lastYearGirls
+                      ? students?.i?.lastYearGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3856,7 +4165,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.ii?.lastYearTotal}
+                    {students?.i?.lastYearTotal
+                      ? students?.i?.lastYearTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3879,7 +4190,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.lastYearBoys}
+                    {students?.ii?.lastYearBoys
+                      ? students?.ii?.lastYearBoys
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3891,7 +4204,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.lastYearGirls}
+                    {students?.ii?.lastYearGirls
+                      ? students?.ii?.lastYearGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3903,7 +4218,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.lastYearTotal}
+                    {students?.ii?.lastYearTotal
+                      ? students?.ii?.lastYearTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3925,7 +4242,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.iv?.lastYearBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iii?.lastYearBoys
+                      ? students?.iii?.lastYearBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3936,7 +4257,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iv?.lastYearGirls}
+                    {students?.iii?.lastYearGirls
+                      ? students?.iii?.lastYearGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -3948,7 +4271,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iv?.lastYearTotal}
+                    {students?.iii?.lastYearTotal
+                      ? students?.iii?.lastYearTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -3970,7 +4295,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.lastYearBoys}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.lastYearBoys
+                      ? students?.iv?.lastYearBoys
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3980,7 +4309,11 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.lastYearGirls}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.lastYearGirls
+                      ? students?.iv?.lastYearGirls
+                      : "-"}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -3990,7 +4323,64 @@ export default function ReturnPrint({ data }) {
                     alignItems: "center",
                   }}
                 >
-                  <Text style={styles.text5}>{students?.v?.lastYearTotal}</Text>
+                  <Text style={styles.text5}>
+                    {students?.iv?.lastYearTotal
+                      ? students?.iv?.lastYearTotal
+                      : "-"}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={[styles.view25Height0, { width: "8.33%" }]}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.v?.lastYearBoys
+                      ? students?.v?.lastYearBoys
+                      : "-"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 1,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.v?.lastYearGirls
+                      ? students?.v?.lastYearGirls
+                      : "-"}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    borderBottomWidth: 0,
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text5}>
+                    {students?.v?.lastYearTotal
+                      ? students?.v?.lastYearTotal
+                      : "-"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -4017,7 +4407,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.lastYearBoys}
+                    {students?.total?.lastYearBoys
+                      ? students?.total?.lastYearBoys
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -4029,7 +4421,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.lastYearGirls}
+                    {students?.total?.lastYearGirls
+                      ? students?.total?.lastYearGirls
+                      : "-"}
                   </Text>
                 </View>
                 <View
@@ -4041,7 +4435,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.lastYearTotal}
+                    {students?.total?.lastYearTotal
+                      ? students?.total?.lastYearTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
