@@ -56,7 +56,9 @@ export default function ReturnPrint({ data }) {
           <Text style={styles.titleMain}>
             HOWRAH DISTRICT PRIMARY SCHOOL COUNCIL
           </Text>
-          <Text style={styles.title}>MONTHLY RETURN OF SCHOOL</Text>
+          <Text style={[styles.title, { marginVertical: 10 }]}>
+            MONTHLY RETURN OF SCHOOL
+          </Text>
           <View style={styles.rowFlexView}>
             <View style={styles.rowFlexView}>
               <Text style={styles.text}>U.Dise Code No.:</Text>
