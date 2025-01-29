@@ -378,7 +378,12 @@ export default function ReturnPrint({ data }) {
           </Text>
           <View style={styles.pageMainView}>
             <View style={styles.headingView}>
-              <View style={styles.tableStartView}>
+              <View
+                style={[
+                  styles.tableStartView,
+                  { borderLeftWidth: 0, borderRightWidth: 0 },
+                ]}
+              >
                 <View style={[styles.view5, { width: "4.8%" }]}>
                   <Text style={styles.text}>Sl. No.</Text>
                 </View>
@@ -454,7 +459,7 @@ export default function ReturnPrint({ data }) {
                       style={{
                         width: "60%",
                         borderRightWidth: 1,
-                        height: 56,
+                        height: 51,
                         justifyContent: "center",
                         alignItems: "center",
                         alignContent: "center",
@@ -471,7 +476,7 @@ export default function ReturnPrint({ data }) {
                         alignContent: "center",
                       }}
                     >
-                      <Text style={styles.text}>From 1st Jon.</Text>
+                      <Text style={styles.text}>From 1st Jan.</Text>
                     </View>
                   </View>
                 </View>
@@ -502,7 +507,7 @@ export default function ReturnPrint({ data }) {
                       style={{
                         width: "25%",
                         borderRightWidth: 1,
-                        height: 58,
+                        height: 53,
                         justifyContent: "center",
                         alignItems: "center",
                         alignContent: "center",
@@ -518,7 +523,7 @@ export default function ReturnPrint({ data }) {
                       style={{
                         width: "25%",
                         borderRightWidth: 1,
-                        height: 58,
+                        height: 53,
                         justifyContent: "center",
                         alignItems: "center",
                         alignContent: "center",
@@ -527,7 +532,7 @@ export default function ReturnPrint({ data }) {
                     >
                       <View>
                         <Text style={styles.text4}>
-                          From{"\n"}1st{"\n"}Jon.
+                          From{"\n"}1st{"\n"}Jan.
                         </Text>
                       </View>
                     </View>
@@ -550,7 +555,7 @@ export default function ReturnPrint({ data }) {
                           paddingBottom: 2,
                         }}
                       >
-                        <Text style={styles.text}>From 1st Jon.</Text>
+                        <Text style={styles.text}>From 1st Jan.</Text>
                       </View>
                       <View
                         style={{
@@ -607,7 +612,7 @@ export default function ReturnPrint({ data }) {
                     Total working days in this month {"\n"}({workingDays})
                   </Text>
                 </View>
-                <View style={[styles.view25, { height: 73, marginRight: 2 }]}>
+                <View style={[styles.view25, { height: 75, marginRight: 2 }]}>
                   <Text style={styles.text}>
                     Full signature of teacher with date
                   </Text>
@@ -5429,7 +5434,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   text5: {
-    fontSize: 9,
+    fontSize: 8.5,
     fontWeight: "bold",
     fontFamily: "Times",
     textAlign: "center",
@@ -5507,7 +5512,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     paddingRight: 1,
     width: "5%",
-    height: 73,
+    height: 68,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -5538,7 +5543,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     paddingRight: 1,
     width: "12.5%",
-    height: 75,
+    height: 68,
     justifyContent: "center",
     alignItems: "center",
   },
