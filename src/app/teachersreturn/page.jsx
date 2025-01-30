@@ -52,6 +52,7 @@ export default function Teachersreturn() {
     tname: "",
     training: "",
     education: "",
+    remarks: "",
     dor: "",
     desig: "",
     rank: "",
@@ -1283,6 +1284,25 @@ export default function Teachersreturn() {
                           }}
                         />
                       </div>
+                      <div className="mb-3">
+                        <label htmlFor="rank" className="form-label">
+                          Remarks
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="remarks"
+                          name="remarks"
+                          placeholder="remarks"
+                          value={editTeacher?.remarks}
+                          onChange={(e) => {
+                            setEditTeacher({
+                              ...editTeacher,
+                              remarks: e.target.value,
+                            });
+                          }}
+                        />
+                      </div>
                     </form>
                   </div>
                   <div className="modal-footer">
@@ -1843,8 +1863,8 @@ export default function Teachersreturn() {
                             }}
                           ></td>
                           <td
-                            style={{ border: "1px solid", paddingInline: 2 }}
-                          ></td>
+                            style={{ border: "1px solid", paddingInline: 2,fontSize: 10 }}
+                          >{teacher.remarks ? teacher.remarks : ""}</td>
                         </tr>
                         {index !== filteredData.length - 1 && (
                           <tr>

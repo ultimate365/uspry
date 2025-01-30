@@ -391,14 +391,14 @@ export default function ReturnPrint({ data }) {
                   <Text style={styles.text}>Name of Teacher</Text>
                 </View>
                 <View style={[styles.view5, { width: "4.5%" }]}>
-                  <Text style={styles.text}>
+                  <Text style={styles.text4}>
                     Desig-
                     {"\n"}
                     nation
                   </Text>
                 </View>
                 <View style={[styles.view5, { width: "7.4%" }]}>
-                  <Text style={styles.text}>
+                  <Text style={styles.text4}>
                     Educational
                     {"\n"} Qualification
                   </Text>
@@ -439,7 +439,7 @@ export default function ReturnPrint({ data }) {
                       justifyContent: "center",
                       alignItems: "center",
                       alignContent: "center",
-                      padding: 2,
+                      // padding: 2,
                     }}
                   >
                     <Text style={styles.text}>Casual Leave</Text>
@@ -451,7 +451,7 @@ export default function ReturnPrint({ data }) {
                       justifyContent: "center",
                       alignItems: "center",
                       alignContent: "center",
-                      padding: 2,
+                      // padding: 2,
                       flexDirection: "row",
                     }}
                   >
@@ -459,7 +459,7 @@ export default function ReturnPrint({ data }) {
                       style={{
                         width: "60%",
                         borderRightWidth: 1,
-                        height: 51,
+                        height: 53,
                         justifyContent: "center",
                         alignItems: "center",
                         alignContent: "center",
@@ -500,7 +500,7 @@ export default function ReturnPrint({ data }) {
                       alignItems: "center",
                       alignContent: "center",
                       flexDirection: "row",
-                      height: 75,
+                      height: 70,
                     }}
                   >
                     <View
@@ -552,7 +552,6 @@ export default function ReturnPrint({ data }) {
                           justifyContent: "center",
                           alignItems: "center",
                           alignContent: "center",
-                          paddingBottom: 2,
                         }}
                       >
                         <Text style={styles.text}>From 1st Jan.</Text>
@@ -576,7 +575,7 @@ export default function ReturnPrint({ data }) {
                             borderRightWidth: 1,
                           }}
                         >
-                          <Text style={styles.text}>Full Pay</Text>
+                          <Text style={styles.text4}>Full Pay</Text>
                         </View>
                         <View
                           style={{
@@ -588,7 +587,7 @@ export default function ReturnPrint({ data }) {
                             borderRightWidth: 1,
                           }}
                         >
-                          <Text style={styles.text}>Half Pay</Text>
+                          <Text style={styles.text4}>Half Pay</Text>
                         </View>
                         <View
                           style={{
@@ -599,9 +598,7 @@ export default function ReturnPrint({ data }) {
                             alignContent: "center",
                           }}
                         >
-                          <Text style={[styles.text, { fontSize: 9 }]}>
-                            Without Pay
-                          </Text>
+                          <Text style={styles.text4}>Without Pay</Text>
                         </View>
                       </View>
                     </View>
@@ -609,7 +606,8 @@ export default function ReturnPrint({ data }) {
                 </View>
                 <View style={[styles.view5]}>
                   <Text style={styles.text5}>
-                    Total working days in this month {"\n"}({workingDays})
+                    Total working days in this month {"\n"}(
+                    <Text style={styles.text}>{workingDays}</Text>)
                   </Text>
                 </View>
                 <View style={[styles.view25, { height: 75, marginRight: 2 }]}>
@@ -618,7 +616,7 @@ export default function ReturnPrint({ data }) {
                   </Text>
                 </View>
                 <View style={[styles.view5, { borderRightWidth: 0 }]}>
-                  <Text style={styles.text}>Remarks</Text>
+                  <Text style={styles.text5}>Remarks</Text>
                 </View>
               </View>
               {teachers.length > 0 &&
@@ -820,7 +818,9 @@ export default function ReturnPrint({ data }) {
                           <Text style={styles.text}></Text>
                         </View>
                         <View style={[styles.view5H0, { borderRightWidth: 0 }]}>
-                          <Text style={styles.text}></Text>
+                          <Text style={styles.text}>
+                            {teacher.remarks ? teacher.remarks : ""}
+                          </Text>
                         </View>
                       </View>
                       {index !== teachers.length - 1 && (
@@ -828,11 +828,10 @@ export default function ReturnPrint({ data }) {
                           style={{
                             width: "100%",
                             height: 5,
-                            borderBottomWidth: 1,
+                            borderBottomWidth:
+                              index !== teachers.length - 1 ? 1 : 0,
                           }}
-                        >
-                          <Text style={styles.text}></Text>
-                        </View>
+                        ></View>
                       )}
                     </React.Fragment>
                   );
@@ -5552,7 +5551,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRightWidth: 1,
     borderBottomWidth: 0,
-    paddingRight: 1,
     width: "27%",
     justifyContent: "center",
     alignItems: "center",
@@ -5574,7 +5572,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     paddingRight: 1,
     width: "25%",
-    height: 60,
+    height: 55,
     justifyContent: "center",
     alignItems: "center",
   },

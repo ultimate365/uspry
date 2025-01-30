@@ -390,6 +390,7 @@ export default function MonthlyTeachersReturn() {
                 loading ? "Loading..." : "Download Teachers Return PDF"
               }
             </PDFDownloadLink>
+            {/* <ReturnPrint data={thisMonthReturnData} /> */}
             <button
               type="button"
               className="btn btn-warning m-2"
@@ -966,8 +967,14 @@ export default function MonthlyTeachersReturn() {
                             }}
                           ></td>
                           <td
-                            style={{ border: "1px solid", paddingInline: 2 }}
-                          ></td>
+                            style={{
+                              border: "1px solid",
+                              paddingInline: 2,
+                              fontSize: 10,
+                            }}
+                          >
+                            {teacher.remarks ? teacher.remarks : ""}
+                          </td>
                         </tr>
                         {index !== filteredData.length - 1 && (
                           <tr>
@@ -1790,7 +1797,7 @@ export default function MonthlyTeachersReturn() {
                             </span>
                           </p>
                           <p className="m-0 p-0">
-                          No. of floor : (1 or 2 erected) : 
+                            No. of floor : (1 or 2 erected) :
                             <span
                               className="fw-bold"
                               style={{
