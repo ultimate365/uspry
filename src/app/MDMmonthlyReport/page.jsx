@@ -128,6 +128,7 @@ export default function MDMmonthlyReport() {
       setSelectedYear(selectedValue);
       setShowMonthSelection(true);
       setEntryMonths(uniqArray(y));
+      console.log(uniqArray(y));
     } else {
       setSelectedYear("");
       setShowMonthSelection(false);
@@ -299,14 +300,14 @@ export default function MDMmonthlyReport() {
             </div>
             {selectedYear && showMonthSelection ? (
               <div className="noprint">
-                {entryMonthsMonths.length > 1 && (
+                {entryMonthsMonths.length > 0 && (
                   <h4 className="text-center text-primary">Select Month</h4>
                 )}
               </div>
             ) : null}
             {showMonthSelection && (
               <div className="row d-flex justify-content-center noprint">
-                {entryMonthsMonths.length > 1 && (
+                {entryMonthsMonths.length > 0 && (
                   <div className="col-md-4 mx-auto mb-3 noprint">
                     <select
                       className="form-select"
@@ -329,17 +330,27 @@ export default function MDMmonthlyReport() {
                       <option value="" className="text-center text-primary">
                         Select Month
                       </option>
-                      {entryMonthsMonths
-                        .slice(1, entryMonthsMonths.length)
-                        .map((month, index) => (
-                          <option
-                            className="text-center text-success"
-                            key={index}
-                            value={month}
-                          >
-                            {month}
-                          </option>
-                        ))}
+                      {entryMonthsMonths.length > 1
+                        ? entryMonthsMonths
+                            .slice(1, entryMonthsMonths.length)
+                            .map((month, index) => (
+                              <option
+                                className="text-center text-success"
+                                key={index}
+                                value={month}
+                              >
+                                {month}
+                              </option>
+                            ))
+                        : entryMonthsMonths.map((month, index) => (
+                            <option
+                              className="text-center text-success"
+                              key={index}
+                              value={month}
+                            >
+                              {month}
+                            </option>
+                          ))}
                     </select>
                   </div>
                 )}
