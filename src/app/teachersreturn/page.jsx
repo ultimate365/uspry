@@ -11,6 +11,7 @@ import {
 import {
   BLOCK,
   CIRCLE,
+  HOI_DESIGNATION,
   HOI_MOBILE_NO,
   JLNO,
   KHATIAN_NO,
@@ -1863,8 +1864,14 @@ export default function Teachersreturn() {
                             }}
                           ></td>
                           <td
-                            style={{ border: "1px solid", paddingInline: 2,fontSize: 10 }}
-                          >{teacher.remarks ? teacher.remarks : ""}</td>
+                            style={{
+                              border: "1px solid",
+                              paddingInline: 2,
+                              fontSize: 10,
+                            }}
+                          >
+                            {teacher.remarks ? teacher.remarks : ""}
+                          </td>
                         </tr>
                         {index !== filteredData.length - 1 && (
                           <tr>
@@ -1891,7 +1898,40 @@ export default function Teachersreturn() {
                     <h6>
                       …......................................................................
                     </h6>
-                    <h6>Signature of Head Teacher / Teacher- In-Charge</h6>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <h6>Signature of&nbsp; </h6>
+                      <h6
+                        style={{
+                          textDecoration:
+                            HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                        }}
+                      >
+                        Head Teacher&nbsp;
+                      </h6>
+                      <h6
+                        style={{
+                          textDecoration:
+                            HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                        }}
+                      >
+                        &nbsp; /&nbsp;
+                      </h6>
+                      <h6
+                        style={{
+                          textDecoration:
+                            HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                        }}
+                      >
+                        Teacher- In-Charge
+                      </h6>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2859,9 +2899,40 @@ export default function Teachersreturn() {
                 </div>
                 <div className="my-5 d-flex justify-content-evenly align-items-center">
                   <h6 className="fw-bold">Sub Inspector of Schools</h6>
-                  <h6 className="fw-bold">
-                    Signature of Head Teacher / Teacher- In-Charge
-                  </h6>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <h6>Signature of&nbsp; </h6>
+                    <h6
+                      style={{
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                      }}
+                    >
+                      Head Teacher&nbsp;
+                    </h6>
+                    <h6
+                      style={{
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      }}
+                    >
+                      &nbsp; /&nbsp;
+                    </h6>
+                    <h6
+                      style={{
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      }}
+                    >
+                      Teacher- In-Charge
+                    </h6>
+                  </div>
                 </div>
               </div>
             </div>

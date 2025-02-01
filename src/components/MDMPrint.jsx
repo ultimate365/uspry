@@ -27,7 +27,8 @@ import {
   TOTAL_STUDENTS,
   UDISE_CODE,
   WARD_NO,
-} from "@/modules/constants";
+  HOI_DESIGNATION,
+} from "../modules/constants";
 import { IndianFormat, round2dec } from "@/modules/calculatefunctions";
 // import useScreenSize from "./useScreenSize";
 const width = 2480;
@@ -973,7 +974,47 @@ export default function MDMPrint({ data }) {
             >
               Signature
             </Text>
-            <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    textDecoration:
+                      HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                  },
+                ]}
+              >
+                Head Teacher
+              </Text>
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    textDecoration:
+                      HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                  },
+                ]}
+              >
+                {"  "}/{"  "}
+              </Text>
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    textDecoration:
+                      HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                  },
+                ]}
+              >
+                Teacher-in-Charge
+              </Text>
+            </View>
           </View>
           {thisMonthlyData?.remarks && (
             <View
@@ -1277,9 +1318,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>Primary</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>
-                {thisMonthlyData?.pryStudent}
-              </Text>
+              <Text style={styles.text}>{thisMonthlyData?.pryStudent}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
@@ -1608,9 +1647,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>Primary</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>
-                {thisMonthlyData?.pryStudent}
-              </Text>
+              <Text style={styles.text}>{thisMonthlyData?.pryStudent}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{thisMonthlyData?.pryTotal}</Text>
@@ -1925,7 +1962,47 @@ export default function MDMPrint({ data }) {
             >
               Signature
             </Text>
-            <Text style={styles.title}>Head Teacher / Teacher-in-Charge</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    textDecoration:
+                      HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                  },
+                ]}
+              >
+                Head Teacher
+              </Text>
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    textDecoration:
+                      HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                  },
+                ]}
+              >
+                {"  "}/{"  "}
+              </Text>
+              <Text
+                style={[
+                  styles.title,
+                  {
+                    textDecoration:
+                      HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                  },
+                ]}
+              >
+                Teacher-in-Charge
+              </Text>
+            </View>
           </View>
         </View>
       </Page>

@@ -27,6 +27,7 @@ export const CCH_NAME = [
 ];
 export const UDISE_CODE = 19160213201;
 export const HOI_MOBILE_NO = "9933684468";
+export const HOI_DESIGNATION = "HT";
 export const NGO_SHG = "SUPRAVAT+DISHARI";
 const THIS_YEAR = new Date().getFullYear();
 export const STUDENT_CLASSES = [

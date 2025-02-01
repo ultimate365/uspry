@@ -18,6 +18,7 @@ import {
   CIRCLE,
   DRINKING_WATER,
   GIRLS_TOILET,
+  HOI_DESIGNATION,
   HOI_MOBILE_NO,
   JLNO,
   KHATIAN_NO,
@@ -866,9 +867,49 @@ export default function ReturnPrint({ data }) {
                 <Text style={styles.text}>
                   …......................................................................
                 </Text>
-                <Text style={styles.text}>
-                  Signature of Head Teacher / Teacher- In-Charge
-                </Text>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text}>Signature of </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                      },
+                    ]}
+                  >
+                    Head Teacher
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      },
+                    ]}
+                  >
+                    {"  "}/{"  "}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      },
+                    ]}
+                  >
+                    Teacher-in-Charge
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -5348,9 +5389,48 @@ export default function ReturnPrint({ data }) {
                 <Text style={[styles.text, { marginLeft: 50 }]}>
                   Sub Inspector of Schools
                 </Text>
-                <Text style={styles.text}>
-                  Signature of Head Teacher / Teacher- In-Charge
-                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={styles.text}>Signature of </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                      },
+                    ]}
+                  >
+                    Head Teacher
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      },
+                    ]}
+                  >
+                    {"  "}/{"  "}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      },
+                    ]}
+                  >
+                    Teacher-in-Charge
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
