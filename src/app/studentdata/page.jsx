@@ -331,6 +331,17 @@ export default function StudentData() {
           >
             Download Data
           </button>
+          {access === "teacher" && (
+            <button
+              type="button"
+              className="btn btn-success m-2"
+              onClick={() => {
+                setShowAdd(!showAdd);
+              }}
+            >
+              Add New Student
+            </button>
+          )}
           <h3 className="text-center text-primary">Student&apos;s Deatails</h3>
           <DataTable
             columns={columns}
