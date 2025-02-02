@@ -99,7 +99,7 @@ export default function MDMPrint({ data }) {
                 width: "25%",
               }}
             >
-              <Text style={styles.title}> </Text>
+              <Text style={styles.title}>BLOCK:- {BLOCK}</Text>
             </View>
           </View>
           <View style={styles.rowStartView}>
