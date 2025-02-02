@@ -331,7 +331,7 @@ export default function StudentData() {
           >
             Download Data
           </button>
-          {access === "teacher" && (
+          {access === "admin" && (
             <button
               type="button"
               className="btn btn-success m-2"
