@@ -16,11 +16,13 @@ import {
   doc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
+import { v4 as uuid } from "uuid";
 export default function StudentData() {
   const {
     state,
@@ -31,11 +33,25 @@ export default function StudentData() {
   } = useGlobalContext();
   const [showTable, setShowTable] = useState(false);
   const access = state.ACCESS;
+  const docId = uuid().split("-")[0];
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [date, setDate] = useState(todayInString());
+  const [addStudent, setAddStudent] = useState({
+    nclass: 0,
+    mobile: "",
+    id: docId,
+    student_id: "",
+    guardians_name: "",
+    class: "CLASS PP (A)",
+    father_name: "",
+    roll_no: 1,
+    birthdate: todayInString(),
+    student_name: "",
+    mother_name: "",
+  });
   const [editStudent, setEditStudent] = useState({
     nclass: 0,
     mobile: "",
@@ -64,13 +80,48 @@ export default function StudentData() {
     setStudentState(data);
     setStudentUpdateTime(Date.now());
   };
+  const addNewStudent = async () => {
+    setShowTable(false);
+    try {
+      await setDoc(doc(firestore, "students", addStudent.id), addStudent)
+        .then(() => {
+          toast.success("New Student Added Successfully");
+          setAddStudent({
+            nclass: 0,
+            mobile: "",
+            id: docId,
+            student_id: "",
+            guardians_name: "",
+            class: "CLASS PP (A)",
+            father_name: "",
+            roll_no: 1,
+            birthdate: todayInString(),
+            student_name: "",
+            mother_name: "",
+          });
+          setShowAdd(false);
+          const newData = studentState.concat(addStudent);
+          setStudentState(newData);
+          setData(newData);
+          setFilteredData(newData);
+          setStudentUpdateTime(Date.now());
+          setShowTable(true);
+        })
+        .catch((err) => {
+          toast.error("Failed to add New Student!");
+          setShowTable(true);
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+      setShowTable(true);
+      toast.error("Something went Wrong!");
+    }
+  };
   const submitStudentData = async () => {
     setShowTable(false);
     try {
-      await updateDoc(
-        doc(firestore, "students", editStudent.id),
-        editStudent
-      )
+      await updateDoc(doc(firestore, "students", editStudent.id), editStudent)
         .then(() => {
           toast.success("Student Data Updated successfully");
           setEditStudent({
@@ -299,7 +350,291 @@ export default function StudentData() {
             }
             subHeaderAlign="right"
           />
-
+          {showAdd && (
+            <div
+              className="modal fade show"
+              tabIndex="-1"
+              role="dialog"
+              style={{ display: "block" }}
+              aria-modal="true"
+            >
+              <div className="modal-dialog modal-xl">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h3 className="modal-title fs-5" id="staticBackdropLabel">
+                      Add New Student
+                    </h3>
+                    <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                      Id: {docId}
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      aria-label="Close"
+                      onClick={() => {
+                        setShowAdd(false);
+                        setAddStudent({
+                          nclass: 0,
+                          mobile: "",
+                          id: docId,
+                          student_id: "",
+                          guardians_name: "",
+                          class: "",
+                          father_name: "",
+                          roll_no: 1,
+                          birthdate: todayInString(),
+                          student_name: "",
+                          mother_name: "",
+                        });
+                      }}
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="row justify-content-center align-items-center">
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Student's Name *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Student's Name"
+                          value={addStudent.student_name}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              student_name: e.target.value.toUpperCase(),
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Father's Name *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Father's Name"
+                          value={addStudent.father_name}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              father_name: e.target.value.toUpperCase(),
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Mother's Name *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Mother's Name"
+                          value={addStudent.mother_name}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              mother_name: e.target.value.toUpperCase(),
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Gurdian's Name *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Gurdian's Name"
+                          value={addStudent.guardians_name}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              guardians_name: e.target.value.toUpperCase(),
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="m-2">Birthday *</label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          defaultValue={getCurrentDateInput(
+                            addStudent.birthdate
+                          )}
+                          onChange={(e) => {
+                            const data = getSubmitDateInput(e.target.value);
+                            setAddStudent({
+                              ...addStudent,
+                              birthdate: data,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="m-2">Class *</label>
+                        <select
+                          className="form-select"
+                          aria-label=".form-select-sm example"
+                          required
+                          id="student_class"
+                          defaultValue={addStudent.class}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "CLASS PP (A)") {
+                              setAddStudent({
+                                ...addStudent,
+                                class: value,
+                                nclass: 0,
+                              });
+                            } else if (value === "CLASS I (A)") {
+                              setAddStudent({
+                                ...addStudent,
+                                class: value,
+                                nclass: 1,
+                              });
+                            } else if (value === "CLASS II (A)") {
+                              setAddStudent({
+                                ...addStudent,
+                                class: value,
+                                nclass: 2,
+                              });
+                            } else if (value === "CLASS III (A)") {
+                              setAddStudent({
+                                ...addStudent,
+                                class: value,
+                                nclass: 3,
+                              });
+                            } else if (value === "CLASS IV (A)") {
+                              setAddStudent({
+                                ...addStudent,
+                                class: value,
+                                nclass: 4,
+                              });
+                            } else if (value === "CLASS V (A)") {
+                              setAddStudent({
+                                ...addStudent,
+                                class: value,
+                                nclass: 5,
+                              });
+                            }
+                          }}
+                        >
+                          <option value={"CLASS PP (A)"}>প্রাক প্রাথমিক</option>
+                          <option value={"CLASS I (A)"}>প্রথম শ্রেনী</option>
+                          <option value={"CLASS II (A)"}>দ্বিতীয় শ্রেনী</option>
+                          <option value={"CLASS III (A)"}>তৃতীয় শ্রেনী</option>
+                          <option value={"CLASS IV (A)"}>চতুর্থ শ্রেনী</option>
+                          <option value={"CLASS V (A)"}>পঞ্চম শ্রেনী</option>
+                        </select>
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Roll No. *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Roll No."
+                          value={addStudent.roll_no}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              roll_no: e.target.value,
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Mobile No. *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Mobile No."
+                          value={addStudent.mobile}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              mobile: e.target.value,
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Student ID *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Student ID"
+                          value={addStudent.student_id}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              student_id: e.target.value,
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={() => {
+                        if (addStudent.student_name === "") {
+                          toast.error("Please enter Student Name");
+                        } else if (addStudent.father_name === "") {
+                          toast.error("Please enter Father Name");
+                        } else if (addStudent.mother_name === "") {
+                          toast.error("Please enter Mother Name");
+                        } else if (addStudent.guardians_name === "") {
+                          toast.error("Please enter Guardians Name");
+                        } else if (addStudent.class === "") {
+                          toast.error("Please select Class");
+                        } else if (addStudent.roll_no === "") {
+                          toast.error("Please enter Roll No.");
+                        } else if (addStudent.student_id === "") {
+                          toast.error("Please enter Student ID");
+                        } else if (addStudent.mobile === "") {
+                          toast.error("Please enter Mobile Number");
+                        } else {
+                          setShowAdd(false);
+                          addNewStudent();
+                        }
+                      }}
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      onClick={() => {
+                        setShowAdd(false);
+                        setAddStudent({
+                          nclass: 0,
+                          mobile: "",
+                          id: docId,
+                          student_id: "",
+                          guardians_name: "",
+                          class: "",
+                          father_name: "",
+                          roll_no: 1,
+                          birthdate: todayInString(),
+                          student_name: "",
+                          mother_name: "",
+                        });
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {showEdit && (
             <div
               className="modal fade show"
@@ -311,9 +646,9 @@ export default function StudentData() {
               <div className="modal-dialog modal-xl">
                 <div className="modal-content">
                   <div className="modal-header">
-                    <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    <h3 className="modal-title fs-5" id="staticBackdropLabel">
                       Edit Details of {editStudent.student_name}
-                    </h1>
+                    </h3>
                     <button
                       type="button"
                       class="btn-close"
