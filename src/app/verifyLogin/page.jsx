@@ -73,6 +73,7 @@ export default function VerifyLogin() {
         }, 500);
       } else {
         toast.error("Please enter a Valid 6 Digit OTP");
+        setDisplayLoader(false);
       }
     }
   };
