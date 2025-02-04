@@ -39,7 +39,7 @@ export default function VerifyLogin() {
       setShowRetryBtn(false);
       setTimeout(() => {
         setShowRetryBtn(true);
-      }, 30000);
+      }, 15000);
     } else {
       setShowRetryBtn(true);
       toast.error("Failed to send OTP!");
@@ -50,30 +50,36 @@ export default function VerifyLogin() {
     e.preventDefault();
     if (mobileOTP !== "" && mobileOTP.length === 6) {
       setDisplayLoader(true);
-      const res = await axios.post("/api/verifyMobileOTP", {
-        phone,
-        phoneCode: mobileOTP,
-        name: name,
-      });
-      const record = res.data;
-      if (record.success) {
-        toast.success("Your Mobile Number is successfully verified!");
+      try {
+        const res = await axios.post("/api/verifyMobileOTP", {
+          phone,
+          phoneCode: mobileOTP,
+          name: name,
+        });
+        const record = res.data;
+        if (record.success) {
+          toast.success("Your Mobile Number is successfully verified!");
+          setDisplayLoader(false);
+          const userTeacherData = decryptObjData("nonverifieduid");
+          setCookie("uid", nonverifieduid, 10080);
+          setCookie("loggedAt", Date.now(), 10080);
+          deleteCookie("nonverifieduid");
+          setTimeout(() => {
+            setState({
+              USER: userTeacherData,
+              LOGGEDAT: Date.now(),
+              ACCESS: userTeacherData?.userType,
+            });
+            router.push("/dashboard");
+          }, 500);
+        } else {
+          toast.error("Please enter a Valid 6 Digit OTP");
+          setDisplayLoader(false);
+        }
+      } catch (error) {
+        toast.error("Failed to verify OTP!");
         setDisplayLoader(false);
-        const userTeacherData = decryptObjData("nonverifieduid");
-        setCookie("uid", nonverifieduid, 10080);
-        setCookie("loggedAt", Date.now(), 10080);
-        deleteCookie("nonverifieduid");
-        setTimeout(() => {
-          setState({
-            USER: userTeacherData,
-            LOGGEDAT: Date.now(),
-            ACCESS: userTeacherData?.userType,
-          });
-          router.push("/dashboard");
-        }, 500);
-      } else {
-        toast.error("Please enter a Valid 6 Digit OTP");
-        setDisplayLoader(false);
+        console.error(error);
       }
     }
   };

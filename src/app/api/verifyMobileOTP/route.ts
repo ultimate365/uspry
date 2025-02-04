@@ -23,12 +23,13 @@ export async function POST(request: NextRequest) {
         );
       } else {
         const sameUserMessages = await PhoneOtp.find({ phone });
-        sameUserMessages.map(async (message) => {
+        const operationDeleteMessage = sameUserMessages.map(async (message) => {
           await deleteTelegramMessage(message.message_id);
-          await message.delete();
         });
         // const message = `Welcome ${name} To Our App.`;
         // const message_id = await sendToTelegram(message);
+
+        await PhoneOtp.deleteMany({ phone });
         return NextResponse.json(
           {
             message: "Mobile Verified Successfully",
@@ -48,6 +49,6 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 200 });
   }
 }
