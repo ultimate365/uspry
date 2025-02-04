@@ -144,6 +144,7 @@ export default function Teachersreturn() {
     setStudents(data.students);
     setInspection(data.inspection);
     setWorkingDays(data.workingDays);
+    setRemarks(data.remarks);
     setShowModal(true);
   };
   const calledData = (array) => {
