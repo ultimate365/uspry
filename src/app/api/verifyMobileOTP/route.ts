@@ -7,7 +7,7 @@ dbConnect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { phone, phoneCode,name }: any = reqBody;
+    const { phone, phoneCode, name }: any = reqBody;
     const phoneData = await PhoneOtp.findOne({ phone, code: phoneCode });
     if (phoneData) {
       const currentTime = new Date().getTime();
@@ -22,8 +22,11 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         );
       } else {
-        await PhoneOtp.deleteMany({ phone });
-        await deleteTelegramMessage(phoneData.message_id);
+        const sameUserMessages = await PhoneOtp.find({ phone });
+        sameUserMessages.map(async (message) => {
+          await deleteTelegramMessage(message.message_id);
+          await message.delete();
+        });
         // const message = `Welcome ${name} To Our App.`;
         // const message_id = await sendToTelegram(message);
         return NextResponse.json(
