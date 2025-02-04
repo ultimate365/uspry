@@ -2113,25 +2113,25 @@ export default function Teachersreturn() {
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.GeralTotal}
+                        {students?.pp?.GeneralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.GeralTotal}
+                        {students?.i?.GeneralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.GeralTotal}
+                        {students?.ii?.GeneralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.GeralTotal}
+                        {students?.iii?.GeneralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.GeralTotal}
+                        {students?.iv?.GeneralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.GeralTotal}
+                        {students?.v?.GeneralTotal}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.GeralTotal}
+                        {students?.total?.GeneralTotal}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
