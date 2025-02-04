@@ -1990,73 +1990,73 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.Boys}
+                        {students?.pp?.Boys ? students?.pp?.Boys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.Boys}
+                        {students?.i?.Boys ? students?.i?.Boys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.Boys}
+                        {students?.ii?.Boys ? students?.ii?.Boys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.Boys}
+                        {students?.iii?.Boys ? students?.iii?.Boys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.Boys}
+                        {students?.iv?.Boys ? students?.iv?.Boys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.Boys}
+                        {students?.v?.Boys ? students?.v?.Boys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.Boys}
+                        {students?.total?.Boys ? students?.total?.Boys : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.Girls}
+                        {students?.pp?.Girls ? students?.pp?.Girls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.Girls}
+                        {students?.i?.Girls ? students?.i?.Girls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.Girls}
+                        {students?.ii?.Girls ? students?.ii?.Girls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.Girls}
+                        {students?.iii?.Girls ? students?.iii?.Girls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.Girls}
+                        {students?.iv?.Girls ? students?.iv?.Girls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.Girls}
+                        {students?.v?.Girls ? students?.v?.Girls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.Girls}
+                        {students?.total?.Girls ? students?.total?.Girls : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.Total}
+                        {students?.pp?.Total ? students?.pp?.Total : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.Total}
+                        {students?.i?.Total ? students?.i?.Total : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.Total}
+                        {students?.ii?.Total ? students?.ii?.Total : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.Total}
+                        {students?.iii?.Total ? students?.iii?.Total : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.Total}
+                        {students?.iv?.Total ? students?.iv?.Total : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.Total}
+                        {students?.v?.Total ? students?.v?.Total : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.Total}
+                        {students?.total?.Total ? students?.total?.Total : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2065,73 +2065,115 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.GeneralBoys}
+                        {students?.pp?.GeneralBoys
+                          ? students?.pp?.GeneralBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.GeneralBoys}
+                        {students?.i?.GeneralBoys
+                          ? students?.i?.GeneralBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.GeneralBoys}
+                        {students?.ii?.GeneralBoys
+                          ? students?.ii?.GeneralBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.GeneralBoys}
+                        {students?.iii?.GeneralBoys
+                          ? students?.iii?.GeneralBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.GeneralBoys}
+                        {students?.iv?.GeneralBoys
+                          ? students?.iv?.GeneralBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.GeneralBoys}
+                        {students?.v?.GeneralBoys
+                          ? students?.v?.GeneralBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.GeneralBoys}
+                        {students?.total?.GeneralBoys
+                          ? students?.total?.GeneralBoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.GeneralGirls}
+                        {students?.pp?.GeneralGirls
+                          ? students?.pp?.GeneralGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.GeneralGirls}
+                        {students?.i?.GeneralGirls
+                          ? students?.i?.GeneralGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.GeneralGirls}
+                        {students?.ii?.GeneralGirls
+                          ? students?.ii?.GeneralGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.GeneralGirls}
+                        {students?.iii?.GeneralGirls
+                          ? students?.iii?.GeneralGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.GeneralGirls}
+                        {students?.iv?.GeneralGirls
+                          ? students?.iv?.GeneralGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.GeneralGirls}
+                        {students?.v?.GeneralGirls
+                          ? students?.v?.GeneralGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.GeneralGirls}
+                        {students?.total?.GeneralGirls
+                          ? students?.total?.GeneralGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.GeneralTotal}
+                        {students?.pp?.GeneralTotal
+                          ? students?.pp?.GeneralTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.GeneralTotal}
+                        {students?.i?.GeneralTotal
+                          ? students?.i?.GeneralTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.GeneralTotal}
+                        {students?.ii?.GeneralTotal
+                          ? students?.ii?.GeneralTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.GeneralTotal}
+                        {students?.iii?.GeneralTotal
+                          ? students?.iii?.GeneralTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.GeneralTotal}
+                        {students?.iv?.GeneralTotal
+                          ? students?.iv?.GeneralTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.GeneralTotal}
+                        {students?.v?.GeneralTotal
+                          ? students?.v?.GeneralTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.GeneralTotal}
+                        {students?.total?.GeneralTotal
+                          ? students?.total?.GeneralTotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2140,73 +2182,79 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ScBoys}
+                        {students?.pp?.ScBoys ? students?.pp?.ScBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ScBoys}
+                        {students?.i?.ScBoys ? students?.i?.ScBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ScBoys}
+                        {students?.ii?.ScBoys ? students?.ii?.ScBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ScBoys}
+                        {students?.iii?.ScBoys ? students?.iii?.ScBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ScBoys}
+                        {students?.iv?.ScBoys ? students?.iv?.ScBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ScBoys}
+                        {students?.v?.ScBoys ? students?.v?.ScBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ScBoys}
+                        {students?.total?.ScBoys
+                          ? students?.total?.ScBoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ScGirls}
+                        {students?.pp?.ScGirls ? students?.pp?.ScGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ScGirls}
+                        {students?.i?.ScGirls ? students?.i?.ScGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ScGirls}
+                        {students?.ii?.ScGirls ? students?.ii?.ScGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ScGirls}
+                        {students?.iii?.ScGirls ? students?.iii?.ScGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ScGirls}
+                        {students?.iv?.ScGirls ? students?.iv?.ScGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ScGirls}
+                        {students?.v?.ScGirls ? students?.v?.ScGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ScGirls}
+                        {students?.total?.ScGirls
+                          ? students?.total?.ScGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ScTotal}
+                        {students?.pp?.ScTotal ? students?.pp?.ScTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ScTotal}
+                        {students?.i?.ScTotal ? students?.i?.ScTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ScTotal}
+                        {students?.ii?.ScTotal ? students?.ii?.ScTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ScTotal}
+                        {students?.iii?.ScTotal ? students?.iii?.ScTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ScTotal}
+                        {students?.iv?.ScTotal ? students?.iv?.ScTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ScTotal}
+                        {students?.v?.ScTotal ? students?.v?.ScTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ScTotal}
+                        {students?.total?.ScTotal
+                          ? students?.total?.ScTotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2215,73 +2263,79 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.StBoys}
+                        {students?.pp?.StBoys ? students?.pp?.StBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.StBoys}
+                        {students?.i?.StBoys ? students?.i?.StBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.StBoys}
+                        {students?.ii?.StBoys ? students?.ii?.StBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.StBoys}
+                        {students?.iii?.StBoys ? students?.iii?.StBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.StBoys}
+                        {students?.iv?.StBoys ? students?.iv?.StBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.StBoys}
+                        {students?.v?.StBoys ? students?.v?.StBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.StBoys}
+                        {students?.total?.StBoys
+                          ? students?.total?.StBoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.StGirls}
+                        {students?.pp?.StGirls ? students?.pp?.StGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.StGirls}
+                        {students?.i?.StGirls ? students?.i?.StGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.StGirls}
+                        {students?.ii?.StGirls ? students?.ii?.StGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.StGirls}
+                        {students?.iii?.StGirls ? students?.iii?.StGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.StGirls}
+                        {students?.iv?.StGirls ? students?.iv?.StGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.StGirls}
+                        {students?.v?.StGirls ? students?.v?.StGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.StGirls}
+                        {students?.total?.StGirls
+                          ? students?.total?.StGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.StTotal}
+                        {students?.pp?.StTotal ? students?.pp?.StTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.StTotal}
+                        {students?.i?.StTotal ? students?.i?.StTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.StTotal}
+                        {students?.ii?.StTotal ? students?.ii?.StTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.StTotal}
+                        {students?.iii?.StTotal ? students?.iii?.StTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.StTotal}
+                        {students?.iv?.StTotal ? students?.iv?.StTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.StTotal}
+                        {students?.v?.StTotal ? students?.v?.StTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.StTotal}
+                        {students?.total?.StTotal
+                          ? students?.total?.StTotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2290,73 +2344,97 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ObcABoys}
+                        {students?.pp?.ObcABoys ? students?.pp?.ObcABoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ObcABoys}
+                        {students?.i?.ObcABoys ? students?.i?.ObcABoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ObcABoys}
+                        {students?.ii?.ObcABoys ? students?.ii?.ObcABoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ObcABoys}
+                        {students?.iii?.ObcABoys
+                          ? students?.iii?.ObcABoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcABoys}
+                        {students?.iv?.ObcABoys ? students?.iv?.ObcABoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ObcABoys}
+                        {students?.v?.ObcABoys ? students?.v?.ObcABoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ObcABoys}
+                        {students?.total?.ObcABoys
+                          ? students?.total?.ObcABoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ObcAGirls}
+                        {students?.pp?.ObcAGirls
+                          ? students?.pp?.ObcAGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ObcAGirls}
+                        {students?.i?.ObcAGirls ? students?.i?.ObcAGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ObcAGirls}
+                        {students?.ii?.ObcAGirls
+                          ? students?.ii?.ObcAGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ObcAGirls}
+                        {students?.iii?.ObcAGirls
+                          ? students?.iii?.ObcAGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcAGirls}
+                        {students?.iv?.ObcAGirls
+                          ? students?.iv?.ObcAGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ObcAGirls}
+                        {students?.v?.ObcAGirls ? students?.v?.ObcAGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ObcAGirls}
+                        {students?.total?.ObcAGirls
+                          ? students?.total?.ObcAGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ObcATotal}
+                        {students?.pp?.ObcATotal
+                          ? students?.pp?.ObcATotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ObcATotal}
+                        {students?.i?.ObcATotal ? students?.i?.ObcATotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ObcATotal}
+                        {students?.ii?.ObcATotal
+                          ? students?.ii?.ObcATotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ObcATotal}
+                        {students?.iii?.ObcATotal
+                          ? students?.iii?.ObcATotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcATotal}
+                        {students?.iv?.ObcATotal
+                          ? students?.iv?.ObcATotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ObcATotal}
+                        {students?.v?.ObcATotal ? students?.v?.ObcATotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ObcATotal}
+                        {students?.total?.ObcATotal
+                          ? students?.total?.ObcATotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2365,73 +2443,97 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ObcBBoys}
+                        {students?.pp?.ObcBBoys ? students?.pp?.ObcBBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ObcABoys}
+                        {students?.i?.ObcABoys ? students?.i?.ObcABoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ObcBBoys}
+                        {students?.ii?.ObcBBoys ? students?.ii?.ObcBBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ObcBBoys}
+                        {students?.iii?.ObcBBoys
+                          ? students?.iii?.ObcBBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcBBoys}
+                        {students?.iv?.ObcBBoys ? students?.iv?.ObcBBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ObcBBoys}
+                        {students?.v?.ObcBBoys ? students?.v?.ObcBBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ObcBBoys}
+                        {students?.total?.ObcBBoys
+                          ? students?.total?.ObcBBoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ObcBGirls}
+                        {students?.pp?.ObcBGirls
+                          ? students?.pp?.ObcBGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ObcBGirls}
+                        {students?.i?.ObcBGirls ? students?.i?.ObcBGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ObcBGirls}
+                        {students?.ii?.ObcBGirls
+                          ? students?.ii?.ObcBGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ObcBGirls}
+                        {students?.iii?.ObcBGirls
+                          ? students?.iii?.ObcBGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcBGirls}
+                        {students?.iv?.ObcBGirls
+                          ? students?.iv?.ObcBGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ObcBGirls}
+                        {students?.v?.ObcBGirls ? students?.v?.ObcBGirls : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ObcBGirls}
+                        {students?.total?.ObcBGirls
+                          ? students?.total?.ObcBGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.ObcBTotal}
+                        {students?.pp?.ObcBTotal
+                          ? students?.pp?.ObcBTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.ObcBTotal}
+                        {students?.i?.ObcBTotal ? students?.i?.ObcBTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.ObcBTotal}
+                        {students?.ii?.ObcBTotal
+                          ? students?.ii?.ObcBTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.ObcBTotal}
+                        {students?.iii?.ObcBTotal
+                          ? students?.iii?.ObcBTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcBTotal}
+                        {students?.iv?.ObcBTotal
+                          ? students?.iv?.ObcBTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.ObcBTotal}
+                        {students?.v?.ObcBTotal ? students?.v?.ObcBTotal : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.ObcBTotal}
+                        {students?.total?.ObcBTotal
+                          ? students?.total?.ObcBTotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2440,73 +2542,113 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.MinorityBoys}
+                        {students?.pp?.MinorityBoys
+                          ? students?.pp?.MinorityBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.MinorityBoys}
+                        {students?.i?.MinorityBoys
+                          ? students?.i?.MinorityBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.MinorityBoys}
+                        {students?.ii?.MinorityBoys
+                          ? students?.ii?.MinorityBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.MinorityBoys}
+                        {students?.iii?.MinorityBoys
+                          ? students?.iii?.MinorityBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.ObcBBoys}
+                        {students?.iv?.ObcBBoys ? students?.iv?.ObcBBoys : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.MinorityBoys}
+                        {students?.v?.MinorityBoys
+                          ? students?.v?.MinorityBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.MinorityBoys}
+                        {students?.total?.MinorityBoys
+                          ? students?.total?.MinorityBoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.MinorityGirls}
+                        {students?.pp?.MinorityGirls
+                          ? students?.pp?.MinorityGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.MinorityGirls}
+                        {students?.i?.MinorityGirls
+                          ? students?.i?.MinorityGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.MinorityGirls}
+                        {students?.ii?.MinorityGirls
+                          ? students?.ii?.MinorityGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.MinorityGirls}
+                        {students?.iii?.MinorityGirls
+                          ? students?.iii?.MinorityGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.MinorityGirls}
+                        {students?.iv?.MinorityGirls
+                          ? students?.iv?.MinorityGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.MinorityGirls}
+                        {students?.v?.MinorityGirls
+                          ? students?.v?.MinorityGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.MinorityGirls}
+                        {students?.total?.MinorityGirls
+                          ? students?.total?.MinorityGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.MinorityTotal}
+                        {students?.pp?.MinorityTotal
+                          ? students?.pp?.MinorityTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.MinorityTotal}
+                        {students?.i?.MinorityTotal
+                          ? students?.i?.MinorityTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.MinorityTotal}
+                        {students?.ii?.MinorityTotal
+                          ? students?.ii?.MinorityTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.MinorityTotal}
+                        {students?.iii?.MinorityTotal
+                          ? students?.iii?.MinorityTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.MinorityTotal}
+                        {students?.iv?.MinorityTotal
+                          ? students?.iv?.MinorityTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.MinorityTotal}
+                        {students?.v?.MinorityTotal
+                          ? students?.v?.MinorityTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.MinorityTotal}
+                        {students?.total?.MinorityTotal
+                          ? students?.total?.MinorityTotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2514,19 +2656,29 @@ export default function Teachersreturn() {
                         Average Attendance of the month
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.averageAttendance}
+                        {students?.pp?.averageAttendance
+                          ? students?.pp?.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.averageAttendance}
+                        {students?.i?.averageAttendance
+                          ? students?.i?.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.averageAttendance}
+                        {students?.ii?.averageAttendance
+                          ? students?.ii?.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.averageAttendance}
+                        {students?.iii?.averageAttendance
+                          ? students?.iii?.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.averageAttendance}
+                        {students?.iv?.averageAttendance
+                          ? students?.iv?.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
                         {students?.v?.averageAttendance > 0
@@ -2534,7 +2686,9 @@ export default function Teachersreturn() {
                           : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.averageAttendance}
+                        {students?.total?.averageAttendance
+                          ? students?.total?.averageAttendance
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
@@ -2548,7 +2702,9 @@ export default function Teachersreturn() {
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>-</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.averageAttendance}
+                        {students?.v?.averageAttendance
+                          ? students?.v?.averageAttendance
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>-</td>
                     </tr>
@@ -2589,73 +2745,115 @@ export default function Teachersreturn() {
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.lastYearBoys}
+                        {students?.pp?.lastYearBoys
+                          ? students?.pp?.lastYearBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.lastYearBoys}
+                        {students?.i?.lastYearBoys
+                          ? students?.i?.lastYearBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.lastYearBoys}
+                        {students?.ii?.lastYearBoys
+                          ? students?.ii?.lastYearBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.lastYearBoys}
+                        {students?.iii?.lastYearBoys
+                          ? students?.iii?.lastYearBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.lastYearBoys}
+                        {students?.iv?.lastYearBoys
+                          ? students?.iv?.lastYearBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.lastYearBoys}
+                        {students?.v?.lastYearBoys
+                          ? students?.v?.lastYearBoys
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.lastYearBoys}
+                        {students?.total?.lastYearBoys
+                          ? students?.total?.lastYearBoys
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Girls</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.lastYearGirls}
+                        {students?.pp?.lastYearGirls
+                          ? students?.pp?.lastYearGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.lastYearGirls}
+                        {students?.i?.lastYearGirls
+                          ? students?.i?.lastYearGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.lastYearGirls}
+                        {students?.ii?.lastYearGirls
+                          ? students?.ii?.lastYearGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.lastYearGirls}
+                        {students?.iii?.lastYearGirls
+                          ? students?.iii?.lastYearGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.lastYearGirls}
+                        {students?.iv?.lastYearGirls
+                          ? students?.iv?.lastYearGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.lastYearGirls}
+                        {students?.v?.lastYearGirls
+                          ? students?.v?.lastYearGirls
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.lastYearGirls}
+                        {students?.total?.lastYearGirls
+                          ? students?.total?.lastYearGirls
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td style={{ border: "1px solid" }}>Total</td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.pp?.lastYearTotal}
+                        {students?.pp?.lastYearTotal
+                          ? students?.pp?.lastYearTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.i?.lastYearTotal}
+                        {students?.i?.lastYearTotal
+                          ? students?.i?.lastYearTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.ii?.lastYearTotal}
+                        {students?.ii?.lastYearTotal
+                          ? students?.ii?.lastYearTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iii?.lastYearTotal}
+                        {students?.iii?.lastYearTotal
+                          ? students?.iii?.lastYearTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.iv?.lastYearTotal}
+                        {students?.iv?.lastYearTotal
+                          ? students?.iv?.lastYearTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.v?.lastYearTotal}
+                        {students?.v?.lastYearTotal
+                          ? students?.v?.lastYearTotal
+                          : "-"}
                       </td>
                       <td style={{ border: "1px solid" }}>
-                        {students?.total?.lastYearTotal}
+                        {students?.total?.lastYearTotal
+                          ? students?.total?.lastYearTotal
+                          : "-"}
                       </td>
                     </tr>
                     <tr style={{ border: "1px solid" }}>
