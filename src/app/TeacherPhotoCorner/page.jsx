@@ -8,7 +8,16 @@ import Image from "next/image";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import TeachersCorner from "../../components/TeachersCorner";
+import dynamic from "next/dynamic";
 export default function TeacherPhotoCorner() {
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   const {
     state,
     teachersState,
@@ -52,6 +61,26 @@ export default function TeacherPhotoCorner() {
     <div className="container text-center mx-auto flex-wrap my-2">
       {showTable ? (
         <div>
+          <div className="my-3 noprint">
+            <PDFDownloadLink
+              document={<TeachersCorner data={teacherData} />}
+              fileName={`Teacher Photo Corner.pdf`}
+              style={{
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
+                margin: 10,
+              }}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download Teacher Photo Corner PDF"
+              }
+            </PDFDownloadLink>
+          </div>
           <h3 className="text-center">TEACHERS' CORNER OF {SCHOOLNAME}</h3>
 
           <div className="row mx-auto justify-content-center">

@@ -6,7 +6,16 @@ import { useGlobalContext } from "../../context/Store";
 import { SCHOOLNAME } from "@/modules/constants";
 import Image from "next/image";
 import Loader from "@/components/Loader";
+import StudentCorner from "../../components/StudentCorner";
+import dynamic from "next/dynamic";
 export default function PhotoCorner() {
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   const {
     state,
     studentState,
@@ -52,8 +61,7 @@ export default function PhotoCorner() {
       {showTable ? (
         <div>
           <h4 className="text-center">
-            STUDENT CORNER OF {SCHOOLNAME} OF THE YEAR{" "}
-            {YEAR}
+            STUDENT CORNER OF {SCHOOLNAME} OF THE YEAR {YEAR}
           </h4>
           <div className="mt-3 noprint mx-auto col-md-4">
             <button
@@ -109,6 +117,26 @@ export default function PhotoCorner() {
             >
               Print
             </button>
+          </div>
+          <div className="my-3 noprint">
+            <PDFDownloadLink
+              document={<StudentCorner data={filteredData} />}
+              fileName={`Student Photo Corner.pdf`}
+              style={{
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
+                margin: 10,
+              }}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download Student Photo Corner PDF"
+              }
+            </PDFDownloadLink>
           </div>
           <div className="row mx-auto text-center">
             {filteredData.map((el, index) => {

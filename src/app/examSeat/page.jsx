@@ -13,7 +13,17 @@ import {
 } from "firebase/firestore";
 import { useGlobalContext } from "../../context/Store";
 import { SCHOOLNAME } from "../../modules/constants";
+import ExamSeatDistribution from "../../components/ExamSeatDistribution";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 export default function Result() {
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   const {
     state,
     studentState,
@@ -21,6 +31,7 @@ export default function Result() {
     setStudentState,
     setStudentUpdateTime,
   } = useGlobalContext();
+  const router = useRouter();
   const [examData, setExamData] = useState([]);
   const [loader, setLoader] = useState(false);
   const studentData = async () => {
@@ -39,7 +50,7 @@ export default function Result() {
     setLoader(false);
   };
   useEffect(() => {
-    document.title = `${SCHOOLNAME}:Students Result Seat`;
+    document.title = `${SCHOOLNAME} : Students Result Seat`;
 
     const studentDifference = (Date.now() - studentUpdateTime) / 1000 / 60 / 15;
     if (studentDifference >= 1 || studentState.length === 0) {
@@ -50,36 +61,83 @@ export default function Result() {
     }
   }, []);
   return (
-    <div className="container text-center">
-      <div className="d-flex">
-        <div className="row justify-content-center align-items-center flex-wrap ">
-          {examData.map((item, index) => (
-            <div
-              className="col-md-4 m-2 d-flex flex-column justify-content-center align-items-center nobreak"
-              key={index}
+    <div className="container-fluid text-center">
+      {loader ? (
+        <Loader center content="loading" size="lg" />
+      ) : (
+        <div className="container-fluid text-center">
+          <div className="noprint">
+            <div className="my-2">
+              <button
+                type="button"
+                className="btn btn-info m-2"
+                onClick={() => {
+                  if (typeof window !== undefined) {
+                    window.print();
+                  }
+                }}
+              >
+                Print
+              </button>
+              <button
+                type="button"
+                className="btn btn-warning m-2"
+                onClick={() => {
+                  router.push("/");
+                }}
+              >
+                Go Back
+              </button>
+            </div>
+            <PDFDownloadLink
+              document={<ExamSeatDistribution examData={examData} />}
+              fileName={`Exam Seat Distribution.pdf`}
               style={{
-                width: "200px",
-                height: 80,
-                margin: "5px",
-                border: "1px solid black",
-                borderRadius: "10px",
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
               }}
             >
-              <h6 className="m-1" style={{ margin: 0, padding: 0 }}>
-                {item?.student_name}
-              </h6>
-              <h6 className="m-1" style={{ margin: 0, padding: 0 }}>
-                {" "}
-                {item?.class?.split(" (A)")[0]}
-              </h6>
-              <h4 className="m-1" style={{ margin: 0, padding: 0 }}>
-                ROLL: {item?.roll_no}
-              </h4>
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download Seat Distribution PDF"
+              }
+            </PDFDownloadLink>
+          </div>
+
+          <div className="d-flex my-3">
+            <div className="row justify-content-center align-items-center flex-wrap ">
+              {examData.map((item, index) => (
+                <div
+                  className="col-md-4 m-2 d-flex flex-column justify-content-center align-items-center nobreak"
+                  key={index}
+                  style={{
+                    width: "200px",
+                    height: 80,
+                    margin: "5px",
+                    border: "1px solid black",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <h6 className="m-1" style={{ margin: 0, padding: 0 }}>
+                    {item?.student_name}
+                  </h6>
+                  <h6 className="m-1" style={{ margin: 0, padding: 0 }}>
+                    {" "}
+                    {item?.class?.split(" (A)")[0]}
+                  </h6>
+                  <h4 className="m-1" style={{ margin: 0, padding: 0 }}>
+                    ROLL: {item?.roll_no}
+                  </h4>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-      {loader && <Loader center content="loading" size="lg" />}
+      )}
     </div>
   );
 }
