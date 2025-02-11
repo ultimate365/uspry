@@ -816,7 +816,7 @@ export default function Admission() {
     }
     if (
       editInputField.student_mobile === "" ||
-      editInputField.student_mobile !== 10
+      editInputField.student_mobile.length !== 10
     ) {
       formIsValid = false;
       setErrEditInputField((prevState) => ({

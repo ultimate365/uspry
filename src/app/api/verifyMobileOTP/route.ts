@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         );
       } else {
         const sameUserMessages = await PhoneOtp.find({ phone });
-        const operationDeleteMessage = sameUserMessages.map(async (message) => {
+        sameUserMessages.map(async (message) => {
           await deleteTelegramMessage(message.message_id);
         });
         // const message = `Welcome ${name} To Our App.`;
