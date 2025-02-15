@@ -64,6 +64,7 @@ export default function HolisticPRCard() {
       setFilteredData(excPP);
       setShowTable(true);
     }
+    //eslint-disable-next-line
   }, []);
 
   return (
@@ -396,6 +397,7 @@ export default function HolisticPRCard() {
                                     borderLeftWidth: ind > 0 ? 0 : 1,
                                     width: "4%",
                                   }}
+                                  key={ind}
                                 >
                                   <p className="m-0 p-0 text-start">{code}</p>
                                 </div>
