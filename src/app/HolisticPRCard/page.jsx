@@ -446,7 +446,7 @@ export default function HolisticPRCard() {
                                 }}
                               >
                                 <p className="m-0 p-0 text-start">
-                                  {SCHOOL_WEBSITE}
+                                  {""}
                                 </p>
                               </div>
                             </div>
