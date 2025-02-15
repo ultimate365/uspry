@@ -25,7 +25,9 @@ export const CCH_NAME = [
   { name: "SHYAMALI MONDAL", gender: "FEMALE", cast: "GEN", payment: "BANK" },
   { name: "LAKSHMI DAS", gender: "FEMALE", cast: "OBC", payment: "BANK" },
 ];
-export const UDISE_CODE = 19160213201;
+export const UDISE_CODE = "19160213201";
+export const SCHOOL_EMAIL = "usprys@gmail.com";
+export const SCHOOL_WEBSITE = "uspry.vercel.app";
 export const HOI_MOBILE_NO = "9933684468";
 export const HOI_DESIGNATION = "HT";
 export const NGO_SHG = "SUPRAVAT+DISHARI";
