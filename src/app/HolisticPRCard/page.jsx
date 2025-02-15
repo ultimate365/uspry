@@ -155,7 +155,7 @@ export default function HolisticPRCard() {
                           height: 50,
                         }}
                       >
-                        <p className="m-0 p-0 text-start">{el?.student_id}</p>
+                        <p className="m-0 p-0 text-start">{el?.birthdate}</p>
                       </div>
                       <div
                         style={{
@@ -166,7 +166,7 @@ export default function HolisticPRCard() {
                           height: 50,
                         }}
                       >
-                        <p className="m-0 p-0 text-start">{el?.birthdate}</p>
+                        <p className="m-0 p-0 text-start">{el?.student_id}</p>
                       </div>
                       <div
                         style={{
