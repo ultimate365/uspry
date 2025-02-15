@@ -51,6 +51,8 @@ export default function StudentData() {
     birthdate: todayInString(),
     student_name: "",
     mother_name: "",
+    gender: "BOYS",
+    aadhaar: "",
   });
   const [editStudent, setEditStudent] = useState({
     nclass: 0,
@@ -64,6 +66,8 @@ export default function StudentData() {
     birthdate: todayInString(),
     student_name: "",
     mother_name: "",
+    gender: "BOYS",
+    aadhaar: "",
   });
   const studentData = async () => {
     const querySnapshot = await getDocs(
@@ -483,6 +487,29 @@ export default function StudentData() {
                           }}
                         />
                       </div>
+                      <div className="mb-3 col-md-4">
+                        <label className="form-label">
+                          ছাত্র/ছাত্রীর লিঙ্গ*
+                        </label>
+                        <select
+                          className="form-select"
+                          aria-label=".form-select-sm example"
+                          required
+                          id="student_gender"
+                          defaultValue={addStudent.gender}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              gender: e.target.value,
+                            });
+                          }}
+                        >
+                          <option value="">লিঙ্গ বেছে নিন</option>
+                          <option value={"BOYS"}>ছেলে</option>
+                          <option value={"GIRLS"}>মেয়ে</option>
+                          <option value={"OTHER"}>অন্যান্য</option>
+                        </select>
+                      </div>
                       <div className="mb-3 col-md-6">
                         <label className="m-2">Class *</label>
                         <select
@@ -567,6 +594,22 @@ export default function StudentData() {
                             setAddStudent({
                               ...addStudent,
                               mobile: e.target.value,
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Aadhaar No. *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Aadhaar No."
+                          value={addStudent.aadhaar}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              aadhaar: e.target.value,
                             });
                           }}
                           required
@@ -765,6 +808,29 @@ export default function StudentData() {
                           }}
                         />
                       </div>
+                      <div className="mb-3 col-md-4">
+                        <label className="form-label">
+                          ছাত্র/ছাত্রীর লিঙ্গ*
+                        </label>
+                        <select
+                          className="form-select"
+                          aria-label=".form-select-sm example"
+                          required
+                          id="student_gender"
+                          defaultValue={editStudent.gender}
+                          onChange={(e) => {
+                            setEditStudent({
+                              ...editStudent,
+                              gender: e.target.value,
+                            });
+                          }}
+                        >
+                          <option value="">লিঙ্গ বেছে নিন</option>
+                          <option value={"BOYS"}>ছেলে</option>
+                          <option value={"GIRLS"}>মেয়ে</option>
+                          <option value={"OTHER"}>অন্যান্য</option>
+                        </select>
+                      </div>
                       <div className="mb-3 col-md-6">
                         <label className="m-2">Class *</label>
                         <select
@@ -849,6 +915,22 @@ export default function StudentData() {
                             setEditStudent({
                               ...editStudent,
                               mobile: e.target.value,
+                            });
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Aadhaar No. *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Aadhaar No."
+                          value={editStudent.aadhaar}
+                          onChange={(e) => {
+                            setEditStudent({
+                              ...editStudent,
+                              aadhaar: e.target.value,
                             });
                           }}
                           required
