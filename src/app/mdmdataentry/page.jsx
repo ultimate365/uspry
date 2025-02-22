@@ -1359,7 +1359,9 @@ export default function MDMData() {
                     <th>Date</th>
                     <th>PP</th>
                     <th>Primary</th>
-                    <th>Rice</th>
+                    <th>Rice Opening</th>
+                    <th>Rice Expense</th>
+                    <th>Rice Closing</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -1371,7 +1373,9 @@ export default function MDMData() {
                         <td>{entry.date}</td>
                         <td>{entry.pp}</td>
                         <td>{entry.pry}</td>
+                        <td>{filteredRiceData[i]?.riceOB} Kg.</td>
                         <td>{filteredRiceData[i]?.riceExpend} Kg.</td>
+                        <td>{filteredRiceData[i]?.riceCB} Kg.</td>
                         <td>
                           <button
                             type="button"
