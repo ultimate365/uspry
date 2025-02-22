@@ -1344,130 +1344,154 @@ export default function MDMData() {
                   Generate Monthly Report
                 </button> */}
               </div>
-              <table
-                className="table table-responsive table-bordered table-striped"
+              <div
                 style={{
                   width: "100%",
-                  overflowX: "auto",
-                  marginBottom: "20px",
-                  border: "1px solid",
+                  overflowX: "scroll",
+                  flexWrap: "wrap",
                 }}
               >
-                <thead>
-                  <tr>
-                    <th>Day</th>
-                    <th>Date</th>
-                    <th>PP</th>
-                    <th>Primary</th>
-                    <th>Rice Opening</th>
-                    <th>Rice Expense</th>
-                    <th>Rice Closing</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((entry, i) => {
-                    return (
-                      <tr key={i}>
-                        <td>Day-{i + 1}</td>
-                        <td>{entry.date}</td>
-                        <td>{entry.pp}</td>
-                        <td>{entry.pry}</td>
-                        <td>{filteredRiceData[i]?.riceOB} Kg.</td>
-                        <td>{filteredRiceData[i]?.riceExpend} Kg.</td>
-                        <td>{filteredRiceData[i]?.riceCB} Kg.</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-primary m-1"
-                            onClick={() => {
-                              setPp(entry.pp);
-                              setPry(entry.pry);
-                              setDate(getCurrentDateInput(entry.date));
+                <table
+                  className="table table-responsive table-bordered table-striped"
+                  style={{
+                    width: "100%",
+                    overflowX: "scroll",
+                    flexWrap: "wrap",
+                    marginBottom: "20px",
+                    border: "1px solid",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th>Day</th>
+                      <th>Date</th>
+                      <th>PP</th>
+                      <th>Primary</th>
+                      <th>Rice Data (in KG)</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.map((entry, i) => {
+                      return (
+                        <tr key={i} style={{ verticalAlign: "middle" }}>
+                          <td>Day-{i + 1}</td>
+                          <td>{entry.date}</td>
+                          <td>{entry.pp}</td>
+                          <td>{entry.pry}</td>
+                          <td suppressHydrationWarning>
+                            <div className="d-flex justify-content-evenly align-items-center">
+                              <p className="m-0 p-0 fs-7">
+                                OB:-{filteredRiceData[i]?.riceOB},{" "}
+                              </p>
+                              {filteredRiceData[i]?.riceGiven > 0 && (
+                                <p className="m-0 p-0 fs-7">
+                                  RC:-{filteredRiceData[i]?.riceGiven},{" "}
+                                </p>
+                              )}
 
-                              setDocId(entry.date);
-                              setLoader(false);
-                              setShowEntry(false);
-                              setShowUpdate(true);
-                              setShowMonthlyReport(false);
-                              setShowDataTable(false);
-                              setShowMonthSelection(false);
-                            }}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-danger m-1"
-                            onClick={() => {
-                              // eslint-disable-next-line no-alert
-                              if (
-                                window.confirm(
-                                  "Are you sure you want to delete this entry?"
-                                )
-                              ) {
-                                delEntry(entry);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  <tr>
-                    <th>Total</th>
-                    <th>
-                      {filteredData.length > 1
-                        ? `${filteredData.length} Days`
-                        : `${filteredData.length} Day`}
-                    </th>
-                    <th>{ppTotalMeal}</th>
-                    <th>{pryTotalMeal}</th>
-                    <th
-                      colSpan={2}
-                      style={{ verticalAlign: "center" }}
-                      suppressHydrationWarning={true}
-                    >
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Total PP Meal- {ppTotalMeal}
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Total Primary Meal- {pryTotalMeal}
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Total Meal- {ppTotalMeal + pryTotalMeal}
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        PP MDM Cost ={" "}
-                        {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} = `}₹{" "}
-                        {IndianFormat(
-                          Math.round(ppTotalMeal * thisMonthMDMAllowance)
-                        )}
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Primary MDM Cost ={" "}
-                        {`${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}₹{" "}
-                        {IndianFormat(
-                          Math.round(pryTotalMeal * thisMonthMDMAllowance)
-                        )}
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Total MDM Cost ={" "}
-                        {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} + ${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}
-                        ₹ {IndianFormat(thisMonthTotalCost)}
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Total Rice Given: {totalRiceGiven}Kg.
-                      </p>
-                      <p style={{ margin: 0, padding: 0 }}>
-                        Rice Consumption: {thisMonthTotalRiceConsumption}Kg.
-                      </p>
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
+                              <p className="m-0 p-0 fs-7">
+                                EX:-{filteredRiceData[i]?.riceExpend},{" "}
+                              </p>
+                              <p className="m-0 p-0 fs-7">
+                                CB:-{filteredRiceData[i]?.riceCB}
+                              </p>
+                            </div>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-primary m-1"
+                              onClick={() => {
+                                setPp(entry.pp);
+                                setPry(entry.pry);
+                                setDate(getCurrentDateInput(entry.date));
+
+                                setDocId(entry.date);
+                                setLoader(false);
+                                setShowEntry(false);
+                                setShowUpdate(true);
+                                setShowMonthlyReport(false);
+                                setShowDataTable(false);
+                                setShowMonthSelection(false);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-danger m-1"
+                              onClick={() => {
+                                // eslint-disable-next-line no-alert
+                                if (
+                                  window.confirm(
+                                    "Are you sure you want to delete this entry?"
+                                  )
+                                ) {
+                                  delEntry(entry);
+                                }
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    <tr>
+                      <th>Total</th>
+                      <th>
+                        {filteredData.length > 1
+                          ? `${filteredData.length} Days`
+                          : `${filteredData.length} Day`}
+                      </th>
+                      <th>{ppTotalMeal}</th>
+                      <th>{pryTotalMeal}</th>
+                      <th
+                        colSpan={2}
+                        style={{ verticalAlign: "center" }}
+                        suppressHydrationWarning={true}
+                      >
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Total PP Meal- {ppTotalMeal}
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Total Primary Meal- {pryTotalMeal}
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Total Meal- {ppTotalMeal + pryTotalMeal}
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          PP MDM Cost ={" "}
+                          {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} = `}₹{" "}
+                          {IndianFormat(
+                            Math.round(ppTotalMeal * thisMonthMDMAllowance)
+                          )}
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Primary MDM Cost ={" "}
+                          {`${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}₹{" "}
+                          {IndianFormat(
+                            Math.round(pryTotalMeal * thisMonthMDMAllowance)
+                          )}
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Total MDM Cost ={" "}
+                          {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} + ${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}
+                          ₹ {IndianFormat(thisMonthTotalCost)}
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Total Rice Given: {totalRiceGiven}Kg.
+                        </p>
+                        <p style={{ margin: 0, padding: 0 }}>
+                          Rice Consumption: {thisMonthTotalRiceConsumption}Kg.
+                        </p>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
               {!showSubmitMonthlyReport && (
                 <button
                   type="button"
