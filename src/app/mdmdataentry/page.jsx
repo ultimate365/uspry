@@ -1380,23 +1380,25 @@ export default function MDMData() {
                           <td>{entry.pp}</td>
                           <td>{entry.pry}</td>
                           <td suppressHydrationWarning>
-                            <div className="d-flex justify-content-evenly align-items-center">
-                              <p className="m-0 p-0 fs-7">
-                                OB:-{filteredRiceData[i]?.riceOB},{" "}
-                              </p>
-                              {filteredRiceData[i]?.riceGiven > 0 && (
+                            {filteredRiceData[i]?.riceExpend > 0 && (
+                              <div className="d-flex justify-content-evenly align-items-center">
                                 <p className="m-0 p-0 fs-7">
-                                  RC:-{filteredRiceData[i]?.riceGiven},{" "}
+                                  OB:-{filteredRiceData[i]?.riceOB},{" "}
                                 </p>
-                              )}
+                                {filteredRiceData[i]?.riceGiven > 0 && (
+                                  <p className="m-0 p-0 fs-7">
+                                    RC:-{filteredRiceData[i]?.riceGiven},{" "}
+                                  </p>
+                                )}
 
-                              <p className="m-0 p-0 fs-7">
-                                EX:-{filteredRiceData[i]?.riceExpend},{" "}
-                              </p>
-                              <p className="m-0 p-0 fs-7">
-                                CB:-{filteredRiceData[i]?.riceCB}
-                              </p>
-                            </div>
+                                <p className="m-0 p-0 fs-7">
+                                  EX:-{filteredRiceData[i]?.riceExpend},{" "}
+                                </p>
+                                <p className="m-0 p-0 fs-7">
+                                  CB:-{filteredRiceData[i]?.riceCB}
+                                </p>
+                              </div>
+                            )}
                           </td>
                           <td>
                             <button
