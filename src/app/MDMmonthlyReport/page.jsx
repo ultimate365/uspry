@@ -330,27 +330,16 @@ export default function MDMmonthlyReport() {
                       <option value="" className="text-center text-primary">
                         Select Month
                       </option>
-                      {monthlyReportState.length === 1
-                        ? monthlyReportState
-                            .slice(1, monthlyReportState.length)
-                            .map((month, index) => (
-                              <option
-                                className="text-center text-success"
-                                key={index}
-                                value={month}
-                              >
-                                {month}
-                              </option>
-                            ))
-                        : entryMonthsMonths.map((month, index) => (
-                            <option
-                              className="text-center text-success"
-                              key={index}
-                              value={month}
-                            >
-                              {month}
-                            </option>
-                          ))}
+                      {monthlyReportState.length > 1 &&
+                        entryMonthsMonths.map((month, index) => (
+                          <option
+                            className="text-center text-success"
+                            key={index}
+                            value={month}
+                          >
+                            {month}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 )}
