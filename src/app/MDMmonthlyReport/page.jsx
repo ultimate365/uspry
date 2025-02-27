@@ -330,21 +330,19 @@ export default function MDMmonthlyReport() {
                       <option value="" className="text-center text-primary">
                         Select Month
                       </option>
-                      {
-                      // entryMonthsMonths.length > 1
-                      //   ? entryMonthsMonths
-                      //       .slice(1, entryMonthsMonths.length)
-                      //       .map((month, index) => (
-                      //         <option
-                      //           className="text-center text-success"
-                      //           key={index}
-                      //           value={month}
-                      //         >
-                      //           {month}
-                      //         </option>
-                      //       ))
-                      //   : 
-                        entryMonthsMonths.map((month, index) => (
+                      {entryMonthsMonths.length > 1
+                        ? entryMonthsMonths
+                            .slice(1, entryMonthsMonths.length)
+                            .map((month, index) => (
+                              <option
+                                className="text-center text-success"
+                                key={index}
+                                value={month}
+                              >
+                                {month}
+                              </option>
+                            ))
+                        : entryMonthsMonths.map((month, index) => (
                             <option
                               className="text-center text-success"
                               key={index}
