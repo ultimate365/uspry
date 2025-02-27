@@ -330,9 +330,9 @@ export default function MDMmonthlyReport() {
                       <option value="" className="text-center text-primary">
                         Select Month
                       </option>
-                      {entryMonthsMonths.length > 1
-                        ? entryMonthsMonths
-                            .slice(1, entryMonthsMonths.length)
+                      {monthlyReportState.length === 1
+                        ? monthlyReportState
+                            .slice(1, monthlyReportState.length)
                             .map((month, index) => (
                               <option
                                 className="text-center text-success"
