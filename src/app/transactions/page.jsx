@@ -898,7 +898,7 @@ export default function Transactions() {
                             PP Opening Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="ppOB"
                             value={ppOB}
@@ -918,7 +918,7 @@ export default function Transactions() {
                               PP Received
                             </label>
                             <input
-                              type="text"
+                              type="number"
                               className="form-control"
                               id="ppRC"
                               value={ppRC}
@@ -941,7 +941,7 @@ export default function Transactions() {
                               PP Expense
                             </label>
                             <input
-                              type="text"
+                              type="number"
                               className="form-control"
                               id="ppEX"
                               value={ppEX}
@@ -968,7 +968,7 @@ export default function Transactions() {
                             PP Closing Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="ppCB"
                             value={ppCB}
@@ -987,13 +987,13 @@ export default function Transactions() {
                             Primary Opening Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="pryOB"
                             value={pryOB}
                             onChange={(e) => {
                               if (e.target.value !== "") {
-                                setPryOB(parseFloat(e.target.value));
+                                setPryOB(parseFloat(round2dec(e.target.value)));
                               } else {
                                 setPryOB("");
                               }
@@ -1007,7 +1007,7 @@ export default function Transactions() {
                               Primary Received
                             </label>
                             <input
-                              type="text"
+                              type="number"
                               className="form-control"
                               id="pryRC"
                               value={pryRC}
@@ -1029,7 +1029,7 @@ export default function Transactions() {
                               Primary Expense
                             </label>
                             <input
-                              type="text"
+                              type="number"
                               className="form-control"
                               id="pryEX"
                               value={pryEX}
@@ -1037,7 +1037,9 @@ export default function Transactions() {
                                 if (e.target.value !== "") {
                                   setPryEX(parseFloat(e.target.value));
                                   setPryCB(
-                                    pryOB + pryRC - parseFloat(e.target.value)
+                                    parseFloat(
+                                      round2dec(pryOB + pryRC - e.target.value)
+                                    )
                                   );
                                 } else {
                                   setPryRC("");
@@ -1053,7 +1055,7 @@ export default function Transactions() {
                             Primary Closing Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="pryCB"
                             value={pryCB}
@@ -1298,7 +1300,7 @@ export default function Transactions() {
                             PP Opening Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="ppOB"
                             value={editTransaction.ppOB}
@@ -1324,7 +1326,7 @@ export default function Transactions() {
                             PP Received
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="ppRC"
                             value={editTransaction.ppRC}
@@ -1352,7 +1354,7 @@ export default function Transactions() {
                             PP Expense
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="ppEX"
                             value={editTransaction?.ppEX}
@@ -1384,7 +1386,7 @@ export default function Transactions() {
                             PP Closing Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="ppCB"
                             value={editTransaction.ppCB}
@@ -1410,7 +1412,7 @@ export default function Transactions() {
                             Primary Opening Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="pryOB"
                             value={editTransaction.pryOB}
@@ -1436,7 +1438,7 @@ export default function Transactions() {
                             Primary Received
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="pryRC"
                             value={editTransaction.pryRC}
@@ -1462,7 +1464,7 @@ export default function Transactions() {
                             Primary Expense
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="pryEX"
                             value={editTransaction?.pryEX}
@@ -1472,10 +1474,13 @@ export default function Transactions() {
                                 setEditTransaction({
                                   ...editTransaction,
                                   pryEX: parsedAmount,
-                                  pryCB:
-                                    editTransaction.pryOB +
-                                    editTransaction.pryRC -
-                                    parsedAmount,
+                                  pryCB: parseFloat(
+                                    round2dec(
+                                      editTransaction.pryOB +
+                                        editTransaction.pryRC -
+                                        parsedAmount
+                                    )
+                                  ),
                                 });
                               } else {
                                 setEditTransaction({
@@ -1495,7 +1500,7 @@ export default function Transactions() {
                             Primary Closing Balance
                           </label>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control"
                             id="pryCB"
                             value={editTransaction.pryCB}
