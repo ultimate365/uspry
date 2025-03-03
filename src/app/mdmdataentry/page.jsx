@@ -29,7 +29,8 @@ import {
   todayInString,
   uniqArray,
   sortMonthwise,
-  IndianFormat,round2dec
+  IndianFormat,
+  round2dec,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
@@ -1383,19 +1384,19 @@ export default function MDMData() {
                             {filteredRiceData[i]?.riceExpend > 0 && (
                               <div className="d-flex justify-content-evenly align-items-center">
                                 <p className="m-0 p-0 fs-7">
-                                  OB:-{filteredRiceData[i]?.riceOB},{" "}
+                                  OB: {filteredRiceData[i]?.riceOB},{" "}
                                 </p>
                                 {filteredRiceData[i]?.riceGiven > 0 && (
                                   <p className="m-0 p-0 fs-7">
-                                    RC:-{filteredRiceData[i]?.riceGiven},{" "}
+                                    RC: {filteredRiceData[i]?.riceGiven},{" "}
                                   </p>
                                 )}
 
                                 <p className="m-0 p-0 fs-7">
-                                  EX:-{filteredRiceData[i]?.riceExpend},{" "}
+                                  EX: {filteredRiceData[i]?.riceExpend},{" "}
                                 </p>
                                 <p className="m-0 p-0 fs-7">
-                                  CB:-{filteredRiceData[i]?.riceCB}
+                                  CB: {filteredRiceData[i]?.riceCB}
                                 </p>
                               </div>
                             )}
