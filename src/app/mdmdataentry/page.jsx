@@ -29,7 +29,7 @@ import {
   todayInString,
   uniqArray,
   sortMonthwise,
-  IndianFormat,
+  IndianFormat,round2dec
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
@@ -2373,9 +2373,9 @@ export default function MDMData() {
                 value={riceOB}
                 onChange={(e) => {
                   if (e.target.value !== "") {
-                    setRiceOB(parseInt(e.target.value));
+                    setRiceOB(parseFloat(e.target.value));
                     setRiceCB(
-                      parseInt(e.target.value) +
+                      parseFloat(e.target.value) +
                         (riceGiven === "" ? 0 : riceGiven) -
                         (riceExpend === "" ? 0 : riceExpend)
                     );
@@ -2394,11 +2394,11 @@ export default function MDMData() {
                 value={riceExpend}
                 onChange={(e) => {
                   if (e.target.value !== "") {
-                    setRiceExpend(parseInt(e.target.value));
+                    setRiceExpend(parseFloat(e.target.value));
                     setRiceCB(
                       riceOB -
                         (riceGiven === "" ? 0 : riceGiven) -
-                        parseInt(e.target.value)
+                        parseFloat(e.target.value)
                     );
                   } else {
                     setRiceExpend("");
@@ -2417,8 +2417,8 @@ export default function MDMData() {
                 value={riceGiven}
                 onChange={(e) => {
                   if (e.target.value !== "") {
-                    setRiceGiven(parseInt(e.target.value));
-                    setRiceCB(riceOB + parseInt(e.target.value) - riceExpend);
+                    setRiceGiven(parseFloat(e.target.value));
+                    setRiceCB(riceOB + parseFloat(e.target.value) - riceExpend);
                   } else {
                     setRiceGiven("");
                     setRiceCB(riceOB - riceExpend);
@@ -2435,7 +2435,7 @@ export default function MDMData() {
                 value={riceCB}
                 onChange={(e) => {
                   if (e.target.value !== "") {
-                    setRiceCB(parseInt(e.target.value));
+                    setRiceCB(parseFloat(e.target.value));
                   } else {
                     setRiceCB("");
                   }
