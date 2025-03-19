@@ -1374,6 +1374,10 @@ export default function MDMData() {
                   </thead>
                   <tbody>
                     {filteredData.map((entry, i) => {
+                      const findRiceData = filteredRiceData.filter(
+                        (r) => r.id === entry.id
+                      );
+                      const foundRData = findRiceData[0];
                       return (
                         <tr key={i} style={{ verticalAlign: "middle" }}>
                           <td>Day-{i + 1}</td>
@@ -1381,22 +1385,22 @@ export default function MDMData() {
                           <td>{entry.pp}</td>
                           <td>{entry.pry}</td>
                           <td suppressHydrationWarning>
-                            {filteredRiceData[i]?.riceExpend > 0 && (
+                            {findRiceData.length > 0 && (
                               <div className="d-flex justify-content-evenly align-items-center">
                                 <p className="m-0 p-0 fs-7">
-                                  OB: {filteredRiceData[i]?.riceOB},{" "}
+                                  OB: {foundRData.riceOB},{" "}
                                 </p>
-                                {filteredRiceData[i]?.riceGiven > 0 && (
+                                {foundRData?.riceGiven > 0 && (
                                   <p className="m-0 p-0 fs-7">
-                                    RC: {filteredRiceData[i]?.riceGiven},{" "}
+                                    RC: {foundRData?.riceGiven},{" "}
                                   </p>
                                 )}
 
                                 <p className="m-0 p-0 fs-7">
-                                  EX: {filteredRiceData[i]?.riceExpend},{" "}
+                                  EX: {foundRData?.riceExpend},{" "}
                                 </p>
                                 <p className="m-0 p-0 fs-7">
-                                  CB: {filteredRiceData[i]?.riceCB}
+                                  CB: {foundRData?.riceCB}
                                 </p>
                               </div>
                             )}
