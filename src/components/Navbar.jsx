@@ -417,6 +417,15 @@ export default function Navbar() {
               Downloads
             </Link>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/HolisticPRCardAny"
+              onClick={handleNavCollapse}
+            >
+              Holistic PRCard
+            </Link>
+          </li>
 
           <li className="nav-item">
             <Link
