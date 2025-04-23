@@ -145,11 +145,11 @@ export default function HolisticPRCard() {
   };
   useEffect(() => {
     document.title = `${
-      schoolName !== "" && schoolName
+      schoolName !== "" ? schoolName : "My School's"
     }:Holistic Progress Report Card`;
-    
+
     //eslint-disable-next-line
-  }, []);
+  }, [schoolName]);
 
   return (
     <div className="container-fluid">
@@ -173,7 +173,7 @@ export default function HolisticPRCard() {
                   <div className="mb-3">
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="school">
-                        School Name
+                        School Name*
                       </span>
                       <input
                         type="text"
@@ -189,7 +189,7 @@ export default function HolisticPRCard() {
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="UDISE">
-                        UDISE
+                        UDISE*
                       </span>
                       <input
                         type="number"
@@ -207,7 +207,7 @@ export default function HolisticPRCard() {
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="schoolAddress">
-                        School Address
+                        Address*
                       </span>
                       <input
                         type="text"
@@ -221,7 +221,7 @@ export default function HolisticPRCard() {
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="Village">
-                        Village / Ward
+                        Village / Ward*
                       </span>
                       <input
                         type="text"
@@ -235,7 +235,7 @@ export default function HolisticPRCard() {
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="Circle">
-                        Circle
+                        Circle*
                       </span>
                       <input
                         type="text"
@@ -249,7 +249,7 @@ export default function HolisticPRCard() {
                     </div>
                     <div className="input-group mb-3">
                       <span className="input-group-text" id="mobile">
-                        HOI's Mobile
+                        HOI's Mobile*
                       </span>
                       <input
                         type="number"
@@ -293,17 +293,35 @@ export default function HolisticPRCard() {
                         onChange={(e) => setWebsite(e.target.value)}
                       />
                     </div>
-                    <div className="row justify-content-center mb-4">
-                      <div className="col-md-6">
-                        <input
-                          type="file"
-                          ref={fileRef}
-                          accept=".xlsx,.xls,.csv,.json"
-                          onChange={handleFileUpload}
-                          className="form-control"
-                        />
-                      </div>
+                    <div className="input-group mb-3 mx-auto text-center">
+                      <span className="input-group-text" id="Webfile">
+                        To Download Reequired Excel File click{" "}
+                        <a
+                          href="https://firebasestorage.googleapis.com/v0/b/uspryschool.appspot.com/o/files%2Fstudents.xlsx?alt=media&token=35d7fc30-978b-4c59-96d6-a15fa8aee268"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ marginLeft: 5 }}
+                        >
+                          Here
+                        </a>
+                      </span>
                     </div>
+                    <div className="input-group mb-3">
+                      <input
+                        type="file"
+                        ref={fileRef}
+                        accept=".xlsx,.xls,.csv,.json"
+                        onChange={handleFileUpload}
+                        className="form-control"
+                      />
+                    </div>
+                    {fileName!=="" && (
+                      <div className="row justify-content-center">
+                        <div className="col-md-6">
+                          <div className="alert alert-success">{fileName} Added</div>
+                        </div>
+                      </div>
+                    )}
                     {error && (
                       <div className="row justify-content-center">
                         <div className="col-md-6">
@@ -365,9 +383,15 @@ export default function HolisticPRCard() {
                       </button>
                       <button
                         onClick={() => downloadFile("xlsx")}
-                        className="btn btn-success"
+                        className="btn btn-success me-2"
                       >
                         Download Excel
+                      </button>
+                      <button
+                        onClick={() => setShowModal(true)}
+                        className="btn btn-info me-2"
+                      >
+                        Re Edit Details
                       </button>
                     </div>
                   </div>
