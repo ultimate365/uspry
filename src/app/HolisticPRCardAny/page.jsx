@@ -297,7 +297,7 @@ export default function HolisticPRCard() {
                       <span className="input-group-text" id="Webfile">
                         To Download Reequired Excel File click{" "}
                         <a
-                          href="https://firebasestorage.googleapis.com/v0/b/uspryschool.appspot.com/o/files%2Fstudents.xlsx?alt=media&token=35d7fc30-978b-4c59-96d6-a15fa8aee268"
+                          href="https://raw.githubusercontent.com/ultimate365/webData/main/students.xlsx"
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ marginLeft: 5 }}
@@ -315,10 +315,12 @@ export default function HolisticPRCard() {
                         className="form-control"
                       />
                     </div>
-                    {fileName!=="" && (
+                    {fileName !== "" && (
                       <div className="row justify-content-center">
                         <div className="col-md-6">
-                          <div className="alert alert-success">{fileName} Added</div>
+                          <div className="alert alert-success">
+                            {fileName} Added
+                          </div>
                         </div>
                       </div>
                     )}
