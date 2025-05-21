@@ -845,7 +845,7 @@ export default function Teachersreturn() {
                 </div>
               </div>
               <div className="modal-footer">
-                {workingDays > 0 && (
+                {workingDays >= 0 && workingDays !== "" && (
                   <button
                     type="button"
                     className="btn btn-success"
@@ -1701,7 +1701,7 @@ export default function Teachersreturn() {
                         rowSpan={3}
                         style={{ border: "1px solid", paddingInline: 2 }}
                       >
-                        S.C./ S.T./ O?.B.C.-A/ O?.B.C.-B/ PH
+                        S.C./ S.T./ O.B.C.-A/ O.B.C.-B/ PH
                       </th>
                       <th
                         colSpan={2}
@@ -2341,7 +2341,7 @@ export default function Teachersreturn() {
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        O?.B.C. A Minority
+                        O.B.C. A Minority
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
@@ -2440,7 +2440,7 @@ export default function Teachersreturn() {
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        O?.B.C. B
+                        O.B.C. B
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>
@@ -2539,7 +2539,7 @@ export default function Teachersreturn() {
                     </tr>
                     <tr style={{ border: "1px solid" }}>
                       <td rowSpan={3} style={{ border: "1px solid" }}>
-                        Minority Excluding O?.B.C.-A
+                        Minority Excluding O.B.C.-A
                       </td>
                       <td style={{ border: "1px solid" }}>Boys</td>
                       <td style={{ border: "1px solid" }}>

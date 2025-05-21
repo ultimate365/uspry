@@ -50,6 +50,7 @@ export default function MDMData() {
   const router = useRouter();
   const access = state?.ACCESS;
   const [date, setDate] = useState(todayInString());
+  const today = new Date();
   const [pp, setPp] = useState("");
   const [pry, setPry] = useState("");
   const [showEntry, setShowEntry] = useState(false);
@@ -750,7 +751,6 @@ export default function MDMData() {
         .then(() => {
           toast.success("Monthly MDM Data Submitted successfully");
           setLoader(false);
-          setMonthlyReportState();
           let z = monthlyReportState.filter((item) => item.id !== monthYearID);
           z = [...z, entry];
           setMonthlyReportState(sortMonthwise(z));
@@ -1280,9 +1280,21 @@ export default function MDMData() {
                   </select>
                 </div>
               )}
+              {today.getDate() >= 20 &&
+                moreFilteredData.filter(
+                  (m) => m.date.split("-")[1] === today.getMonth() + 1
+                ).length === 0 && (
+                  <div>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => router.push("/blankMDMEntry")}
+                    >
+                      Blank Entry
+                    </button>
+                  </div>
+                )}
             </div>
           )}
-
           {showDataTable && (
             <>
               <h4>Mothly MDM Report of {monthText} Month</h4>
