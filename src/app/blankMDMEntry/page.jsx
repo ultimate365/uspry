@@ -1,13 +1,4 @@
 "use client";
-import {
-  BLOCK,
-  CCH_NAME,
-  PRIMARY_STUDENTS,
-  SCHOOL_TYPE,
-  SCHOOLNAME,
-  TOTAL_STUDENTS,
-  WARD_NO,
-} from "@/modules/constants";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { firestore } from "../../context/FirbaseContext";
@@ -15,28 +6,16 @@ import { getDocs, query, collection, setDoc, doc } from "firebase/firestore";
 import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
 import {
-  createDownloadLink,
   GetMonthName,
-  IndianFormat,
-  round2dec,
   sortMonthwise,
   todayInString,
-  uniqArray,
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
-import MDMPrint from "@/components/MDMPrint";
 
 export default function BlankMDMEntry() {
   const { monthlyReportState, setMonthlyReportState, state } =
     useGlobalContext();
-  const PDFDownloadLink = dynamic(
-    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-    {
-      ssr: false,
-      loading: () => <p>Loading...</p>,
-    }
-  );
   const [thisMonthlyData, setThisMonthlyData] = useState({
     id: "",
     month: "",
@@ -84,15 +63,6 @@ export default function BlankMDMEntry() {
   const access = state?.ACCESS;
   const router = useRouter();
   const [loader, setLoader] = useState(false);
-  const [showData, setShowData] = useState(false);
-  const [showMonthSelection, setShowMonthSelection] = useState(false);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [entryMonthsMonths, setEntryMonths] = useState([]);
-  const [serviceArray, setServiceArray] = useState([]);
-  const [showZoom, setShowZoom] = useState(false);
-  const [newFormatZoom, setNewFormatZoom] = useState(100);
-  const [oldFormatZoom, setOldFormatZoom] = useState(100);
-
   const today = new Date();
   const monthIndex = today.getMonth();
   const thisYear = today.getFullYear();
@@ -221,6 +191,10 @@ export default function BlankMDMEntry() {
   return (
     <div className="container my-2">
       {loader && <Loader />}
+      <h3 className="text-center text-primary">
+        Submit MDM RETURN of {thisMonthlyData?.month.toUpperCase()}{" "}
+        {thisMonthlyData?.year}
+      </h3>
       <div className="my-3 mx-auto d-flex flex-row justify-content-center align-items-center gap-4 flex-wrap">
         {JSON.stringify(thisMonthlyData)
           .split(`"`)

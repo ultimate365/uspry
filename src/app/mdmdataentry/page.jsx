@@ -1514,7 +1514,7 @@ export default function MDMData() {
               {!showSubmitMonthlyReport && (
                 <button
                   type="button"
-                  className="btn btn-dark"
+                  className="btn btn-dark m-3"
                   onClick={() => {
                     setShowSubmitMonthlyReport(true);
                     if (monthlyReportState.length === 0) {

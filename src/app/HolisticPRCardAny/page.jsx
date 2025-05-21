@@ -358,6 +358,14 @@ export default function HolisticPRCard() {
                   >
                     Save
                   </button>
+                  <button
+                    className="btn btn-warning my-3 mx-2"
+                    onClick={() => {
+                      router.back();
+                    }}
+                  >
+                    Back
+                  </button>
                 </div>
               </div>
             </div>
