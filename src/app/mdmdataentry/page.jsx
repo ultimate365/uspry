@@ -1280,7 +1280,8 @@ export default function MDMData() {
                   </select>
                 </div>
               )}
-              {today.getDate() >= 20 &&
+              {selectedYear == today.getFullYear() &&
+                today.getDate() >= 20 &&
                 moreFilteredData.filter(
                   (m) => m.date.split("-")[1] === today.getMonth() + 1
                 ).length === 0 && (
