@@ -195,6 +195,15 @@ export default function BlankMDMEntry() {
         Submit MDM RETURN of {thisMonthlyData?.month.toUpperCase()}{" "}
         {thisMonthlyData?.year}
       </h3>
+      <div>
+        <button
+          type="button"
+          className="btn btn-warning"
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
+      </div>
       <div className="my-3 mx-auto d-flex flex-row justify-content-center align-items-center gap-4 flex-wrap">
         {JSON.stringify(thisMonthlyData)
           .split(`"`)
@@ -246,6 +255,15 @@ export default function BlankMDMEntry() {
             </button>
           </div>
         )}
+      </div>
+      <div>
+        <button
+          type="button"
+          className="btn btn-warning"
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
       </div>
     </div>
   );

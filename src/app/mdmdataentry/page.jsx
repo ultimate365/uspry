@@ -1285,6 +1285,11 @@ export default function MDMData() {
                   (m) => m.date.split("-")[1] === today.getMonth() + 1
                 ).length === 0 && (
                   <div>
+                    <h3 className="text-danger text-center mb-3">
+                      No Monthly Entry Found for{" "}
+                      {monthNamesWithIndex[today.getMonth()].monthName},{" "}
+                      {today.getFullYear()}
+                    </h3>
                     <button
                       className="btn btn-secondary"
                       onClick={() => router.push("/blankMDMEntry")}
