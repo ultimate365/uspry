@@ -7,7 +7,7 @@ import {
   PREV_MDM_COST,
   MDM_COST_MAY_2025,
 } from "@/modules/constants";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { firestore } from "../../context/FirbaseContext";
 import {
@@ -162,6 +162,17 @@ export default function MDMData() {
     YEAR: "2025",
     id: "2025",
   });
+  const UseFocus = () => {
+    const htmlElRef = useRef(null);
+    const setFocus = () => {
+      htmlElRef.current && htmlElRef.current.focus();
+    };
+
+    return [htmlElRef, setFocus];
+  };
+  const [input1Ref, setInput1Focus] = UseFocus();
+  const [input2Ref, setInput2Focus] = UseFocus();
+
   const submitData = async () => {
     if (validForm()) {
       setLoader(true);
@@ -968,6 +979,9 @@ export default function MDMData() {
             setShowMonthSelection(false);
             setShowRiceData(false);
           });
+          setTimeout(() => {
+            setInput1Focus();
+          }, 200);
         }}
       >
         Coverage Entry
@@ -1012,6 +1026,9 @@ export default function MDMData() {
           setShowStudentDataEntryForm(false);
           setDate(todayInString());
           setDocId(todayInString());
+          setTimeout(() => {
+            setInput2Focus();
+          }, 200);
         }}
       >
         Rice Data
@@ -1046,6 +1063,7 @@ export default function MDMData() {
           <div className="form-group m-2">
             <label className="m-2">PP</label>
             <input
+              ref={input1Ref}
               type="number"
               className="form-control"
               placeholder={`Max Limit: ${StudentData?.PP_STUDENTS}`}
@@ -1291,7 +1309,7 @@ export default function MDMData() {
               {selectedYear == today.getFullYear() &&
                 today.getDate() >= 20 &&
                 moreFilteredData.filter(
-                  (m) => m.date.split("-")[1] === today.getMonth() + 1
+                  (m) => m.date.split("-")[1] == today.getMonth() + 1
                 ).length === 0 && (
                   <div>
                     <h3 className="text-danger text-center mb-3">
@@ -2419,6 +2437,7 @@ export default function MDMData() {
             <div className="form-group m-2 col-md-4 mx-auto">
               <label className="m-2">Rice Expenditure (in Kg.)</label>
               <input
+                ref={input2Ref}
                 type="number"
                 className="form-control "
                 placeholder={`Enter Rice Expenditure`}

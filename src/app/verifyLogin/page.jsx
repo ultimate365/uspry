@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
 import {
@@ -17,6 +17,7 @@ import Link from "next/link";
 export default function VerifyLogin() {
   const { setState } = useGlobalContext();
   const router = useRouter();
+  const ref = useRef();
   const [phone, setPhone] = useState(null);
   const [name, setName] = useState(null);
   const [displayLoader, setDisplayLoader] = useState(false);
@@ -117,7 +118,9 @@ export default function VerifyLogin() {
           </p> */}
           <div className="col-md-6 mx-auto">
             <form action="" autoComplete="off" onSubmit={verifyOTP}>
-              <CustomInput
+              <input
+                className="form-control mb-3"
+                ref={(input) => input && input.focus()}
                 title={"Enter Your OTP"}
                 type={"number"}
                 placeholder={"Enter Your 6 digit OTP"}
