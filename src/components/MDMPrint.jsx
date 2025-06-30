@@ -16,16 +16,8 @@ import unchecked from "@/images/unchecked.png";
 import {
   BLOCK,
   CCH_NAME,
-  DIST,
-  NGO_SHG,
-  PP_STUDENTS,
-  PRIMARY_BOYS,
-  PRIMARY_GIRLS,
-  PRIMARY_STUDENTS,
   SCHOOL_TYPE,
   SCHOOLNAME,
-  TOTAL_STUDENTS,
-  UDISE_CODE,
   WARD_NO,
   HOI_DESIGNATION,
 } from "../modules/constants";
@@ -1909,7 +1901,7 @@ export default function MDMPrint({ data }) {
               <Text style={styles.text}>-</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
-              <Text style={styles.text}>{TOTAL_STUDENTS}</Text>
+              <Text style={styles.text}>{thisMonthlyData?.totalStudent}</Text>
             </View>
             <View style={[styles.view88H20, { width: "8.8%" }]}>
               <Text style={styles.text}>{CCH_NAME.length}</Text>
