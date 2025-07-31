@@ -790,15 +790,15 @@ export default function Transactions() {
                         </div>
                       )}
                       <h5 className="text-black p-1">
-                        Opening Balance: Rs.{" "}
+                        Closing Balance: Rs.{" "}
                         {IndianFormat(viewTransaction.closingBalance)}
                       </h5>
                       <h5 className="text-black p-1">
-                        PP Opening Balance: Rs.{" "}
+                        PP Closing Balance: Rs.{" "}
                         {IndianFormat(viewTransaction.ppCB)}
                       </h5>
                       <h5 className="text-black p-1">
-                        Pry. Opening Balance: Rs.{" "}
+                        Pry. Closing Balance: Rs.{" "}
                         {IndianFormat(viewTransaction.pryCB)}
                       </h5>
                     </div>
