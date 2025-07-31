@@ -55,6 +55,7 @@ export default function Transactions() {
   const [allTransactions, setAllTransactions] = useState([]);
   const [thisAccounTransactions, setThisAccounTransactions] = useState([]);
   const [showEntry, setShowEntry] = useState(false);
+  const [showView, setShowView] = useState(false);
   const [amount, setAmount] = useState("");
   const [mdmWithdrawal, setMdmWithdrawal] = useState("MDM WITHDRAWAL");
   const [type, setType] = useState("DEBIT");
@@ -104,6 +105,27 @@ export default function Transactions() {
     pryRC: "",
     pryCB: "",
     pryEX: "",
+  });
+  const [viewTransaction, setViewTransaction] = useState({
+    id: "",
+    accountNumber: "",
+    amount: "",
+    month: "",
+    year: "",
+    purpose: "",
+    type: "",
+    transactionPurpose: "",
+    date: "",
+    ppOB: "",
+    ppRC: "",
+    ppCB: "",
+    ppEX: "",
+    pryOB: "",
+    pryRC: "",
+    pryCB: "",
+    pryEX: "",
+    openingBalance: "",
+    closingBalance: "",
   });
   const [showEdit, setShowEdit] = useState(false);
   const getId = () => {
@@ -523,6 +545,17 @@ export default function Transactions() {
         <div>
           <button
             type="button"
+            className={`btn btn-primary btn-sm m-1`}
+            onClick={() => {
+              setShowView(true);
+              setViewTransaction(transaction);
+            }}
+            style={{ fontSize: 10 }}
+          >
+            View
+          </button>
+          <button
+            type="button"
             className={`btn btn-warning btn-sm m-1`}
             style={{ fontSize: 10 }}
             onClick={() => {
@@ -632,7 +665,7 @@ export default function Transactions() {
     //eslint-disable-next-line
   }, [stateObject, allTransactions, id]);
   return (
-    <div className="container">
+    <div className="container-fluid">
       {loader && <Loader />}
       <div>
         <h3>Transactions</h3>
@@ -675,7 +708,115 @@ export default function Transactions() {
             conditionalRowStyles={conditionalRowStyles}
           />
         )}
-
+        {showView && (
+          <div
+            className="modal fade show"
+            tabIndex="-1"
+            role="dialog"
+            style={{ display: "block" }}
+            aria-modal="true"
+          >
+            <div className="modal-dialog modal-md">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                    {viewTransaction.purpose}
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    aria-label="Close"
+                    onClick={() => setShowView(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <div className="text-center mx-auto">
+                    <h4 className="text-primary">
+                      Purpose: {viewTransaction.purpose}
+                    </h4>
+                    <div className="my-3">
+                      <h5 className="text-black">
+                        Transaction Date: {viewTransaction.date}
+                      </h5>
+                      <div className="d-flex flex-row mx-auto justify-content-center align-items-center">
+                        <h5 className="text-black p-1">Transaction Type:</h5>
+                        <h5
+                          className={`text-${
+                            viewTransaction.type == "CREDIT"
+                              ? "success"
+                              : "danger"
+                          } p-1`}
+                        >
+                          {viewTransaction.type}
+                        </h5>
+                      </div>
+                      <h5 className="text-black">
+                        Transaction Amount: Rs.{" "}
+                        {IndianFormat(viewTransaction.amount)}
+                      </h5>
+                      <h5 className="text-black p-1">
+                        Opening Balance: Rs.{" "}
+                        {IndianFormat(viewTransaction.openingBalance)}
+                      </h5>
+                      <h5 className="text-black p-1">
+                        PP Opening Balance: Rs.{" "}
+                        {IndianFormat(viewTransaction.ppOB)}
+                      </h5>
+                      <h5 className="text-black p-1">
+                        Pry. Opening Balance: Rs.{" "}
+                        {IndianFormat(viewTransaction.pryOB)}
+                      </h5>
+                      {viewTransaction.type == "CREDIT" ? (
+                        <div>
+                          <h5 className="text-black p-1">
+                            PP Amount Received: Rs.{" "}
+                            {IndianFormat(viewTransaction.ppRC)}
+                          </h5>
+                          <h5 className="text-black p-1">
+                            Pry. Amount Received: Rs.{" "}
+                            {IndianFormat(viewTransaction.pryRC)}
+                          </h5>
+                        </div>
+                      ) : (
+                        <div>
+                          <h5 className="text-black p-1">
+                            PP Amount Expended: Rs.{" "}
+                            {IndianFormat(viewTransaction.ppEX)}
+                          </h5>
+                          <h5 className="text-black p-1">
+                            Pry. Amount Expended: Rs.{" "}
+                            {IndianFormat(viewTransaction.pryEX)}
+                          </h5>
+                        </div>
+                      )}
+                      <h5 className="text-black p-1">
+                        Opening Balance: Rs.{" "}
+                        {IndianFormat(viewTransaction.closingBalance)}
+                      </h5>
+                      <h5 className="text-black p-1">
+                        PP Opening Balance: Rs.{" "}
+                        {IndianFormat(viewTransaction.ppCB)}
+                      </h5>
+                      <h5 className="text-black p-1">
+                        Pry. Opening Balance: Rs.{" "}
+                        {IndianFormat(viewTransaction.pryCB)}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-danger m-2"
+                    onClick={() => setShowView(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {showEntry && (
           <div
             className="modal fade show"
