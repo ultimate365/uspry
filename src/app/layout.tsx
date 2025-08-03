@@ -55,8 +55,8 @@ export const metadata = {
   openGraph: {
     title: "UTTAR SEHAGORI PRIMARY SCHOOL",
     description: "Updates and information from UTTAR SEHAGORI PRIMARY SCHOOL.",
-    url: "https://usprys.vercel.app",
-    siteName: "usprys.vercel.app",
+    url: "https://uspry.vercel.app",
+    siteName: "uspry.vercel.app",
     type: "website",
   },
   robots: {
@@ -64,7 +64,7 @@ export const metadata = {
     follow: true,
   },
   alternates: {
-    canonical: "https://usprys.vercel.app",
+    canonical: "https://uspry.vercel.app",
   },
   other: {
     "google-site-verification": "9pZA_1PHu84pqNd0B8B7MdAow1W57RjGPD9LN1OtJ6Y",

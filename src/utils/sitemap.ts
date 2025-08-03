@@ -1,6 +1,6 @@
 // utils/sitemap.ts
 export async function GET() {
-  const baseUrl = "https://awwbtpta.vercel.app";
+  const baseUrl = "https://uspry.vercel.app";
   const pages = [
     "accounts",
     "admission",
