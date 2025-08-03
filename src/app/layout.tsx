@@ -34,12 +34,42 @@ const dejaVuCondensed = localFont({
   variable: "--font-dejaVuCondensed",
 });
 
-
-export const metadata: Metadata = {
+<meta
+  name="google-site-verification"
+  content="9pZA_1PHu84pqNd0B8B7MdAow1W57RjGPD9LN1OtJ6Y"
+/>;
+// app/layout.tsx
+export const metadata = {
   title: "UTTAR SEHAGORI PRIMARY SCHOOL",
   description: "Welcome to UTTAR SEHAGORI PRIMARY SCHOOL's Website",
+  keywords: [
+    "UTTAR SEHAGORI",
+    "PRIMARY SCHOOL",
+    "Amta West",
+    "Primary Teachers",
+    "West Bengal",
+    "Trinamool",
+  ],
+  authors: [{ name: "UTTAR SEHAGORI PRIMARY SCHOOL" }],
+  creator: "UTTAR SEHAGORI PRIMARY SCHOOL",
+  openGraph: {
+    title: "UTTAR SEHAGORI PRIMARY SCHOOL",
+    description: "Updates and information from UTTAR SEHAGORI PRIMARY SCHOOL.",
+    url: "https://usprys.vercel.app",
+    siteName: "usprys.vercel.app",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://usprys.vercel.app",
+  },
+  other: {
+    "google-site-verification": "9pZA_1PHu84pqNd0B8B7MdAow1W57RjGPD9LN1OtJ6Y",
+  },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,6 +77,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head />
       <body
         className={`container-fluid text-center text-black ${kalpurush.variable} ${dejaVuBold.variable} ${dejaVuCondensed.variable}`}
         suppressHydrationWarning={true}
