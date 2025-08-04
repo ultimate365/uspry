@@ -38,6 +38,7 @@ const dejaVuCondensed = localFont({
   name="google-site-verification"
   content="9pZA_1PHu84pqNd0B8B7MdAow1W57RjGPD9LN1OtJ6Y"
 />;
+<meta name="viewport" content="width=device-width, initial-scale=1" />;
 // app/layout.tsx
 export const metadata = {
   title: "UTTAR SEHAGORI PRIMARY SCHOOL",
