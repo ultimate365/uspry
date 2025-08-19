@@ -156,6 +156,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/techLeaves"
+              onClick={handleNavCollapse}
+            >
+              Teacher Leaves
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/HolisticPRCard"
               onClick={handleNavCollapse}
             >
