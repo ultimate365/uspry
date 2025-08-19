@@ -263,6 +263,20 @@ export default function UserTeachers() {
             <h4 className="text-center text-primary">
               {getMonth()} Teachers Leave Details
             </h4>
+            <button
+              className="btn btn-primary m-4"
+              onClick={() => {
+                setEditData({
+                  id: filteredEntry[0]?.id,
+                  month: filteredEntry[0]?.month,
+                  year: filteredEntry[0]?.year,
+                  leaves: filteredData,
+                });
+                setShowEditModal(true);
+              }}
+            >
+              Edit
+            </button>
           </div>
           <div
             style={{
@@ -289,7 +303,6 @@ export default function UserTeachers() {
                   <th>OL This Month</th>
                   <th>CL This Year</th>
                   <th>OL This Year</th>
-                  <th>Edit</th>
                 </tr>
               </thead>
               <tbody>
@@ -302,24 +315,6 @@ export default function UserTeachers() {
                       <td>{entry.olThisMonth}</td>
                       <td>{entry.clThisYear}</td>
                       <td>{entry.olThisYear}</td>
-                      <td suppressHydrationWarning>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => {
-                            setEditData(
-                              {
-                                id: filteredEntry[0]?.id,
-                                month: filteredEntry[0]?.month,
-                                year: filteredEntry[0]?.year,
-                                leaves: filteredData,
-                              }
-                            );
-                            setShowEditModal(true);
-                          }}
-                        >
-                          Edit
-                        </button>
-                      </td>
                     </tr>
                   );
                 })}
@@ -340,73 +335,105 @@ export default function UserTeachers() {
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                  Edit Teachers Leave of {editData?.month} -{" "}
-                  {editData?.year}
+                  Edit Teachers Leave of {editData?.month} - {editData?.year}
                 </h1>
                 <button
                   type="button"
                   className="btn-close"
                   aria-label="Close"
                   onClick={() => {
-                      setShowEditModal(false);
-                      setShowData(true);
-                    }}
+                    setShowEditModal(false);
+                    setShowData(true);
+                  }}
                 ></button>
               </div>
               <div className="modal-body">
                 <div className="mx-auto my-2 noprint">
-                  <div className="mb-3 mx-auto">
-                    <label htmlFor="month" className="form-label">
-                      Month
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="month"
-                      value={editData?.month}
-                      readOnly
-                    />
+                  <p htmlFor="id" className="form-label">
+                    ID: {editData?.id}
+                  </p>
+                  <p htmlFor="month" className="form-label">
+                    Month: {editData?.month}
+                  </p>
+                  <p htmlFor="year" className="form-label">
+                    Year: {editData?.year}
+                  </p>
+                </div>
+                <div className="mx-auto my-2 noprint">
+                  {editData.leaves.map((teacher, index) => (
+                    <div className="p-2 bg-info m-2 rounded" key={index}>
+                      <p className="m-1">{teacher.tname}</p>
+                      <div className="form-group m-2">
+                        <label className="m-2">CL This Month</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="CL This Month"
+                          value={teacher.clThisMonth}
+                          onChange={(e) => {
+                            let x = [...editData.leaves];
+                            x[index].clThisMonth = parseInt(e.target.value);
+                            setEditData({ ...editData, leaves: x });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">OL This Month</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="OL This Month"
+                          value={teacher.olThisMonth}
+                          onChange={(e) => {
+                            let x = [...editData.leaves];
+                            x[index].olThisMonth = parseInt(e.target.value);
+                            setEditData({ ...editData, leaves: x });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">CL This Year</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="CL This Year"
+                          value={teacher.clThisYear}
+                          onChange={(e) => {
+                            let x = [...editData.leaves];
+                            x[index].clThisYear = parseInt(e.target.value);
+                            setEditData({ ...editData, leaves: x });
+                          }}
+                        />
+                      </div>
+                      <div className="form-group m-2">
+                        <label className="m-2">OL This Year</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="OL This Year"
+                          value={teacher.olThisYear}
+                          onChange={(e) => {
+                            let x = [...editData.leaves];
+                            x[index].olThisYear = parseInt(e.target.value);
+                            setEditData({ ...editData, leaves: x });
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="mb-3 mx-auto">
-                    <label htmlFor="year" className="form-label">
-                      Year
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="year"
-                      value={editData?.year}
-                      readOnly
-                    />
-                    </div>
-                    <div className="mb-3 mx-auto">
-                    <label htmlFor="id" className="form-label">
-                      ID  
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="id"
-                      value={editData?.id}
-                      readOnly  
-                    />
-                    
-
-
-                  </div>
+                  ))}
                 </div>
               </div>
               <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={() => {
-                      setShowEditModal(false);
-                      setShowData(true);
-                    }}
-                  >
-                    Save
-                  </button>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setShowData(true);
+                  }}
+                >
+                  Save
+                </button>
               </div>
             </div>
           </div>
