@@ -11,7 +11,14 @@ import {
   todayInString,
   uniqArray,
 } from "@/modules/calculatefunctions";
-import { getDocs, query, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  getDocs,
+  query,
+  collection,
+  doc,
+  updateDoc,
+  setDoc,
+} from "firebase/firestore";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -32,8 +39,8 @@ export default function UserTeachers() {
   const [entryMonths, setEntryMonths] = useState("");
   const [showMonthSelection, setShowMonthSelection] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editData, setEditData] = useState({
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addData, setAddData] = useState({
     id: "January-2025",
     month: "January",
     year: 2025,
@@ -82,6 +89,16 @@ export default function UserTeachers() {
   });
   const [showData, setShowData] = useState(false);
   const [filteredData, setFilteredData] = useState();
+  const currentDate = new Date();
+  const monthName =
+    monthNamesWithIndex[
+      currentDate.getDate() > 10
+        ? currentDate.getMonth()
+        : currentDate.getMonth() === 0
+        ? 11
+        : currentDate.getMonth() - 1
+    ].monthName;
+  const yearName = currentDate.getFullYear();
   const getMonth = () => {
     return `${month.toUpperCase()} of ${year}`;
   };
@@ -130,6 +147,7 @@ export default function UserTeachers() {
         setFilteredData(entry?.leaves);
         setMonth(entry?.month);
         setYear(entry?.year);
+        document.title = `${entry?.month} ${entry?.year} Teachers Leave Details`;
         return x;
       }
     });
@@ -165,7 +183,92 @@ export default function UserTeachers() {
     setAllEnry(array);
     setFilteredEntry(array);
   };
-
+  const addLeaveData = async () => {
+    if (!addData.id || !addData.month || !addData.year) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+    setShowAddModal(false);
+    setLoader(true);
+    try {
+      await setDoc(doc(firestore, "teachersLeaves", addData.id), addData)
+        .then(() => {
+          setLoader(false);
+          setShowAddModal(false);
+          setShowData(true);
+          toast.success("Teachers Leave Data Added Successfully");
+          setTeacherLeaveState((prev) => {
+            const updatedData = [...prev, addData];
+            return sortMonthwise(updatedData);
+          });
+          calledData(sortMonthwise([...allEnry, addData]));
+          setFilteredEntry((prev) => {
+            const updatedData = [...prev, addData];
+            return sortMonthwise(updatedData);
+          });
+          setEntryMonths((prev) => {
+            const updatedMonths = uniqArray([...prev, addData.month]).sort(
+              (a, b) =>
+                monthNamesWithIndex.indexOf(a) - monthNamesWithIndex.indexOf(b)
+            );
+            return updatedMonths;
+          });
+        })
+        .catch((error) => {
+          setLoader(false);
+          toast.error("Error adding data: " + error.message);
+        });
+    } catch (error) {
+      setLoader(false);
+      toast.error("Error adding data: " + error.message);
+    }
+  };
+  const updateLeaveData = async (id, value, field, isDecrement = false) => {
+    setLoader(true);
+    const updatedValue = isDecrement ? value - 1 : value + 1;
+    const updatedData = filteredData.map((entry) => {
+      if (entry.id === id) {
+        return {
+          ...entry,
+          [field]: updatedValue,
+          clThisYear:
+            field === "clThisMonth"
+              ? entry.clThisYear + (isDecrement ? -1 : 1)
+              : entry.clThisYear,
+          olThisYear:
+            field === "olThisMonth"
+              ? entry.olThisYear + (isDecrement ? -1 : 1)
+              : entry.olThisYear,
+        };
+      }
+      return entry;
+    });
+    await updateDoc(doc(firestore, "teachersLeaves", month + "-" + year), {
+      leaves: updatedData,
+    })
+      .then(() => {
+        toast.success("Teachers Leave Data Updated Successfully");
+      })
+      .catch((error) => {
+        toast.error("Error updating data: " + error.message);
+      });
+    setFilteredEntry(updatedData);
+    setFilteredData(updatedData);
+    setTeacherLeaveState((prev) => {
+      const updatedData = prev.map((entry) => {
+        if (entry.id === month + "-" + year) {
+          return {
+            ...entry,
+            leaves: updatedData,
+          };
+        }
+        return entry;
+      });
+      return sortMonthwise(updatedData);
+    });
+    calledData(sortMonthwise(teacherLeaveState));
+    setLoader(false);
+  };
   useEffect(() => {
     if (access !== "admin") {
       router.push("/");
@@ -178,13 +281,35 @@ export default function UserTeachers() {
     }
   }, []);
   useEffect(() => {
-    document.title = `${filteredEntry[0]?.id} Teachers Leave Details`;
     //eslint-disable-next-line
   }, [filteredEntry]);
+
   return (
     <div className="container">
       {loader && <Loader />}
       <div>
+        <button
+          className="btn btn-primary m-4"
+          onClick={() => {
+            setShowAddModal(true);
+            setShowData(false);
+            setAddData({
+              ...addData,
+              id: `${monthName}-${yearName}`,
+              month: monthName,
+              year: yearName,
+              leaves: allEnry[allEnry.length - 1]?.leaves.map((el) => {
+                return {
+                  ...el,
+                  clThisMonth: 0,
+                  olThisMonth: 0,
+                };
+              }),
+            });
+          }}
+        >
+          Add Month
+        </button>
         <h4>Select Year</h4>
         <div className="col-md-4 mx-auto mb-3 noprint">
           <select
@@ -263,20 +388,6 @@ export default function UserTeachers() {
             <h4 className="text-center text-primary">
               {getMonth()} Teachers Leave Details
             </h4>
-            <button
-              className="btn btn-primary m-4"
-              onClick={() => {
-                setEditData({
-                  id: filteredEntry[0]?.id,
-                  month: filteredEntry[0]?.month,
-                  year: filteredEntry[0]?.year,
-                  leaves: filteredData,
-                });
-                setShowEditModal(true);
-              }}
-            >
-              Edit
-            </button>
           </div>
           <div
             style={{
@@ -311,10 +422,75 @@ export default function UserTeachers() {
                     <tr key={i} style={{ verticalAlign: "middle" }}>
                       <td>{i + 1}</td>
                       <td>{entry.tname}</td>
-                      <td>{entry.clThisMonth}</td>
-                      <td>{entry.olThisMonth}</td>
-                      <td>{entry.clThisYear}</td>
-                      <td>{entry.olThisYear}</td>
+                      <td className="fs-5" suppressHydrationWarning>
+                        <i
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          className="bi bi-plus-circle-fill"
+                          onClick={() =>
+                            updateLeaveData(
+                              entry.id,
+                              entry.clThisMonth,
+                              "clThisMonth"
+                            )
+                          }
+                        ></i>
+                        <br /> {entry.clThisMonth}
+                        <br />
+                        <i
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          className="bi bi-dash-circle-fill"
+                          onClick={() =>
+                            updateLeaveData(
+                              entry.id,
+                              entry.clThisMonth,
+                              "clThisMonth",
+                              true
+                            )
+                          }
+                        ></i>
+                      </td>
+                      <td className="fs-5" suppressHydrationWarning>
+                        <i
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          className="bi bi-plus-circle-fill"
+                          onClick={() =>
+                            updateLeaveData(
+                              entry.id,
+                              entry.olThisMonth,
+                              "olThisMonth"
+                            )
+                          }
+                        ></i>
+                        <br />
+                        {entry.olThisMonth}
+                        <br />
+                        <i
+                          style={{
+                            cursor: "pointer",
+                          }}
+                          className="bi bi-dash-circle-fill"
+                          onClick={() =>
+                            updateLeaveData(
+                              entry.id,
+                              entry.olThisMonth,
+                              "olThisMonth",
+                              true
+                            )
+                          }
+                        ></i>
+                      </td>
+                      <td className="fs-5" suppressHydrationWarning>
+                        {entry.clThisYear}
+                      </td>
+                      <td className="fs-5" suppressHydrationWarning>
+                        {entry.olThisYear}
+                      </td>
                     </tr>
                   );
                 })}
@@ -323,7 +499,7 @@ export default function UserTeachers() {
           </div>
         </>
       )}
-      {showEditModal && (
+      {showAddModal && (
         <div
           className="modal fade show"
           tabIndex="-1"
@@ -331,108 +507,88 @@ export default function UserTeachers() {
           style={{ display: "block" }}
           aria-modal="true"
         >
-          <div className="modal-dialog modal-sm">
+          <div className="modal-dialog modal-md">
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                  Edit Teachers Leave of {editData?.month} - {editData?.year}
+                  Edit Teachers Leave of {addData?.month} - {addData?.year}
                 </h1>
                 <button
                   type="button"
                   className="btn-close"
                   aria-label="Close"
                   onClick={() => {
-                    setShowEditModal(false);
-                    setShowData(true);
+                    setShowAddModal(false);
+                    selectedYear && showMonthSelection && setShowData(true);
                   }}
                 ></button>
               </div>
               <div className="modal-body">
                 <div className="mx-auto my-2 noprint">
-                  <p htmlFor="id" className="form-label">
-                    ID: {editData?.id}
-                  </p>
-                  <p htmlFor="month" className="form-label">
-                    Month: {editData?.month}
-                  </p>
-                  <p htmlFor="year" className="form-label">
-                    Year: {editData?.year}
-                  </p>
-                </div>
-                <div className="mx-auto my-2 noprint">
-                  {editData.leaves.map((teacher, index) => (
-                    <div className="p-2 bg-info m-2 rounded" key={index}>
-                      <p className="m-1">{teacher.tname}</p>
-                      <div className="form-group m-2">
-                        <label className="m-2">CL This Month</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          placeholder="CL This Month"
-                          value={teacher.clThisMonth}
-                          onChange={(e) => {
-                            let x = [...editData.leaves];
-                            x[index].clThisMonth = parseInt(e.target.value);
-                            setEditData({ ...editData, leaves: x });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group m-2">
-                        <label className="m-2">OL This Month</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          placeholder="OL This Month"
-                          value={teacher.olThisMonth}
-                          onChange={(e) => {
-                            let x = [...editData.leaves];
-                            x[index].olThisMonth = parseInt(e.target.value);
-                            setEditData({ ...editData, leaves: x });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group m-2">
-                        <label className="m-2">CL This Year</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          placeholder="CL This Year"
-                          value={teacher.clThisYear}
-                          onChange={(e) => {
-                            let x = [...editData.leaves];
-                            x[index].clThisYear = parseInt(e.target.value);
-                            setEditData({ ...editData, leaves: x });
-                          }}
-                        />
-                      </div>
-                      <div className="form-group m-2">
-                        <label className="m-2">OL This Year</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          placeholder="OL This Year"
-                          value={teacher.olThisYear}
-                          onChange={(e) => {
-                            let x = [...editData.leaves];
-                            x[index].olThisYear = parseInt(e.target.value);
-                            setEditData({ ...editData, leaves: x });
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                  <div className="input-group p-1">
+                    <label className="input-group-text">ID</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="ID"
+                      value={addData?.id}
+                      onChange={(e) => {
+                        setAddData({
+                          ...addData,
+                          id: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group p-1">
+                    <label className="input-group-text">Month</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Month"
+                      value={addData?.month}
+                      onChange={(e) => {
+                        setAddData({
+                          ...addData,
+                          month: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group p-1">
+                    <label className="input-group-text">Year</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Year"
+                      value={addData?.year}
+                      onChange={(e) => {
+                        setAddData({
+                          ...addData,
+                          year: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={() => {
-                    setShowEditModal(false);
-                    setShowData(true);
-                  }}
+                  onClick={addLeaveData}
                 >
                   Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    setShowAddModal(false);
+                    selectedYear && showMonthSelection && setShowData(true);
+                  }}
+                >
+                  Cancel
                 </button>
               </div>
             </div>
