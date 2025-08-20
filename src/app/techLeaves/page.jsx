@@ -307,6 +307,10 @@ export default function UserTeachers() {
                 };
               }),
             });
+            teacherLeaveState.filter((el => el.id === `${monthName}-${yearName}`)).length > 0 &&
+              toast.error(
+                "Data for this month already exists."
+              );
           }}
         >
           Add Month
@@ -601,6 +605,12 @@ export default function UserTeachers() {
                   type="button"
                   className="btn btn-success"
                   onClick={addLeaveData}
+                  disabled={
+                    teacherLeaveState.filter(
+                      (el) =>
+                        el.id === `${addData?.month}-${addData?.year}`
+                    ).length > 0
+                  }
                 >
                   Save
                 </button>
