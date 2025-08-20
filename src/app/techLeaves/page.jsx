@@ -288,6 +288,7 @@ export default function UserTeachers() {
     <div className="container">
       {loader && <Loader />}
       <div>
+      <h3 className="text-primary">Teacher's Leave Details</h3>
         <button
           className="btn btn-primary m-4"
           onClick={() => {
