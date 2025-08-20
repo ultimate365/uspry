@@ -255,7 +255,7 @@ export default function UserTeachers() {
     setFilteredEntry(updatedData);
     setFilteredData(updatedData);
     setTeacherLeaveState((prev) => {
-      const updatedData = prev.map((entry) => {
+      const updatedNewData = prev.map((entry) => {
         if (entry.id === month + "-" + year) {
           return {
             ...entry,
@@ -264,7 +264,7 @@ export default function UserTeachers() {
         }
         return entry;
       });
-      return sortMonthwise(updatedData);
+      return sortMonthwise(updatedNewData);
     });
     calledData(sortMonthwise(teacherLeaveState));
     setLoader(false);
@@ -409,11 +409,23 @@ export default function UserTeachers() {
               <thead>
                 <tr>
                   <th>Sl</th>
-                  <th>Teacher's name</th>
-                  <th>CL This Month</th>
-                  <th>OL This Month</th>
-                  <th>CL This Year</th>
-                  <th>OL This Year</th>
+                  <th>Teacher's<br />name</th>
+                  <th>
+                    CL This
+                    <br /> Month
+                  </th>
+                  <th>
+                    OL This
+                    <br /> Month
+                  </th>
+                  <th>
+                    CL This
+                    <br /> Year
+                  </th>
+                  <th>
+                    OL This
+                    <br /> Year
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -421,7 +433,14 @@ export default function UserTeachers() {
                   return (
                     <tr key={i} style={{ verticalAlign: "middle" }}>
                       <td>{i + 1}</td>
-                      <td>{entry.tname}</td>
+                      <td suppressHydrationWarning>
+                        {entry?.tname?.split(" ")?.map((el, i) => (
+                          <p className="m-0 p-0" key={i}>
+                            {el}
+                            <br />
+                          </p>
+                        ))}
+                      </td>
                       <td className="fs-5" suppressHydrationWarning>
                         <i
                           style={{
@@ -438,20 +457,22 @@ export default function UserTeachers() {
                         ></i>
                         <br /> {entry.clThisMonth}
                         <br />
-                        <i
-                          style={{
-                            cursor: "pointer",
-                          }}
-                          className="bi bi-dash-circle-fill"
-                          onClick={() =>
-                            updateLeaveData(
-                              entry.id,
-                              entry.clThisMonth,
-                              "clThisMonth",
-                              true
-                            )
-                          }
-                        ></i>
+                        {entry.clThisMonth > 0 && (
+                          <i
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="bi bi-dash-circle-fill"
+                            onClick={() =>
+                              updateLeaveData(
+                                entry.id,
+                                entry.clThisMonth,
+                                "clThisMonth",
+                                true
+                              )
+                            }
+                          ></i>
+                        )}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
                         <i
@@ -470,20 +491,22 @@ export default function UserTeachers() {
                         <br />
                         {entry.olThisMonth}
                         <br />
-                        <i
-                          style={{
-                            cursor: "pointer",
-                          }}
-                          className="bi bi-dash-circle-fill"
-                          onClick={() =>
-                            updateLeaveData(
-                              entry.id,
-                              entry.olThisMonth,
-                              "olThisMonth",
-                              true
-                            )
-                          }
-                        ></i>
+                        {entry.olThisMonth > 0 && (
+                          <i
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="bi bi-dash-circle-fill"
+                            onClick={() =>
+                              updateLeaveData(
+                                entry.id,
+                                entry.olThisMonth,
+                                "olThisMonth",
+                                true
+                              )
+                            }
+                          ></i>
+                        )}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
                         {entry.clThisYear}
