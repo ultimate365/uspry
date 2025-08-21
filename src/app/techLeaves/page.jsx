@@ -4,11 +4,8 @@ import { useGlobalContext } from "../../context/Store";
 import { firestore } from "../../context/FirbaseContext";
 import {
   createDownloadLink,
-  getCurrentDateInput,
-  getSubmitDateInput,
   monthNamesWithIndex,
   sortMonthwise,
-  todayInString,
   uniqArray,
 } from "@/modules/calculatefunctions";
 import {
@@ -22,9 +19,6 @@ import {
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import DataTable from "react-data-table-component";
-import { set } from "mongoose";
-
 export default function UserTeachers() {
   const { state, teacherLeaveState, setTeacherLeaveState } = useGlobalContext();
 
