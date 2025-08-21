@@ -23,6 +23,7 @@ import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import DataTable from "react-data-table-component";
+import { set } from "mongoose";
 
 export default function UserTeachers() {
   const { state, teacherLeaveState, setTeacherLeaveState } = useGlobalContext();
@@ -40,52 +41,54 @@ export default function UserTeachers() {
   const [showMonthSelection, setShowMonthSelection] = useState(false);
   const [loader, setLoader] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const leavesArray = [
+    {
+      desig: "HT",
+      rank: 1,
+      clThisYear: 0,
+      tname: "SK MAIDUL ISLAM",
+      id: "teachers381",
+      clThisMonth: 0,
+      olThisMonth: 0,
+      olThisYear: 0,
+    },
+    {
+      id: "teachers382",
+      clThisMonth: 0,
+      olThisMonth: 0,
+      olThisYear: 0,
+      desig: "AT",
+      rank: 2,
+      clThisYear: 0,
+      tname: "MALLIKA GAYEN",
+    },
+    {
+      id: "teachers383",
+      tname: "SURASHREE SADHUKHAN SAHA",
+      olThisMonth: 0,
+      olThisYear: 0,
+      desig: "AT",
+      rank: 3,
+      clThisYear: 0,
+      clThisMonth: 0,
+    },
+    {
+      rank: 4,
+      olThisMonth: 0,
+      olThisYear: 0,
+      clThisYear: 0,
+      id: "teachers384",
+      clThisMonth: 0,
+      tname: "ABDUS SALAM MOLLICK",
+      desig: "AT",
+    },
+  ];
+  const [techLeaves, setTechLeaves] = useState(leavesArray);
   const [addData, setAddData] = useState({
     id: "January-2025",
     month: "January",
     year: 2025,
-    leaves: [
-      {
-        desig: "HT",
-        rank: 1,
-        clThisYear: 0,
-        tname: "SK MAIDUL ISLAM",
-        id: "teachers381",
-        clThisMonth: 0,
-        olThisMonth: 0,
-        olThisYear: 0,
-      },
-      {
-        id: "teachers382",
-        clThisMonth: 0,
-        olThisMonth: 0,
-        olThisYear: 0,
-        desig: "AT",
-        rank: 2,
-        clThisYear: 0,
-        tname: "MALLIKA GAYEN",
-      },
-      {
-        id: "teachers383",
-        tname: "SURASHREE SADHUKHAN SAHA",
-        olThisMonth: 0,
-        olThisYear: 0,
-        desig: "AT",
-        rank: 3,
-        clThisYear: 0,
-        clThisMonth: 0,
-      },
-      {
-        rank: 4,
-        olThisMonth: 0,
-        olThisYear: 0,
-        clThisYear: 0,
-        id: "teachers384",
-        clThisMonth: 0,
-        tname: "ABDUS SALAM MOLLICK",
-        desig: "AT",
-      },
-    ],
+    leaves: leavesArray,
   });
   const [showData, setShowData] = useState(false);
   const [filteredData, setFilteredData] = useState();
@@ -113,15 +116,48 @@ export default function UserTeachers() {
       const selectedValue = e.target.value;
       let x = [];
       let y = [];
+      let cl1 = 0;
+      let cl2 = 0;
+      let cl3 = 0;
+      let cl4 = 0;
+      let ol1 = 0;
+      let ol2 = 0;
+      let ol3 = 0;
+      let ol4 = 0;
+      let t = leavesArray;
       allEnry.map((entry) => {
         const entryYear = entry.id.split("-")[1];
         const entryMonth = entry.id.split("-")[0];
-
-        if (entryYear === selectedValue) {
+        if (entryYear == selectedValue) {
           x.push(entry);
           y.push(entryMonth);
+          entry.leaves.map((el) => {
+            if (el.rank === 1) {
+              cl1 += el.clThisMonth;
+              ol1 += el.olThisMonth;
+            } else if (el.rank === 2) {
+              cl2 += el.clThisMonth;
+              ol2 += el.olThisMonth;
+            } else if (el.rank === 3) {
+              cl3 += el.clThisMonth;
+              ol3 += el.olThisMonth;
+            } else {
+              cl4 += el.clThisMonth;
+              ol4 += el.olThisMonth;
+            }
+          });
+
+          t[0].clThisYear = cl1;
+          t[0].olThisYear = ol1;
+          t[1].clThisYear = cl2;
+          t[1].olThisYear = ol2;
+          t[2].clThisYear = cl3;
+          t[2].olThisYear = ol3;
+          t[3].clThisYear = cl4;
+          t[3].olThisYear = ol4;
         }
       });
+      setTechLeaves(t);
       setSelectedYear(selectedValue);
       setShowMonthSelection(true);
       setFilteredEntry(x);
@@ -141,7 +177,7 @@ export default function UserTeachers() {
     allEnry.map((entry, index) => {
       const entryYear = entry.id.split("-")[1];
       const entryMonth = entry.id.split("-")[0];
-      if (entryYear === selectedYear && entryMonth === month) {
+      if (entryYear == selectedYear && entryMonth === month) {
         x.push(entry);
         setShowData(true);
         setFilteredData(entry?.leaves);
@@ -248,26 +284,41 @@ export default function UserTeachers() {
     })
       .then(() => {
         toast.success("Teachers Leave Data Updated Successfully");
+        let x = techLeaves;
+        x.map((el) => {
+          if (el.id === id) {
+            field === "clThisMonth"
+              ? (el.clThisYear = isDecrement
+                  ? el.clThisYear - 1
+                  : el.clThisYear + 1)
+              : (el.olThisYear = isDecrement
+                  ? el.olThisYear - 1
+                  : el.olThisYear + 1);
+          }
+        });
+        setTechLeaves(x);
+        setFilteredEntry(updatedData);
+        setFilteredData(updatedData);
+        setTeacherLeaveState((prev) => {
+          const updatedNewData = prev.map((entry) => {
+            if (entry.id === month + "-" + year) {
+              return {
+                ...entry,
+                leaves: updatedData,
+              };
+            }
+            return entry;
+          });
+          return sortMonthwise(updatedNewData);
+        });
+        calledData(sortMonthwise(teacherLeaveState));
       })
       .catch((error) => {
         toast.error("Error updating data: " + error.message);
+      })
+      .finally(() => {
+        setLoader(false);
       });
-    setFilteredEntry(updatedData);
-    setFilteredData(updatedData);
-    setTeacherLeaveState((prev) => {
-      const updatedNewData = prev.map((entry) => {
-        if (entry.id === month + "-" + year) {
-          return {
-            ...entry,
-            leaves: updatedData,
-          };
-        }
-        return entry;
-      });
-      return sortMonthwise(updatedNewData);
-    });
-    calledData(sortMonthwise(teacherLeaveState));
-    setLoader(false);
   };
   useEffect(() => {
     if (access !== "admin") {
@@ -283,12 +334,16 @@ export default function UserTeachers() {
   useEffect(() => {
     //eslint-disable-next-line
   }, [filteredEntry]);
+  useEffect(() => {
+    console.log(techLeaves);
+    //eslint-disable-next-line
+  }, [techLeaves]);
 
   return (
     <div className="container">
       {loader && <Loader />}
       <div>
-      <h3 className="text-primary">Teacher's Leave Details</h3>
+        <h3 className="text-primary">Teacher's Leave Details</h3>
         <button
           className="btn btn-primary m-4"
           onClick={() => {
@@ -307,10 +362,9 @@ export default function UserTeachers() {
                 };
               }),
             });
-            teacherLeaveState.filter((el => el.id === `${monthName}-${yearName}`)).length > 0 &&
-              toast.error(
-                "Data for this month already exists."
-              );
+            teacherLeaveState.filter(
+              (el) => el.id === `${monthName}-${yearName}`
+            ).length > 0 && toast.error("Data for this month already exists.");
           }}
         >
           Add Month
@@ -414,7 +468,11 @@ export default function UserTeachers() {
               <thead>
                 <tr>
                   <th>Sl</th>
-                  <th>Teacher's<br />name</th>
+                  <th>
+                    Teacher's
+                    <br />
+                    name
+                  </th>
                   <th>
                     CL This
                     <br /> Month
@@ -514,10 +572,10 @@ export default function UserTeachers() {
                         )}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
-                        {entry.clThisYear}
+                        {techLeaves[i].clThisYear}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
-                        {entry.olThisYear}
+                        {techLeaves[i].olThisYear}
                       </td>
                     </tr>
                   );
@@ -607,8 +665,7 @@ export default function UserTeachers() {
                   onClick={addLeaveData}
                   disabled={
                     teacherLeaveState.filter(
-                      (el) =>
-                        el.id === `${addData?.month}-${addData?.year}`
+                      (el) => el.id === `${addData?.month}-${addData?.year}`
                     ).length > 0
                   }
                 >
