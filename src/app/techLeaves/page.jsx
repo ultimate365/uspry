@@ -335,7 +335,6 @@ export default function UserTeachers() {
     //eslint-disable-next-line
   }, [filteredEntry]);
   useEffect(() => {
-    console.log(techLeaves);
     //eslint-disable-next-line
   }, [techLeaves]);
 
@@ -343,6 +342,15 @@ export default function UserTeachers() {
     <div className="container">
       {loader && <Loader />}
       <div>
+        <button
+          type="button"
+          className="btn btn-dark m-2"
+          onClick={() => {
+            createDownloadLink(teacherLeaveState, "teachersLeaves");
+          }}
+        >
+          Download Leaves Data
+        </button>
         <h3 className="text-primary">Teacher's Leave Details</h3>
         <button
           className="btn btn-primary m-4"
@@ -482,12 +490,24 @@ export default function UserTeachers() {
                     <br /> Month
                   </th>
                   <th>
-                    CL This
-                    <br /> Year
+                    CL Till
+                    <br />
+                    This Month
                   </th>
                   <th>
-                    OL This
-                    <br /> Year
+                    OL Till
+                    <br />
+                    This Month
+                  </th>
+                  <th>
+                    Total CL
+                    <br />
+                    This Year
+                  </th>
+                  <th>
+                    Total OL
+                    <br />
+                    This Year
                   </th>
                 </tr>
               </thead>
@@ -570,6 +590,12 @@ export default function UserTeachers() {
                             }
                           ></i>
                         )}
+                      </td>
+                      <td className="fs-5" suppressHydrationWarning>
+                        {entry.clThisYear}
+                      </td>
+                      <td className="fs-5" suppressHydrationWarning>
+                        {entry.olThisYear}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
                         {techLeaves[i].clThisYear}
