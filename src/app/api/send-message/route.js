@@ -11,7 +11,6 @@ const stringSession = new StringSession(process.env.TELEGRAM_SESSION || "");
 export async function POST(req) {
   try {
     const { phoneNumber, message } = await req.json();
-console.log(phoneNumber, message);
     const client = new TelegramClient(stringSession, apiId, apiHash, {
       connectionRetries: 5,
     });

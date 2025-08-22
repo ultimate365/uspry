@@ -22,10 +22,10 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         );
       } else {
-        const sameUserMessages = await PhoneOtp.find({ phone });
-        sameUserMessages.map(async (message) => {
-          await deleteTelegramMessage(message.message_id);
-        });
+        // const sameUserMessages = await PhoneOtp.find({ phone });
+        // sameUserMessages.map(async (message) => {
+        //   await deleteTelegramMessage(message.message_id);
+        // });
         // const message = `Welcome ${name} To Our App.`;
         // const message_id = await sendToTelegram(message);
 

@@ -28,7 +28,11 @@ export default function VerifyLogin() {
 
   const sendVerificationOTP = async (phone, name) => {
     setDisplayLoader(true);
-    const res = await axios.post("/api/sendMobileOTP", {
+    // const res = await axios.post("/api/sendMobileOTP", {
+    //   phone,
+    //   name,
+    // });
+    const res = await axios.post("/api/sendVerificationOTP", {
       phone,
       name,
     });
@@ -156,7 +160,7 @@ export default function VerifyLogin() {
         </div>
       )}
 
-      <div className="my-5">
+      {/* <div className="my-5">
         <Link
           className="btn btn-success m-1 fs-5"
           href={TELEGRAM_TEACHER_GROUP}
@@ -164,7 +168,7 @@ export default function VerifyLogin() {
         >
           <i className="bi bi-telegram"></i> Our Telegram Group
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
