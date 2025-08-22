@@ -161,6 +161,7 @@ export default function UserTeachers() {
       setFilteredEntry([]);
       setSelectedYear("");
       setShowMonthSelection(false);
+      setShowData(false);
       toast.error("Please select a year");
     }
   };
