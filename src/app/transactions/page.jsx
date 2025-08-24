@@ -731,6 +731,7 @@ export default function Transactions() {
                 </div>
                 <div className="modal-body">
                   <div className="text-center mx-auto">
+                    <h4 className="text-primary">ID: {viewTransaction.id}</h4>
                     <h4 className="text-primary">
                       Purpose: {viewTransaction.purpose}
                     </h4>
@@ -871,6 +872,25 @@ export default function Transactions() {
                         <label htmlFor="date" className="form-label">
                           ID: {id}
                         </label>
+                        <div className="mb-3">
+                          <label htmlFor="amount" className="form-label">
+                            ID
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="ID"
+                            value={id}
+                            onChange={(e) => {
+                              if (e.target.value !== "") {
+                                setId(e.target.value);
+                              } else {
+                                setId("");
+                              }
+                            }}
+                            placeholder="Enter ID"
+                          />
+                        </div>
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
                             Date
