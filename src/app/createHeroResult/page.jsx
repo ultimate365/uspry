@@ -1,138 +1,59 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
 import DataTable from "react-data-table-component";
-import {
-  createDownloadLink,
-  getCurrentDateInput,
-  getSubmitDateInput,
-  todayInString,
-} from "../../modules/calculatefunctions";
-import Loader from "@/components/Loader";
 import { firestore } from "@/context/FirbaseContext";
 import {
   collection,
-  deleteDoc,
-  doc,
   getDocs,
   query,
-  setDoc,
-  updateDoc,
+  writeBatch,
+  doc,
 } from "firebase/firestore";
+import Loader from "@/components/Loader";
 import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
-import { v4 as uuid } from "uuid";
 import { useRouter } from "next/navigation";
-import { set } from "mongoose";
+
 export default function CreateHeroResult() {
   const { state, studentResultState, setStudentResultState } =
     useGlobalContext();
   const router = useRouter();
   const [loader, setLoader] = useState(false);
   const access = state.ACCESS;
-  const docId = uuid().split("-")[0];
-  const studentUpdateTime = Date.now();
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [showAdd, setShowAdd] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
+  const [showAddMarks, setShowAddMarks] = useState(false);
   const [viewResult, setViewResult] = useState(false);
-  const [addStudent, setAddStudent] = useState({
-    nclass: 0,
-    mobile: "",
-    id: docId,
-    student_id: "",
-    class: "CLASS PP",
-    roll_no: 1,
-    student_name: "",
-    ben1: 0,
-    ben2: 0,
-    ben3: 0,
-    eng1: 0,
-    eng2: 0,
-    eng3: 0,
-    math1: 0,
-    math2: 0,
-    math3: 0,
-    envs1: 0,
-    envs2: 0,
-    envs3: 0,
-    health1: 0,
-    health2: 0,
-    health3: 0,
-    work1: 0,
-    work2: 0,
-    work3: 0,
-    total: 0,
-    new_roll_no: 1,
-  });
-  const [editStudent, setEditStudent] = useState({
-    nclass: 0,
-    mobile: "",
-    id: docId,
-    student_id: "",
-    class: "CLASS PP",
-    roll_no: 1,
-    student_name: "",
-    ben1: 0,
-    ben2: 0,
-    ben3: 0,
-    eng1: 0,
-    eng2: 0,
-    eng3: 0,
-    math1: 0,
-    math2: 0,
-    math3: 0,
-    envs1: 0,
-    envs2: 0,
-    envs3: 0,
-    health1: 0,
-    health2: 0,
-    health3: 0,
-    work1: 0,
-    work2: 0,
-    work3: 0,
-    total: 0,
-    new_roll_no: 1,
-  });
-  const [viewStudent, setViewStudent] = useState({
-    nclass: 0,
-    mobile: "",
-    id: docId,
-    student_id: "",
-    class: "CLASS PP",
-    roll_no: 1,
-    student_name: "",
-    ben1: 0,
-    ben2: 0,
-    ben3: 0,
-    eng1: 0,
-    eng2: 0,
-    eng3: 0,
-    math1: 0,
-    math2: 0,
-    math3: 0,
-    envs1: 0,
-    envs2: 0,
-    envs3: 0,
-    health1: 0,
-    health2: 0,
-    health3: 0,
-    work1: 0,
-    work2: 0,
-    work3: 0,
-    total: 0,
-    new_roll_no: 1,
-  });
+  const [viewStudent, setViewStudent] = useState({});
+
+  // Selection states
+  const [selectPart, setSelectPart] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [isPartSelected, setIsPartSelected] = useState(false);
+  const [isClassSelected, setIsClassSelected] = useState(false);
+  const [isSubjectSelected, setIsSubjectSelected] = useState(false);
+
+  // Marks input state
+  const [marksInput, setMarksInput] = useState([]);
+
+  const subjects = [
+    { fullName: "Bengali", shortName: "ben" },
+    { fullName: "English", shortName: "eng" },
+    { fullName: "Mathematics", shortName: "math" },
+    { fullName: "Health", shortName: "health" },
+    { fullName: "Work Education", shortName: "work" },
+    { fullName: "ENVS", shortName: "envs" },
+  ];
+
   const studentData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
       query(collection(firestore, "studentsResult"))
     );
     const data = querySnapshot.docs.map((doc) => ({
-      // doc.data() is never undefined for query doc snapshots
       ...doc.data(),
       id: doc.id,
     }));
@@ -142,42 +63,117 @@ export default function CreateHeroResult() {
     setStudentResultState(data);
   };
 
+  useEffect(() => {
+    document.title = `${SCHOOLNAME}:Students Database`;
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unauthorized access");
+    } else if (studentResultState.length === 0) {
+      studentData();
+    } else {
+      setData(studentResultState);
+    }
+  }, []);
+
+  useEffect(() => {
+    const result = data.filter((el) => {
+      return el.student_name.toLowerCase().match(search.toLowerCase());
+    });
+    setFilteredData(result);
+  }, [search, data]);
+
+  // When subject is selected, initialize marks input
+  useEffect(() => {
+    if (isSubjectSelected) {
+      const partNumber = selectPart.split(" ")[1];
+      const subjectPartKey = `${selectedSubject}${partNumber}`;
+      const studentsInClass = data.filter(
+        (student) => student.class === selectedClass
+      );
+      const initialMarks = studentsInClass.map((student) => ({
+        id: student.id,
+        mark: student[subjectPartKey] || 0,
+      }));
+      setMarksInput(initialMarks);
+    }
+  }, [isSubjectSelected, selectedClass, selectedSubject, selectPart, data]);
+
+  const handleMarkChange = (id, value) => {
+    setMarksInput((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, mark: parseInt(value) || 0 } : item
+      )
+    );
+  };
+
+  const handleSaveMarks = async () => {
+    setLoader(true);
+    const partNumber = selectPart.split(" ")[1];
+    const subjectPartKey = `${selectedSubject}${partNumber}`;
+
+    try {
+      const batch = writeBatch(firestore);
+
+      for (const item of marksInput) {
+        const studentRef = doc(firestore, "studentsResult", item.id);
+        batch.update(studentRef, {
+          [subjectPartKey]: item.mark,
+        });
+      }
+
+      await batch.commit();
+
+      // Update local state
+      const updatedData = data.map((student) => {
+        const markItem = marksInput.find((item) => item.id === student.id);
+        if (markItem) {
+          return {
+            ...student,
+            [subjectPartKey]: markItem.mark,
+          };
+        }
+        return student;
+      });
+
+      setData(updatedData);
+      setStudentResultState(updatedData);
+      toast.success("Marks updated successfully");
+      setShowAddMarks(false);
+    } catch (error) {
+      toast.error("Error updating marks");
+      console.error("Error updating marks:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   const columns = [
     {
       name: "Sl",
-      selector: (row, ind) => data.findIndex((i) => i.id === row.id) + 1,
-      width: "2",
+      selector: (row, ind) =>
+        filteredData.findIndex((i) => i.id === row.id) + 1,
+      width: "50px",
     },
-
     {
       name: "Student Name",
       selector: (row) => row.student_name,
-      sortable: +true,
-      wrap: +true,
-      center: +true,
+      sortable: true,
     },
     {
       name: "Class",
       selector: (row) => row.class,
-      sortable: +true,
-      wrap: +true,
-      center: +true,
+      sortable: true,
     },
     {
       name: "Roll No.",
       selector: (row) => row.roll_no,
-      sortable: +true,
-      wrap: +true,
-      center: +true,
+      sortable: true,
     },
     {
       name: "Student ID",
       selector: (row) => row.student_id,
-      sortable: +true,
-      wrap: +true,
-      center: +true,
+      sortable: true,
     },
-
     {
       name: "Action",
       selector: (row) => (
@@ -187,59 +183,31 @@ export default function CreateHeroResult() {
             type="button"
             onClick={() => {
               setViewResult(true);
-              setShowEdit(false);
               setViewStudent(row);
             }}
           >
             View
           </button>
-          <button
-            className="btn btn-warning m-1"
-            type="button"
-            onClick={() => {
-              setEditStudent(row);
-              setShowEdit(true);
-              setViewResult(false);
-            }}
-          >
-            Edit
-          </button>
         </>
       ),
-      sortable: +true,
-      wrap: +true,
-      center: +true,
       omit: access !== "admin",
     },
   ];
 
-  useEffect(() => {
-    document.title = `${SCHOOLNAME}:Students Database`;
-
-    const studentDifference = (Date.now() - studentUpdateTime) / 1000 / 60 / 15;
-    if (studentDifference >= 1 || studentResultState.length === 0) {
-      studentData();
-    } else {
-      setData(studentResultState);
-      setLoader(false);
-    }
-    if (access !== "admin") {
-      router.push("/");
-      toast.error("Unathorized access");
-    }
-  }, []);
-  useEffect(() => {
-    const result = data.filter((el) => {
-      return el.student_name.toLowerCase().match(search.toLowerCase());
-    });
-    setFilteredData(result);
-  }, [search, data]);
   return (
     <div className="container-fluid text-center my-3">
       <h2 className="text-center text-success">{SCHOOLNAME}</h2>
-      <h3 className="text-center text-primary">
-        Student&apos;s Result Deatails
-      </h3>
+      <div className="my-3">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => setShowAddMarks(true)}
+        >
+          Enter Marks
+        </button>
+      </div>
+      <h3 className="text-center text-primary">Student's Result Details</h3>
+
       <DataTable
         columns={columns}
         data={filteredData}
@@ -251,168 +219,207 @@ export default function CreateHeroResult() {
         subHeaderComponent={
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search by name"
             className="w-50 form-control"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         }
-        subHeaderAlign="right"
       />
-      {viewResult && (
+
+      {/* Marks Entry Modal */}
+      {showAddMarks && (
         <div
-          className="modal fade show"
+          className="modal fade show d-block"
           tabIndex="-1"
-          role="dialog"
-          style={{ display: "block" }}
-          aria-modal="true"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         >
-          <div className="modal-dialog modal-xl">
+          <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
-                <h3 className="modal-title fs-5" id="staticBackdropLabel">
-                  Viewing Result of {viewStudent.student_name}
-                </h3>
-
+                <h5 className="modal-title">Add Student Marks</h5>
                 <button
                   type="button"
                   className="btn-close"
-                  aria-label="Close"
-                  onClick={() => {
-                    setViewResult(false);
-                  }}
+                  onClick={() => setShowAddMarks(false)}
                 ></button>
               </div>
               <div className="modal-body">
-                <div className="row justify-content-center align-items-center">
-                  <h5 className="text-center text-success">
-                    Student's Name: {viewStudent.student_name}
-                  </h5>
-                  <h5 className="text-center text-success">
-                    Class: {viewStudent.class}
-                  </h5>
-                  <h5 className="text-center text-success">
-                    Roll: {viewStudent.roll_no}
-                  </h5>
-                  <h4 className="text-center text-black">Part 1</h4>
-                  {/* {viewStudent.ben1 > 0 ? ( */}
-                  <div className="my-2">
-                    <h5 className="text-center text-black">
-                      Bengali Part 1: {viewStudent.ben1}
-                    </h5>
-                    <h5 className="text-center text-black">
-                      English Part 1: {viewStudent.eng1}
-                    </h5>
-                    <h5 className="text-center text-black">
-                      Mathematics Part 1: {viewStudent.math1}
-                    </h5>
-                    {viewStudent.nclass > 2 && (
-                      <>
-                        <h5 className="text-center text-black">
-                          ENVS Part 1: {viewStudent.envs1}
-                        </h5>
-                      </>
-                    )}
-                    {viewStudent.nclass > 0 && (
-                      <>
-                        <h5 className="text-center text-black">
-                          Health Part 1: {viewStudent.health1}
-                        </h5>
-                        <h5 className="text-center text-black">
-                          Work Education Part 1: {viewStudent.work1}
-                        </h5>
-                      </>
-                    )}
+                <div className="row mb-3">
+                  <div className="col-md-4">
+                    <label className="form-label">Select Part</label>
+                    <select
+                      className="form-select"
+                      value={selectPart}
+                      onChange={(e) => {
+                        setSelectPart(e.target.value);
+                        setIsPartSelected(!!e.target.value);
+                        setIsClassSelected(false);
+                        setIsSubjectSelected(false);
+                        setSelectedClass("");
+                        setSelectedSubject("");
+                      }}
+                    >
+                      <option value="">Select Part</option>
+                      <option value="PART 1">Part 1</option>
+                      <option value="PART 2">Part 2</option>
+                      <option value="PART 3">Part 3</option>
+                    </select>
                   </div>
-                  {/* ) : (
-                    <div className="my-2">
-                      <h5 className="text-center text-black">No Result Yet</h5>
+
+                  {isPartSelected && (
+                    <div className="col-md-4">
+                      <label className="form-label">Select Class</label>
+                      <select
+                        className="form-select"
+                        value={selectedClass}
+                        onChange={(e) => {
+                          setSelectedClass(e.target.value);
+                          setIsClassSelected(!!e.target.value);
+                          setIsSubjectSelected(false);
+                          setSelectedSubject("");
+                        }}
+                      >
+                        <option value="">Select Class</option>
+                        <option value="CLASS PP">CLASS PP</option>
+                        <option value="CLASS I">CLASS I</option>
+                        <option value="CLASS II">CLASS II</option>
+                        <option value="CLASS III">CLASS III</option>
+                        <option value="CLASS IV">CLASS IV</option>
+                      </select>
                     </div>
-                  )} */}
-                  <h4 className="text-center text-black">Part 2</h4>
-                  {/* {viewStudent.ben2 > 0 ? ( */}
-                  <div className="my-2">
-                    <h5 className="text-center text-black">
-                      Bengali Part 2: {viewStudent.ben2}
-                    </h5>
-                    <h5 className="text-center text-black">
-                      English Part 2: {viewStudent.eng2}
-                    </h5>
-                    <h5 className="text-center text-black">
-                      Mathematics Part 2: {viewStudent.math2}
-                    </h5>
-                    {viewStudent.nclass > 2 && (
-                      <>
-                        <h5 className="text-center text-black">
-                          ENVS Part 2: {viewStudent.envs2}
-                        </h5>
-                      </>
-                    )}
-                    {viewStudent.nclass > 0 && (
-                      <>
-                        <h5 className="text-center text-black">
-                          Health Part 2: {viewStudent.health2}
-                        </h5>
-                        <h5 className="text-center text-black">
-                          Work Education Part 2: {viewStudent.work2}
-                        </h5>
-                      </>
-                    )}
-                  </div>
-                  {/* ) : (
-                    <div className="my-2">
-                      <h5 className="text-center text-black">No Result Yet</h5>
+                  )}
+
+                  {isClassSelected && (
+                    <div className="col-md-4">
+                      <label className="form-label">Select Subject</label>
+                      <select
+                        className="form-select"
+                        value={selectedSubject}
+                        onChange={(e) => {
+                          setSelectedSubject(e.target.value);
+                          setIsSubjectSelected(!!e.target.value);
+                        }}
+                      >
+                        <option value="">Select Subject</option>
+                        {subjects.map((sub, index) => {
+                          if (selectedClass === "CLASS PP" && index < 3) {
+                            return (
+                              <option value={sub.shortName} key={index}>
+                                {sub.fullName}
+                              </option>
+                            );
+                          } else if (
+                            (selectedClass === "CLASS I" ||
+                              selectedClass === "CLASS II") &&
+                            index < 5
+                          ) {
+                            return (
+                              <option value={sub.shortName} key={index}>
+                                {sub.fullName}
+                              </option>
+                            );
+                          } else if (
+                            selectedClass === "CLASS III" ||
+                            selectedClass === "CLASS IV"
+                          ) {
+                            return (
+                              <option value={sub.shortName} key={index}>
+                                {sub.fullName}
+                              </option>
+                            );
+                          }
+                          return null;
+                        })}
+                      </select>
                     </div>
-                  )} */}
-                  {/* ) : (
-                    <div className="my-2">
-                      <h5 className="text-center text-black">No Result Yet</h5>
-                    </div>
-                  )} */}
-                  {/* {viewStudent.ben2 > 0 ? ( */}
-                  <h4 className="text-center text-black">Part 3</h4>
-                  <div className="my-2">
-                    <h5 className="text-center text-black">
-                      Bengali Part 3: {viewStudent.ben3}
-                    </h5>
-                    <h5 className="text-center text-black">
-                      English Part 3: {viewStudent.eng3}
-                    </h5>
-                    <h5 className="text-center text-black">
-                      Mathematics Part 3: {viewStudent.math3}
-                    </h5>
-                    {viewStudent.nclass > 2 && (
-                      <>
-                        <h5 className="text-center text-black">
-                          ENVS Part 3: {viewStudent.envs3}
-                        </h5>
-                      </>
-                    )}
-                    {viewStudent.nclass > 0 && (
-                      <>
-                        <h5 className="text-center text-black">
-                          Health Part 3: {viewStudent.health3}
-                        </h5>
-                        <h5 className="text-center text-black">
-                          Work Education Part 3: {viewStudent.work3}
-                        </h5>
-                      </>
-                    )}
-                  </div>
-                  {/* ) : (
-                    <div className="my-2">
-                      <h5 className="text-center text-black">No Result Yet</h5>
-                    </div>
-                  )} */}
+                  )}
                 </div>
+
+                {isSubjectSelected && (
+                  <div className="mt-4">
+                    <h5>
+                      Entering marks for {selectedClass} - {selectedSubject} -{" "}
+                      {selectPart}
+                    </h5>
+                    <div className="table-responsive">
+                      <table className="table table-striped table-bordered">
+                        <thead className="table-dark">
+                          <tr>
+                            <th>Roll No</th>
+                            <th>Student Name</th>
+                            <th>Marks (0-100)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data
+                            .filter(
+                              (student) => student.class === selectedClass
+                            )
+                            .sort((a, b) => a.roll_no - b.roll_no)
+                            .map((student) => {
+                              const markItem = marksInput.find(
+                                (item) => item.id === student.id
+                              );
+                              const mark = markItem ? markItem.mark : 0;
+                              console.log(student);
+                              return (
+                                <tr key={student.id}>
+                                  <td>{student.roll_no}</td>
+                                  <td>{student.student_name}</td>
+                                  <td>
+                                    <input
+                                      type="number"
+                                      className="form-control"
+                                      min="0"
+                                      max="100"
+                                      value={mark}
+                                      onChange={(e) =>
+                                        handleMarkChange(
+                                          student.id,
+                                          e.target.value
+                                        )
+                                      }
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="modal-footer">
+                {isSubjectSelected && (
+                  <button
+                    type="button"
+                    className="btn btn-success"
+                    onClick={handleSaveMarks}
+                  >
+                    Save Marks
+                  </button>
+                )}
+
                 <button
                   type="button"
-                  className="btn btn-warning"
+                  className="btn btn-danger"
                   onClick={() => {
-                    setViewResult(false);
+                    setSelectPart("");
+                    setIsPartSelected(false);
+                    setSelectedClass("");
+                    setIsClassSelected(false);
+                    setSelectedSubject("");
+                    setIsSubjectSelected(false);
                   }}
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowAddMarks(false)}
                 >
                   Close
                 </button>
@@ -421,6 +428,87 @@ export default function CreateHeroResult() {
           </div>
         </div>
       )}
+
+      {/* View Result Modal */}
+      {viewResult && (
+        <div
+          className="modal fade show d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Results for {viewStudent.student_name}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setViewResult(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <p>
+                      <strong>Class:</strong> {viewStudent.class}
+                    </p>
+                  </div>
+                  <div className="col-md-6">
+                    <p>
+                      <strong>Roll No:</strong> {viewStudent.roll_no}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="row">
+                  {[1, 2, 3].map((part) => (
+                    <div className="col-md-4" key={part}>
+                      <div className="card mb-4">
+                        <div className="card-header bg-primary text-white">
+                          Part {part}
+                        </div>
+                        <div className="card-body">
+                          {subjects.map((subject) => {
+                            const mark =
+                              viewStudent[`${subject.shortName}${part}`];
+                            return (
+                              mark !== undefined && (
+                                <p
+                                  key={subject.shortName}
+                                  className="d-flex justify-content-between"
+                                >
+                                  <span>{subject.fullName}:</span>
+                                  <span>{mark}</span>
+                                </p>
+                              )
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center mt-3">
+                  <h4>Total Marks: {viewStudent.total}</h4>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setViewResult(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {loader && <Loader center content="loading" size="lg" />}
     </div>
   );
