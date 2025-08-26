@@ -202,6 +202,12 @@ export default function CreateHeroResult() {
       setFilteredData(updatedData);
       toast.success("Marks updated successfully");
       setShowAddMarks(false);
+      setSelectPart("");
+      setIsPartSelected(false);
+      setSelectedClass("");
+      setIsClassSelected(false);
+      setSelectedSubject("");
+      setIsSubjectSelected(false);
     } catch (error) {
       toast.error("Error updating marks");
       console.error("Error updating marks:", error);
