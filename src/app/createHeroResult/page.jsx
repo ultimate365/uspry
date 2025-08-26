@@ -14,7 +14,7 @@ import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-
+import { createDownloadLink } from "../../modules/calculatefunctions";
 export default function CreateHeroResult() {
   const { state, studentResultState, setStudentResultState } =
     useGlobalContext();
@@ -26,7 +26,63 @@ export default function CreateHeroResult() {
   const [filteredData, setFilteredData] = useState([]);
   const [showAddMarks, setShowAddMarks] = useState(false);
   const [viewResult, setViewResult] = useState(false);
-  const [viewStudent, setViewStudent] = useState({});
+  const [viewStudent, setViewStudent] = useState({
+    id: "",
+    student_id: "",
+    student_name: "",
+    nclass: 0,
+    roll_no: 1,
+    class: "CLASS PP",
+    ben1: 0,
+    eng1: 0,
+    math1: 0,
+    health1: 0,
+    work1: 0,
+    envs1: 0,
+    ben2: 0,
+    eng2: 0,
+    math2: 0,
+    envs2: 0,
+    health2: 0,
+    work2: 0,
+    ben3: 0,
+    eng3: 0,
+    math3: 0,
+    envs3: 0,
+    health3: 0,
+    work3: 0,
+    total: 0,
+    new_roll_no: 1,
+  });
+  const [showEdit, setShowEdit] = useState(false);
+  const [editStudentMarks, setEditStudentMarks] = useState({
+    id: "",
+    student_id: "",
+    student_name: "",
+    nclass: 0,
+    roll_no: 1,
+    class: "CLASS PP",
+    ben1: 0,
+    eng1: 0,
+    math1: 0,
+    health1: 0,
+    work1: 0,
+    envs1: 0,
+    ben2: 0,
+    eng2: 0,
+    math2: 0,
+    envs2: 0,
+    health2: 0,
+    work2: 0,
+    ben3: 0,
+    eng3: 0,
+    math3: 0,
+    envs3: 0,
+    health3: 0,
+    work3: 0,
+    total: 0,
+    new_roll_no: 1,
+  });
 
   // Selection states
   const [selectPart, setSelectPart] = useState("");
@@ -99,11 +155,17 @@ export default function CreateHeroResult() {
   }, [isSubjectSelected, selectedClass, selectedSubject, selectPart, data]);
 
   const handleMarkChange = (id, value) => {
-    setMarksInput((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, mark: parseInt(value) || 0 } : item
-      )
-    );
+    if (value) {
+      setMarksInput((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, mark: parseInt(value) || 0 } : item
+        )
+      );
+    } else {
+      setMarksInput((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, mark: "" } : item))
+      );
+    }
   };
 
   const handleSaveMarks = async () => {
@@ -137,6 +199,7 @@ export default function CreateHeroResult() {
 
       setData(updatedData);
       setStudentResultState(updatedData);
+      setFilteredData(updatedData);
       toast.success("Marks updated successfully");
       setShowAddMarks(false);
     } catch (error) {
@@ -145,6 +208,28 @@ export default function CreateHeroResult() {
     } finally {
       setLoader(false);
     }
+  };
+
+  const updateStudentResult = async () => {
+    setLoader(true);
+    await updateDoc(
+      doc(firestore, "studentsResult", editStudentMarks.id),
+      editStudentMarks
+    )
+      .then(() => {
+        const newData = studentResultState.map((item) =>
+          item.id === editStudentMarks.id ? editStudentMarks : item
+        );
+        setData(newData);
+        setStudentResultState(newData);
+        setFilteredData(newData);
+        toast.success("Marks updated successfully");
+        setLoader(false);
+      })
+      .catch((e) => {
+        toast.error("Failed to update Student Data!");
+        setLoader(false);
+      });
   };
 
   const columns = [
@@ -157,22 +242,22 @@ export default function CreateHeroResult() {
     {
       name: "Student Name",
       selector: (row) => row.student_name,
-      sortable: true,
+      sortable: +true,
     },
     {
       name: "Class",
       selector: (row) => row.class,
-      sortable: true,
+      sortable: +true,
     },
     {
       name: "Roll No.",
       selector: (row) => row.roll_no,
-      sortable: true,
+      sortable: +true,
     },
     {
       name: "Student ID",
       selector: (row) => row.student_id,
-      sortable: true,
+      sortable: +true,
     },
     {
       name: "Action",
@@ -188,6 +273,16 @@ export default function CreateHeroResult() {
           >
             View
           </button>
+          <button
+            className="btn btn-warning m-1"
+            type="button"
+            onClick={() => {
+              setViewResult(true);
+              setEditStudentMarks(row);
+            }}
+          >
+            Edit
+          </button>
         </>
       ),
       omit: access !== "admin",
@@ -196,6 +291,15 @@ export default function CreateHeroResult() {
 
   return (
     <div className="container-fluid text-center my-3">
+      <button
+        type="button"
+        className="btn btn-dark m-2"
+        onClick={() => {
+          createDownloadLink(data, "studentsResult");
+        }}
+      >
+        Download Data
+      </button>
       <h2 className="text-center text-success">{SCHOOLNAME}</h2>
       <div className="my-3">
         <button
@@ -348,21 +452,26 @@ export default function CreateHeroResult() {
                           <tr>
                             <th>Roll No</th>
                             <th>Student Name</th>
-                            <th>Marks (0-100)</th>
+                            <th>
+                              Marks (0-
+                              {selectPart == "PART 1"
+                                ? "10"
+                                : selectPart == "PART 2"
+                                ? "30"
+                                : "50"}
+                              )
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           {data
-                            .filter(
-                              (student) => student.class === selectedClass
-                            )
+                            .filter((student) => student.class == selectedClass)
                             .sort((a, b) => a.roll_no - b.roll_no)
                             .map((student) => {
                               const markItem = marksInput.find(
-                                (item) => item.id === student.id
+                                (item) => item.id == student.id
                               );
                               const mark = markItem ? markItem.mark : 0;
-                              console.log(student);
                               return (
                                 <tr key={student.id}>
                                   <td>{student.roll_no}</td>
@@ -372,7 +481,13 @@ export default function CreateHeroResult() {
                                       type="number"
                                       className="form-control"
                                       min="0"
-                                      max="100"
+                                      max={
+                                        selectPart == "PART 1"
+                                          ? "10"
+                                          : selectPart == "PART 2"
+                                          ? "30"
+                                          : "50"
+                                      }
                                       value={mark}
                                       onChange={(e) =>
                                         handleMarkChange(
@@ -474,7 +589,8 @@ export default function CreateHeroResult() {
                             const mark =
                               viewStudent[`${subject.shortName}${part}`];
                             return (
-                              mark !== undefined && (
+                              mark !== undefined &&
+                              mark !== 0 && (
                                 <p
                                   key={subject.shortName}
                                   className="d-flex justify-content-between"
@@ -485,6 +601,29 @@ export default function CreateHeroResult() {
                               )
                             );
                           })}
+                          <h6 className="text-success">
+                            Total Marks:{" "}
+                            {part === 1
+                              ? viewStudent.ben1 +
+                                viewStudent.eng1 +
+                                viewStudent.math1 +
+                                viewStudent.health1 +
+                                viewStudent.work1 +
+                                viewStudent.envs1
+                              : part === 2
+                              ? viewStudent.ben2 +
+                                viewStudent.eng2 +
+                                viewStudent.math2 +
+                                viewStudent.health2 +
+                                viewStudent.work2 +
+                                viewStudent.envs2
+                              : viewStudent.ben3 +
+                                viewStudent.eng3 +
+                                viewStudent.math3 +
+                                viewStudent.health3 +
+                                viewStudent.work3 +
+                                viewStudent.envs3}
+                          </h6>
                         </div>
                       </div>
                     </div>
@@ -492,7 +631,27 @@ export default function CreateHeroResult() {
                 </div>
 
                 <div className="text-center mt-3">
-                  <h4>Total Marks: {viewStudent.total}</h4>
+                  <h4>
+                    Gross Total Marks:{" "}
+                    {viewStudent.ben1 +
+                      viewStudent.ben2 +
+                      viewStudent.ben3 +
+                      viewStudent.eng1 +
+                      viewStudent.eng2 +
+                      viewStudent.eng3 +
+                      viewStudent.math1 +
+                      viewStudent.math2 +
+                      viewStudent.math3 +
+                      viewStudent.health1 +
+                      viewStudent.health2 +
+                      viewStudent.health3 +
+                      viewStudent.work1 +
+                      viewStudent.work2 +
+                      viewStudent.work3 +
+                      viewStudent.envs1 +
+                      viewStudent.envs2 +
+                      viewStudent.envs3}
+                  </h4>
                 </div>
               </div>
               <div className="modal-footer">
@@ -500,6 +659,219 @@ export default function CreateHeroResult() {
                   type="button"
                   className="btn btn-secondary"
                   onClick={() => setViewResult(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Edit Result Modal */}
+      {showEdit && (
+        <div
+          className="modal fade show d-block"
+          tabIndex="-1"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  Results for {editStudentMarks.student_name}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowEdit(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <p>
+                      <strong>Class:</strong> {editStudentMarks.class}
+                    </p>
+                  </div>
+                  <div className="col-md-6">
+                    <p>
+                      <strong>Roll No:</strong> {editStudentMarks.roll_no}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="row">
+                  {[1, 2, 3].map((part) => (
+                    <div className="col-md-4" key={part}>
+                      <div className="card mb-4">
+                        <div className="card-header bg-primary text-white">
+                          Part {part}
+                        </div>
+                        <div className="card-body">
+                          {subjects.map((subject, index) => {
+                            const mark =
+                              editStudentMarks[`${subject.shortName}${part}`];
+                            if (
+                              editStudentMarks.class === "CLASS PP" &&
+                              index < 3
+                            ) {
+                              return (
+                                <p key={subject.shortName}>
+                                  <p>{subject.fullName}:</p>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    min="0"
+                                    max={
+                                      part === 1
+                                        ? "10"
+                                        : part === 2
+                                        ? "30"
+                                        : "50"
+                                    }
+                                    value={mark}
+                                    onChange={(e) =>
+                                      setEditStudentMarks({
+                                        ...editStudentMarks,
+                                        [`${subject.shortName}${part}`]:
+                                          parseInt(e.target.value) || "",
+                                      })
+                                    }
+                                    placeholder="Enter marks"
+                                  />
+                                </p>
+                              );
+                            } else if (
+                              (editStudentMarks.class === "CLASS I" ||
+                                editStudentMarks.class === "CLASS II") &&
+                              index < 5
+                            ) {
+                              return (
+                                <p key={subject.shortName}>
+                                  <p>{subject.fullName}:</p>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    min="0"
+                                    max={
+                                      part === 1
+                                        ? "10"
+                                        : part === 2
+                                        ? "30"
+                                        : "50"
+                                    }
+                                    value={mark}
+                                    onChange={(e) =>
+                                      setEditStudentMarks({
+                                        ...editStudentMarks,
+                                        [`${subject.shortName}${part}`]:
+                                          parseInt(e.target.value) || "",
+                                      })
+                                    }
+                                    placeholder="Enter marks"
+                                  />
+                                </p>
+                              );
+                            } else if (
+                              editStudentMarks.class === "CLASS III" ||
+                              editStudentMarks.class === "CLASS IV"
+                            ) {
+                              return (
+                                <p key={subject.shortName}>
+                                  <p>{subject.fullName}:</p>
+                                  <input
+                                    type="number"
+                                    className="form-control"
+                                    min="0"
+                                    max={
+                                      part === 1
+                                        ? "10"
+                                        : part === 2
+                                        ? "30"
+                                        : "50"
+                                    }
+                                    value={mark}
+                                    onChange={(e) =>
+                                      setEditStudentMarks({
+                                        ...editStudentMarks,
+                                        [`${subject.shortName}${part}`]:
+                                          parseInt(e.target.value) || "",
+                                      })
+                                    }
+                                    placeholder="Enter marks"
+                                  />
+                                </p>
+                              );
+                            }
+                          })}
+                          <h6 className="text-success">
+                            Total Marks:{" "}
+                            {part === 1
+                              ? editStudentMarks.ben1 +
+                                editStudentMarks.eng1 +
+                                editStudentMarks.math1 +
+                                editStudentMarks.health1 +
+                                editStudentMarks.work1 +
+                                editStudentMarks.envs1
+                              : part === 2
+                              ? editStudentMarks.ben2 +
+                                editStudentMarks.eng2 +
+                                editStudentMarks.math2 +
+                                editStudentMarks.health2 +
+                                editStudentMarks.work2 +
+                                editStudentMarks.envs2
+                              : editStudentMarks.ben3 +
+                                editStudentMarks.eng3 +
+                                editStudentMarks.math3 +
+                                editStudentMarks.health3 +
+                                editStudentMarks.work3 +
+                                editStudentMarks.envs3}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center mt-3">
+                  <h4>
+                    Gross Total Marks:{" "}
+                    {editStudentMarks.ben1 +
+                      editStudentMarks.ben2 +
+                      editStudentMarks.ben3 +
+                      editStudentMarks.eng1 +
+                      editStudentMarks.eng2 +
+                      editStudentMarks.eng3 +
+                      editStudentMarks.math1 +
+                      editStudentMarks.math2 +
+                      editStudentMarks.math3 +
+                      editStudentMarks.health1 +
+                      editStudentMarks.health2 +
+                      editStudentMarks.health3 +
+                      editStudentMarks.work1 +
+                      editStudentMarks.work2 +
+                      editStudentMarks.work3 +
+                      editStudentMarks.envs1 +
+                      editStudentMarks.envs2 +
+                      editStudentMarks.envs3}
+                  </h4>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setShowEdit(false);
+                    updateStudentResult();
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowEdit(false)}
                 >
                   Close
                 </button>
