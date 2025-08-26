@@ -169,6 +169,7 @@ export default function CreateHeroResult() {
   };
 
   const handleSaveMarks = async () => {
+    setShowAddMarks(false);
     setLoader(true);
     const partNumber = selectPart.split(" ")[1];
     const subjectPartKey = `${selectedSubject}${partNumber}`;
@@ -201,7 +202,6 @@ export default function CreateHeroResult() {
       setStudentResultState(updatedData);
       setFilteredData(updatedData);
       toast.success("Marks updated successfully");
-      setShowAddMarks(false);
       setSelectPart("");
       setIsPartSelected(false);
       setSelectedClass("");
