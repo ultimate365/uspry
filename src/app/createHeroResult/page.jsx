@@ -8,6 +8,7 @@ import {
   query,
   writeBatch,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import Loader from "@/components/Loader";
 import { SCHOOLNAME } from "@/modules/constants";
@@ -246,52 +247,98 @@ export default function CreateHeroResult() {
       width: "50px",
     },
     {
-      name: "Student Name",
-      selector: (row) => row.student_name,
+      name: "Student ID",
+      selector: (row) => (
+        <h6
+          onClick={() => {
+            if (access === "admin") {
+              setViewResult(true);
+              setViewStudent(row);
+            }
+          }}
+          className="cursor-pointer text-primary"
+          style={{
+            cursor: access === "admin" ? "pointer" : "default",
+          }}
+        >
+          {row.student_id}
+        </h6>
+      ),
       sortable: +true,
+      wrap: +true,
+      center: +true,
+      grow: 2,
+      width: "130px",
     },
+    {
+      name: "Student Name",
+      selector: (row) => (
+        <h6
+          onClick={() => {
+            if (access === "admin") {
+              setViewResult(true);
+              setViewStudent(row);
+            }
+          }}
+          className="cursor-pointer text-primary"
+          style={{
+            cursor: access === "admin" ? "pointer" : "default",
+          }}
+        >
+          {row.student_name}
+        </h6>
+      ),
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      grow: 2,
+      width: "150px",
+    },
+    {
+      name: "Roll",
+      selector: (row) => row.roll_no,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      grow: 2,
+      width: "80px",
+    },
+    ,
     {
       name: "Class",
       selector: (row) => row.class,
       sortable: +true,
+      wrap: +true,
+      center: +true,
+      grow: 2,
+      width: "100px",
     },
     {
-      name: "Roll No.",
-      selector: (row) => row.roll_no,
+      name: "Total",
+      selector: (row) =>
+        (row.ben1 ? row.ben1 : 0) +
+        (row.ben2 ? row.ben2 : 0) +
+        (row.ben3 ? row.ben3 : 0) +
+        (row.eng1 ? row.eng1 : 0) +
+        (row.eng2 ? row.eng2 : 0) +
+        (row.eng3 ? row.eng3 : 0) +
+        (row.math1 ? row.math1 : 0) +
+        (row.math2 ? row.math2 : 0) +
+        (row.math3 ? row.math3 : 0) +
+        (row.health1 ? row.health1 : 0) +
+        (row.health2 ? row.health2 : 0) +
+        (row.health3 ? row.health3 : 0) +
+        (row.work1 ? row.work1 : 0) +
+        (row.work2 ? row.work2 : 0) +
+        (row.work3 ? row.work3 : 0) +
+        (row.envs1 ? row.envs1 : 0) +
+        (row.envs2 ? row.envs2 : 0) +
+        (row.envs3 ? row.envs3 : 0),
       sortable: +true,
-    },
-    {
-      name: "Student ID",
-      selector: (row) => row.student_id,
-      sortable: +true,
-    },
-    {
-      name: "Action",
-      selector: (row) => (
-        <>
-          <button
-            className="btn btn-primary m-1"
-            type="button"
-            onClick={() => {
-              setViewResult(true);
-              setViewStudent(row);
-            }}
-          >
-            View
-          </button>
-          <button
-            className="btn btn-warning m-1"
-            type="button"
-            onClick={() => {
-              setViewResult(true);
-              setEditStudentMarks(row);
-            }}
-          >
-            Edit
-          </button>
-        </>
-      ),
-      omit: access !== "admin",
+      wrap: +true,
+      center: +true,
+      grow: 2,
+      width: "100px",
     },
   ];
 
@@ -540,7 +587,15 @@ export default function CreateHeroResult() {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setShowAddMarks(false)}
+                  onClick={() => {
+                    setShowAddMarks(false);
+                    setSelectPart("");
+                    setIsPartSelected(false);
+                    setSelectedClass("");
+                    setIsClassSelected(false);
+                    setSelectedSubject("");
+                    setIsSubjectSelected(false);
+                  }}
                 >
                   Close
                 </button>
@@ -561,7 +616,7 @@ export default function CreateHeroResult() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  Results for {viewStudent.student_name}
+                  Results of {viewStudent.student_name}
                 </h5>
                 <button
                   type="button"
@@ -663,6 +718,17 @@ export default function CreateHeroResult() {
               <div className="modal-footer">
                 <button
                   type="button"
+                  className="btn btn-success"
+                  onClick={() => {
+                    setViewResult(false);
+                    setShowEdit(true);
+                    setEditStudentMarks(viewStudent);
+                  }}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => setViewResult(false)}
                 >
@@ -684,7 +750,7 @@ export default function CreateHeroResult() {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">
-                  Results for {editStudentMarks.student_name}
+                  Edit Marks of {editStudentMarks.student_name}
                 </h5>
                 <button
                   type="button"
@@ -736,13 +802,20 @@ export default function CreateHeroResult() {
                                         : "50"
                                     }
                                     value={mark}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      const parsedValue = parseInt(
+                                        e.target.value,
+                                        10
+                                      );
                                       setEditStudentMarks({
                                         ...editStudentMarks,
-                                        [`${subject.shortName}${part}`]:
-                                          parseInt(e.target.value) || "",
-                                      })
-                                    }
+                                        [`${subject.shortName}${part}`]: isNaN(
+                                          parsedValue
+                                        )
+                                          ? ""
+                                          : parsedValue,
+                                      });
+                                    }}
                                     placeholder="Enter marks"
                                   />
                                 </p>
@@ -767,13 +840,20 @@ export default function CreateHeroResult() {
                                         : "50"
                                     }
                                     value={mark}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      const parsedValue = parseInt(
+                                        e.target.value,
+                                        10
+                                      );
                                       setEditStudentMarks({
                                         ...editStudentMarks,
-                                        [`${subject.shortName}${part}`]:
-                                          parseInt(e.target.value) || "",
-                                      })
-                                    }
+                                        [`${subject.shortName}${part}`]: isNaN(
+                                          parsedValue
+                                        )
+                                          ? ""
+                                          : parsedValue,
+                                      });
+                                    }}
                                     placeholder="Enter marks"
                                   />
                                 </p>
@@ -797,13 +877,20 @@ export default function CreateHeroResult() {
                                         : "50"
                                     }
                                     value={mark}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                      const parsedValue = parseInt(
+                                        e.target.value,
+                                        10
+                                      );
                                       setEditStudentMarks({
                                         ...editStudentMarks,
-                                        [`${subject.shortName}${part}`]:
-                                          parseInt(e.target.value) || "",
-                                      })
-                                    }
+                                        [`${subject.shortName}${part}`]: isNaN(
+                                          parsedValue
+                                        )
+                                          ? ""
+                                          : parsedValue,
+                                      });
+                                    }}
                                     placeholder="Enter marks"
                                   />
                                 </p>
@@ -813,25 +900,61 @@ export default function CreateHeroResult() {
                           <h6 className="text-success">
                             Total Marks:{" "}
                             {part === 1
-                              ? editStudentMarks.ben1 +
-                                editStudentMarks.eng1 +
-                                editStudentMarks.math1 +
-                                editStudentMarks.health1 +
-                                editStudentMarks.work1 +
-                                editStudentMarks.envs1
+                              ? (editStudentMarks.ben1
+                                  ? editStudentMarks.ben1
+                                  : 0) +
+                                (editStudentMarks.eng1
+                                  ? editStudentMarks.eng1
+                                  : 0) +
+                                (editStudentMarks.math1
+                                  ? editStudentMarks.math1
+                                  : 0) +
+                                (editStudentMarks.health1
+                                  ? editStudentMarks.health1
+                                  : 0) +
+                                (editStudentMarks.work1
+                                  ? editStudentMarks.work1
+                                  : 0) +
+                                (editStudentMarks.envs1
+                                  ? editStudentMarks.envs1
+                                  : 0)
                               : part === 2
-                              ? editStudentMarks.ben2 +
-                                editStudentMarks.eng2 +
-                                editStudentMarks.math2 +
-                                editStudentMarks.health2 +
-                                editStudentMarks.work2 +
-                                editStudentMarks.envs2
-                              : editStudentMarks.ben3 +
-                                editStudentMarks.eng3 +
-                                editStudentMarks.math3 +
-                                editStudentMarks.health3 +
-                                editStudentMarks.work3 +
-                                editStudentMarks.envs3}
+                              ? (editStudentMarks.ben2
+                                  ? editStudentMarks.ben2
+                                  : 0) +
+                                (editStudentMarks.eng2
+                                  ? editStudentMarks.eng2
+                                  : 0) +
+                                (editStudentMarks.math2
+                                  ? editStudentMarks.math2
+                                  : 0) +
+                                (editStudentMarks.health2
+                                  ? editStudentMarks.health2
+                                  : 0) +
+                                (editStudentMarks.work2
+                                  ? editStudentMarks.work2
+                                  : 0) +
+                                (editStudentMarks.envs2
+                                  ? editStudentMarks.envs2
+                                  : 0)
+                              : (editStudentMarks.ben3
+                                  ? editStudentMarks.ben3
+                                  : 0) +
+                                (editStudentMarks.eng3
+                                  ? editStudentMarks.eng3
+                                  : 0) +
+                                (editStudentMarks.math3
+                                  ? editStudentMarks.math3
+                                  : 0) +
+                                (editStudentMarks.health3
+                                  ? editStudentMarks.health3
+                                  : 0) +
+                                (editStudentMarks.work3
+                                  ? editStudentMarks.work3
+                                  : 0) +
+                                (editStudentMarks.envs3
+                                  ? editStudentMarks.envs3
+                                  : 0)}
                           </h6>
                         </div>
                       </div>
@@ -842,31 +965,37 @@ export default function CreateHeroResult() {
                 <div className="text-center mt-3">
                   <h4>
                     Gross Total Marks:{" "}
-                    {editStudentMarks.ben1 +
-                      editStudentMarks.ben2 +
-                      editStudentMarks.ben3 +
-                      editStudentMarks.eng1 +
-                      editStudentMarks.eng2 +
-                      editStudentMarks.eng3 +
-                      editStudentMarks.math1 +
-                      editStudentMarks.math2 +
-                      editStudentMarks.math3 +
-                      editStudentMarks.health1 +
-                      editStudentMarks.health2 +
-                      editStudentMarks.health3 +
-                      editStudentMarks.work1 +
-                      editStudentMarks.work2 +
-                      editStudentMarks.work3 +
-                      editStudentMarks.envs1 +
-                      editStudentMarks.envs2 +
-                      editStudentMarks.envs3}
+                    {(editStudentMarks.ben1 ? editStudentMarks.ben1 : 0) +
+                      (editStudentMarks.ben2 ? editStudentMarks.ben2 : 0) +
+                      (editStudentMarks.ben3 ? editStudentMarks.ben3 : 0) +
+                      (editStudentMarks.eng1 ? editStudentMarks.eng1 : 0) +
+                      (editStudentMarks.eng2 ? editStudentMarks.eng2 : 0) +
+                      (editStudentMarks.eng3 ? editStudentMarks.eng3 : 0) +
+                      (editStudentMarks.math1 ? editStudentMarks.math1 : 0) +
+                      (editStudentMarks.math2 ? editStudentMarks.math2 : 0) +
+                      (editStudentMarks.math3 ? editStudentMarks.math3 : 0) +
+                      (editStudentMarks.health1
+                        ? editStudentMarks.health1
+                        : 0) +
+                      (editStudentMarks.health2
+                        ? editStudentMarks.health2
+                        : 0) +
+                      (editStudentMarks.health3
+                        ? editStudentMarks.health3
+                        : 0) +
+                      (editStudentMarks.work1 ? editStudentMarks.work1 : 0) +
+                      (editStudentMarks.work2 ? editStudentMarks.work2 : 0) +
+                      (editStudentMarks.work3 ? editStudentMarks.work3 : 0) +
+                      (editStudentMarks.envs1 ? editStudentMarks.envs1 : 0) +
+                      (editStudentMarks.envs2 ? editStudentMarks.envs2 : 0) +
+                      (editStudentMarks.envs3 ? editStudentMarks.envs3 : 0)}
                   </h4>
                 </div>
               </div>
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-success"
                   onClick={() => {
                     setShowEdit(false);
                     updateStudentResult();
