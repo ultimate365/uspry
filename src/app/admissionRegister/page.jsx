@@ -109,6 +109,7 @@ export default function AdmissionRegisterData() {
           setAdmissionRegisterState(newData);
           setData(newData);
           setFilteredData(newData);
+          setYearArray(uniqArray(newData.map((item) => item.year)));
           setShowTable(true);
         })
         .catch((err) => {
@@ -147,6 +148,7 @@ export default function AdmissionRegisterData() {
           setAdmissionRegisterState(newData);
           setData(newData);
           setFilteredData(newData);
+          setYearArray(uniqArray(newData.map((item) => item.year)));
           setShowTable(true);
         })
         .catch((err) => {
@@ -169,6 +171,7 @@ export default function AdmissionRegisterData() {
           setAdmissionRegisterState(x);
           setData(x);
           setFilteredData(x);
+          setYearArray(uniqArray(x.map((item) => item.year)));
           toast.success("Student Deleted Successfully");
           setShowTable(true);
         })
