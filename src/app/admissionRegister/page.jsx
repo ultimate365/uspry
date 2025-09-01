@@ -24,9 +24,11 @@ import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
 import { v4 as uuid } from "uuid";
+import { useRouter } from "next/navigation";
 export default function AdmissionRegisterData() {
   const { state, admissionRegisterState, setAdmissionRegisterState } =
     useGlobalContext();
+  const router = useRouter();
   const [showTable, setShowTable] = useState(false);
   const access = state.ACCESS;
   const docId = uuid().split("-")[0];
@@ -259,8 +261,10 @@ export default function AdmissionRegisterData() {
   ];
   useEffect(() => {
     document.title = `${SCHOOLNAME}:Students Database`;
-
-    if (admissionRegisterState.length === 0) {
+    if (access !== "admin") {
+      router.push("/");
+      toast.error("Unauthorized access");
+    } else if (admissionRegisterState.length === 0) {
       AdmissionRegisterData();
     } else {
       setData(admissionRegisterState);
