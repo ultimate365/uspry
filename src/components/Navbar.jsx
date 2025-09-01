@@ -93,6 +93,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/admissionRegister"
+              onClick={handleNavCollapse}
+            >
+              Admission Register
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/createHeroResult"
               onClick={handleNavCollapse}
             >

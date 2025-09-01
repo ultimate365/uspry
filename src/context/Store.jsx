@@ -89,6 +89,8 @@ const GlobalContext = createContext({
   setTeacherLeaveState: () => [],
   studentResultState: [],
   setStudentResultState: () => [],
+  admissionRegisterState: [],
+  setAdmissionRegisterState: () => [],
 });
 export const GlobalContextProvider = ({ children }) => {
   const [state, setState] = useState({
@@ -151,6 +153,8 @@ export const GlobalContextProvider = ({ children }) => {
   const [StudentDataState, setStudentDataState] = useState([]);
   const [teacherLeaveState, setTeacherLeaveState] = useState([]);
   const [studentResultState, setStudentResultState] = useState([]);
+  const [admissionRegisterState, setAdmissionRegisterState] = useState([]);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -206,6 +210,8 @@ export const GlobalContextProvider = ({ children }) => {
         setTeacherLeaveState,
         studentResultState,
         setStudentResultState,
+        admissionRegisterState,
+        setAdmissionRegisterState,
       }}
     >
       <FirebaseProvider>{children}</FirebaseProvider>
