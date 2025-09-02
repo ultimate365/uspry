@@ -24,7 +24,17 @@ import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import SchoolCertificate from "../../components/SchoolCertificate";
 export default function AdmissionRegisterData() {
+  const PDFDownloadLink = dynamic(
+    async () =>
+      await import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Please Wait...</p>,
+    }
+  );
   const { state, admissionRegisterState, setAdmissionRegisterState } =
     useGlobalContext();
   const router = useRouter();
@@ -39,6 +49,7 @@ export default function AdmissionRegisterData() {
   const [showViewStudent, setShowViewStudent] = useState(false);
   const [yearArray, setYearArray] = useState([]);
   const ref = useRef();
+  const [showDldBtn, setShowDldBtn] = useState(false);
   const [addStudent, setAddStudent] = useState({
     id: "",
     father_name: "",
@@ -304,12 +315,7 @@ export default function AdmissionRegisterData() {
       setShowTable(true);
     }
   }, []);
-  useEffect(() => {
-    const result = data.filter((el) => {
-      return el.student_name.toLowerCase().match(search.toLowerCase());
-    });
-    setFilteredData(result);
-  }, [search]);
+
   useEffect(() => {
     generateUniqueId();
   }, [data]);
@@ -397,7 +403,15 @@ export default function AdmissionRegisterData() {
                 placeholder="Search"
                 className="w-50 form-control"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  const result = data.filter((el) => {
+                    return el.student_name
+                      .toLowerCase()
+                      .match(search.toLowerCase());
+                  });
+                  setFilteredData(result);
+                }}
               />
             }
             subHeaderAlign="right"
@@ -418,7 +432,7 @@ export default function AdmissionRegisterData() {
                     </h3>
                     <button
                       type="button"
-                      class="btn-close"
+                      className="btn-close"
                       aria-label="Close"
                       onClick={() => {
                         setShowAdd(false);
@@ -579,7 +593,7 @@ export default function AdmissionRegisterData() {
                     </h3>
                     <button
                       type="button"
-                      class="btn-close"
+                      className="btn-close"
                       aria-label="Close"
                       onClick={() => {
                         setShowViewStudent(false);
@@ -606,6 +620,41 @@ export default function AdmissionRegisterData() {
                       <h5>Admission Year: {viewStudent.year}</h5>
                       <h5>Student Ref: {viewStudent.ref}</h5>
                     </div>
+                    <button
+                      className="btn btn-primary m-1"
+                      type="button"
+                      onClick={() => {
+                        setShowDldBtn(!showDldBtn);
+                      }}
+                    >
+                      {showDldBtn
+                        ? "Hide Download Button"
+                        : "Download School Certificate"}
+                    </button>
+                    {showDldBtn && (
+                      <div className="my-2 mx-auto">
+                        {/* <SchoolCertificate data={viewStudent} /> */}
+                        <PDFDownloadLink
+                          document={<SchoolCertificate data={viewStudent} />}
+                          fileName={`School Certificate of ${viewStudent.student_name}.pdf`}
+                          style={{
+                            textDecoration: "none",
+                            padding: "10px",
+                            color: "#fff",
+                            backgroundColor: "navy",
+                            border: "1px solid #4a4a4a",
+                            width: "40%",
+                            borderRadius: 10,
+                          }}
+                        >
+                          {({ blob, url, loading, error }) =>
+                            loading
+                              ? "Please Wait..."
+                              : "Download School Certificate"
+                          }
+                        </PDFDownloadLink>
+                      </div>
+                    )}
                   </div>
                   <div className="modal-footer">
                     <button
@@ -672,7 +721,7 @@ export default function AdmissionRegisterData() {
                     </h3>
                     <button
                       type="button"
-                      class="btn-close"
+                      className="btn-close"
                       aria-label="Close"
                       onClick={() => {
                         setShowEdit(false);
