@@ -23,7 +23,6 @@ import {
 import { SCHOOLNAME } from "@/modules/constants";
 import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
-import { v4 as uuid } from "uuid";
 import { useRouter } from "next/navigation";
 export default function AdmissionRegisterData() {
   const { state, admissionRegisterState, setAdmissionRegisterState } =
@@ -31,7 +30,7 @@ export default function AdmissionRegisterData() {
   const router = useRouter();
   const [showTable, setShowTable] = useState(false);
   const access = state.ACCESS;
-  const docId = uuid().split("-")[0];
+  const [docId, setDocId] = useState("");
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -186,6 +185,32 @@ export default function AdmissionRegisterData() {
       setShowTable(true);
     }
   };
+
+  // Generate unique ID like st1001, st1002, st1003...
+  const generateUniqueId = () => {
+    // Extract all existing IDs from data
+    const existingIds = new Set(data.map((item) => item.id));
+
+    // Start from array length + 1001
+    let num = data.length + 1001;
+    let newId = `st${num}`;
+
+    // If ID already exists, keep incrementing until unique
+    while (existingIds.has(newId)) {
+      num++;
+      newId = `st${num}`;
+    }
+
+    // Ensure ID length remains 6 (st + 4 digits)
+    // Example: st0001
+    newId = `st${String(num).padStart(4, "0")}`;
+
+    // Save in state
+    setDocId(newId);
+    console.log("newId:", newId);
+    return newId;
+  };
+
   const columns = [
     {
       name: "Sl",
@@ -281,7 +306,10 @@ export default function AdmissionRegisterData() {
       return el.student_name.toLowerCase().match(search.toLowerCase());
     });
     setFilteredData(result);
-  }, [search, data]);
+  }, [search]);
+  useEffect(() => {
+    generateUniqueId();
+  }, [data]);
 
   return (
     <div className="container-fluid text-center my-3">
