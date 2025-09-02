@@ -214,7 +214,10 @@ export default function AdmissionRegisterData() {
   const columns = [
     {
       name: "Sl",
-      selector: (row, ind) => data.findIndex((i) => i.id === row.id) + 1,
+      selector: (row, ind) =>
+        data.length === filteredData.length
+          ? data.findIndex((i) => i.id === row.id) + 1
+          : ind + 1,
       width: "2",
     },
     {
