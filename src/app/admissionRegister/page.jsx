@@ -26,6 +26,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import SchoolCertificate from "../../components/SchoolCertificate";
+import FuzzySearch from "../../components/FuzzySearch";
 export default function AdmissionRegisterData() {
   const PDFDownloadLink = dynamic(
     async () =>
@@ -229,7 +230,11 @@ export default function AdmissionRegisterData() {
         data.length === filteredData.length
           ? data.findIndex((i) => i.id === row.id) + 1
           : ind + 1,
-      width: "2",
+      width: "10%",
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      sortable: +true,
     },
     {
       name: "Student Name",
@@ -400,8 +405,8 @@ export default function AdmissionRegisterData() {
             subHeaderComponent={
               <input
                 type="text"
-                placeholder="Search"
-                className="w-50 form-control"
+                placeholder="Search Student Name"
+                className="col-md-6 form-control"
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
@@ -416,6 +421,60 @@ export default function AdmissionRegisterData() {
             }
             subHeaderAlign="right"
           />
+          <div className="my-5">
+            <FuzzySearch
+              data={data}
+              keys={["student_name"]}
+              placeholder="Search Student Name"
+              onItemClick={(item) => {
+                setShowViewStudent(true);
+                setViewStudent(item);
+              }}
+              renderItem={({ item, matchesForKey, HighlightMatch }) => (
+                <div className="d-flex justify-content-center align-items-center gap-4">
+                  <strong>
+                    <HighlightMatch
+                      text={item.student_name}
+                      matches={matchesForKey("student_name")}
+                    />
+                  </strong>
+                  <div className="text-muted">
+                    <HighlightMatch
+                      text={item.father_name}
+                      matches={matchesForKey("father_name")}
+                    />
+                  </div>
+                  <small>DOB: {item.dob}</small>
+                </div>
+              )}
+            />
+            <FuzzySearch
+              data={data}
+              keys={["father_name"]}
+              placeholder="Search Father Name"
+              onItemClick={(item) => {
+                setShowViewStudent(true);
+                setViewStudent(item);
+              }}
+              renderItem={({ item, matchesForKey, HighlightMatch }) => (
+                <div className="d-flex justify-content-center align-items-center gap-4">
+                  <strong>
+                    <HighlightMatch
+                      text={item.student_name}
+                      matches={matchesForKey("student_name")}
+                    />
+                  </strong>
+                  <div className="text-muted">
+                    <HighlightMatch
+                      text={item.father_name}
+                      matches={matchesForKey("father_name")}
+                    />
+                  </div>
+                  <small>DOB: {item.dob}</small>
+                </div>
+              )}
+            />
+          </div>
           {showAdd && (
             <div
               className="modal fade show"

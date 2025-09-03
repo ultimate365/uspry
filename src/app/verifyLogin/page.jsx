@@ -17,7 +17,7 @@ import Link from "next/link";
 export default function VerifyLogin() {
   const { setState } = useGlobalContext();
   const router = useRouter();
-  const ref = useRef();
+  const formRef = useRef(null);
   const [phone, setPhone] = useState(null);
   const [name, setName] = useState(null);
   const [displayLoader, setDisplayLoader] = useState(false);
@@ -99,7 +99,12 @@ export default function VerifyLogin() {
     }
     // eslint-disable-next-line
   }, []);
-
+  // 🔑 Watch for OTP changes — auto-submit when length is 6
+  useEffect(() => {
+    if (mobileOTP.length === 6) {
+      formRef.current?.requestSubmit();
+    }
+  }, [mobileOTP]);
   return (
     <div className="container">
       {displayLoader ? <Loader /> : null}
@@ -115,38 +120,43 @@ export default function VerifyLogin() {
         </button>
       ) : (
         <div>
-          <p>Please check your OTP on Our Telegram Group</p>
+          <p>Please check your OTP in your Telegram App</p>
           {/* <p>
             Please check your phone +91-
             {`${phone?.slice(0, 4)}XXXX${phone?.slice(8, 10)}`} for an OTP.
           </p> */}
           <div className="col-md-6 mx-auto">
-            <form action="" autoComplete="off" onSubmit={verifyOTP}>
+            <form ref={formRef} autoComplete="off" onSubmit={verifyOTP}>
               <input
                 className="form-control mb-3"
-                ref={(input) => input && input.focus()}
-                title={"Enter Your OTP"}
-                type={"number"}
-                placeholder={"Enter Your 6 digit OTP"}
+                autoFocus
+                title="Enter Your OTP"
+                type="text" // ✅ use text so maxlength works
+                inputMode="numeric"
+                maxLength={6}
+                placeholder="Enter Your 6 digit OTP"
                 value={mobileOTP}
                 onChange={(e) => {
-                  const inputValue = e.target.value;
-
-                  // Set a maxLength (e.g., 6 digits)
-                  if (inputValue.length <= 6) {
-                    setMobileOTP(inputValue);
-                  }
+                  // Only digits, max 6
+                  const inputValue = e.target.value
+                    .replace(/\D/g, "")
+                    .slice(0, 6);
+                  setMobileOTP(inputValue);
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  const pasted = e.clipboardData
+                    .getData("Text")
+                    .replace(/\D/g, "")
+                    .slice(0, 6);
+                  setMobileOTP(pasted);
                 }}
               />
+              <button type="submit" className="btn btn-primary m-1">
+                Verify
+              </button>
             </form>
 
-            <button
-              type="submit"
-              className="btn btn-primary m-1"
-              onClick={verifyOTP}
-            >
-              Verify
-            </button>
             {showRetryBtn && (
               <button
                 type="button"

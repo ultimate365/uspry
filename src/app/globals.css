@@ -303,3 +303,7 @@ table#team-list tr:nth-child(n + 1) td:first-child::before {
   min-width: 1em;
   margin-right: 0.5em;
 }
+.list-group.results-scroll {
+  max-height: 150px;   /* adjust */
+  overflow-y: auto;
+}
