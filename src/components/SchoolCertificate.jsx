@@ -54,17 +54,23 @@ export default function SchoolCertificate({ data }) {
               margin: 20,
             }}
           >
-            <Text style={styles.text}>
+            <Text style={styles.textItalic}>
               Date: ...................................
             </Text>
           </View>
+          <Text
+            style={[styles.text, { textDecoration: "underline", fontSize: 16 }]}
+          >
+            To Whom It May Concern
+          </Text>
           <View
             style={{
               margin: 50,
-              marginBottom: 5,
+              marginBottom: 15,
+              marginLeft: 30,
               flexDirection: "row",
               justifyContent: "flex-start",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               width: "90%",
             }}
@@ -84,10 +90,10 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               width: "90%",
-              marginBottom: 5,
+              marginBottom: 15,
             }}
           >
             <Text style={styles.textMain}>Son / Daughter of Sri / Late</Text>
@@ -106,10 +112,10 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-start",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               width: "90%",
-              marginBottom: 5,
+              marginBottom: 15,
             }}
           >
             <Text style={styles.textMain}>and</Text>
@@ -123,7 +129,7 @@ export default function SchoolCertificate({ data }) {
               <Text style={styles.text}>{mother_name ? mother_name : ""}</Text>
             </View>
             <Text style={styles.textMain}>
-              (Mother), an inhabitant of Vill.- Sehagori,
+              (Mother), an inhabitant of Vill.- Sehagori, P.O.- Khorop,
             </Text>
           </View>
           <View
@@ -133,12 +139,16 @@ export default function SchoolCertificate({ data }) {
               alignItems: "baseline",
               alignContent: "center",
               width: "90%",
-              marginBottom: 5,
+              marginBottom: 15,
             }}
           >
             <Text style={styles.textMain}>
-              P.0.- Khorop. P.S.- Joypur, Dist.- Howrah, Pin.~ 711401. is / was
-              a Student of our School.
+              P.S.- Joypur, Dist.- Howrah, Pin.-{" "}
+            </Text>
+            <Text style={styles.textItalic}>711401</Text>
+            <Text style={styles.textMain}>
+              {" "}
+              , is / was a Student of our School.
             </Text>
           </View>
 
@@ -146,36 +156,46 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-start",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
-              width: "90%",
-              marginBottom: 5,
+              width: "100%",
+              marginBottom: 15,
             }}
           >
             <Text style={[styles.textMain, { textIndent: 30 }]}>
               As per our School records and admission register his / her date of
               birth is / was
             </Text>
+
+            <View
+              style={{
+                marginLeft: 20,
+              }}
+            >
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    borderBottomStyle: "dotted",
+                    borderBottomWidth: 1,
+                  },
+                ]}
+              >
+                {" "}
+                {dob ? dob : ""}
+              </Text>
+            </View>
           </View>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "flex-start",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               width: "90%",
-              marginBottom: 5,
+              marginBottom: 15,
             }}
           >
-            <View
-              style={{
-                borderBottomWidth: 1,
-                borderBottomStyle: "dotted",
-                width: "20%",
-              }}
-            >
-              <Text style={styles.text}>{dob ? dob : ""}</Text>
-            </View>
             <Text style={[styles.textMain, { textIndent: 10 }]}>
               (The {dobToWords(dob)})
             </Text>
@@ -184,10 +204,10 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-start",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               width: "90%",
-              marginBottom: 5,
+              marginBottom: 15,
             }}
           >
             <Text style={[styles.textMain, { textIndent: 30 }]}>
@@ -198,10 +218,10 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-start",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               width: "90%",
-              marginBottom: 5,
+              marginBottom: 15,
             }}
           >
             <Text style={[styles.textMain, { textIndent: 30 }]}>
@@ -212,7 +232,7 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-end",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               marginTop: 50,
               marginRight: 50,
@@ -224,7 +244,7 @@ export default function SchoolCertificate({ data }) {
             style={{
               flexDirection: "row",
               justifyContent: "flex-end",
-              alignItems: "baseline",
+              alignItems: "center",
               alignContent: "center",
               marginRight: 20,
             }}
@@ -275,18 +295,21 @@ const styles = StyleSheet.create({
     fontFamily: "TimesBold",
     textAlign: "center",
     padding: 2,
-    lineHeight: 1.5,
   },
   textBold: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: "TimesBold",
+    textAlign: "center",
+  },
+  textItalic: {
+    fontSize: 14,
+    fontFamily: "TimesBoldItalic",
     textAlign: "center",
   },
   textMain: {
     fontSize: 14,
-    fontFamily: "Milk_Script",
+    fontFamily: "Birds",
     textAlign: "center",
-    lineHeight: 1.5,
   },
 });
 Font.register({
@@ -294,8 +317,8 @@ Font.register({
   src: "https://raw.githubusercontent.com/amtawestwbtpta/awwbtptadata/main/arialbd.ttf",
 });
 Font.register({
-  family: "Milk_Script",
-  src: "https://raw.githubusercontent.com/amtawestwbtpta/awwbtptadata/main/Milk_Script.otf",
+  family: "Birds",
+  src: "https://raw.githubusercontent.com/amtawestwbtpta/awwbtptadata/main/Birds.ttf",
 });
 Font.register({
   family: "Times",
@@ -304,4 +327,8 @@ Font.register({
 Font.register({
   family: "TimesBold",
   src: "https://raw.githubusercontent.com/amtawestwbtpta/awwbtptadata/main/timesBold.ttf",
+});
+Font.register({
+  family: "TimesBoldItalic",
+  src: "https://raw.githubusercontent.com/amtawestwbtpta/awwbtptadata/main/timesBoldItalic.ttf",
 });

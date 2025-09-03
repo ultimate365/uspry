@@ -606,6 +606,7 @@ export default function AdmissionRegisterData() {
                           year: "",
                           ref: "",
                         });
+                        setShowDldBtn(false);
                       }}
                     ></button>
                   </div>
@@ -632,7 +633,7 @@ export default function AdmissionRegisterData() {
                         : "Download School Certificate"}
                     </button>
                     {showDldBtn && (
-                      <div className="my-2 mx-auto">
+                      <div className="my-3 mx-auto">
                         {/* <SchoolCertificate data={viewStudent} /> */}
                         <PDFDownloadLink
                           document={<SchoolCertificate data={viewStudent} />}
@@ -645,6 +646,7 @@ export default function AdmissionRegisterData() {
                             border: "1px solid #4a4a4a",
                             width: "40%",
                             borderRadius: 10,
+                            margin: 10,
                           }}
                         >
                           {({ blob, url, loading, error }) =>
@@ -663,6 +665,7 @@ export default function AdmissionRegisterData() {
                       onClick={() => {
                         setEditStudent(viewStudent);
                         setShowEdit(true);
+                        setShowDldBtn(false);
                       }}
                     >
                       Edit
@@ -671,6 +674,7 @@ export default function AdmissionRegisterData() {
                       className="btn btn-danger m-1"
                       type="button"
                       onClick={() => {
+                        setShowDldBtn(false);
                         //eslint-disable-next-line
                         let message = confirm(
                           `Are You Sure To Delete Student ${viewStudent.student_name}`
@@ -696,6 +700,7 @@ export default function AdmissionRegisterData() {
                           year: "",
                           ref: "",
                         });
+                        setShowDldBtn(false);
                       }}
                     >
                       Close
