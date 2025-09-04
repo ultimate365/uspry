@@ -456,9 +456,6 @@ export default function Transactions() {
       }
       let thisAccount = stateObject;
       thisAccount.date = editTransaction.date;
-      thisAccount.createdAt = Date.parse(
-        getCurrentDateInput(editTransaction.date)
-      );
       thisAccount.balance = amount;
       await updateDoc(doc(firestore, "accounts", stateObject.id), thisAccount);
       let filteredAccounts = accountState.filter(
@@ -1332,6 +1329,7 @@ export default function Transactions() {
                             onChange={(e) => {
                               const date = getSubmitDateInput(e.target.value);
                               const currentDate = new Date(e.target.value);
+                              const time = Date.parse(e.target.value);
                               const cmonth =
                                 monthNamesWithIndex[
                                   currentDate.getDate() > 10
@@ -1346,6 +1344,7 @@ export default function Transactions() {
                                 date: date,
                                 month: cmonth,
                                 year: cyear,
+                                createdAt: time,
                               });
                             }}
                           />

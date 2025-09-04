@@ -46,6 +46,7 @@ export default function VecTransactions() {
     date: todayInString(),
     openingBalance: parseFloat(stateObject?.balance),
     closingBalance: parseFloat(stateObject?.balance),
+    createdAt: "",
   });
   const [editVecObj, setEditVecObj] = useState({
     id: "",
@@ -56,6 +57,7 @@ export default function VecTransactions() {
     date: todayInString(),
     openingBalance: "",
     closingBalance: "",
+    createdAt: "",
   });
 
   const getId = () => {
@@ -63,10 +65,10 @@ export default function VecTransactions() {
     const month =
       monthNamesWithIndex[
         currentDate.getDate() > 10
-        ? currentDate.getMonth()
-        : currentDate.getMonth() === 0
-        ? 11
-        : currentDate.getMonth() - 1
+          ? currentDate.getMonth()
+          : currentDate.getMonth() === 0
+          ? 11
+          : currentDate.getMonth() - 1
       ].monthName;
     const year = currentDate.getFullYear();
     return `${month}-${year}`;
@@ -83,13 +85,9 @@ export default function VecTransactions() {
         ...doc.data(),
         id: doc.id,
       }))
-      .sort(
-        (a, b) =>
-          Date.parse(getCurrentDateInput(a.date)) -
-          Date.parse(getCurrentDateInput(b.date))
-      );
+      .sort((a, b) => b.createdAt - a.createdAt);
     setLoader(false);
-    setAllTransactions(data.reverse());
+    setAllTransactions(data);
     setAllFTransactions(data);
     const x = data.filter((t) => t.id === id);
     if (x.length > 0) {
@@ -624,6 +622,7 @@ export default function VecTransactions() {
                           setVecObj({
                             ...vecObj,
                             date: getSubmitDateInput(e.target.value),
+                            createdAt: Date.parse(e.target.value),
                           });
                         }}
                       />
@@ -848,6 +847,7 @@ export default function VecTransactions() {
                           setEditVecObj({
                             ...editVecObj,
                             date: getSubmitDateInput(e.target.value),
+                            createdAt: Date.parse(e.target.value),
                           });
                         }}
                       />
