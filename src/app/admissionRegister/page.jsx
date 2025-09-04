@@ -153,12 +153,26 @@ export default function AdmissionRegisterData() {
             ref: "",
           });
           setShowEdit(false);
+          setShowViewStudent(false);
+          setViewStudent({
+            id: docId,
+            father_name: "",
+            student_name: "",
+            mother_name: "",
+            dob: "",
+            year: "",
+            ref: "",
+          });
           const newData = admissionRegisterState.map((item) =>
             item.id === editStudent.id ? editStudent : item
           );
           setAdmissionRegisterState(newData);
           setData(newData);
-          setFilteredData(newData);
+          setFilteredData(
+            newData.filter((el) => {
+              return el.student_name.toLowerCase().match(search.toLowerCase());
+            })
+          );
           setYearArray(uniqArray(newData.map((item) => item.year)));
           setShowTable(true);
         })
@@ -413,7 +427,7 @@ export default function AdmissionRegisterData() {
                   const result = data.filter((el) => {
                     return el.student_name
                       .toLowerCase()
-                      .match(search.toLowerCase());
+                      .match(e.target.value.toLowerCase());
                   });
                   setFilteredData(result);
                 }}
