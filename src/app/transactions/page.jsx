@@ -168,13 +168,11 @@ export default function Transactions() {
         ...doc.data(),
         id: doc.id,
       }))
-      .sort((a, b) => a.createdAt - b.createdAt);
+      .sort((a, b) => b.createdAt - a.createdAt);
     setThisAccounTransactions(
-      data
-        .filter(
-          (account) => account.accountNumber === stateObject.accountNumber
-        )
-        .reverse()
+      data.filter(
+        (account) => account.accountNumber === stateObject.accountNumber
+      )
     );
     setLoader(false);
     setAllTransactions(data);
@@ -221,9 +219,11 @@ export default function Transactions() {
       };
       let x = transactionState;
       x = [...x, transaction];
-      const w = x
-        .filter((item) => item.accountNumber === stateObject.accountNumber)
-        .reverse();
+      x = x.sort((a, b) => b.createdAt - a.createdAt);
+      const w = x.filter(
+        (item) => item.accountNumber === stateObject.accountNumber
+      );
+
       setThisAccounTransactions(w);
       setTransactionState(x);
       await setDoc(doc(firestore, "transactions", y), transaction);
@@ -275,10 +275,12 @@ export default function Transactions() {
     });
     let x = transactionState;
     x = x.filter((item) => item.id !== transaction.id);
+    x = x.sort((a, b) => b.createdAt - a.createdAt);
     setTransactionState(x);
-    const y = x
-      .filter((account) => account.accountNumber === stateObject.accountNumber)
-      .reverse();
+    const y = x.filter(
+      (account) => account.accountNumber === stateObject.accountNumber
+    );
+
     setThisAccounTransactions(y);
     let filteredAccounts = accountState.filter(
       (el) => el.id !== stateObject.id
@@ -468,12 +470,12 @@ export default function Transactions() {
       let x = transactionState;
       x = x.filter((item) => item.id !== orgTransaction.id);
       x.push(editTransaction);
+      x = x.sort((a, b) => b.createdAt - a.createdAt);
       setTransactionState(x);
-      const y = x
-        .filter(
-          (account) => account.accountNumber === stateObject.accountNumber
-        )
-        .reverse();
+      const y = x.filter(
+        (account) => account.accountNumber === stateObject.accountNumber
+      );
+
       setThisAccounTransactions(y);
       toast.success("Transaction Updated successfully");
       setShowEdit(false);
