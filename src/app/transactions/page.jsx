@@ -86,6 +86,7 @@ export default function Transactions() {
     pryRC: "",
     pryCB: "",
     pryEX: "",
+    createdAt: "",
   });
   const [orgTransaction, setOrgTransaction] = useState({
     id: "",
@@ -105,6 +106,7 @@ export default function Transactions() {
     pryRC: "",
     pryCB: "",
     pryEX: "",
+    createdAt: "",
   });
   const [viewTransaction, setViewTransaction] = useState({
     id: "",
@@ -124,6 +126,7 @@ export default function Transactions() {
     pryRC: "",
     pryCB: "",
     pryEX: "",
+    createdAt: "",
     openingBalance: "",
     closingBalance: "",
   });
@@ -165,11 +168,7 @@ export default function Transactions() {
         ...doc.data(),
         id: doc.id,
       }))
-      .sort(
-        (a, b) =>
-          Date.parse(getCurrentDateInput(a.date)) -
-          Date.parse(getCurrentDateInput(b.date))
-      );
+      .sort((a, b) => a.createdAt - b.createdAt);
     setThisAccounTransactions(
       data
         .filter(
@@ -218,6 +217,7 @@ export default function Transactions() {
         pryCB,
         openingBalance,
         closingBalance: round2dec(ppCB + pryCB),
+        createdAt: Date.now(),
       };
       let x = transactionState;
       x = [...x, transaction];
@@ -454,6 +454,9 @@ export default function Transactions() {
       }
       let thisAccount = stateObject;
       thisAccount.date = editTransaction.date;
+      thisAccount.createdAt = Date.parse(
+        getCurrentDateInput(editTransaction.date)
+      );
       thisAccount.balance = amount;
       await updateDoc(doc(firestore, "accounts", stateObject.id), thisAccount);
       let filteredAccounts = accountState.filter(
