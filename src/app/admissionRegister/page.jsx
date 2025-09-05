@@ -615,8 +615,6 @@ export default function AdmissionRegisterData() {
                           toast.error("Please enter Student Name");
                         } else if (addStudent.father_name === "") {
                           toast.error("Please enter Father Name");
-                        } else if (addStudent.mother_name === "") {
-                          toast.error("Please enter Mother Name");
                         } else if (addStudent.ref === "") {
                           toast.error("Please enter Student ID");
                         } else {
