@@ -4,8 +4,12 @@ import { useGlobalContext } from "../../context/Store";
 import { firestore } from "../../context/FirbaseContext";
 import {
   createDownloadLink,
+  getCurrentDateInput,
+  getSubmitDateInput,
   monthNamesWithIndex,
+  months,
   sortMonthwise,
+  todayInString,
   uniqArray,
 } from "@/modules/calculatefunctions";
 import {
@@ -19,9 +23,16 @@ import {
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { v4 as uuid } from "uuid";
 export default function UserTeachers() {
-  const { state, teacherLeaveState, setTeacherLeaveState } = useGlobalContext();
-
+  const {
+    state,
+    teacherLeaveState,
+    setTeacherLeaveState,
+    leaveDateState,
+    setLeaveDateState,
+  } = useGlobalContext();
+  const docId = uuid().split("-")[0].substring(0, 6);
   const access = state?.ACCESS;
   const router = useRouter();
   const [month, setMonth] = useState("");
@@ -77,6 +88,7 @@ export default function UserTeachers() {
       desig: "AT",
     },
   ];
+  const [filteredLeaveData, setFilteredLeaveData] = useState([]);
   const [techLeaves, setTechLeaves] = useState(leavesArray);
   const [addData, setAddData] = useState({
     id: "January-2025",
@@ -84,6 +96,30 @@ export default function UserTeachers() {
     year: 2025,
     leaves: leavesArray,
   });
+  const [addLeaveDateData, setAddLeaveDateData] = useState({
+    id: docId,
+    techID: "",
+    month: "",
+    year: "",
+    leaveType: "",
+    date: todayInString(),
+    sl: "",
+  });
+  const [selectedTeacher, setSelectedTeacher] = useState("");
+  const [showCLAdd, setShowCLAdd] = useState(false);
+  const [showClDel, setShowClDel] = useState(false);
+  const [clDelObj, setClDelObj] = useState({
+    id: "",
+    value: "",
+    field: "",
+    tname: "",
+    cl: [],
+  });
+  const [selectedDelDate, setSelectedDelDate] = useState("");
+  const [clDelId, setClDelId] = useState("");
+  const [showOLAdd, setShowOLAdd] = useState(false);
+  const [showOLDel, setShowOLDel] = useState(false);
+
   const [showData, setShowData] = useState(false);
   const [filteredData, setFilteredData] = useState();
   const currentDate = new Date();
@@ -157,6 +193,12 @@ export default function UserTeachers() {
       setFilteredEntry(x);
       setMoreFilteredEntry(x);
       setEntryMonths(uniqArray(y));
+      const fLDate = leaveDateState.filter((el) => el.year === selectedValue);
+      setFilteredLeaveData(fLDate);
+      setAddLeaveDateData({
+        ...addLeaveDateData,
+        year: parseInt(selectedValue),
+      });
     } else {
       setFilteredEntry([]);
       setSelectedYear("");
@@ -176,6 +218,11 @@ export default function UserTeachers() {
         x.push(entry);
         setShowData(true);
         setFilteredData(entry?.leaves);
+        const fLDate = leaveDateState.filter(
+          (el) => el.year == selectedYear && el.month == month
+        );
+        setFilteredLeaveData(fLDate);
+        setAddLeaveDateData({ ...addLeaveDateData, month });
         setMonth(entry?.month);
         setYear(entry?.year);
         document.title = `${entry?.month} ${entry?.year} Teachers Leave Details`;
@@ -197,6 +244,37 @@ export default function UserTeachers() {
     }));
     const monthwiseSorted = sortMonthwise(data);
     setTeacherLeaveState(monthwiseSorted);
+
+    const querySnapshot2 = await getDocs(
+      query(collection(firestore, "leaveDates"))
+    );
+    const data2 = querySnapshot2.docs.map((doc) => ({
+      // doc.data() is never undefined for query doc snapshots
+      ...doc.data(),
+      id: doc.id,
+    }));
+    const monthwiseSorted2 = data2.sort((a, b) => {
+      if (a.year === b.year) {
+        if (months.indexOf(a.month) - months.indexOf(b.month)) {
+          return 1;
+        }
+        if (months.indexOf(b.month) - months.indexOf(a.month)) {
+          return -1;
+        }
+
+        if (a.techID < b.techID) {
+          return -1;
+        }
+        if (a.techID > b.techID) {
+          return 1;
+        }
+        return a.sl - b.sl; // Sort by serial number
+      } else {
+        return a.year - b.year; // Sort by year
+      }
+    });
+    setLeaveDateState(monthwiseSorted2);
+    setFilteredLeaveData(monthwiseSorted2);
     setLoader(false);
     calledData(monthwiseSorted);
   };
@@ -277,8 +355,52 @@ export default function UserTeachers() {
     await updateDoc(doc(firestore, "teachersLeaves", month + "-" + year), {
       leaves: updatedData,
     })
-      .then(() => {
-        toast.success("Teachers Leave Data Updated Successfully");
+      .then(async () => {
+        if (field === "clThisMonth" && !isDecrement) {
+          await setDoc(
+            doc(firestore, "leaveDates", addLeaveDateData.id),
+            addLeaveDateData
+          ).then(() => {
+            toast.success("Teachers Cl Added Successfully");
+            const x = [...leaveDateState, addLeaveDateData];
+            const monthwiseSorted = x.sort((a, b) => {
+              if (a.year === b.year) {
+                if (months.indexOf(a.month) - months.indexOf(b.month)) {
+                  return 1;
+                }
+                if (months.indexOf(b.month) - months.indexOf(a.month)) {
+                  return -1;
+                }
+
+                if (a.techID < b.techID) {
+                  return -1;
+                }
+                if (a.techID > b.techID) {
+                  return 1;
+                }
+                return a.sl - b.sl; // Sort by serial number
+              } else {
+                return a.year - b.year; // Sort by year
+              }
+            });
+            const y = monthwiseSorted.filter(
+              (el) => el.year == selectedYear && el.month == month
+            );
+            setLeaveDateState(y);
+            setFilteredLeaveData(y);
+          });
+        } else if (field === "clThisMonth" && isDecrement) {
+          await deleteDoc(doc(firestore, "leaveDates", clDelId)).then(() => {
+            const x = leaveDateState.filter((el) => el.id !== clDelId);
+            const y = x.filter(
+              (el) => el.year == selectedYear && el.month == month
+            );
+            setLeaveDateState(x);
+            setFilteredLeaveData(y);
+            toast.success("Teachers Cl Deleted Successfully");
+          });
+        }
+
         let x = techLeaves;
         x.map((el) => {
           if (el.id === id) {
@@ -345,6 +467,15 @@ export default function UserTeachers() {
           }}
         >
           Download Leaves Data
+        </button>
+        <button
+          type="button"
+          className="btn btn-success m-2"
+          onClick={() => {
+            createDownloadLink(leaveDateState, "leaveDates");
+          }}
+        >
+          Download Leave Date Data
         </button>
         <h3 className="text-primary">Teacher's Leave Details</h3>
         <button
@@ -508,6 +639,9 @@ export default function UserTeachers() {
               </thead>
               <tbody>
                 {filteredData.map((entry, i) => {
+                  const techLDates = filteredLeaveData.filter(
+                    (el) => el.techID === entry.id
+                  );
                   return (
                     <tr key={i} style={{ verticalAlign: "middle" }}>
                       <td>{i + 1}</td>
@@ -525,13 +659,26 @@ export default function UserTeachers() {
                             cursor: "pointer",
                           }}
                           className="bi bi-plus-circle-fill"
-                          onClick={() =>
-                            updateLeaveData(
-                              entry.id,
-                              entry.clThisMonth,
-                              "clThisMonth"
-                            )
-                          }
+                          onClick={() => {
+                            // updateLeaveData(
+                            //   entry.id,
+                            //   entry.clThisMonth,
+                            //   "clThisMonth"
+                            // );
+                            setShowCLAdd(true);
+                            setAddLeaveDateData({
+                              ...addLeaveDateData,
+                              techID: entry.id,
+                              leaveType: "CL",
+                              sl:
+                                techLDates.filter((el) => el.leaveType === "CL")
+                                  .length + 1,
+                              date: `01-${(months.indexOf(month) + 1)
+                                .toString()
+                                .padStart(2, "0")}-${selectedYear}`,
+                            });
+                            setSelectedTeacher(entry.tname);
+                          }}
                         ></i>
                         <br /> {entry.clThisMonth}
                         <br />
@@ -541,16 +688,42 @@ export default function UserTeachers() {
                               cursor: "pointer",
                             }}
                             className="bi bi-dash-circle-fill"
-                            onClick={() =>
-                              updateLeaveData(
-                                entry.id,
-                                entry.clThisMonth,
-                                "clThisMonth",
-                                true
-                              )
-                            }
+                            onClick={() => {
+                              // updateLeaveData(
+                              //   entry.id,
+                              //   entry.clThisMonth,
+                              //   "clThisMonth",
+                              //   true
+                              // );
+                              setShowClDel(true);
+                              setClDelObj({
+                                id: entry.id,
+                                value: entry.clThisMonth,
+                                field: "clThisMonth",
+                                tname: entry.tname,
+                                cl: techLDates.filter(
+                                  (el) => el.leaveType === "CL"
+                                ),
+                              });
+                            }}
                           ></i>
                         )}
+                        <br />
+                        {techLDates.filter((el) => el.leaveType === "CL")
+                          .length > 0 &&
+                          techLDates
+                            .filter((el) => el.leaveType === "CL")
+                            .map((el, ind) => (
+                              <p className="fs-6 m-0 p-0" key={ind}>
+                                {el.date.split("-").map((l, x) => {
+                                  if (x === 0) {
+                                    return l + "/";
+                                  } else if (x == 1) {
+                                    return l;
+                                  }
+                                })}
+                              </p>
+                            ))}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
                         <i
@@ -585,6 +758,22 @@ export default function UserTeachers() {
                             }
                           ></i>
                         )}
+                        <br />
+                        {techLDates.filter((el) => el.leaveType === "OL")
+                          .length > 0 &&
+                          techLDates
+                            .filter((el) => el.leaveType === "OL")
+                            .map((el, ind) => (
+                              <p className="fs-6 m-0 p-0" key={ind}>
+                                {el.date.split("-").map((l, x) => {
+                                  if (x === 0) {
+                                    return l + "/";
+                                  } else if (x == 1) {
+                                    return l;
+                                  }
+                                })}
+                              </p>
+                            ))}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
                         {entry.clThisYear}
@@ -618,7 +807,7 @@ export default function UserTeachers() {
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                  Edit Teachers Leave of {addData?.month} - {addData?.year}
+                  Add Teachers Leave of {addData?.month} - {addData?.year}
                 </h1>
                 <button
                   type="button"
@@ -698,6 +887,204 @@ export default function UserTeachers() {
                   onClick={() => {
                     setShowAddModal(false);
                     selectedYear && showMonthSelection && setShowData(true);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showCLAdd && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                  Add CL{" "}
+                  {`${addLeaveDateData.sl} of ${addLeaveDateData.month}-${addLeaveDateData.year} of ${selectedTeacher}`}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowCLAdd(false);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">ID</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="ID"
+                      value={addLeaveDateData?.id}
+                      onChange={(e) => {
+                        setAddLeaveDateData({
+                          ...addLeaveDateData,
+                          id: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Date</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      defaultValue={getCurrentDateInput(addLeaveDateData.date)}
+                      onChange={(e) => {
+                        const date = getSubmitDateInput(e.target.value);
+                        setAddLeaveDateData({ ...addLeaveDateData, date });
+                      }}
+                    />
+                  </div>
+
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">SL</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="SL"
+                      value={addLeaveDateData?.sl}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          setAddLeaveDateData({
+                            ...addLeaveDateData,
+                            sl: parseInt(e.target.value),
+                          });
+                        } else {
+                          setAddLeaveDateData({
+                            ...addLeaveDateData,
+                            sl: "",
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={async () => {
+                    updateLeaveData(
+                      addLeaveDateData.techID,
+                      addLeaveDateData.sl - 1,
+                      "clThisMonth",
+                      false
+                    );
+                    setShowCLAdd(false);
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    setShowCLAdd(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showClDel && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                  Delete CL of {clDelObj.tname}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowClDel(false);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Date</label>
+                    <select
+                      className="form-select"
+                      defaultValue={""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value) {
+                          setClDelId(value.split("+")[0]);
+                          setSelectedDelDate(value.split("+")[1]);
+                        } else {
+                          toast.error("Please Select A Date");
+                        }
+                      }}
+                      aria-label="Default select example"
+                    >
+                      <option className="text-center text-primary" value="">
+                        Select Date
+                      </option>
+                      {clDelObj.cl.map((el, i) => (
+                        <option
+                          className="text-center text-success text-wrap"
+                          key={i}
+                          value={`${el.id}+${el.date}`}
+                        >
+                          {el.date}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedDelDate && (
+                    <h5 className="">Selected Date: {selectedDelDate}</h5>
+                  )}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    updateLeaveData(
+                      clDelObj.id,
+                      clDelObj.value,
+                      "clThisMonth",
+                      true
+                    );
+                    setShowClDel(false);
+                  }}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => {
+                    setShowClDel(false);
                   }}
                 >
                   Cancel
