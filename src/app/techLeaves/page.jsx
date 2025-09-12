@@ -19,6 +19,7 @@ import {
   doc,
   updateDoc,
   setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
@@ -115,11 +116,30 @@ export default function UserTeachers() {
     tname: "",
     cl: [],
   });
+  const [olDelObj, setOlDelObj] = useState({
+    id: "",
+    value: "",
+    field: "",
+    tname: "",
+    ol: [],
+  });
+
   const [selectedDelDate, setSelectedDelDate] = useState("");
   const [clDelId, setClDelId] = useState("");
-  const [showOLAdd, setShowOLAdd] = useState(false);
-  const [showOLDel, setShowOLDel] = useState(false);
+  const [showOlAdd, setShowOlAdd] = useState(false);
+  const [showOlDel, setShowOlDel] = useState(false);
+  const [olDelId, setOlDelId] = useState("");
 
+  const [editLeaveDateObj, setEditLeaveDateObj] = useState({
+    year: 2025,
+    techID: "",
+    leaveType: "",
+    id: "",
+    month: "",
+    sl: "",
+    date: "01-01-2025",
+  });
+  const [showEditLeaveDateData, setShowEditLeaveDateData] = useState(false);
   const [showData, setShowData] = useState(false);
   const [filteredData, setFilteredData] = useState();
   const currentDate = new Date();
@@ -253,26 +273,7 @@ export default function UserTeachers() {
       ...doc.data(),
       id: doc.id,
     }));
-    const monthwiseSorted2 = data2.sort((a, b) => {
-      if (a.year === b.year) {
-        if (months.indexOf(a.month) - months.indexOf(b.month)) {
-          return 1;
-        }
-        if (months.indexOf(b.month) - months.indexOf(a.month)) {
-          return -1;
-        }
-
-        if (a.techID < b.techID) {
-          return -1;
-        }
-        if (a.techID > b.techID) {
-          return 1;
-        }
-        return a.sl - b.sl; // Sort by serial number
-      } else {
-        return a.year - b.year; // Sort by year
-      }
-    });
+    const monthwiseSorted2 = sortLeaves(data2);
     setLeaveDateState(monthwiseSorted2);
     setFilteredLeaveData(monthwiseSorted2);
     setLoader(false);
@@ -363,34 +364,39 @@ export default function UserTeachers() {
           ).then(() => {
             toast.success("Teachers Cl Added Successfully");
             const x = [...leaveDateState, addLeaveDateData];
-            const monthwiseSorted = x.sort((a, b) => {
-              if (a.year === b.year) {
-                if (months.indexOf(a.month) - months.indexOf(b.month)) {
-                  return 1;
-                }
-                if (months.indexOf(b.month) - months.indexOf(a.month)) {
-                  return -1;
-                }
-
-                if (a.techID < b.techID) {
-                  return -1;
-                }
-                if (a.techID > b.techID) {
-                  return 1;
-                }
-                return a.sl - b.sl; // Sort by serial number
-              } else {
-                return a.year - b.year; // Sort by year
-              }
-            });
+            const monthwiseSorted = sortLeaves(x);
+            setLeaveDateState(monthwiseSorted);
             const y = monthwiseSorted.filter(
               (el) => el.year == selectedYear && el.month == month
             );
-            setLeaveDateState(y);
             setFilteredLeaveData(y);
           });
         } else if (field === "clThisMonth" && isDecrement) {
           await deleteDoc(doc(firestore, "leaveDates", clDelId)).then(() => {
+            const x = leaveDateState.filter((el) => el.id !== clDelId);
+            const y = x.filter(
+              (el) => el.year == selectedYear && el.month == month
+            );
+            setLeaveDateState(x);
+            setFilteredLeaveData(y);
+            toast.success("Teachers Cl Deleted Successfully");
+          });
+        } else if (field === "olThisMonth" && !isDecrement) {
+          await setDoc(
+            doc(firestore, "leaveDates", addLeaveDateData.id),
+            addLeaveDateData
+          ).then(() => {
+            toast.success("Teachers Cl Added Successfully");
+            const x = [...leaveDateState, addLeaveDateData];
+            const monthwiseSorted = sortLeaves(x);
+            setLeaveDateState(monthwiseSorted);
+            const y = monthwiseSorted.filter(
+              (el) => el.year == selectedYear && el.month == month
+            );
+            setFilteredLeaveData(y);
+          });
+        } else if (field === "olThisMonth" && isDecrement) {
+          await deleteDoc(doc(firestore, "leaveDates", olDelId)).then(() => {
             const x = leaveDateState.filter((el) => el.id !== clDelId);
             const y = x.filter(
               (el) => el.year == selectedYear && el.month == month
@@ -437,6 +443,101 @@ export default function UserTeachers() {
         setLoader(false);
       });
   };
+  const updateLeaveDate = async () => {
+    setLoader(true);
+    setShowEditLeaveDateData(false);
+    await updateDoc(
+      doc(firestore, "leaveDates", editLeaveDateObj.id),
+      editLeaveDateObj
+    )
+      .then(() => {
+        toast.success("Teachers Leave Date Updated Successfully");
+        const x = leaveDateState.filter((el) => el.id !== editLeaveDateObj.id);
+        const y = [...x, editLeaveDateObj];
+        const monthwiseSorted = sortLeaves(y);
+        setLeaveDateState(monthwiseSorted);
+        const z =
+          monthwiseSorted.filter(
+            (el) => el.year == selectedYear && el.month == month
+          ) || [];
+        setFilteredLeaveData(z);
+        setLoader(false);
+      })
+      .catch((e) => {
+        setLoader(false);
+        toast.error("Error updating data: " + e.message);
+      });
+  };
+  const deleteLeaveDate = async () => {
+    setLoader(true);
+    setShowEditLeaveDateData(false);
+    await deleteDoc(doc(firestore, "leaveDates", editLeaveDateObj.id))
+      .then(() => {
+        toast.success("Teachers Leave Date Deleted Successfully");
+        const x = leaveDateState.filter((el) => el.id !== editLeaveDateObj.id);
+        const y = x.filter(
+          (el) =>
+            el.year == editLeaveDateObj.year &&
+            el.month == editLeaveDateObj.month
+        );
+        setLeaveDateState(x);
+        setFilteredLeaveData(y);
+        setLoader(false);
+      })
+      .catch((e) => {
+        setLoader(false);
+        toast.error("Error deleting data: " + e.message);
+      });
+  };
+  function sortLeaves(leaves) {
+    const monthOrder = {
+      January: 1,
+      February: 2,
+      March: 3,
+      April: 4,
+      May: 5,
+      June: 6,
+      July: 7,
+      August: 8,
+      September: 9,
+      October: 10,
+      November: 11,
+      December: 12,
+    };
+
+    return leaves.sort((a, b) => {
+      // 1. Year (descending)
+      if (a.year !== b.year) {
+        return b.year - a.year;
+      }
+
+      // 2. Month (descending)
+      if (a.month !== b.month) {
+        return monthOrder[b.month] - monthOrder[a.month];
+      }
+
+      // 3. Date (descending, extract day from dd-mm-yyyy)
+      const dayA = parseInt(a.date.split("-")[0], 10);
+      const dayB = parseInt(b.date.split("-")[0], 10);
+      if (dayA !== dayB) {
+        return dayA - dayB;
+      }
+
+      // 4. techID (ascending)
+      if (a.techID !== b.techID) {
+        return a.techID.localeCompare(b.techID);
+      }
+
+      // 5. techID (ascending)
+      if (a.leaveType !== b.leaveType) {
+        return b.leaveType.localeCompare(a.leaveType);
+      }
+
+      // 6. sl (ascending)
+      return a.sl - b.sl;
+    });
+  }
+
   useEffect(() => {
     if (access !== "admin") {
       router.push("/");
@@ -714,7 +815,17 @@ export default function UserTeachers() {
                           techLDates
                             .filter((el) => el.leaveType === "CL")
                             .map((el, ind) => (
-                              <p className="fs-6 m-0 p-0" key={ind}>
+                              <p
+                                className="fs-6 m-0 p-0"
+                                key={ind}
+                                style={{
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  setEditLeaveDateObj(el);
+                                  setShowEditLeaveDateData(true);
+                                }}
+                              >
                                 {el.date.split("-").map((l, x) => {
                                   if (x === 0) {
                                     return l + "/";
@@ -731,13 +842,26 @@ export default function UserTeachers() {
                             cursor: "pointer",
                           }}
                           className="bi bi-plus-circle-fill"
-                          onClick={() =>
-                            updateLeaveData(
-                              entry.id,
-                              entry.olThisMonth,
-                              "olThisMonth"
-                            )
-                          }
+                          onClick={() => {
+                            // updateLeaveData(
+                            //   entry.id,
+                            //   entry.olThisMonth,
+                            //   "olThisMonth"
+                            // );
+                            setShowOlAdd(true);
+                            setAddLeaveDateData({
+                              ...addLeaveDateData,
+                              techID: entry.id,
+                              leaveType: "OL",
+                              sl:
+                                techLDates.filter((el) => el.leaveType === "OL")
+                                  .length + 1,
+                              date: `01-${(months.indexOf(month) + 1)
+                                .toString()
+                                .padStart(2, "0")}-${selectedYear}`,
+                            });
+                            setSelectedTeacher(entry.tname);
+                          }}
                         ></i>
                         <br />
                         {entry.olThisMonth}
@@ -748,14 +872,24 @@ export default function UserTeachers() {
                               cursor: "pointer",
                             }}
                             className="bi bi-dash-circle-fill"
-                            onClick={() =>
-                              updateLeaveData(
-                                entry.id,
-                                entry.olThisMonth,
-                                "olThisMonth",
-                                true
-                              )
-                            }
+                            onClick={() => {
+                              // updateLeaveData(
+                              //   entry.id,
+                              //   entry.olThisMonth,
+                              //   "olThisMonth",
+                              //   true
+                              // )
+                              setShowOlDel(true);
+                              setOlDelObj({
+                                id: entry.id,
+                                value: entry.olThisMonth,
+                                field: "olThisMonth",
+                                tname: entry.tname,
+                                ol: techLDates.filter(
+                                  (el) => el.leaveType === "OL"
+                                ),
+                              });
+                            }}
                           ></i>
                         )}
                         <br />
@@ -764,7 +898,17 @@ export default function UserTeachers() {
                           techLDates
                             .filter((el) => el.leaveType === "OL")
                             .map((el, ind) => (
-                              <p className="fs-6 m-0 p-0" key={ind}>
+                              <p
+                                className="fs-6 m-0 p-0"
+                                key={ind}
+                                style={{
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => {
+                                  setEditLeaveDateObj(el);
+                                  setShowEditLeaveDateData(true);
+                                }}
+                              >
                                 {el.date.split("-").map((l, x) => {
                                   if (x === 0) {
                                     return l + "/";
@@ -1085,6 +1229,319 @@ export default function UserTeachers() {
                   className="btn btn-warning"
                   onClick={() => {
                     setShowClDel(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showOlAdd && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                  Add OL{" "}
+                  {`${addLeaveDateData.sl} of ${addLeaveDateData.month}-${addLeaveDateData.year} of ${selectedTeacher}`}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowOlAdd(false);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">ID</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="ID"
+                      value={addLeaveDateData?.id}
+                      onChange={(e) => {
+                        setAddLeaveDateData({
+                          ...addLeaveDateData,
+                          id: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Date</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      defaultValue={getCurrentDateInput(addLeaveDateData.date)}
+                      onChange={(e) => {
+                        const date = getSubmitDateInput(e.target.value);
+                        setAddLeaveDateData({ ...addLeaveDateData, date });
+                      }}
+                    />
+                  </div>
+
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">SL</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="SL"
+                      value={addLeaveDateData?.sl}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          setAddLeaveDateData({
+                            ...addLeaveDateData,
+                            sl: parseInt(e.target.value),
+                          });
+                        } else {
+                          setAddLeaveDateData({
+                            ...addLeaveDateData,
+                            sl: "",
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={async () => {
+                    updateLeaveData(
+                      addLeaveDateData.techID,
+                      addLeaveDateData.sl - 1,
+                      "olThisMonth",
+                      false
+                    );
+                    setShowOlAdd(false);
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    setShowOlAdd(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showOlDel && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                  Delete OL of {olDelObj.tname}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowOlDel(false);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Date</label>
+                    <select
+                      className="form-select"
+                      defaultValue={""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value) {
+                          setOlDelId(value.split("+")[0]);
+                          setSelectedDelDate(value.split("+")[1]);
+                        } else {
+                          toast.error("Please Select A Date");
+                        }
+                      }}
+                      aria-label="Default select example"
+                    >
+                      <option className="text-center text-primary" value="">
+                        Select Date
+                      </option>
+                      {olDelObj.ol.map((el, i) => (
+                        <option
+                          className="text-center text-success text-wrap"
+                          key={i}
+                          value={`${el.id}+${el.date}`}
+                        >
+                          {el.date}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedDelDate && (
+                    <h5 className="">Selected Date: {selectedDelDate}</h5>
+                  )}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    updateLeaveData(
+                      olDelObj.id,
+                      olDelObj.value,
+                      "olThisMonth",
+                      true
+                    );
+                    setShowOlDel(false);
+                  }}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => {
+                    setShowOlDel(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showEditLeaveDateData && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                  Edit {editLeaveDateObj.leaveType} of{" "}
+                  {
+                    leavesArray.filter(
+                      (el) => el.id === editLeaveDateObj.techID
+                    )[0].tname
+                  }
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowEditLeaveDateData(false);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Date</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      defaultValue={getCurrentDateInput(editLeaveDateObj.date)}
+                      onChange={(e) => {
+                        const date = getSubmitDateInput(e.target.value);
+                        setEditLeaveDateObj({ ...editLeaveDateObj, date });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group mb-3">
+                    <select
+                      className="form-select"
+                      defaultValue={
+                        editLeaveDateObj.leaveType
+                          ? editLeaveDateObj.leaveType
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value) {
+                          setEditLeaveDateObj({
+                            ...editLeaveDateObj,
+                            leaveType: value,
+                          });
+                        } else {
+                          toast.error("Please Select A Leave Type");
+                        }
+                      }}
+                      aria-label="Default select example"
+                    >
+                      <option className="text-center text-primary" value="">
+                        Select Leave Type
+                      </option>
+                      <option
+                        className="text-center text-success text-wrap"
+                        value="CL"
+                      >
+                        CL
+                      </option>
+                      <option
+                        className="text-center text-success text-wrap"
+                        value="OL"
+                      >
+                        OL
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={() => {
+                    updateLeaveDate();
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    deleteLeaveDate();
+                  }}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => {
+                    setShowEditLeaveDateData(false);
                   }}
                 >
                   Cancel
