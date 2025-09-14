@@ -35,6 +35,7 @@ export default function UserTeachers() {
   } = useGlobalContext();
   const docId = uuid().split("-")[0].substring(0, 6);
   const access = state?.ACCESS;
+  const isHT = state.USER.desig === "HT" ? true : false;
   const router = useRouter();
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
@@ -579,31 +580,34 @@ export default function UserTeachers() {
           Download Leave Date Data
         </button>
         <h3 className="text-primary">Teacher's Leave Details</h3>
-        <button
-          className="btn btn-primary m-4"
-          onClick={() => {
-            setShowAddModal(true);
-            setShowData(false);
-            setAddData({
-              ...addData,
-              id: `${monthName}-${yearName}`,
-              month: monthName,
-              year: yearName,
-              leaves: allEnry[allEnry.length - 1]?.leaves.map((el) => {
-                return {
-                  ...el,
-                  clThisMonth: 0,
-                  olThisMonth: 0,
-                };
-              }),
-            });
-            teacherLeaveState.filter(
-              (el) => el.id === `${monthName}-${yearName}`
-            ).length > 0 && toast.error("Data for this month already exists.");
-          }}
-        >
-          Add Month
-        </button>
+        {isHT && (
+          <button
+            className="btn btn-primary m-4"
+            onClick={() => {
+              setShowAddModal(true);
+              setShowData(false);
+              setAddData({
+                ...addData,
+                id: `${monthName}-${yearName}`,
+                month: monthName,
+                year: yearName,
+                leaves: allEnry[allEnry.length - 1]?.leaves.map((el) => {
+                  return {
+                    ...el,
+                    clThisMonth: 0,
+                    olThisMonth: 0,
+                  };
+                }),
+              });
+              teacherLeaveState.filter(
+                (el) => el.id === `${monthName}-${yearName}`
+              ).length > 0 &&
+                toast.error("Data for this month already exists.");
+            }}
+          >
+            Add Month
+          </button>
+        )}
         <h4>Select Year</h4>
         <div className="col-md-4 mx-auto mb-3 noprint">
           <select
@@ -755,35 +759,38 @@ export default function UserTeachers() {
                         ))}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
-                        <i
-                          style={{
-                            cursor: "pointer",
-                          }}
-                          className="bi bi-plus-circle-fill"
-                          onClick={() => {
-                            // updateLeaveData(
-                            //   entry.id,
-                            //   entry.clThisMonth,
-                            //   "clThisMonth"
-                            // );
-                            setShowCLAdd(true);
-                            setAddLeaveDateData({
-                              ...addLeaveDateData,
-                              techID: entry.id,
-                              leaveType: "CL",
-                              sl:
-                                techLDates.filter((el) => el.leaveType === "CL")
-                                  .length + 1,
-                              date: `01-${(months.indexOf(month) + 1)
-                                .toString()
-                                .padStart(2, "0")}-${selectedYear}`,
-                            });
-                            setSelectedTeacher(entry.tname);
-                          }}
-                        ></i>
+                        {isHT && (
+                          <i
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="bi bi-plus-circle-fill"
+                            onClick={() => {
+                              // updateLeaveData(
+                              //   entry.id,
+                              //   entry.clThisMonth,
+                              //   "clThisMonth"
+                              // );
+                              setShowCLAdd(true);
+                              setAddLeaveDateData({
+                                ...addLeaveDateData,
+                                techID: entry.id,
+                                leaveType: "CL",
+                                sl:
+                                  techLDates.filter(
+                                    (el) => el.leaveType === "CL"
+                                  ).length + 1,
+                                date: `01-${(months.indexOf(month) + 1)
+                                  .toString()
+                                  .padStart(2, "0")}-${selectedYear}`,
+                              });
+                              setSelectedTeacher(entry.tname);
+                            }}
+                          ></i>
+                        )}
                         <br /> {entry.clThisMonth}
                         <br />
-                        {entry.clThisMonth > 0 && (
+                        {entry.clThisMonth > 0 && isHT && (
                           <i
                             style={{
                               cursor: "pointer",
@@ -822,8 +829,10 @@ export default function UserTeachers() {
                                   cursor: "pointer",
                                 }}
                                 onClick={() => {
-                                  setEditLeaveDateObj(el);
-                                  setShowEditLeaveDateData(true);
+                                  if (isHT) {
+                                    setEditLeaveDateObj(el);
+                                    setShowEditLeaveDateData(true);
+                                  }
                                 }}
                               >
                                 {el.date.split("-").map((l, x) => {
@@ -837,36 +846,39 @@ export default function UserTeachers() {
                             ))}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
-                        <i
-                          style={{
-                            cursor: "pointer",
-                          }}
-                          className="bi bi-plus-circle-fill"
-                          onClick={() => {
-                            // updateLeaveData(
-                            //   entry.id,
-                            //   entry.olThisMonth,
-                            //   "olThisMonth"
-                            // );
-                            setShowOlAdd(true);
-                            setAddLeaveDateData({
-                              ...addLeaveDateData,
-                              techID: entry.id,
-                              leaveType: "OL",
-                              sl:
-                                techLDates.filter((el) => el.leaveType === "OL")
-                                  .length + 1,
-                              date: `01-${(months.indexOf(month) + 1)
-                                .toString()
-                                .padStart(2, "0")}-${selectedYear}`,
-                            });
-                            setSelectedTeacher(entry.tname);
-                          }}
-                        ></i>
+                        {isHT && (
+                          <i
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            className="bi bi-plus-circle-fill"
+                            onClick={() => {
+                              // updateLeaveData(
+                              //   entry.id,
+                              //   entry.olThisMonth,
+                              //   "olThisMonth"
+                              // );
+                              setShowOlAdd(true);
+                              setAddLeaveDateData({
+                                ...addLeaveDateData,
+                                techID: entry.id,
+                                leaveType: "OL",
+                                sl:
+                                  techLDates.filter(
+                                    (el) => el.leaveType === "OL"
+                                  ).length + 1,
+                                date: `01-${(months.indexOf(month) + 1)
+                                  .toString()
+                                  .padStart(2, "0")}-${selectedYear}`,
+                              });
+                              setSelectedTeacher(entry.tname);
+                            }}
+                          ></i>
+                        )}
                         <br />
                         {entry.olThisMonth}
                         <br />
-                        {entry.olThisMonth > 0 && (
+                        {entry.olThisMonth > 0 && isHT && (
                           <i
                             style={{
                               cursor: "pointer",
@@ -905,8 +917,10 @@ export default function UserTeachers() {
                                   cursor: "pointer",
                                 }}
                                 onClick={() => {
-                                  setEditLeaveDateObj(el);
-                                  setShowEditLeaveDateData(true);
+                                  if (isHT) {
+                                    setEditLeaveDateObj(el);
+                                    setShowEditLeaveDateData(true);
+                                  }
                                 }}
                               >
                                 {el.date.split("-").map((l, x) => {
