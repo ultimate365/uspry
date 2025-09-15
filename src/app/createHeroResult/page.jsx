@@ -100,8 +100,8 @@ export default function CreateHeroResult() {
     { fullName: "Bengali", shortName: "ben" },
     { fullName: "English", shortName: "eng" },
     { fullName: "Mathematics", shortName: "math" },
-    { fullName: "Health", shortName: "health" },
     { fullName: "Work Education", shortName: "work" },
+    { fullName: "Health", shortName: "health" },
     { fullName: "ENVS", shortName: "envs" },
   ];
 
