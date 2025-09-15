@@ -80,6 +80,58 @@ export default function Result() {
       return total + (viewStudent[subjectPartKey] || 0);
     }, 0);
   };
+  const totalMarks =
+    viewStudent.ben1 +
+    viewStudent.ben2 +
+    viewStudent.ben3 +
+    viewStudent.eng1 +
+    viewStudent.eng2 +
+    viewStudent.eng3 +
+    viewStudent.math1 +
+    viewStudent.math2 +
+    viewStudent.math3 +
+    viewStudent.work1 +
+    viewStudent.work2 +
+    viewStudent.work3 +
+    viewStudent.health1 +
+    viewStudent.health2 +
+    viewStudent.health3 +
+    viewStudent.envs1 +
+    viewStudent.envs2 +
+    viewStudent.envs3;
+  const getGrade = () => {
+    const maxMarks =
+      getPartTotal(3) > 0
+        ? viewStudent.nclass === 0
+          ? 300
+          : viewStudent.nclass < 3
+          ? 450
+          : 600
+        : viewStudent.nclass === 0
+        ? 150
+        : viewStudent.nclass < 3
+        ? 200
+        : 250 + getPartTotal(2) > 0
+        ? viewStudent.nclass === 0
+          ? 150
+          : viewStudent.nclass < 3
+          ? 200
+          : 250
+        : viewStudent.nclass === 0
+        ? 100
+        : viewStudent.nclass < 3
+        ? 150
+        : 200;
+
+    const percentage = (totalMarks / maxMarks) * 100;
+    if (percentage >= 90) return "A+";
+    if (percentage >= 80) return "A";
+    if (percentage >= 70) return "B+";
+    if (percentage >= 60) return "B";
+    if (percentage >= 45) return "C+";
+    if (percentage >= 25) return "C";
+    return "D";
+  };
   return (
     <div className="container text-black p-2 my-4">
       <h3 className="text-primary my-3">{SCHOOLNAME}</h3>
@@ -221,26 +273,7 @@ export default function Result() {
               {getPartTotal(1) + getPartTotal(2) + getPartTotal(3) > 0 ? (
                 <div className="text-center">
                   <h4>
-                    Total Marks:{" "}
-                    {viewStudent.ben1 +
-                      viewStudent.eng1 +
-                      viewStudent.math1 +
-                      viewStudent.work1 +
-                      viewStudent.health1 +
-                      viewStudent.envs1 +
-                      viewStudent.ben2 +
-                      viewStudent.eng2 +
-                      viewStudent.math2 +
-                      viewStudent.work2 +
-                      viewStudent.health2 +
-                      viewStudent.envs2 +
-                      viewStudent.ben3 +
-                      viewStudent.eng3 +
-                      viewStudent.math3 +
-                      viewStudent.work3 +
-                      viewStudent.health3 +
-                      viewStudent.envs3}{" "}
-                    /{" "}
+                    Total Marks: {totalMarks} /{" "}
                     {getPartTotal(3) > 0
                       ? viewStudent.nclass === 0
                         ? 300
@@ -266,24 +299,7 @@ export default function Result() {
                   <h4>
                     Percentage:{" "}
                     {(
-                      ((viewStudent.ben1 +
-                        viewStudent.eng1 +
-                        viewStudent.math1 +
-                        viewStudent.work1 +
-                        viewStudent.health1 +
-                        viewStudent.envs1 +
-                        viewStudent.ben2 +
-                        viewStudent.eng2 +
-                        viewStudent.math2 +
-                        viewStudent.work2 +
-                        viewStudent.health2 +
-                        viewStudent.envs2 +
-                        viewStudent.ben3 +
-                        viewStudent.eng3 +
-                        viewStudent.math3 +
-                        viewStudent.work3 +
-                        viewStudent.health3 +
-                        viewStudent.envs3) /
+                      (totalMarks /
                         (getPartTotal(3) > 0
                           ? viewStudent.nclass === 0
                             ? 300
@@ -305,6 +321,7 @@ export default function Result() {
                     ).toFixed(2)}
                     %
                   </h4>
+                  <h4>Grade: {getGrade()}</h4>
                 </div>
               ) : (
                 <h4 className="text-center">No Marks Available</h4>
