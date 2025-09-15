@@ -100,9 +100,9 @@ export default function CreateHeroResult() {
     { fullName: "Bengali", shortName: "ben" },
     { fullName: "English", shortName: "eng" },
     { fullName: "Mathematics", shortName: "math" },
-    { fullName: "ENVS", shortName: "envs" },
     { fullName: "Work Education", shortName: "work" },
     { fullName: "Health", shortName: "health" },
+    { fullName: "ENVS", shortName: "envs" },
   ];
 
   const studentData = async () => {
@@ -668,21 +668,21 @@ export default function CreateHeroResult() {
                               ? viewStudent.ben1 +
                                 viewStudent.eng1 +
                                 viewStudent.math1 +
-                                viewStudent.health1 +
                                 viewStudent.work1 +
+                                viewStudent.health1 +
                                 viewStudent.envs1
                               : part === 2
                               ? viewStudent.ben2 +
                                 viewStudent.eng2 +
                                 viewStudent.math2 +
-                                viewStudent.health2 +
                                 viewStudent.work2 +
+                                viewStudent.health2 +
                                 viewStudent.envs2
                               : viewStudent.ben3 +
                                 viewStudent.eng3 +
                                 viewStudent.math3 +
-                                viewStudent.health3 +
                                 viewStudent.work3 +
+                                viewStudent.health3 +
                                 viewStudent.envs3}
                           </h6>
                         </div>
@@ -703,8 +703,8 @@ export default function CreateHeroResult() {
                       viewStudent.math1 +
                       viewStudent.math2 +
                       viewStudent.math3 +
-                      viewStudent.health1 +
                       viewStudent.health2 +
+                      viewStudent.health1 +
                       viewStudent.health3 +
                       viewStudent.work1 +
                       viewStudent.work2 +
@@ -912,11 +912,11 @@ export default function CreateHeroResult() {
                                 (editStudentMarks.health1
                                   ? editStudentMarks.health1
                                   : 0) +
-                                (editStudentMarks.work1
-                                  ? editStudentMarks.work1
-                                  : 0) +
                                 (editStudentMarks.envs1
                                   ? editStudentMarks.envs1
+                                  : 0) +
+                                (editStudentMarks.work1
+                                  ? editStudentMarks.work1
                                   : 0)
                               : part === 2
                               ? (editStudentMarks.ben2
@@ -946,11 +946,11 @@ export default function CreateHeroResult() {
                                 (editStudentMarks.math3
                                   ? editStudentMarks.math3
                                   : 0) +
-                                (editStudentMarks.health3
-                                  ? editStudentMarks.health3
-                                  : 0) +
                                 (editStudentMarks.work3
                                   ? editStudentMarks.work3
+                                  : 0) +
+                                (editStudentMarks.health3
+                                  ? editStudentMarks.health3
                                   : 0) +
                                 (editStudentMarks.envs3
                                   ? editStudentMarks.envs3
@@ -958,6 +958,23 @@ export default function CreateHeroResult() {
                           </h6>
                         </div>
                       </div>
+                      <button
+                        type="button"
+                        className="btn btn-success m-2"
+                        onClick={() => {
+                          setShowEdit(false);
+                          updateStudentResult();
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary m-2"
+                        onClick={() => setShowEdit(false)}
+                      >
+                        Close
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -974,6 +991,9 @@ export default function CreateHeroResult() {
                       (editStudentMarks.math1 ? editStudentMarks.math1 : 0) +
                       (editStudentMarks.math2 ? editStudentMarks.math2 : 0) +
                       (editStudentMarks.math3 ? editStudentMarks.math3 : 0) +
+                      (editStudentMarks.work1 ? editStudentMarks.work1 : 0) +
+                      (editStudentMarks.work2 ? editStudentMarks.work2 : 0) +
+                      (editStudentMarks.work3 ? editStudentMarks.work3 : 0) +
                       (editStudentMarks.health1
                         ? editStudentMarks.health1
                         : 0) +
@@ -983,9 +1003,6 @@ export default function CreateHeroResult() {
                       (editStudentMarks.health3
                         ? editStudentMarks.health3
                         : 0) +
-                      (editStudentMarks.work1 ? editStudentMarks.work1 : 0) +
-                      (editStudentMarks.work2 ? editStudentMarks.work2 : 0) +
-                      (editStudentMarks.work3 ? editStudentMarks.work3 : 0) +
                       (editStudentMarks.envs1 ? editStudentMarks.envs1 : 0) +
                       (editStudentMarks.envs2 ? editStudentMarks.envs2 : 0) +
                       (editStudentMarks.envs3 ? editStudentMarks.envs3 : 0)}
@@ -993,16 +1010,6 @@ export default function CreateHeroResult() {
                 </div>
               </div>
               <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={() => {
-                    setShowEdit(false);
-                    updateStudentResult();
-                  }}
-                >
-                  Save
-                </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
