@@ -218,29 +218,97 @@ export default function Result() {
                   </div>
                 ) : null;
               })}
-              <div className="text-center">
-                <h4>
-                  Total Marks:{" "}
-                  {viewStudent.ben1 +
-                    viewStudent.eng1 +
-                    viewStudent.math1 +
-                    viewStudent.work1 +
-                    viewStudent.health1 +
-                    viewStudent.envs1 +
-                    viewStudent.ben2 +
-                    viewStudent.eng2 +
-                    viewStudent.math2 +
-                    viewStudent.work2 +
-                    viewStudent.health2 +
-                    viewStudent.envs2 +
-                    viewStudent.ben3 +
-                    viewStudent.eng3 +
-                    viewStudent.math3 +
-                    viewStudent.work3 +
-                    viewStudent.health3 +
-                    viewStudent.envs3}
-                </h4>
-              </div>
+              {getPartTotal(1) + getPartTotal(2) + getPartTotal(3) > 0 ? (
+                <div className="text-center">
+                  <h4>
+                    Total Marks:{" "}
+                    {viewStudent.ben1 +
+                      viewStudent.eng1 +
+                      viewStudent.math1 +
+                      viewStudent.work1 +
+                      viewStudent.health1 +
+                      viewStudent.envs1 +
+                      viewStudent.ben2 +
+                      viewStudent.eng2 +
+                      viewStudent.math2 +
+                      viewStudent.work2 +
+                      viewStudent.health2 +
+                      viewStudent.envs2 +
+                      viewStudent.ben3 +
+                      viewStudent.eng3 +
+                      viewStudent.math3 +
+                      viewStudent.work3 +
+                      viewStudent.health3 +
+                      viewStudent.envs3}{" "}
+                    /{" "}
+                    {getPartTotal(3) > 0
+                      ? viewStudent.nclass === 0
+                        ? 300
+                        : viewStudent.nclass < 3
+                        ? 450
+                        : 600
+                      : viewStudent.nclass === 0
+                      ? 150
+                      : viewStudent.nclass < 3
+                      ? 200
+                      : 250 + getPartTotal(2) > 0
+                      ? viewStudent.nclass === 0
+                        ? 150
+                        : viewStudent.nclass < 3
+                        ? 200
+                        : 250
+                      : viewStudent.nclass === 0
+                      ? 100
+                      : viewStudent.nclass < 3
+                      ? 150
+                      : 200}
+                  </h4>
+                  <h4>
+                    Percentage:{" "}
+                    {(
+                      ((viewStudent.ben1 +
+                        viewStudent.eng1 +
+                        viewStudent.math1 +
+                        viewStudent.work1 +
+                        viewStudent.health1 +
+                        viewStudent.envs1 +
+                        viewStudent.ben2 +
+                        viewStudent.eng2 +
+                        viewStudent.math2 +
+                        viewStudent.work2 +
+                        viewStudent.health2 +
+                        viewStudent.envs2 +
+                        viewStudent.ben3 +
+                        viewStudent.eng3 +
+                        viewStudent.math3 +
+                        viewStudent.work3 +
+                        viewStudent.health3 +
+                        viewStudent.envs3) /
+                        (getPartTotal(3) > 0
+                          ? viewStudent.nclass === 0
+                            ? 300
+                            : viewStudent.nclass < 3
+                            ? 450
+                            : 600
+                          : getPartTotal(2) > 0
+                          ? viewStudent.nclass === 0
+                            ? 150
+                            : viewStudent.nclass < 3
+                            ? 200
+                            : 250
+                          : viewStudent.nclass === 0
+                          ? 100
+                          : viewStudent.nclass < 3
+                          ? 150
+                          : 200)) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </h4>
+                </div>
+              ) : (
+                <h4 className="text-center">No Marks Available</h4>
+              )}
             </div>
           </div>
           <div className="text-center mt-3">
