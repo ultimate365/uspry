@@ -89,6 +89,7 @@ export default function CreateHeroResult() {
   const [selectPart, setSelectPart] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedFullSubject, setSelectedFullSubject] = useState("");
   const [isPartSelected, setIsPartSelected] = useState(false);
   const [isClassSelected, setIsClassSelected] = useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = useState(false);
@@ -208,6 +209,7 @@ export default function CreateHeroResult() {
       setSelectedClass("");
       setIsClassSelected(false);
       setSelectedSubject("");
+      setSelectedFullSubject("");
       setIsSubjectSelected(false);
     } catch (error) {
       toast.error("Error updating marks");
@@ -435,6 +437,7 @@ export default function CreateHeroResult() {
                           setIsClassSelected(!!e.target.value);
                           setIsSubjectSelected(false);
                           setSelectedSubject("");
+                          setSelectedFullSubject("");
                         }}
                       >
                         <option value="">Select Class</option>
@@ -456,6 +459,11 @@ export default function CreateHeroResult() {
                         onChange={(e) => {
                           setSelectedSubject(e.target.value);
                           setIsSubjectSelected(!!e.target.value);
+                          setSelectedFullSubject(
+                            subjects.find(
+                              (sub) => sub.shortName === e.target.value
+                            ).fullName
+                          );
                         }}
                       >
                         <option value="">Select Subject</option>
@@ -496,8 +504,8 @@ export default function CreateHeroResult() {
                 {isSubjectSelected && (
                   <div className="mt-4">
                     <h5>
-                      Entering marks for {selectedClass} - {selectedSubject} -{" "}
-                      {selectPart}
+                      Entering marks for {selectedClass} - {selectedFullSubject}{" "}
+                      - {selectPart}
                     </h5>
                     <div className="table-responsive">
                       <table className="table table-striped table-bordered">
@@ -579,6 +587,7 @@ export default function CreateHeroResult() {
                     setSelectedClass("");
                     setIsClassSelected(false);
                     setSelectedSubject("");
+                    setSelectedFullSubject("");
                     setIsSubjectSelected(false);
                   }}
                 >
@@ -594,6 +603,7 @@ export default function CreateHeroResult() {
                     setSelectedClass("");
                     setIsClassSelected(false);
                     setSelectedSubject("");
+                    setSelectedFullSubject("");
                     setIsSubjectSelected(false);
                   }}
                 >
