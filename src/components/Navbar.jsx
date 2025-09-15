@@ -117,7 +117,7 @@ export default function Navbar() {
               Notifications
             </Link>
           </li>
-          {/* <li className="nav-item">
+          <li className="nav-item">
             <Link
               className="nav-link"
               href="/result"
@@ -125,7 +125,7 @@ export default function Navbar() {
             >
               Result
             </Link>
-          </li> */}
+          </li>
           {/* <li className="nav-item">
             <Link
               className="nav-link"

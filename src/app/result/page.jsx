@@ -1,86 +1,262 @@
 "use client";
-import React, { useEffect } from "react";
-import resultData from "./resultp2.json";
-import Image from "next/image";
+import { firestore } from "@/context/FirbaseContext";
+import { SCHOOLNAME } from "@/modules/constants";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+
 export default function Result() {
-  useEffect(() => {}, []);
+  const [loader, setLoader] = useState(false);
+  const [studentId, setStudentId] = useState("");
+  const [rollNo, setRollNo] = useState("");
+  const [showSearchedResult, setShowSearchedResult] = useState(false);
+  const [viewStudent, setViewStudent] = useState({
+    id: "",
+    student_id: "",
+    student_name: "",
+    nclass: 0,
+    roll_no: 1,
+    class: "CLASS PP",
+    ben1: 0,
+    eng1: 0,
+    math1: 0,
+    health1: 0,
+    work1: 0,
+    envs1: 0,
+    ben2: 0,
+    eng2: 0,
+    math2: 0,
+    envs2: 0,
+    health2: 0,
+    work2: 0,
+    ben3: 0,
+    eng3: 0,
+    math3: 0,
+    envs3: 0,
+    health3: 0,
+    work3: 0,
+    total: 0,
+    new_roll_no: 1,
+  });
+  const subjects = [
+    { fullName: "Bengali", shortName: "ben" },
+    { fullName: "English", shortName: "eng" },
+    { fullName: "Mathematics", shortName: "math" },
+    { fullName: "Work Education", shortName: "work" },
+    { fullName: "Health", shortName: "health" },
+    { fullName: "ENVS", shortName: "envs" },
+  ];
+  const searchApplication = async () => {
+    setLoader(true);
+    try {
+      const collectionRef = collection(firestore, "studentsResult");
+      const q = query(collectionRef, where("student_id", "==", studentId));
+      const querySnapshot = await getDocs(q);
+      // console.log(querySnapshot.docs[0].data().pan);
+      if (querySnapshot.docs.length > 0) {
+        const data = querySnapshot.docs[0].data();
+
+        if (data.student_id === studentId && data.roll_no == rollNo) {
+          setViewStudent(data);
+          setShowSearchedResult(true);
+          setLoader(false);
+        } else {
+          setShowSearchedResult(false);
+          toast.error("Result Not Found!");
+          setLoader(false);
+        }
+      }
+    } catch (error) {
+      toast.error("Result Not Found!");
+      setShowSearchedResult(false);
+      setLoader(false);
+      console.log(error);
+    }
+  };
+
+  const getPartTotal = (part) => {
+    return subjects.reduce((total, sub) => {
+      const subjectPartKey = `${sub.shortName}${part}`;
+      return total + (viewStudent[subjectPartKey] || 0);
+    }, 0);
+  };
   return (
-    <div className="container ben text-center">
-      <h1 className="text-center">UTTAR SEHAGORI PRIMARY SCHOOL</h1>
-      <h1 className="text-center">Second Summative Examination 2024 Result</h1>
-      <div className="d-flex">
-        <div className="row justify-content-center align-items-center flex-wrap ">
-          {resultData.map((item, index) => (
-            <div
-              className="col-md-4 m-2 p-2 d-flex flex-column justify-content-start align-items-center nobreak"
-              key={index}
-              style={{
-                width: "200px",
-                height:
-                  item.class === "PP"
-                    ? "230px"
-                    : item.class === "CLASS III" || item.class === "CLASS IV"
-                    ? "300px"
-                    : "275px",
-                margin: "5px",
-                border: "1px solid black",
-                borderRadius: "10px",
+    <div className="container text-black p-2 my-4">
+      <h3 className="text-primary my-3">{SCHOOLNAME}</h3>
+
+      {!showSearchedResult ? (
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="card p-4 shadow">
+              <h3 className="text-center mb-4">Check Result</h3>
+              <div className="mb-3">
+                <label htmlFor="studentId" className="form-label">
+                  Student ID
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="studentId"
+                  value={studentId}
+                  maxLength={14}
+                  placeholder="Enter Student ID"
+                  autoComplete="off"
+                  required
+                  onChange={(e) => setStudentId(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="rollNo" className="form-label">
+                  Roll No
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="rollNo"
+                  value={rollNo}
+                  placeholder="Enter Roll No"
+                  autoComplete="off"
+                  required
+                  min={1}
+                  max={20}
+                  onChange={(e) => setRollNo(e.target.value)}
+                />
+              </div>
+              <button
+                className="btn btn-primary w-100"
+                onClick={searchApplication}
+                disabled={loader}
+              >
+                {loader ? "Searching..." : "Search"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="row justify-content-center mt-4">
+          <div className="col-md-8">
+            <div className="card p-4 shadow">
+              <h3 className="text-center mb-4">Result</h3>
+              <p>
+                <strong>Student Name:</strong> {viewStudent.student_name}
+              </p>
+              <p>
+                <strong>Class:</strong> {viewStudent.class}
+              </p>
+              <p>
+                <strong>Roll No:</strong> {viewStudent.roll_no}
+              </p>
+              <p>
+                <strong>Student ID:</strong> {viewStudent.student_id}
+              </p>
+              {[1, 2, 3].map((part, ind) => {
+                const studentClass = viewStudent.nclass;
+                const partTotal = getPartTotal(part);
+
+                return partTotal > 0 ? (
+                  <div key={part} className="card p-4 shadow mb-4">
+                    <h5 className="text-center mb-3">Part {part}</h5>
+                    <table className="table table-bordered table-striped border-dark">
+                      <thead>
+                        <tr>
+                          <th>Subject</th>
+                          <th>Marks Obtained</th>
+                          <th>Full Marks</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {subjects.map((sub, index) => {
+                          const subjectPartKey = `${sub.shortName}${part}`;
+                          const mark = viewStudent[subjectPartKey];
+                          return (
+                            mark !== undefined &&
+                            mark !== 0 && (
+                              <tr key={index}>
+                                <td>{sub.fullName}</td>
+                                <td>{mark}</td>
+                                <td>
+                                  {sub.shortName === "work" ||
+                                  sub.shortName === "health"
+                                    ? part === 1
+                                      ? 10
+                                      : part === 2
+                                      ? 15
+                                      : 25
+                                    : part === 1
+                                    ? 20
+                                    : part === 2
+                                    ? 30
+                                    : 50}
+                                </td>
+                              </tr>
+                            )
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    <h6 className="text-center">
+                      <strong>Total Marks : </strong>
+                      {partTotal} /{" "}
+                      {part === 1
+                        ? studentClass === 0
+                          ? 60
+                          : studentClass < 3
+                          ? 80
+                          : 100
+                        : part === 2
+                        ? studentClass === 0
+                          ? 90
+                          : studentClass < 3
+                          ? 120
+                          : 150
+                        : studentClass === 0
+                        ? 150
+                        : studentClass < 3
+                        ? 200
+                        : 250}
+                    </h6>
+                  </div>
+                ) : null;
+              })}
+              <div className="text-center">
+                <h4>
+                  Total Marks:{" "}
+                  {viewStudent.ben1 +
+                    viewStudent.eng1 +
+                    viewStudent.math1 +
+                    viewStudent.work1 +
+                    viewStudent.health1 +
+                    viewStudent.envs1 +
+                    viewStudent.ben2 +
+                    viewStudent.eng2 +
+                    viewStudent.math2 +
+                    viewStudent.work2 +
+                    viewStudent.health2 +
+                    viewStudent.envs2 +
+                    viewStudent.ben3 +
+                    viewStudent.eng3 +
+                    viewStudent.math3 +
+                    viewStudent.work3 +
+                    viewStudent.health3 +
+                    viewStudent.envs3}
+                </h4>
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-3">
+            <button
+              className="btn btn-warning"
+              onClick={() => {
+                setShowSearchedResult(false);
+                setStudentId("");
+                setRollNo("");
               }}
             >
-              <Image
-                src={require("@/../public/assets/images/logoweb.png")}
-                width={150}
-                style={{
-                  position: "absolute",
-                  zIndex: -1,
-                  marginTop: 40,
-                  opacity: 0.2,
-                  mixBlendMode: "multiply",
-                }}
-                alt="logo"
-              />
-              <h6>{item.name}</h6>
-              <h6> {item.class}</h6>
-              <h6>Roll: {item.roll}</h6>
-              {/* <h6>Student ID: {item.student_id}</h6> */}
-              <h6 className="text-decoration-underline">প্রাপ্ত নম্বর</h6>
-              {item.class === "PP" ? (
-                <div>
-                  <h6>বাংলা: {item.s1}</h6>
-                  <h6>ইংরাজী: {item.s2}</h6>
-                  <h6>গণিত: {item.s3}</h6>
-                  <h6>মোট প্রাপ্ত নম্বর: {item.total}</h6>
-                  <h6>শতকরা: {item.percent}%</h6>
-                  <h6>গ্রেড: {item.grade}</h6>
-                </div>
-              ) : item.class === "CLASS I" || item.class === "CLASS II" ? (
-                <div>
-                  <h6>সংযোগ স্থাপনে সক্ষমতা: {item.s1}</h6>
-                  <h6>সমন্বয় সাধনে সক্ষমতা: {item.s2}</h6>
-                  <h6>সমস্যা সমাধানে সক্ষমতা: {item.s3}</h6>
-                  <h6>মানসিক ও শারীরিক সমন্বয় সাধন: {item.s4}</h6>
-                  <h6>হাতের কাজ: {item.s5}</h6>
-                  <h6>মোট প্রাপ্ত নম্বর: {item.total}</h6>
-                  <h6>শতকরা: {item.percent}%</h6>
-                  <h6>গ্রেড: {item.grade}</h6>
-                </div>
-              ) : item.class === "CLASS III" || item.class === "CLASS IV" ? (
-                <div>
-                  <h6>বাংলা: {item.s1}</h6>
-                  <h6>ইংরাজী: {item.s2}</h6>
-                  <h6>গণিত: {item.s3}</h6>
-                  <h6>আমাদের পরিবেশ: {item.s4}</h6>
-                  <h6>স্বাস্থ্য ও শারীরশিক্ষা: {item.s5}</h6>
-                  <h6>হাতের কাজ: {item.s6}</h6>
-                  <h6>মোট প্রাপ্ত নম্বর: {item.total}</h6>
-                  <h6>শতকরা: {item.percent}%</h6>
-                  <h6>গ্রেড: {item.grade}</h6>
-                </div>
-              ) : null}
-            </div>
-          ))}
+              Close
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
