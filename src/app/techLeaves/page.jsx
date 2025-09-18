@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useGlobalContext } from "../../context/Store";
 import { firestore } from "../../context/FirbaseContext";
 import {
   createDownloadLink,
+  findEmptyValues,
   getCurrentDateInput,
   getSubmitDateInput,
   monthNamesWithIndex,
@@ -35,6 +36,7 @@ export default function UserTeachers() {
   } = useGlobalContext();
   const docId = uuid().split("-")[0].substring(0, 6);
   const access = state?.ACCESS;
+  const leaveRef = useRef();
   const isHT = state.USER.desig === "HT" ? true : false;
   const router = useRouter();
   const [month, setMonth] = useState("");
@@ -107,6 +109,7 @@ export default function UserTeachers() {
     date: todayInString(),
     sl: "",
   });
+  const [showLeaveDateAdd, setShowLeaveDateAdd] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState("");
   const [showCLAdd, setShowCLAdd] = useState(false);
   const [showClDel, setShowClDel] = useState(false);
@@ -444,6 +447,40 @@ export default function UserTeachers() {
         setLoader(false);
       });
   };
+  const uploadLeaveDateData = async () => {
+    setLoader(true);
+    setShowLeaveDateAdd(false);
+    await setDoc(
+      doc(firestore, "leaveDates", addLeaveDateData.id),
+      addLeaveDateData
+    )
+      .then(() => {
+        toast.success("Teachers Leave Date Added Successfully");
+        const x = [...leaveDateState, addLeaveDateData];
+        const monthwiseSorted = sortLeaves(x);
+        setLeaveDateState(monthwiseSorted);
+        const z =
+          monthwiseSorted.filter(
+            (el) => el.year == selectedYear && el.month == month
+          ) || [];
+        setFilteredLeaveData(z);
+        setLoader(false);
+        setAddLeaveDateData({
+          id: docId,
+          techID: "",
+          month: monthName,
+          year: yearName,
+          leaveType: "",
+          date: todayInString(),
+          sl: "",
+        });
+        setSelectedTeacher("");
+      })
+      .catch((e) => {
+        setLoader(false);
+        toast.error("Error updating data: " + e.message);
+      });
+  };
   const updateLeaveDate = async () => {
     setLoader(true);
     setShowEditLeaveDateData(false);
@@ -555,7 +592,7 @@ export default function UserTeachers() {
   }, [filteredEntry]);
   useEffect(() => {
     //eslint-disable-next-line
-  }, [techLeaves]);
+  }, [techLeaves, addLeaveDateData]);
 
   return (
     <div className="container">
@@ -581,32 +618,52 @@ export default function UserTeachers() {
         </button>
         <h3 className="text-primary">Teacher's Leave Details</h3>
         {isHT && (
-          <button
-            className="btn btn-primary m-4"
-            onClick={() => {
-              setShowAddModal(true);
-              setShowData(false);
-              setAddData({
-                ...addData,
-                id: `${monthName}-${yearName}`,
-                month: monthName,
-                year: yearName,
-                leaves: allEnry[allEnry.length - 1]?.leaves.map((el) => {
-                  return {
-                    ...el,
-                    clThisMonth: 0,
-                    olThisMonth: 0,
-                  };
-                }),
-              });
-              teacherLeaveState.filter(
-                (el) => el.id === `${monthName}-${yearName}`
-              ).length > 0 &&
-                toast.error("Data for this month already exists.");
-            }}
-          >
-            Add Month
-          </button>
+          <div>
+            <button
+              className="btn btn-primary m-4"
+              onClick={() => {
+                setShowAddModal(true);
+                setShowData(false);
+                setAddData({
+                  ...addData,
+                  id: `${monthName}-${yearName}`,
+                  month: monthName,
+                  year: yearName,
+                  leaves: allEnry[allEnry.length - 1]?.leaves.map((el) => {
+                    return {
+                      ...el,
+                      clThisMonth: 0,
+                      olThisMonth: 0,
+                    };
+                  }),
+                });
+                teacherLeaveState.filter(
+                  (el) => el.id === `${monthName}-${yearName}`
+                ).length > 0 &&
+                  toast.error("Data for this month already exists.");
+              }}
+            >
+              Add Month
+            </button>
+            <button
+              className="btn btn-success m-4"
+              onClick={() => {
+                setShowLeaveDateAdd(true);
+                setAddLeaveDateData({
+                  id: docId,
+                  techID: "",
+                  month: monthName,
+                  year: yearName,
+                  leaveType: "",
+                  date: todayInString(),
+                  sl: "",
+                });
+                setSelectedTeacher("");
+              }}
+            >
+              Add Leave Date
+            </button>
+          </div>
         )}
         <h4>Select Year</h4>
         <div className="col-md-4 mx-auto mb-3 noprint">
@@ -1045,6 +1102,253 @@ export default function UserTeachers() {
                   onClick={() => {
                     setShowAddModal(false);
                     selectedYear && showMonthSelection && setShowData(true);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showLeaveDateAdd && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                  Add Leave Date
+                </h1>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowLeaveDateAdd(false);
+                    setAddLeaveDateData({
+                      id: docId,
+                      techID: "",
+                      month: monthName,
+                      year: yearName,
+                      leaveType: "",
+                      date: todayInString(),
+                      sl: "",
+                    });
+                    setSelectedTeacher("");
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mx-auto my-2 noprint">
+                  <div className="input-group p-1">
+                    <label className="input-group-text">ID</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="ID"
+                      value={addLeaveDateData?.id}
+                      onChange={(e) => {
+                        setAddLeaveDateData({
+                          ...addLeaveDateData,
+                          id: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Select Teacher</label>
+                    <select
+                      className="form-select"
+                      defaultValue={""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value) {
+                          setAddLeaveDateData({
+                            ...addLeaveDateData,
+                            techID: value.split("+")[0],
+                            leaveType: "",
+                            sl: "",
+                          });
+                          setSelectedTeacher(value.split("+")[1]);
+                          if (leaveRef.current) {
+                            leaveRef.current.value = "";
+                          }
+                        } else {
+                          toast.error("Please Select A Date");
+                        }
+                      }}
+                      aria-label="Default select example"
+                    >
+                      <option className="text-center text-primary" value="">
+                        Select Teacher
+                      </option>
+                      {leavesArray.map((el, i) => (
+                        <option
+                          className="text-center text-success text-wrap"
+                          key={i}
+                          value={`${el.id}+${el.tname}`}
+                        >
+                          {el.tname}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="input-group mb-3">
+                    <label className="input-group-text">Date</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      defaultValue={getCurrentDateInput(addLeaveDateData.date)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const date = getSubmitDateInput(e.target.value);
+                        setAddLeaveDateData({
+                          ...addLeaveDateData,
+                          date,
+                          year: new Date(value).getFullYear(),
+                          month:
+                            monthNamesWithIndex[
+                              new Date(value).getDate() > 10
+                                ? new Date(value).getMonth()
+                                : new Date(value).getMonth() === 0
+                                ? 11
+                                : new Date(value).getMonth() + 1
+                            ].monthName,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group p-1">
+                    <label className="input-group-text">Month</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Month"
+                      value={addLeaveDateData?.month}
+                      onChange={(e) => {
+                        setAddLeaveDateData({
+                          ...addLeaveDateData,
+                          month: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="input-group p-1">
+                    <label className="input-group-text">Year</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Year"
+                      value={addLeaveDateData?.year}
+                      onChange={(e) => {
+                        setAddLeaveDateData({
+                          ...addLeaveDateData,
+                          year: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                  {addLeaveDateData.techID && (
+                    <div className="input-group mb-3">
+                      <label className="input-group-text">
+                        Select Leave Type
+                      </label>
+                      <select
+                        className="form-select"
+                        ref={leaveRef}
+                        defaultValue={""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          const techLeaveSl = leaveDateState.filter(
+                            (el) =>
+                              el.techID === addLeaveDateData.techID &&
+                              el.leaveType === value &&
+                              el.month === addLeaveDateData.month &&
+                              el.year === addLeaveDateData.year
+                          );
+                          if (value) {
+                            setAddLeaveDateData({
+                              ...addLeaveDateData,
+                              leaveType: value,
+                              sl:
+                                techLeaveSl.length > 0
+                                  ? techLeaveSl.length + 1
+                                  : 1,
+                            });
+                          } else {
+                            toast.error("Please Select A Leave Type");
+                          }
+                        }}
+                        aria-label="Default select example"
+                      >
+                        <option className="text-center text-primary" value="">
+                          Select Leave Type
+                        </option>
+                        <option
+                          className="text-center text-success text-wrap"
+                          value="CL"
+                        >
+                          CL
+                        </option>
+                        <option
+                          className="text-center text-success text-wrap"
+                          value="OL"
+                        >
+                          OL
+                        </option>
+                      </select>
+                    </div>
+                  )}
+
+                  {addLeaveDateData.leaveType && addLeaveDateData.techID && (
+                    <div className="input-group p-1">
+                      <label className="input-group-text">Leave Serial</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Leave Serial"
+                        value={addLeaveDateData?.sl}
+                        onChange={(e) => {
+                          setAddLeaveDateData({
+                            ...addLeaveDateData,
+                            sl: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={uploadLeaveDateData}
+                  disabled={!findEmptyValues(addLeaveDateData)}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => {
+                    setShowLeaveDateAdd(false);
+                    setAddLeaveDateData({
+                      id: docId,
+                      techID: "",
+                      month: monthName,
+                      year: yearName,
+                      leaveType: "",
+                      date: todayInString(),
+                      sl: "",
+                    });
+                    setSelectedTeacher("");
                   }}
                 >
                   Cancel
