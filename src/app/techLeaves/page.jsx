@@ -1313,11 +1313,11 @@ export default function UserTeachers() {
                         type="number"
                         className="form-control"
                         placeholder="Leave Serial"
-                        value={addLeaveDateData?.sl}
+                        value={addLeaveDateData?.sl || ""}
                         onChange={(e) => {
                           setAddLeaveDateData({
                             ...addLeaveDateData,
-                            sl: e.target.value,
+                            sl: parseInt(e.target.value),
                           });
                         }}
                       />
