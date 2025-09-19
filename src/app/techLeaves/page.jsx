@@ -1213,11 +1213,8 @@ export default function UserTeachers() {
                           date,
                           year: new Date(value).getFullYear(),
                           month:
-                            monthNamesWithIndex[
-                              new Date(value).getDate() > 10
-                                ? new Date(value).getMonth()
-                                : new Date(value).getMonth() + 1
-                            ].monthName,
+                            monthNamesWithIndex[new Date(value).getMonth() + 1]
+                              .monthName,
                         });
                       }}
                     />
