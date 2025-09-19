@@ -1216,8 +1216,6 @@ export default function UserTeachers() {
                             monthNamesWithIndex[
                               new Date(value).getDate() > 10
                                 ? new Date(value).getMonth()
-                                : new Date(value).getMonth() === 0
-                                ? 11
                                 : new Date(value).getMonth() + 1
                             ].monthName,
                         });
