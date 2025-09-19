@@ -1180,7 +1180,7 @@ export default function UserTeachers() {
                             leaveRef.current.value = "";
                           }
                         } else {
-                          toast.error("Please Select A Date");
+                          toast.error("Please Select A Teacher");
                         }
                       }}
                       aria-label="Default select example"
