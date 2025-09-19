@@ -443,7 +443,15 @@ export default function Navbar() {
               Student Data
             </Link>
           </li>
-
+          {/* <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/autoresult"
+              onClick={handleNavCollapse}
+            >
+              Auto Table
+            </Link>
+          </li> */}
           <li className="nav-item">
             <Link
               className="nav-link"
