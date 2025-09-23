@@ -28,17 +28,17 @@ export async function POST(request: NextRequest) {
       onError: (err) => console.log("Error:", err),
     });
     const user = await client.getEntity("+91" + phone);
-    await client.sendMessage(user, { message });
+    // In your original POST function (where you send messages), update this part:
+    const result = await client.sendMessage(user, { message: message });
 
-    // Store the message ID
+    // Store MORE information about the chat context
     let mobileOtpdata = new PhoneOtp({
       phone: phone,
       code: mobileOtp,
       expiresIn: new Date().getTime() + 300 * 1000,
-      message_id: user.id, // Store the message ID
-      peerId: user.id, // 👈 store this
+      message_id: result.id,
+      chat_id: user.id, // Store chat ID
     });
-    console.log(user);
     await mobileOtpdata.save();
     return NextResponse.json(
       { message: "OTP sent successfully", success: true },

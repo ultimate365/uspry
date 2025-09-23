@@ -29,25 +29,23 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         );
       } else {
-        // Find all OTP records for this phone
+        // In your POST function, replace the deletion part with:
         const sameUserMessages = await PhoneOtp.find({ phone });
 
-        // Delete all messages using Promise.all for parallel execution
-        await Promise.all(
-          sameUserMessages.map(async (message) => {
-            try {
-              await deleteTelegramMessage(message.phone, message.code);
-            } catch (error) {
-              console.error(
-                `Failed to delete message for code ${message.code}:`,
-                error
-              );
-              // Continue with other messages even if one fails
-            }
-          })
-        );
+        // Delete sequentially with better error handling
+        const deletionResults = [];
+        for (const message of sameUserMessages) {
+          console.log(`Processing message deletion for code: ${message.code}`);
+          const result = await deleteTelegramMessage(
+            message.phone,
+            message.code
+          );
+          deletionResults.push(result);
+        }
 
-        // Delete all OTP records for this phone from database
+        console.log("Deletion results:", deletionResults);
+
+        // Delete from database regardless of Telegram deletion success
         await PhoneOtp.deleteMany({ phone });
 
         return NextResponse.json(
@@ -79,16 +77,18 @@ export async function POST(request: NextRequest) {
 
 const deleteTelegramMessage = async (phone: string, code: number) => {
   try {
-    // Find the OTP record
-    const otpRecord = await PhoneOtp.findOne({
-      phone: phone,
-      code: code,
-    });
+    const otpRecord = await PhoneOtp.findOne({ phone, code });
 
     if (!otpRecord || !otpRecord.message_id) {
-      console.log(`No message ID found for phone ${phone} and code ${code}`);
-      return;
+      console.log(`No message record found for ${phone}`);
+      return { success: false, error: "No record found" };
     }
+
+    console.log("Attempting to delete message:", {
+      message_id: otpRecord.message_id,
+      chat_id: otpRecord.chat_id,
+      phone: phone,
+    });
 
     const client = new TelegramClient(stringSession, apiId, apiHash, {
       connectionRetries: 5,
@@ -96,28 +96,90 @@ const deleteTelegramMessage = async (phone: string, code: number) => {
 
     await client.connect();
 
-    // Note: You might not need to call client.start() again if you're already authenticated
-    // If the session is stored properly, you can skip the start process
-    await client.start({
-      phoneNumber: async () => "+91" + phone,
-      password: async () => "",
-      phoneCode: async () => {
-        throw new Error("OTP required — run setup separately to get session.");
-      },
-      onError: (err) => console.log("Error in client start:", err),
-    });
+    if (!(await client.checkAuthorization())) {
+      console.log("Client not authorized");
+      return { success: false, error: "Not authorized" };
+    }
 
-    const user = await client.getEntity(otpRecord.peerId);
+    // Method 1: Try to get the user entity
+    let targetEntity;
+    try {
+      targetEntity = await client.getEntity("+91" + phone);
+      console.log("Found user entity:", targetEntity);
+    } catch (error) {
+      console.log("Could not find user by phone, trying by ID...");
+      if (otpRecord.chat_id) {
+        targetEntity = await client.getEntity(otpRecord.chat_id);
+        console.log("Found entity by ID:", targetEntity);
+      }
+    }
 
-    // Delete the message using the stored message ID
-    await client.deleteMessages(user, [otpRecord.message_id], {
-      revoke: true,
-    });
+    if (!targetEntity) {
+      console.log("Could not find target entity");
+      return { success: false, error: "Entity not found" };
+    }
 
-    console.log(`Successfully deleted message for phone ${phone}`);
+    // Method 2: Try different deletion approaches
+    try {
+      // Approach 1: Direct deletion
+      await client.deleteMessages(
+        targetEntity,
+        [parseInt(otpRecord.message_id)],
+        {
+          revoke: true,
+        }
+      );
+      console.log("✅ Message deleted successfully");
+      return { success: true };
+    } catch (deleteError: any) {
+      console.log("Direct deletion failed, trying alternative approach...");
+
+      // Approach 2: Get the message first, then delete
+      try {
+        const messages = await client.getMessages(targetEntity, {
+          ids: [parseInt(otpRecord.message_id)],
+        });
+
+        if (messages.length > 0 && messages[0]) {
+          await client.deleteMessages(targetEntity, [messages[0].id], {
+            revoke: true,
+          });
+          console.log("✅ Message deleted via lookup approach");
+          return { success: true };
+        } else {
+          console.log("Message not found in chat - may be already deleted");
+          return { success: true, note: "Message already deleted" };
+        }
+      } catch (lookupError) {
+        console.log("Lookup approach also failed:", lookupError);
+
+        // Approach 3: Delete by iterating through messages
+        try {
+          const recentMessages = await client.getMessages(targetEntity, {
+            limit: 10,
+          });
+          const messageToDelete = recentMessages.find(
+            (msg) => msg.text && msg.text.includes(otpRecord.code.toString())
+          );
+
+          if (messageToDelete) {
+            await client.deleteMessages(targetEntity, [messageToDelete.id], {
+              revoke: true,
+            });
+            console.log("✅ Message deleted via content search");
+            return { success: true };
+          } else {
+            console.log("Could not find message by content");
+            return { success: false, error: "Message not found" };
+          }
+        } catch (finalError) {
+          console.log("All deletion approaches failed");
+          return { success: false, error: finalError };
+        }
+      }
+    }
   } catch (error: any) {
-    console.error(`Error deleting Telegram message for phone ${phone}:`, error);
-    // Don't throw the error - let the calling function handle it
-    throw error;
+    console.error(`Error deleting message for ${phone}:`, error);
+    return { success: false, error: error.message };
   }
 };
