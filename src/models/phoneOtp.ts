@@ -2,10 +2,11 @@ import mongoose from "mongoose";
 
 let phoneOtpSchema = new mongoose.Schema(
   {
-    phone: String,
-    code: String,
-    message_id: Number,
-    expiresIn: Number,
+    phone: { type: String, required: true },
+    code: { type: String, required: true },
+    message_id: { type: Number, required: true }, // Telegram message ID
+    peerId: { type: Number, required: true }, // Telegram peer (user/chat ID)
+    expiresIn: { type: Number, required: true },
   },
   {
     timestamps: true,

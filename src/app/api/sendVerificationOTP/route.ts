@@ -17,11 +17,7 @@ export async function POST(request: NextRequest) {
     });
 
     const mobileOtp = Math.floor(100000 + Math.random() * 900000);
-    let mobileOtpdata = new PhoneOtp({
-      phone: phone,
-      code: mobileOtp,
-      expiresIn: new Date().getTime() + 300 * 1000,
-    });
+
     const message = `Hello ${name} your OTP is ${mobileOtp}. Please use it before 10 Minutes.`;
     await client.start({
       phoneNumber: async () => "+91" + phone,
@@ -34,8 +30,15 @@ export async function POST(request: NextRequest) {
     const user = await client.getEntity("+91" + phone);
     await client.sendMessage(user, { message });
 
-    // const message_id = await sendToTelegram(message);
-    // mobileOtpdata.message_id = message_id;
+    // Store the message ID
+    let mobileOtpdata = new PhoneOtp({
+      phone: phone,
+      code: mobileOtp,
+      expiresIn: new Date().getTime() + 300 * 1000,
+      message_id: user.id, // Store the message ID
+      peerId: user.id, // 👈 store this
+    });
+    console.log(user);
     await mobileOtpdata.save();
     return NextResponse.json(
       { message: "OTP sent successfully", success: true },
