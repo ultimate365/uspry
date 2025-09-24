@@ -47,6 +47,8 @@ export default function MDMData() {
     setMonthlyReportState,
     StudentDataState,
     setStudentDataState,
+    transactionState,
+    setTransactionState,
   } = useGlobalContext();
   const router = useRouter();
   const access = state?.ACCESS;
@@ -67,7 +69,6 @@ export default function MDMData() {
   const [allEnry, setAllEnry] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [moreFilteredData, setMoreFilteredData] = useState([]);
-  const [monthlyReportData, setMonthlyReportData] = useState([]);
   const [thisMonthMDMAllowance, setThisMonthMDMAllowance] =
     useState(PREV_MDM_COST);
   const [ppTotalMeal, setPpTotalMeal] = useState("");
@@ -172,7 +173,28 @@ export default function MDMData() {
   };
   const [input1Ref, setInput1Focus] = UseFocus();
   const [input2Ref, setInput2Focus] = UseFocus();
-
+  const [thisMonthTransaction, setThisMonthTransaction] = useState([
+    {
+      id: "",
+      accountNumber: "",
+      amount: "",
+      month: "",
+      year: "",
+      purpose: "",
+      type: "",
+      transactionPurpose: "",
+      date: "",
+      ppOB: "",
+      ppRC: "",
+      ppCB: "",
+      ppEX: "",
+      pryOB: "",
+      pryRC: "",
+      pryCB: "",
+      pryEX: "",
+      createdAt: "",
+    },
+  ]);
   const submitData = async () => {
     if (validForm()) {
       setLoader(true);
@@ -546,7 +568,6 @@ export default function MDMData() {
     }
   };
   const handleMonthChange = (month) => {
-    console.log("called");
     let x = [];
     let y = [];
     allEnry.map((entry) => {
@@ -636,6 +657,10 @@ export default function MDMData() {
     );
     setShowDataTable(true);
     setMonthText(month.monthName);
+    const thisMTrans = transactionState.filter(
+      (item) => item.month === month.monthName && item.year === selectedYear
+    );
+    setThisMonthTransaction(thisMTrans);
   };
 
   const submitRice = async () => {
@@ -904,6 +929,28 @@ export default function MDMData() {
       toast.error("Something went Wrong!");
     }
   };
+
+  const getTransactions = async () => {
+    setLoader(true);
+    const querySnapshot = await getDocs(
+      query(collection(firestore, "transactions"))
+    );
+    const data = querySnapshot.docs
+      .map((doc) => ({
+        // doc.data() is never undefined for query doc snapshots
+        ...doc.data(),
+        id: doc.id,
+      }))
+      .sort((a, b) => b.createdAt - a.createdAt);
+    setLoader(false);
+    setTransactionState(data);
+  };
+  useEffect(() => {
+    if (transactionState.length === 0) {
+      getTransactions();
+    }
+    //eslint-disable-next-line
+  }, []);
   useEffect(() => {}, [
     allEnry,
     filteredData,
@@ -919,6 +966,7 @@ export default function MDMData() {
     monthlyPPCost,
     monthlyPRYCost,
     filteredRiceData,
+    thisMonthTransaction,
   ]);
   useEffect(() => {
     if (riceState.length === 0) {
@@ -1552,7 +1600,6 @@ export default function MDMData() {
                     if (monthlyReportState.length === 0) {
                       getMonthlyData();
                     } else {
-                      setMonthlyReportData(monthlyReportState);
                       const thisMonthlyData = monthlyReportState.filter(
                         (data) => data.id === monthYearID
                       );
@@ -1616,6 +1663,102 @@ export default function MDMData() {
               {showSubmitMonthlyReport && (
                 <div className="my-2">
                   <h4 className="text-primary">Submit Monthly Report</h4>
+                  {
+                    thisMonthTransaction[0].id && (
+                      <div>
+                        {thisMonthTransaction.map((row, i) => (
+                          <div
+                            className={`alert alert-${
+                              row.type === "CREDIT" ? "success" : "danger"
+                            } m-2 p-2 rounded`}
+                            key={i}
+                          >
+                            <p className="m-0 p-0">
+                              <strong>Sl.:</strong> {i + 1}
+                            </p>
+                            <p className="m-0 p-0">
+                              <strong>Date:</strong> {row.date}
+                            </p>
+                            <p className="m-0 p-0">
+                              <strong>Type:</strong> {row.type}
+                            </p>
+                            <p className="m-0 p-0">
+                              <strong>Purpose:</strong> {row.purpose}
+                            </p>
+
+                            <p className="m-0 p-0">
+                              <strong>Opening Balance:</strong>{" "}
+                              {row.openingBalance}
+                            </p>
+                            <p className="m-0 p-0">
+                              <strong>Transaction Amount:</strong> {row.amount}
+                            </p>
+                            <p className="m-0 p-0">
+                              <strong>Closing Balance:</strong>{" "}
+                              {row.closingBalance}
+                            </p>
+
+                            {row.type == "CREDIT" ? (
+                              <div>
+                                <p className="m-0 p-0">
+                                  <strong>PP Opening Balance:</strong>{" "}
+                                  {row.ppOB}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>PP Amount Received: </strong>
+                                  {row.ppRC}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>PP Closing Balance:</strong>{" "}
+                                  {row.ppCB}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>Primary Opening Balance:</strong>{" "}
+                                  {row.pryOB}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong> Primary Amount Received: </strong>
+                                  {row.pryRC}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>Primary Closing Balance: </strong>{" "}
+                                  {row.pryCB}
+                                </p>
+                              </div>
+                            ) : (
+                              <div>
+                                <p className="m-0 p-0">
+                                  <strong>PP Opening Balance:</strong>{" "}
+                                  {row.ppOB}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>PP Amount Expended: </strong>
+                                  {row.ppEX}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>PP Closing Balance:</strong>{" "}
+                                  {row.ppCB}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>Primary Opening Balance:</strong>{" "}
+                                  {row.pryOB}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong> Primary Amount Expended: </strong>{" "}
+                                  Rs. {row.pryEX}
+                                </p>
+                                <p className="m-0 p-0">
+                                  <strong>Primary Closing Balance: </strong>{" "}
+                                  {row.pryCB}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )
+                    // : null
+                  }
                   <div className="col-md-6 mx-auto my-2">
                     <form action="">
                       <div className="form-group m-2">

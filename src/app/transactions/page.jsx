@@ -194,6 +194,7 @@ export default function Transactions() {
       if (z.length > 0) {
         y = y + `-${z.length}`;
       }
+      y = y.split(" ")?.join("-");
       const transaction = {
         accountName: stateObject.accountName,
         accountNumber: stateObject.accountNumber,
