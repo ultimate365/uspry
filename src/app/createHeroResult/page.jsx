@@ -648,57 +648,66 @@ export default function CreateHeroResult() {
                   </div>
                 </div>
 
-                <div className="row">
-                  {[1, 2, 3].map((part) => (
-                    <div className="col-md-4" key={part}>
-                      <div className="card mb-4">
-                        <div className="card-header bg-primary text-white">
-                          Part {part}
-                        </div>
-                        <div className="card-body">
-                          {subjects.map((subject) => {
-                            const mark =
-                              viewStudent[`${subject.shortName}${part}`];
-                            return (
-                              mark !== undefined &&
-                              mark !== 0 && (
-                                <p
-                                  key={subject.shortName}
-                                  className="d-flex justify-content-between"
-                                >
-                                  <span>{subject.fullName}:</span>
-                                  <span>{mark}</span>
-                                </p>
-                              )
-                            );
-                          })}
-                          <h6 className="text-success">
-                            Total Marks:{" "}
-                            {part === 1
-                              ? viewStudent.ben1 +
-                                viewStudent.eng1 +
-                                viewStudent.math1 +
-                                viewStudent.work1 +
-                                viewStudent.health1 +
-                                viewStudent.envs1
-                              : part === 2
-                              ? viewStudent.ben2 +
-                                viewStudent.eng2 +
-                                viewStudent.math2 +
-                                viewStudent.work2 +
-                                viewStudent.health2 +
-                                viewStudent.envs2
-                              : viewStudent.ben3 +
-                                viewStudent.eng3 +
-                                viewStudent.math3 +
-                                viewStudent.work3 +
-                                viewStudent.health3 +
-                                viewStudent.envs3}
-                          </h6>
+                <div className="row justify-content-center align-items-stretch">
+                  {[1, 2, 3].map((part) => {
+                    const part1total =
+                      viewStudent.ben1 +
+                      viewStudent.eng1 +
+                      viewStudent.math1 +
+                      viewStudent.work1 +
+                      viewStudent.health1 +
+                      viewStudent.envs1;
+                    const part2total =
+                      viewStudent.ben2 +
+                      viewStudent.eng2 +
+                      viewStudent.math2 +
+                      viewStudent.work2 +
+                      viewStudent.health2 +
+                      viewStudent.envs2;
+                    const part3total =
+                      viewStudent.ben3 +
+                      viewStudent.eng3 +
+                      viewStudent.math3 +
+                      viewStudent.work3 +
+                      viewStudent.health3 +
+                      viewStudent.envs3;
+                    const total =
+                      part === 1
+                        ? part1total
+                        : part === 2
+                        ? part2total
+                        : part3total;
+                    return total > 0 ? (
+                      <div className="col-md-4 text-center" key={part}>
+                        <div className="card mb-4">
+                          <div className="card-header bg-primary text-white">
+                            Part {part}
+                          </div>
+                          <div className="card-body">
+                            {subjects.map((subject) => {
+                              const mark =
+                                viewStudent[`${subject.shortName}${part}`];
+                              return (
+                                mark !== undefined &&
+                                mark !== 0 && (
+                                  <p
+                                    key={subject.shortName}
+                                    className="d-flex justify-content-between"
+                                  >
+                                    <span>{subject.fullName}:</span>
+                                    <span>{mark}</span>
+                                  </p>
+                                )
+                              );
+                            })}
+                            <h6 className="text-success">
+                              Total Marks: {total}
+                            </h6>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ) : null;
+                  })}
                 </div>
 
                 <div className="text-center mt-3">
