@@ -282,15 +282,19 @@ export default function GetStudentID() {
             Clear
           </button>
         </div>
-        {showData && (
-          <div>
-            <h5>Student Code: {studentDetails?.student_code}</h5>
-            <h5>Student Name: {studentDetails?.studentname}</h5>
-            <h5>Father Name: {studentDetails?.fathername}</h5>
-            <h5>Mother Name: {studentDetails?.mothername}</h5>
-            <h5>DOB: {dateObjToDateFormat(new Date(studentDetails?.dob))}</h5>
-          </div>
-        )}
+        {showData ? (
+          studentDetails.student_code ? (
+            <div>
+              <h5>Student Code: {studentDetails?.student_code}</h5>
+              <h5>Student Name: {studentDetails?.studentname}</h5>
+              <h5>Father Name: {studentDetails?.fathername}</h5>
+              <h5>Mother Name: {studentDetails?.mothername}</h5>
+              <h5>DOB: {dateObjToDateFormat(new Date(studentDetails?.dob))}</h5>
+            </div>
+          ) : (
+            <h5 className="text-danger">No Data Found</h5>
+          )
+        ) : null}
       </div>
 
       {loader && <Loader />}

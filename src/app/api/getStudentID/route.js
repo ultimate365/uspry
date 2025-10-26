@@ -30,6 +30,7 @@ export async function POST(req) {
       });
 
       try {
+        const time = Date.now();
         const response = await axios.post(
           "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id_by_aadhaar",
           form,
@@ -41,10 +42,17 @@ export async function POST(req) {
           }
         );
 
-        return NextResponse.json({
-          success: true,
-          data: response.data,
-        });
+        if (Date.now() - time <= 10000) {
+          return NextResponse.json({
+            success: true,
+            data: response.data,
+          });
+        } else {
+          return NextResponse.json({
+            success: false,
+            message: "Failed to fetch data due to SSL or network issue.",
+          });
+        }
       } catch (error) {
         console.error("POST request failed:", error.message);
         return NextResponse.json({
@@ -65,6 +73,7 @@ export async function POST(req) {
       });
 
       try {
+        const time = Date.now();
         const response = await axios.post(
           "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id_by_gurdian_mobile_no",
           form,
@@ -75,11 +84,17 @@ export async function POST(req) {
             httpsAgent,
           }
         );
-
-        return NextResponse.json({
-          success: true,
-          data: response.data,
-        });
+        if (Date.now() - time <= 10000) {
+          return NextResponse.json({
+            success: true,
+            data: response.data,
+          });
+        } else {
+          return NextResponse.json({
+            success: false,
+            message: "Failed to fetch data due to SSL or network issue.",
+          });
+        }
       } catch (error) {
         console.error("POST request failed:", error.message);
         return NextResponse.json({
@@ -102,6 +117,7 @@ export async function POST(req) {
       });
 
       try {
+        const time = Date.now();
         const response = await axios.post(
           "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id",
           form,
@@ -113,10 +129,17 @@ export async function POST(req) {
           }
         );
 
-        return NextResponse.json({
-          success: true,
-          data: response.data,
-        });
+        if (Date.now() - time <= 10000) {
+          return NextResponse.json({
+            success: true,
+            data: response.data,
+          });
+        } else {
+          return NextResponse.json({
+            success: false,
+            message: "Failed to fetch data due to SSL or network issue.",
+          });
+        }
       } catch (error) {
         console.error("POST request failed:", error.message);
         return NextResponse.json({
