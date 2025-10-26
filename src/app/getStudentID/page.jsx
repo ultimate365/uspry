@@ -37,7 +37,6 @@ export default function GetStudentID() {
         type,
       })
       .then((data) => {
-        console.log(data.data.data);
         setLoader(false);
         setShowData(true);
         if (type === "aadhaar" || type === "mobile") {
@@ -285,11 +284,11 @@ export default function GetStudentID() {
         </div>
         {showData && (
           <div>
-            <h5>Student Code: {studentDetails.student_code}</h5>
-            <h5>Student Name: {studentDetails.studentname}</h5>
-            <h5>Father Name: {studentDetails.fathername}</h5>
-            <h5>Mother Name: {studentDetails.mothername}</h5>
-            <h5>DOB: {dateObjToDateFormat(new Date(studentDetails.dob))}</h5>
+            <h5>Student Code: {studentDetails?.student_code}</h5>
+            <h5>Student Name: {studentDetails?.studentname}</h5>
+            <h5>Father Name: {studentDetails?.fathername}</h5>
+            <h5>Mother Name: {studentDetails?.mothername}</h5>
+            <h5>DOB: {dateObjToDateFormat(new Date(studentDetails?.dob))}</h5>
           </div>
         )}
       </div>
