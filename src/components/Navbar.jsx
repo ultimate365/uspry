@@ -423,7 +423,15 @@ export default function Navbar() {
               Home
             </Link>
           </li>
-
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              href="/getStudentID"
+              onClick={handleNavCollapse}
+            >
+              Get Student ID
+            </Link>
+          </li>
           <li className="nav-item">
             <Link
               className="nav-link"

@@ -37,10 +37,17 @@ export default function GetStudentID() {
         type,
       })
       .then((data) => {
+        const res = data?.data?.data;
         setLoader(false);
         setShowData(true);
         if (type === "aadhaar" || type === "mobile") {
-          setStudentDetails(data.data.data);
+          setStudentDetails({
+            student_code: res.student_code ? res.student_code : "",
+            studentname: res.studentname ? res.studentname : "",
+            fathername: res.fathername ? res.fathername : "",
+            mothername: res.mothername ? res.mothername : "",
+            dob: res.dob ? res.dob : "",
+          });
           setName("");
           setFather_name("");
           setMother_name("");
@@ -49,7 +56,7 @@ export default function GetStudentID() {
           setGurdian_mobile_number("");
         } else {
           setStudentDetails({
-            student_code: data.data.data.student_code,
+            student_code: res.student_code ? res.student_code : "",
             studentname: name,
             fathername: father_name,
             mothername: mother_name,
@@ -283,7 +290,7 @@ export default function GetStudentID() {
           </button>
         </div>
         {showData ? (
-          studentDetails.student_code ? (
+          studentDetails?.student_code ? (
             <div>
               <h5>Student Code: {studentDetails?.student_code}</h5>
               <h5>Student Name: {studentDetails?.studentname}</h5>
