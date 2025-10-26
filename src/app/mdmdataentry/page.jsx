@@ -1664,7 +1664,7 @@ export default function MDMData() {
                 <div className="my-2">
                   <h4 className="text-primary">Submit Monthly Report</h4>
                   {
-                    thisMonthTransaction[0].id && (
+                    thisMonthTransaction.length > 0 && (
                       <div>
                         {thisMonthTransaction.map((row, i) => (
                           <div
