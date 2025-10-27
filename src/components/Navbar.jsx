@@ -423,7 +423,7 @@ export default function Navbar() {
               Home
             </Link>
           </li>
-          <li className="nav-item">
+          {/*   <li className="nav-item">
             <Link
               className="nav-link"
               href="/getStudentID"
@@ -432,6 +432,7 @@ export default function Navbar() {
               Get Student ID
             </Link>
           </li>
+          */}
           <li className="nav-item">
             <Link
               className="nav-link"
