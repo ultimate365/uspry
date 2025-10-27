@@ -1,76 +1,83 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 import https from "https";
-import FormData from "form-data";
+import qs from "querystring";
 
-// ✅ Indian proxy servers (you can add more)
-const INDIAN_PROXIES = [process.env.SCRAPE_URL].filter(Boolean);
-
-// ✅ Get a random Indian proxy
-const getIndianProxy = () => {
-  if (INDIAN_PROXIES.length === 0) return null;
-  return INDIAN_PROXIES[Math.floor(Math.random() * INDIAN_PROXIES.length)];
+const SCRAPEDO_CONFIG = {
+  token: process.env.SCRAPE_URL,
 };
 
-// ✅ Fixed HTTPS agent with proxy support
-const createHttpsAgent = (proxyUrl = null) => {
-  const baseConfig = {
-    rejectUnauthorized: false,
-    secureOptions: 0x4, // legacy renegotiation allowed
-  };
-
-  if (proxyUrl) {
-    const { hostname, port, username, password } = new URL(proxyUrl);
-    baseConfig.proxy = {
-      host: hostname,
-      port: parseInt(port),
-      ...(username &&
-        password && {
-          proxyAuth: `${username}:${password}`,
-        }),
-    };
+// Method 1: Scrape.do proxy
+const fetchWithScrapeDo = async (targetUrl, formData) => {
+  if (!SCRAPEDO_CONFIG.token) {
+    throw new Error("Scrape.do token missing");
   }
 
-  return new https.Agent(baseConfig);
-};
+  const encodedUrl = encodeURIComponent(targetUrl);
+  const scrapeDoUrl = `https://api.scrape.do?token=${SCRAPEDO_CONFIG.token}&url=${encodedUrl}`;
 
-// ✅ Helper function to send POST request with proxy
-const fetchStudentData = async (url, form) => {
-  const startTime = Date.now();
-
-  // Try with proxy first, fallback to direct connection
-  const proxyUrl = getIndianProxy();
-  const httpsAgent = createHttpsAgent(proxyUrl);
-
-  console.log(`Making request to ${url} via proxy: ${proxyUrl ? "Yes" : "No"}`);
-
-  const response = await axios.post(url, form, {
+  const response = await axios.post(scrapeDoUrl, qs.stringify(formData), {
     headers: {
-      ...form.getHeaders(),
-      // Add headers to appear more like a Indian browser request
+      "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
       "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
-      Accept: "application/json, text/plain, */*",
-      "Cache-Control": "no-cache",
     },
-    httpsAgent,
-    timeout: 30000,
-    // Additional axios configuration for Indian IP
-    withCredentials: true,
-    decompress: true,
+    timeout: 45000,
   });
-
-  // Check if it took too long
-  if (Date.now() - startTime > 20000) {
-    throw new Error("Request timed out or SSL handshake too slow.");
-  }
 
   return response.data;
 };
 
+// Method 2: Direct request with Indian headers
+const fetchDirect = async (targetUrl, formData) => {
+  console.log("Trying direct connection...");
+
+  const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+    secureOptions: 0x4,
+  });
+
+  const response = await axios.post(targetUrl, qs.stringify(formData), {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
+      Accept: "application/json, text/plain, */*",
+      Origin: "https://banglarshiksha.wb.gov.in",
+      Referer: "https://banglarshiksha.wb.gov.in/",
+    },
+    httpsAgent,
+    timeout: 90000,
+  });
+
+  return response.data;
+};
+
+// Main function with fallback
+const fetchStudentData = async (targetUrl, formData) => {
+  try {
+    console.log("Trying Scrape.do proxy...");
+    const data = await fetchWithScrapeDo(targetUrl, formData);
+    return { data, method: "scrape.do" };
+  } catch (error) {
+    console.log("Scrape.do failed, trying direct connection...");
+    try {
+      const data = await fetchDirect(targetUrl, formData);
+      return { data, method: "direct" };
+    } catch (directError) {
+      console.log("Direct connection also failed");
+      throw new Error(
+        `All methods failed: Scrape.do - ${error.message}, Direct - ${directError.message}`
+      );
+    }
+  }
+};
+
 export async function POST(request) {
   try {
+    const body = await request.json();
     const {
       type,
       aadhaar_number,
@@ -79,68 +86,79 @@ export async function POST(request) {
       father_name,
       mother_name,
       dob,
-    } = await request.json();
+    } = body;
 
-    const form = new FormData();
-    form.append("ci_csrf_token", "");
-    form.append("pass_out_status_id", "1");
-    form.append("district_id", "20");
+    // Form data construction (same as before)
+    const formData = {
+      ci_csrf_token: "",
+      pass_out_status_id: "1",
+      district_id: "20",
+    };
 
-    let url = "";
-
+    let targetUrl = "";
     switch (type) {
       case "aadhaar":
-        form.append("aadhaar_number", aadhaar_number);
-        url =
+        if (!aadhaar_number) {
+          return NextResponse.json(
+            { success: false, message: "Aadhaar number required" },
+            { status: 400 }
+          );
+        }
+        formData.aadhaar_number = aadhaar_number;
+        targetUrl =
           "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id_by_aadhaar";
         break;
-
       case "mobile":
-        form.append("gurdian_mobile_number", gurdian_mobile_number);
-        form.append("name", name);
-        url =
+        if (!gurdian_mobile_number || !name) {
+          return NextResponse.json(
+            { success: false, message: "Mobile and name required" },
+            { status: 400 }
+          );
+        }
+        formData.gurdian_mobile_number = gurdian_mobile_number;
+        formData.name = name;
+        targetUrl =
           "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id_by_gurdian_mobile_no";
         break;
-
       case "details":
-        form.append("name", name);
-        form.append("father_name", father_name);
-        form.append("mother_name", mother_name);
-        form.append("dob", dob);
-        url = "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id";
+        if (!name || !father_name || !mother_name || !dob) {
+          return NextResponse.json(
+            { success: false, message: "All details required" },
+            { status: 400 }
+          );
+        }
+        formData.name = name;
+        formData.father_name = father_name;
+        formData.mother_name = mother_name;
+        formData.dob = dob;
+        targetUrl = "https://banglarshiksha.wb.gov.in/Ajax_ep/ajax_get_bs_id";
         break;
-
       default:
         return NextResponse.json(
-          {
-            success: false,
-            message: "Invalid request type.",
-          },
+          { success: false, message: "Invalid type" },
           { status: 400 }
         );
     }
 
-    const data = await fetchStudentData(url, form);
+    console.log(`Making ${type} request to ${targetUrl}`);
+
+    const { data, method } = await fetchStudentData(targetUrl, formData);
 
     return NextResponse.json({
       success: true,
       data,
-      via_proxy: !!getIndianProxy(),
+      method_used: method,
+      via_proxy: method === "scrape.do",
     });
   } catch (error) {
-    console.error("POST request failed:", {
-      message: error.message,
-      code: error.code,
-      url: error.config?.url,
-    });
+    console.error("All request methods failed:", error.message);
 
     return NextResponse.json(
       {
         success: false,
-        message:
-          error.message ||
-          "Failed to fetch data due to SSL, timeout, or network issue.",
-        via_proxy: !!getIndianProxy(),
+        message: `All connection methods failed: ${error.message}`,
+        suggestion:
+          "The target website might be temporarily unavailable or blocking requests. Please try again later.",
       },
       { status: 500 }
     );
