@@ -4,13 +4,7 @@ import https from "https";
 import FormData from "form-data";
 
 // ✅ Indian proxy servers (you can add more)
-const INDIAN_PROXIES = [
-  "http://103.156.17.32:80",
-  "http://103.159.90.14:83",
-  "http://103.174.45.58:8080",
-  "http://20.204.212.16:3129",
-  "http://103.178.42.14:8181",
-].filter(Boolean);
+const INDIAN_PROXIES = [process.env.SCRAPE_URL].filter(Boolean);
 
 // ✅ Get a random Indian proxy
 const getIndianProxy = () => {
