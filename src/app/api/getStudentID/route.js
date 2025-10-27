@@ -3,22 +3,71 @@ import axios from "axios";
 import https from "https";
 import FormData from "form-data";
 
-// ✅ Fixed HTTPS agent — works in Node 18–22+
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
-  secureOptions: 0x4, // legacy renegotiation allowed
-});
+// ✅ Indian proxy servers (you can add more)
+const INDIAN_PROXIES = [
+  "http://103.156.17.32:80",
+  "http://103.159.90.14:83",
+  "http://103.174.45.58:8080",
+  "http://20.204.212.16:3129",
+  "http://103.178.42.14:8181",
+].filter(Boolean);
 
-// ✅ Helper function to send POST request safely
+// ✅ Get a random Indian proxy
+const getIndianProxy = () => {
+  if (INDIAN_PROXIES.length === 0) return null;
+  return INDIAN_PROXIES[Math.floor(Math.random() * INDIAN_PROXIES.length)];
+};
+
+// ✅ Fixed HTTPS agent with proxy support
+const createHttpsAgent = (proxyUrl = null) => {
+  const baseConfig = {
+    rejectUnauthorized: false,
+    secureOptions: 0x4, // legacy renegotiation allowed
+  };
+
+  if (proxyUrl) {
+    const { hostname, port, username, password } = new URL(proxyUrl);
+    baseConfig.proxy = {
+      host: hostname,
+      port: parseInt(port),
+      ...(username &&
+        password && {
+          proxyAuth: `${username}:${password}`,
+        }),
+    };
+  }
+
+  return new https.Agent(baseConfig);
+};
+
+// ✅ Helper function to send POST request with proxy
 const fetchStudentData = async (url, form) => {
   const startTime = Date.now();
+
+  // Try with proxy first, fallback to direct connection
+  const proxyUrl = getIndianProxy();
+  const httpsAgent = createHttpsAgent(proxyUrl);
+
+  console.log(`Making request to ${url} via proxy: ${proxyUrl ? "Yes" : "No"}`);
+
   const response = await axios.post(url, form, {
-    headers: form.getHeaders(),
+    headers: {
+      ...form.getHeaders(),
+      // Add headers to appear more like a Indian browser request
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
+      Accept: "application/json, text/plain, */*",
+      "Cache-Control": "no-cache",
+    },
     httpsAgent,
-    timeout: 30000, // 30s to handle slow SSL handshake
+    timeout: 30000,
+    // Additional axios configuration for Indian IP
+    withCredentials: true,
+    decompress: true,
   });
 
-  // Check if it took too long (network or SSL issues)
+  // Check if it took too long
   if (Date.now() - startTime > 20000) {
     throw new Error("Request timed out or SSL handshake too slow.");
   }
@@ -82,12 +131,13 @@ export async function POST(request) {
     return NextResponse.json({
       success: true,
       data,
+      via_proxy: !!getIndianProxy(),
     });
   } catch (error) {
     console.error("POST request failed:", {
       message: error.message,
       code: error.code,
-      stack: error.stack,
+      url: error.config?.url,
     });
 
     return NextResponse.json(
@@ -96,6 +146,7 @@ export async function POST(request) {
         message:
           error.message ||
           "Failed to fetch data due to SSL, timeout, or network issue.",
+        via_proxy: !!getIndianProxy(),
       },
       { status: 500 }
     );

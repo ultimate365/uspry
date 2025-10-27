@@ -18,6 +18,7 @@ const nextConfig = {
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
+    serverComponentsExternalPackages: ["axios", "form-data"],
   },
 };
 
