@@ -546,10 +546,10 @@ export default function MDMData() {
       allEnry.map((entry) => {
         const entryYear = entry.date.split("-")[2];
         const entryMonth = entry.date.split("-")[1];
-        if (entryYear === selectedValue) {
+        if (entryYear == selectedValue) {
           x.push(entry);
         }
-        if (entryYear === selectedValue) {
+        if (entryYear == selectedValue) {
           monthNamesWithIndex.map((month) => {
             if (entryMonth === month.index) {
               y.push(month);
@@ -573,14 +573,14 @@ export default function MDMData() {
     allEnry.map((entry) => {
       const entryYear = entry.date.split("-")[2];
       const entryMonth = entry.date.split("-")[1];
-      if (entryYear === selectedYear && entryMonth === month.index) {
+      if (entryYear == selectedYear && entryMonth === month.index) {
         return x.push(entry);
       }
     });
     riceData.map((entry) => {
       const entryYear = entry.date.split("-")[2];
       const entryMonth = entry.date.split("-")[1];
-      if (entryYear === selectedYear && entryMonth === month.index) {
+      if (entryYear == selectedYear && entryMonth === month.index) {
         return y.push(entry);
       }
     });
@@ -658,7 +658,7 @@ export default function MDMData() {
     setShowDataTable(true);
     setMonthText(month.monthName);
     const thisMTrans = transactionState.filter(
-      (item) => item.month === month.monthName && item.year === selectedYear
+      (item) => item.month === month.monthName && item.year == selectedYear
     );
     setThisMonthTransaction(thisMTrans);
   };
