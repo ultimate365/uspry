@@ -17,7 +17,11 @@ import {
   CIRCLE,
   SCHOOLADDRESS,
 } from "@/modules/constants";
-import { titleCase, dobToWords } from "../modules/calculatefunctions";
+import {
+  titleCase,
+  dobToWords,
+  todayInString,
+} from "../modules/calculatefunctions";
 const width = 2480;
 const height = 3508;
 
@@ -47,13 +51,21 @@ export default function SchoolCertificate({ data }) {
           <Text style={styles.textBold}>Address: {SCHOOLADDRESS}</Text>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "baseline",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-end",
               alignContent: "center",
               margin: 20,
             }}
           >
+            <Text
+              style={[
+                styles.textItalic,
+                { marginRight: 20, marginBottom: -10 },
+              ]}
+            >
+              {todayInString()}
+            </Text>
             <Text style={styles.textItalic}>
               Date: ...................................
             </Text>
@@ -231,10 +243,23 @@ export default function SchoolCertificate({ data }) {
           <View
             style={{
               flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              alignContent: "center",
+              width: "90%",
+              marginBottom: 15,
+              marginTop: 20,
+            }}
+          >
+            <Text style={styles.text}>Reference No.: {ref}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
               justifyContent: "flex-end",
               alignItems: "center",
               alignContent: "center",
-              marginTop: 50,
+              marginTop: 30,
               marginRight: 50,
             }}
           >
