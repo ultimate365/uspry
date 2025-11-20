@@ -36,182 +36,67 @@ import {
   WARD_NO,
 } from "@/modules/constants";
 
-/**
- * ReturnPrint
- * - Accepts `data` prop which can be:
- *    - an object { students, teachers, ... }
- *    - an array [ { students, teachers, ... } ] (will pick first item)
- *
- * Student data expected format (flat keys per grade), example:
- * students.pp.GeneralBoys, students.pp.GeneralGirls, students.pp.GeneralTotal
- * or fallback to students.pp.Boys / Girls / Total
- */
-
-const BASE_FONT_SIZE = 8;
-const HEADER_FONT_SIZE = 10;
-const TITLE_FONT_SIZE = 12;
 const width = 2480;
 const height = 3508;
+
 export default function ReturnPrint({ data }) {
-  // support passing an array or single object
-  const payload = Array.isArray(data) ? data[0] || {} : data || {};
-
   const {
-    students = {},
-    inspection = {},
-    remarks = "",
-    workingDays = "",
-    teachers = [],
-    year = "",
-    id = "",
-    month = "",
-  } = payload;
-  // Date display component (keeps earlier behavior)
-  const DateDisplay = ({ dateString }) => {
-    if (!dateString) return <Text style={styles.text}>-</Text>;
-    const parts = dateString.split("-");
-    return (
-      <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.title2, { marginTop: 2 }]}>{parts[0]}</Text>
-        <View style={styles.datePart}>
-          <Text style={[styles.title2, styles.underlined]}>{parts[1]}</Text>
-          <Text style={styles.title2}>{parts[2]}</Text>
-        </View>
-      </View>
-    );
-  };
-
-  // Teacher table header (kept mostly same)
-  const TeacherTableHeader = () => (
-    <View style={[styles.tableStartView, styles.teacherHeader]}>
-      <View style={[styles.colSerial]}>
-        <Text style={styles.text}>Sl. No.</Text>
-      </View>
-      <View style={[styles.colName]}>
-        <Text style={styles.text}>Name of Teacher</Text>
-      </View>
-      <View style={[styles.colDesignation]}>
-        <Text style={styles.text4}>Desig-{"\n"}nation</Text>
-      </View>
-      <View style={[styles.colEducation]}>
-        <Text style={styles.text4}>Educational{"\n"}Qualification</Text>
-      </View>
-      <View style={[styles.colDob]}>
-        <Text style={styles.text}>
-          Date{"\n"}of{"\n"}Birth
-        </Text>
-      </View>
-      <View style={[styles.colJoining]}>
-        <Text style={styles.text}>
-          Joining{"\n"}date as{"\n"}approved{"\n"}teacher
-        </Text>
-      </View>
-      <View style={[styles.colCurrentJoining]}>
-        <Text style={styles.text}>
-          Joining{"\n"}date in this{"\n"}school
-        </Text>
-      </View>
-      <View style={[styles.colCast]}>
-        <Text style={[styles.text, { fontSize: 9 }]}>
-          S.C./ S.T./ O.B.C.-A/ O.B.C.-B/ PH
-        </Text>
-      </View>
-
-      <View style={[styles.colCasualLeave]}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.text}>Casual Leave</Text>
-        </View>
-        <View style={styles.splitSection}>
-          <View style={[styles.splitCell, styles.borderRight]}>
-            <Text style={styles.text}>In this month</Text>
-          </View>
-          <View style={styles.splitCell}>
-            <Text style={styles.text}>From 1st Jan.</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={[styles.colOtherLeave]}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.text}>Other Leave</Text>
-        </View>
-        <View style={styles.complexSection}>
-          <View style={[styles.smallSplitCell, styles.borderRight]}>
-            <Text style={styles.text4}>
-              In{"\n"}this{"\n"}month
-            </Text>
-          </View>
-          <View style={[styles.smallSplitCell, styles.borderRight]}>
-            <Text style={styles.text4}>
-              From{"\n"}1st{"\n"}Jan.
-            </Text>
-          </View>
-          <View style={styles.leaveTypes}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.text}>From 1st Jan.</Text>
-            </View>
-            <View style={styles.leaveSplit}>
-              <View style={[styles.leaveTypeCell, styles.borderRight]}>
-                <Text style={styles.text4}>Full Pay</Text>
-              </View>
-              <View style={[styles.leaveTypeCell, styles.borderRight]}>
-                <Text style={styles.text4}>Half Pay</Text>
-              </View>
-              <View style={[styles.leaveTypeCell, { borderRightWidth: 0 }]}>
-                <Text style={styles.text4}>Without Pay</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      <View style={[styles.colWorkingDays]}>
-        <Text style={styles.text5}>
-          Total working days in this month {"\n"}({workingDays})
-        </Text>
-      </View>
-      <View style={[styles.colSignature]}>
-        <Text style={styles.text}>Full signature of teacher with date</Text>
-      </View>
-      <View style={[styles.colRemarks]}>
-        <Text style={[styles.text5, { fontSize: 6 }]}>Remarks</Text>
-      </View>
-    </View>
-  );
-
+    students,
+    inspection,
+    remarks,
+    workingDays,
+    teachers,
+    year,
+    id,
+    month,
+  } = data;
   return (
-    // <PDFViewer
-    //   style={{
-    //     width: width / 3,
-    //     height: height / 3,
-    //   }}
-    // >
-    <Document
-      style={styles.document}
-      title={`${id || "Return"} Teachers Return`}
-    >
-      {/* Teacher Page */}
+    <Document style={{ margin: 5, padding: 5 }} title={`${id} Teachers Return`}>
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.pageMainView}>
           <Text style={styles.titleMain}>
             HOWRAH DISTRICT PRIMARY SCHOOL COUNCIL
           </Text>
-          <Text style={[styles.title, styles.sectionSpacing]}>
+          <Text style={[styles.title, { marginVertical: 10 }]}>
             MONTHLY RETURN OF SCHOOL
           </Text>
-
-          <View style={styles.infoRow}>
-            <View style={styles.infoPair}>
+          <View style={styles.rowFlexView}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>U.Dise Code No.:</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {UDISE_CODE}
               </Text>
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>Contact No.: HT/</Text>
-              <Text style={[styles.text, styles.strikethrough]}>TIC</Text>
-              <Text style={styles.text}>:</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    textDecoration: "line-through",
+                  },
+                ]}
+              >
+                TIC
+              </Text>
+              <Text style={[styles.text]}>:</Text>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {" "}
                 {HOI_MOBILE_NO}
               </Text>
@@ -223,41 +108,64 @@ export default function ReturnPrint({ data }) {
                   height: 10,
                   position: "absolute",
                   top: -10,
-                  right: 65,
+                  right: 90,
                 }}
               />
             </View>
           </View>
-
-          <View style={[styles.infoRow, styles.justifyEnd]}>
-            <View style={styles.infoPair}>
-              <Text style={[styles.textBold, { fontSize: HEADER_FONT_SIZE }]}>
-                {" "}
-                Month:
-              </Text>
+          <View style={[styles.rowFlexView, { justifyContent: "flex-end" }]}>
+            <View style={styles.rowFlexView}>
+              <Text style={[styles.textBold, { fontSize: 12 }]}> Month:</Text>
               <Text
                 style={[
                   styles.textBold,
-                  styles.underlinedDotted,
-                  { fontSize: HEADER_FONT_SIZE },
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                    fontSize: 12,
+                  },
                 ]}
               >
-                {`${month || ""} of ${year || ""}`}
+                {`${month} of ${year}`}
               </Text>
             </View>
           </View>
-
-          <View style={[styles.infoRow, styles.marginTop]}>
-            <View style={styles.infoPair}>
+          <View style={[styles.rowFlexView, { marginTop: 10 }]}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>Name of School:{"  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {SCHOOLNAME}
               </Text>
             </View>
-            <View style={styles.infoPair}>
-              <Text style={[styles.text, styles.strikethrough]}>Morn.</Text>
+            <View style={styles.rowFlexView}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    textDecoration: "line-through",
+                  },
+                ]}
+              >
+                Morn.
+              </Text>
               <Text style={styles.text}>/Day Section time{"  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 11 A.M. TO 4 P.M.
               </Text>
             </View>
@@ -269,32 +177,61 @@ export default function ReturnPrint({ data }) {
                 height: 10,
                 position: "absolute",
                 top: -10,
-                right: 100,
+                right: 140,
               }}
             />
           </View>
-
-          {/* more school info rows (kept same) */}
-          <View style={[styles.infoRow]}>
-            <View style={styles.infoPair}>
+          <View style={[styles.rowFlexView]}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>Vill:{"  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {VILL}
               </Text>
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>P.O.:{"  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {PO}
               </Text>
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>Panchayet Samity</Text>
-              <Text style={[styles.text, styles.strikethrough]}>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    textDecoration: "line-through",
+                  },
+                ]}
+              >
                 /Municipality/Municipal Corporation
               </Text>
               <Text style={styles.text}>{" :  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {BLOCK}
               </Text>
             </View>
@@ -306,23 +243,47 @@ export default function ReturnPrint({ data }) {
                 height: 10,
                 position: "absolute",
                 top: -10,
-                right: 200,
+                right: 230,
               }}
             />
           </View>
-
-          <View style={[styles.infoRow]}>
-            <View style={styles.infoPair}>
+          <View style={[styles.rowFlexView]}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>P.S.:{"  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {PS}
               </Text>
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>G.P.:{"  "}</Text>
-              <Text style={[styles.text, styles.strikethrough]}>Ward</Text>
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    textDecoration: "line-through",
+                  },
+                ]}
+              >
+                Ward
+              </Text>
               <Text style={styles.text}>{"  "}</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {WARD_NO}
               </Text>
               <Image
@@ -333,183 +294,563 @@ export default function ReturnPrint({ data }) {
                   height: 10,
                   position: "absolute",
                   top: -7,
-                  right: 90,
+                  right: 120,
                 }}
               />
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>Mouza:&nbsp;&nbsp;</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {MOUZA}
               </Text>
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>J.L. No.:&nbsp;&nbsp;</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {JLNO}
               </Text>
             </View>
-            <View style={styles.infoPair}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>School Sl. No.:&nbsp;&nbsp;</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {SCHNO}
               </Text>
             </View>
           </View>
-
-          <View style={[styles.infoRow, styles.justifyStart]}>
-            <View style={styles.infoPair}>
+          <View style={[styles.rowFlexView, { justifyContent: "flex-start" }]}>
+            <View style={styles.rowFlexView}>
               <Text style={styles.text}>Circle:&nbsp;&nbsp;</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {CIRCLE}
               </Text>
             </View>
-            <View style={[styles.infoPair, styles.paddingLeft]}>
+            <View style={[styles.rowFlexView, { paddingLeft: 50 }]}>
               <Text style={styles.text}>Medium:&nbsp;&nbsp;</Text>
-              <Text style={[styles.textBold, styles.underlinedDotted]}>
+              <Text
+                style={[
+                  styles.textBold,
+                  {
+                    textDecoration: "underline",
+                    textDecorationStyle: "dotted",
+                  },
+                ]}
+              >
                 {MEDIUM}
               </Text>
             </View>
           </View>
-
-          <Text style={[styles.title, styles.sectionSpacing]}>
+          <Text style={[styles.title, { marginVertical: 10 }]}>
             PART- 'A': PARTICULARS OF TEACHERS
           </Text>
-
           <View style={styles.pageMainView}>
             <View style={styles.headingView}>
-              <TeacherTableHeader />
+              <View
+                style={[
+                  styles.tableStartView,
+                  { borderLeftWidth: 0, borderRightWidth: 0 },
+                ]}
+              >
+                <View style={[styles.view5, { width: "4.8%" }]}>
+                  <Text style={styles.text}>Sl. No.</Text>
+                </View>
+                <View style={[styles.view125H40, { width: "12.25%" }]}>
+                  <Text style={styles.text}>Name of Teacher</Text>
+                </View>
+                <View style={[styles.view5, { width: "4.5%" }]}>
+                  <Text style={styles.text4}>
+                    Desig-
+                    {"\n"}
+                    nation
+                  </Text>
+                </View>
+                <View style={[styles.view5, { width: "7.4%" }]}>
+                  <Text style={styles.text4}>
+                    Educational
+                    {"\n"} Qualification
+                  </Text>
+                </View>
+                <View style={[styles.view5, { width: "6.7%" }]}>
+                  <Text style={styles.text}>
+                    Date{"\n"}of{"\n"}Birth
+                  </Text>
+                </View>
+                <View style={[styles.view5, { width: "7%" }]}>
+                  <Text style={styles.text}>
+                    Joining{"\n"}date as{"\n"}approved{"\n"}teacher
+                  </Text>
+                </View>
+                <View style={[styles.view5, { width: "6.8%" }]}>
+                  <Text style={styles.text}>
+                    Joining{"\n"}date in this{"\n"}school
+                  </Text>
+                </View>
+                <View style={[styles.view5, { width: "6.7%" }]}>
+                  <Text style={[styles.text, { fontSize: 9 }]}>
+                    S.C./ S.T./ O.B.C.-A/ O.B.C.-B/ PH
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    styles.view5,
+                    {
+                      flexDirection: "column",
+                      width: "10%",
+                    },
+                  ]}
+                >
+                  <View
+                    style={{
+                      width: "100%",
+                      borderBottomWidth: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignContent: "center",
+                      // padding: 2,
+                    }}
+                  >
+                    <Text style={styles.text}>Casual Leave</Text>
+                  </View>
+                  <View
+                    style={{
+                      width: "100%",
 
-              {teachers.length > 0 &&
-                teachers.map((teacher, index) => (
-                  <React.Fragment key={teacher.id || index}>
-                    <View style={styles.rowStartView}>
-                      <View style={[styles.colSerial, styles.teacherDataCell]}>
-                        <Text style={styles.title2}>{index + 1}</Text>
-                      </View>
-                      <View style={[styles.colName, styles.teacherDataCell]}>
-                        <Text style={styles.title2}>
-                          {teacher?.tname?.split(" ").join("\n")}
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignContent: "center",
+                      // padding: 2,
+                      flexDirection: "row",
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "60%",
+                        borderRightWidth: 1,
+                        height: 53,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                      }}
+                    >
+                      <Text style={styles.text}>In this month</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: "50%",
+                        height: 56,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                      }}
+                    >
+                      <Text style={styles.text}>From 1st Jan.</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={[styles.view5, { width: "18%" }]}>
+                  <View
+                    style={{
+                      width: "100%",
+                      borderBottomWidth: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignContent: "center",
+                      paddingBottom: 5,
+                    }}
+                  >
+                    <Text style={styles.text}>Other Leave</Text>
+                  </View>
+                  <View
+                    style={{
+                      width: "100%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignContent: "center",
+                      flexDirection: "row",
+                      height: 70,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: "25%",
+                        borderRightWidth: 1,
+                        height: 53,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                      }}
+                    >
+                      <View>
+                        <Text style={styles.text4}>
+                          In{"\n"}this{"\n"}month
                         </Text>
-                      </View>
-                      <View
-                        style={[styles.colDesignation, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}>{teacher.desig}</Text>
-                      </View>
-                      <View
-                        style={[styles.colEducation, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.education}
-                          {"\n"}
-                          {teacher.training}
-                        </Text>
-                      </View>
-                      <View style={[styles.colDob, styles.teacherDataCell]}>
-                        <DateDisplay dateString={teacher.dob} />
-                      </View>
-                      <View style={[styles.colJoining, styles.teacherDataCell]}>
-                        <DateDisplay dateString={teacher.doj} />
-                      </View>
-                      <View
-                        style={[
-                          styles.colCurrentJoining,
-                          styles.teacherDataCell,
-                        ]}
-                      >
-                        <DateDisplay dateString={teacher.dojnow} />
-                      </View>
-                      <View style={[styles.colCast, styles.teacherDataCell]}>
-                        <Text style={styles.title2}>{teacher.cast}</Text>
-                      </View>
-                      <View
-                        style={[
-                          styles.colCasualLeaveSplit,
-                          styles.teacherDataCell,
-                        ]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.clThisMonth ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[
-                          styles.colCasualLeaveSplit,
-                          styles.teacherDataCell,
-                        ]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.clThisYear ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[
-                          styles.colOtherLeaveSplit,
-                          styles.teacherDataCell,
-                        ]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.olThisMonth ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[
-                          styles.colOtherLeaveSplit,
-                          styles.teacherDataCell,
-                        ]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.olThisYear ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[styles.colLeaveType, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.fullPay ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[styles.colLeaveType, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.halfPay ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[styles.colLeaveType, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.WOPay ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[styles.colWorkingDays, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}>
-                          {teacher.workingDays ?? "-"}
-                        </Text>
-                      </View>
-                      <View
-                        style={[styles.colSignature, styles.teacherDataCell]}
-                      >
-                        <Text style={styles.title2}></Text>
-                      </View>
-                      <View style={[styles.colRemarks, styles.teacherDataCell]}>
-                        <Text style={styles.text}>{teacher.remarks || ""}</Text>
                       </View>
                     </View>
-                    {index !== teachers.length - 1 && (
-                      <View style={styles.rowDivider}></View>
-                    )}
-                  </React.Fragment>
-                ))}
-            </View>
+                    <View
+                      style={{
+                        width: "25%",
+                        borderRightWidth: 1,
+                        height: 53,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                        borderColor: "black",
+                      }}
+                    >
+                      <View>
+                        <Text style={styles.text4}>
+                          From{"\n"}1st{"\n"}Jan.
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        width: "75%",
+                        height: 60,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignContent: "center",
+                      }}
+                    >
+                      <View
+                        style={{
+                          width: "100%",
+                          borderBottomWidth: 1,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          alignContent: "center",
+                        }}
+                      >
+                        <Text style={styles.text}>From 1st Jan.</Text>
+                      </View>
+                      <View
+                        style={{
+                          width: "100%",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          alignContent: "center",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <View
+                          style={{
+                            width: "33%",
+                            height: 39,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            alignContent: "center",
+                            borderRightWidth: 1,
+                          }}
+                        >
+                          <Text style={styles.text4}>Full Pay</Text>
+                        </View>
+                        <View
+                          style={{
+                            width: "33%",
+                            height: 39,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            alignContent: "center",
+                            borderRightWidth: 1,
+                          }}
+                        >
+                          <Text style={styles.text4}>Half Pay</Text>
+                        </View>
+                        <View
+                          style={{
+                            width: "33%",
+                            height: 39,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            alignContent: "center",
+                          }}
+                        >
+                          <Text style={styles.text4}>Without Pay</Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+                <View style={[styles.view5]}>
+                  <Text style={styles.text5}>
+                    Total working days in this month {"\n"}(
+                    <Text style={styles.text}>{workingDays}</Text>)
+                  </Text>
+                </View>
+                <View style={[styles.view25, { height: 75, marginRight: 2 }]}>
+                  <Text style={styles.text}>
+                    Full signature of teacher with date
+                  </Text>
+                </View>
+                <View style={[styles.view5, { borderRightWidth: 0 }]}>
+                  <Text style={styles.text5}>Remarks</Text>
+                </View>
+              </View>
+              {teachers.length > 0 &&
+                teachers.map((teacher, index) => {
+                  const { dob, doj, dojnow } = teacher;
+                  return (
+                    <React.Fragment key={index}>
+                      <View style={styles.rowStartView}>
+                        <View style={[styles.view5H0, { width: 35 }]}>
+                          <Text style={styles.text}>{index + 1}</Text>
+                        </View>
+                        <View
+                          style={[
+                            styles.view125H50,
+                            {
+                              justifyContent: "center",
+                              alignItems: "center",
+                              alignContent: "center",
+                              width: 89,
+                            },
+                          ]}
+                        >
+                          <Text style={styles.text}>
+                            {teacher?.tname?.split(" ").join("\n")}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 33 }]}>
+                          <Text style={styles.text}>{teacher.desig}</Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 54 }]}>
+                          <Text style={styles.text}>
+                            {teacher.education}
+                            {"\n"}
+                            {teacher.training}
+                          </Text>
+                        </View>
+                        <View
+                          style={[
+                            styles.view5H0,
+                            {
+                              width: 48.8,
+                              justifyContent: "center",
+                              alignContent: "center",
+                              alignItems: "center",
+                            },
+                          ]}
+                        >
+                          {/* <Text style={styles.text}>{teacher.dob}</Text> */}
+                          <View style={{ flexDirection: "row" }}>
+                            <Text style={[styles.title2, { marginTop: 5 }]}>
+                              {dob?.split("-")[0]}
+                            </Text>
+                            <View
+                              style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignContent: "center",
+                              }}
+                            >
+                              <Text
+                                style={[
+                                  styles.title2,
+                                  {
+                                    textDecoration: "underline",
+                                  },
+                                ]}
+                              >
+                                {dob?.split("-")[1]}
+                              </Text>
+                              <Text style={styles.title2}>
+                                {dob?.split("-")[2]}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View
+                          style={[
+                            styles.view5H0,
+                            {
+                              width: 48.8,
+                              justifyContent: "center",
+                              alignContent: "center",
+                              alignItems: "center",
+                            },
+                          ]}
+                        >
+                          {/* <Text style={styles.text}>{teacher.dob}</Text> */}
+                          <View style={{ flexDirection: "row" }}>
+                            <Text style={[styles.title2, { marginTop: 5 }]}>
+                              {doj?.split("-")[0]}
+                            </Text>
+                            <View
+                              style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignContent: "center",
+                              }}
+                            >
+                              <Text
+                                style={[
+                                  styles.title2,
+                                  {
+                                    textDecoration: "underline",
+                                  },
+                                ]}
+                              >
+                                {doj?.split("-")[1]}
+                              </Text>
+                              <Text style={styles.title2}>
+                                {doj?.split("-")[2]}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View
+                          style={[
+                            styles.view5H0,
+                            {
+                              width: 48.8,
+                              justifyContent: "center",
+                              alignContent: "center",
+                              alignItems: "center",
+                            },
+                          ]}
+                        >
+                          {/* <Text style={styles.text}>{teacher.dob}</Text> */}
+                          <View style={{ flexDirection: "row" }}>
+                            <Text style={[styles.title2, { marginTop: 5 }]}>
+                              {dojnow?.split("-")[0]}
+                            </Text>
+                            <View
+                              style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignContent: "center",
+                              }}
+                            >
+                              <Text
+                                style={[
+                                  styles.title2,
+                                  {
+                                    textDecoration: "underline",
+                                  },
+                                ]}
+                              >
+                                {dojnow?.split("-")[1]}
+                              </Text>
+                              <Text style={styles.title2}>
+                                {dojnow?.split("-")[2]}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={[styles.view5H0, { width: 50 }]}>
+                          <Text style={styles.text}>{teacher.cast}</Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 37 }]}>
+                          <Text style={styles.text}>
+                            {teacher.clThisMonth ? teacher.clThisMonth : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 37 }]}>
+                          <Text style={styles.text}>
+                            {teacher.clThisYear ? teacher.clThisYear : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 26 }]}>
+                          <Text style={styles.text}>
+                            {teacher.olThisMonth ? teacher.olThisMonth : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 26 }]}>
+                          <Text style={styles.text}>
+                            {teacher.olThisYear ? teacher.olThisYear : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 26 }]}>
+                          <Text style={styles.text}>
+                            {teacher.fullPay ? teacher.fullPay : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 26 }]}>
+                          <Text style={styles.text}>
+                            {teacher.halfPay ? teacher.halfPay : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 26 }]}>
+                          <Text style={styles.text}>
+                            {teacher.WOPay ? teacher.WOPay : "-"}
+                          </Text>
+                        </View>
+                        <View style={[styles.view5H0, { width: 36 }]}>
+                          <Text style={styles.text}>
+                            {teacher.workingDays ? teacher.workingDays : "-"}
+                          </Text>
+                        </View>
 
-            {/* signatures */}
-            <View style={styles.signatureSection}>
-              <View style={styles.signatureGroup}>
+                        <View style={[styles.view25H50]}>
+                          <Text style={styles.text}></Text>
+                        </View>
+                        <View style={[styles.view5H0, { borderRightWidth: 0 }]}>
+                          <Text style={styles.text}>
+                            {teacher.remarks ? teacher.remarks : ""}
+                          </Text>
+                        </View>
+                      </View>
+                      {index !== teachers.length - 1 && (
+                        <View
+                          style={{
+                            width: "100%",
+                            height: 5,
+                            borderBottomWidth:
+                              index !== teachers.length - 1 ? 1 : 0,
+                          }}
+                        ></View>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+            </View>
+            <View
+              style={[
+                styles.rowFlexView,
+                {
+                  justifyContent: "space-between",
+                  padding: 5,
+                  marginVertical: 20,
+                  width: "100%",
+                  borderBottomWidth: 0,
+                },
+              ]}
+            >
+              <View style={[styles.rowFlexView, { flexDirection: "column" }]}>
                 <Text style={styles.text}>
                   1..............................................................2.....................................................................
                 </Text>
@@ -517,27 +858,53 @@ export default function ReturnPrint({ data }) {
                   Signature of two members of Committee
                 </Text>
               </View>
-              <View style={styles.signatureGroup}>
+              <View
+                style={[
+                  styles.rowFlexView,
+                  { paddingLeft: 50, flexDirection: "column" },
+                ]}
+              >
                 <Text style={styles.text}>
                   …......................................................................
                 </Text>
-                <View style={styles.hoiSignature}>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <Text style={styles.text}>Signature of </Text>
                   <Text
                     style={[
                       styles.text,
-                      HOI_DESIGNATION === "HT" ? styles.strikethrough : {},
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "none" : "line-through",
+                      },
                     ]}
                   >
                     Head Teacher
                   </Text>
-                  <Text style={styles.text}>
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      },
+                    ]}
+                  >
                     {"  "}/{"  "}
                   </Text>
                   <Text
                     style={[
                       styles.text,
-                      HOI_DESIGNATION === "HT" ? {} : styles.strikethrough,
+                      {
+                        textDecoration:
+                          HOI_DESIGNATION === "HT" ? "line-through" : "none",
+                      },
                     ]}
                   >
                     Teacher-in-Charge
@@ -548,8 +915,6 @@ export default function ReturnPrint({ data }) {
           </View>
         </View>
       </Page>
-
-      {/* Student Page */}
       <Page size="A4" orientation="portrait" style={styles.page}>
         <View style={styles.pageMainView}>
           <View style={styles.headingView}>
@@ -5072,281 +5437,93 @@ export default function ReturnPrint({ data }) {
         </View>
       </Page>
     </Document>
-    // </PDFViewer>
   );
 }
-
-/* ---------- Styles (kept mostly same but some cleanup) ---------- */
-
 const styles = StyleSheet.create({
-  document: { margin: 5, padding: 5 },
-  page: { padding: 5, margin: 5, backgroundColor: "#FFFFFF" },
+  page: {
+    padding: 5,
+    margin: 5,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    width: width,
+    height: height,
+  },
   pageMainView: {
     padding: 5,
     margin: 5,
+    backgroundColor: "#FFFFFF",
     border: "1px solid",
     borderWidth: 2,
+    alignSelf: "center",
     width: "99%",
     height: "99%",
   },
-
+  title: {
+    fontSize: 15,
+    fontWeight: "ultrabold",
+    fontFamily: "TimesBold",
+    textAlign: "center",
+  },
+  title2: {
+    fontSize: 12,
+    fontWeight: "ultrabold",
+    fontFamily: "Times",
+    textAlign: "center",
+  },
   titleMain: {
     fontSize: 20,
     fontWeight: "bold",
     fontFamily: "TimesBold",
     textAlign: "center",
   },
-  title: {
-    fontSize: TITLE_FONT_SIZE,
-    fontWeight: "ultrabold",
-    fontFamily: "TimesBold",
-    textAlign: "center",
-  },
-  title2: {
-    fontSize: BASE_FONT_SIZE + 2,
-    fontWeight: "ultrabold",
-    fontFamily: "Times",
-    textAlign: "center",
-  },
   text: {
-    fontSize: BASE_FONT_SIZE,
+    fontSize: 10,
     fontWeight: "bold",
     fontFamily: "Times",
     textAlign: "center",
-    padding: 1,
+    padding: 2,
   },
   textBold: {
-    fontSize: BASE_FONT_SIZE,
+    fontSize: 10,
     fontWeight: "bold",
     fontFamily: "TimesBold",
     textAlign: "center",
-    padding: 1,
+    padding: 2,
+  },
+  text2: {
+    fontSize: 9,
+    fontWeight: "bold",
+    fontFamily: "Times",
+    textAlign: "center",
+    transform: "rotate(-60deg)",
+  },
+  text3: {
+    fontSize: 8,
+    fontWeight: "bold",
+    fontFamily: "Times",
+    textAlign: "center",
+    transform: "rotate(-60deg)",
   },
   text4: {
-    fontSize: BASE_FONT_SIZE - 1,
+    fontSize: 8,
     fontWeight: "bold",
     fontFamily: "Times",
     textAlign: "center",
   },
   text5: {
-    fontSize: BASE_FONT_SIZE + 0.5,
+    fontSize: 8.5,
     fontWeight: "bold",
     fontFamily: "Times",
     textAlign: "center",
   },
-  textLeft: { textAlign: "left", paddingLeft: 2 },
-
-  underlined: { textDecoration: "underline" },
-  underlinedDotted: {
-    textDecoration: "underline",
-    textDecorationStyle: "dotted",
-  },
-  strikethrough: { textDecoration: "line-through" },
-
-  sectionSpacing: { marginVertical: 10 },
-  marginTop: { marginTop: 10 },
-  marginTopSmall: { marginTop: 5 },
-  justifyEnd: { justifyContent: "flex-end" },
-  justifyStart: { justifyContent: "flex-start" },
-  paddingLeft: { paddingLeft: 50 },
-
-  infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 2,
-  },
-  infoPair: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  /* Teacher columns */
-  teacherHeader: { borderLeftWidth: 0, borderRightWidth: 0, height: 68 },
-  teacherDataCell: { height: 55 },
-
-  colSerial: {
-    width: "4%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colName: {
-    width: "10%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colDesignation: {
-    width: "5%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colEducation: {
-    width: "7%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colDob: {
-    width: "6%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colJoining: {
-    width: "6%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colCurrentJoining: {
-    width: "6%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colCast: {
-    width: "6%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colCasualLeave: { width: "7%", borderRightWidth: 1, flexDirection: "column" },
-  colCasualLeaveSplit: {
-    width: "3.5%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colOtherLeave: { width: "15%", borderRightWidth: 1, flexDirection: "column" },
-  colOtherLeaveSplit: {
-    width: "3%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colLeaveType: {
-    width: "3%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colWorkingDays: {
-    width: "5%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colSignature: {
-    width: "17%",
-    borderRightWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  colRemarks: { width: "3%", justifyContent: "center", alignItems: "center" },
-
-  /* Student table layout */
-  labelColumn: { width: "41.65%", flexDirection: "row" },
-  labelColumnHeader: {
-    width: "41.65%",
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  fullLabelCell: {
-    width: "41.65%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  genderColumn: { width: "25%", flexDirection: "column" },
-  view75: { width: "75%" },
-  gradeCell: { width: "8.33%", borderRightWidth: 1, flexDirection: "column" },
-  lastGradeCell: { borderRightWidth: 1 },
-  lastCell: { borderRightWidth: 0 },
-  gradeHeader: {
-    width: "8.33%",
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRightWidth: 1,
-  },
-  lastGradeHeader: { borderRightWidth: 0 },
-  remarksLabel: {
-    width: "12.5%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRightWidth: 1,
-  },
-  remarksContent: {
-    width: "87.5%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  cell: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  headingView: {
+    // border: "1px solid",
+    borderWidth: 1,
     width: "100%",
+    height: "auto",
   },
-  fullCell: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  borderBottom: { borderBottomWidth: 1 },
-  borderRight: { borderRightWidth: 1 },
-
-  sectionHeader: {
-    width: "100%",
-    borderBottomWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 1,
-  },
-  splitSection: {
-    width: "100%",
-    flexDirection: "row",
-    flex: 1,
-  },
-  splitCell: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  smallSplitCell: {
-    width: "25%",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRightWidth: 1,
-  },
-  complexSection: {
-    width: "100%",
-    flexDirection: "row",
-    flex: 1,
-  },
-  leaveTypes: {
-    width: "75%",
-    flexDirection: "column",
-  },
-  leaveSplit: {
-    width: "100%",
-    flexDirection: "row",
-    flex: 1,
-  },
-  leaveTypeCell: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRightWidth: 1,
-  },
-
-  headingView: { borderWidth: 1, width: "100%", height: "auto" },
   tableStartView: {
     borderTopWidth: 0,
     borderLeftWidth: 1,
@@ -5355,20 +5532,237 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "auto",
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
   },
-  rowStartView: {
-    borderBottomWidth: 1,
-    width: "100%",
-    height: "auto",
-    flexDirection: "row",
-  },
-  rowStartBorderView: {
+  tableStartBorderView: {
+    borderTopWidth: 0,
     borderLeftWidth: 1,
     borderRightWidth: 1,
     borderBottomWidth: 1,
     width: "100%",
     height: "auto",
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  secondTableStartView: {
+    borderWidth: 1,
+    width: "100%",
+    height: "auto",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  view88H20: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "8.78%",
+    height: 20,
+  },
+  SecondView16: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "16%",
+    height: 15,
+  },
+  SecondView10: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "10%",
+    height: 15,
+  },
+  view5: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "5%",
+    height: 68,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  view5H0: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "5%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  view125H50: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "13%",
+    height: 60,
+  },
+  view125H40: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "12.5%",
+    height: 68,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  view25: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    width: "27%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  view25Height0: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "27%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  view25H50: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "25%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  view16: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "25%",
+    height: 20,
+  },
+  view16H0: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "16%",
+  },
+  view25H30: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "25%",
+    height: 30,
+  },
+  view20: {
+    paddingRight: 1,
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    height: 20,
+  },
+  view20Sec: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingHorizontal: 1,
+    width: "20%",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    height: 20,
+  },
+  view125: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "12.5%",
+    height: 30,
+  },
+
+  view125H30: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "12.5%",
+    height: 30,
+  },
+
+  view80H20: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
+    paddingRight: 1,
+    width: "80%",
+    height: 20,
+  },
+  rowStartView: {
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 1,
+    width: "100%",
+    height: "auto",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  rowStartBorderView: {
+    borderTopWidth: 0,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    width: "100%",
+    height: "auto",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  rowWrapView: {
+    paddingRight: 1,
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
   },
   rowFlexView: {
     paddingRight: 1,
@@ -5384,91 +5778,26 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
   },
-  rowDivider: { width: "100%", height: 5, borderBottomWidth: 1 },
-  view25Height0: {
+  break: {
     borderTopWidth: 0,
-    borderLeftWidth: 0,
+    borderLeftWidth: 1,
     borderRightWidth: 1,
-    borderBottomWidth: 0,
-    paddingRight: 1,
-    width: "27%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  datePart: {
+    borderBottomWidth: 1,
+    width: "100%",
+    height: 5,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
   },
-
-  signatureSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 5,
-    marginVertical: 20,
-    width: "100%",
-  },
-  signatureGroup: {
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  hoiSignature: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  facilityRow: {
+  secondRowView: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    padding: 2,
-  },
-  facilityPair: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  divider: {
-    width: "100%",
-    height: 1,
-    backgroundColor: "black",
-    marginVertical: 2,
-  },
-
-  accountsSection: {
-    alignItems: "flex-start",
-    marginTop: 10,
-  },
-  accountInfo: {
-    flexDirection: "row",
-  },
-  countersignedSection: {
-    marginVertical: 20,
-  },
-  countersignedTitle: {
-    marginLeft: -300,
-  },
-  finalSignatures: {
-    marginVertical: 40,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 30,
-  },
-  inspectorSignature: {
-    marginLeft: 50,
-  },
-
-  tickIcon: {
-    width: 8,
-    height: 8,
-    position: "absolute",
-    top: -8,
-    right: 70,
+    alignContent: "center",
+    paddingHorizontal: 5,
   },
 });
-
-/* ---------- Font registrations (kept) ---------- */
 Font.register({
   family: "Kalpurush",
   src: "https://raw.githubusercontent.com/usprys/usprysdata/main/kalpurush.ttf",
