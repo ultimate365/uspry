@@ -91,6 +91,16 @@ export default function UserTeachers() {
       tname: "ABDUS SALAM MOLLICK",
       desig: "AT",
     },
+    {
+      rank: 5,
+      olThisMonth: 0,
+      olThisYear: 0,
+      clThisYear: 0,
+      id: "teachers399-4fe1a07f",
+      clThisMonth: 0,
+      tname: "SANCHITA DAS",
+      desig: "AT",
+    },
   ];
   const [filteredLeaveData, setFilteredLeaveData] = useState([]);
   const [techLeaves, setTechLeaves] = useState(leavesArray);
@@ -170,15 +180,10 @@ export default function UserTeachers() {
       const selectedValue = e.target.value;
       let x = [];
       let y = [];
-      let cl1 = 0;
-      let cl2 = 0;
-      let cl3 = 0;
-      let cl4 = 0;
-      let ol1 = 0;
-      let ol2 = 0;
-      let ol3 = 0;
-      let ol4 = 0;
-      let t = leavesArray;
+      const clTotals = Array(leavesArray.length).fill(0);
+      const olTotals = Array(leavesArray.length).fill(0);
+      const t = [...leavesArray]; // Create a shallow copy
+
       allEnry.map((entry) => {
         const entryYear = entry.id.split("-")[1];
         const entryMonth = entry.id.split("-")[0];
@@ -186,30 +191,21 @@ export default function UserTeachers() {
           x.push(entry);
           y.push(entryMonth);
           entry.leaves.map((el) => {
-            if (el.rank === 1) {
-              cl1 += el.clThisMonth;
-              ol1 += el.olThisMonth;
-            } else if (el.rank === 2) {
-              cl2 += el.clThisMonth;
-              ol2 += el.olThisMonth;
-            } else if (el.rank === 3) {
-              cl3 += el.clThisMonth;
-              ol3 += el.olThisMonth;
-            } else {
-              cl4 += el.clThisMonth;
-              ol4 += el.olThisMonth;
+            // Find the index of the teacher in the master leavesArray using their ID
+            const teacherIndex = leavesArray.findIndex(
+              (teacher) => teacher.id === el.id
+            );
+            // Only update totals if the teacher is found in the current leavesArray
+            if (teacherIndex !== -1) {
+              clTotals[teacherIndex] += el.clThisMonth;
+              olTotals[teacherIndex] += el.olThisMonth;
             }
           });
-
-          t[0].clThisYear = cl1;
-          t[0].olThisYear = ol1;
-          t[1].clThisYear = cl2;
-          t[1].olThisYear = ol2;
-          t[2].clThisYear = cl3;
-          t[2].olThisYear = ol3;
-          t[3].clThisYear = cl4;
-          t[3].olThisYear = ol4;
         }
+      });
+      t.forEach((teacher, index) => {
+        teacher.clThisYear = clTotals[index];
+        teacher.olThisYear = olTotals[index];
       });
       setTechLeaves(t);
       setSelectedYear(selectedValue);
