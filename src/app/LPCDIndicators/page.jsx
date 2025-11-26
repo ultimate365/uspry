@@ -17,11 +17,14 @@ const LPCDIndicators = () => {
   useEffect(() => {
     localStorage.setItem("indicators", JSON.stringify(indicators));
   }, [indicators]);
-
+  const sortAlphabetically = (arr) => {
+    return [...arr].sort((a, b) => a.localeCompare(b));
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!indicator.trim()) return;
-    setIndicators([...indicators, indicator.trim()]);
+    const updated = sortAlphabetically([...indicators, indicator.trim()]);
+    setIndicators(updated);
     setIndicator("");
   };
 
@@ -40,7 +43,8 @@ const LPCDIndicators = () => {
     if (!editValue.trim()) return;
     const updated = [...indicators];
     updated[editIndex] = editValue.trim();
-    setIndicators(updated);
+    // Sort after update
+    setIndicators(sortAlphabetically(updated));
     setEditIndex(null);
     setEditValue("");
   };
