@@ -103,13 +103,25 @@ const LPCDIndicators = () => {
 
               <div className="btn-group">
                 {editIndex === index ? (
-                  <button
-                    type="submit"
-                    className="btn btn-success btn-sm"
-                    onClick={handleUpdate}
-                  >
-                    Update
-                  </button>
+                  <>
+                    <button
+                      type="submit"
+                      className="btn btn-success btn-sm"
+                      onClick={handleUpdate}
+                    >
+                      Update
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-warning btn-sm"
+                      onClick={() => {
+                        setEditIndex(null);
+                        setEditValue("");
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
                 ) : (
                   <>
                     <button
