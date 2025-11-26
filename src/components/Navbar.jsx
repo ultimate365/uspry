@@ -246,6 +246,15 @@ export default function Navbar() {
           <li className="nav-item">
             <Link
               className="nav-link"
+              href="/LPCDIndicators"
+              onClick={handleNavCollapse}
+            >
+              LPCD Indicators
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
               href="/photocorner"
               onClick={handleNavCollapse}
             >
