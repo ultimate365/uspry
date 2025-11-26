@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { createDownloadLink } from "@/modules/calculatefunctions";
 const LPCDIndicators = () => {
   const [indicator, setIndicator] = useState("");
   const [indicators, setIndicators] = useState([]);
@@ -61,8 +61,16 @@ const LPCDIndicators = () => {
   return (
     <div className="container mt-4">
       <div className="col-md-6 mx-auto">
+        <button
+          type="button"
+          className="btn btn-success m-2"
+          onClick={() => {
+            createDownloadLink(indicators, "indicators");
+          }}
+        >
+          Download Indicators
+        </button>
         <h3 className="mb-3">Indicator Manager</h3>
-
         {/* Input + Submit */}
         <form action="">
           <div className="input-group mb-4">
