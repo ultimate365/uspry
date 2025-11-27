@@ -52,8 +52,11 @@ const LPCDIndicators = () => {
       setIndicators(saved);
     } else {
       // Otherwise, set the initial indicators in state and local storage.
-      setIndicators(initialIndicators);
-      localStorage.setItem("indicators", JSON.stringify(initialIndicators));
+      const allIndicators = [
+        ...new Set([...initialIndicators, ...(saved || [])]),
+      ];
+      setIndicators(allIndicators);
+      localStorage.setItem("indicators", JSON.stringify(allIndicators));
     }
   }, []);
 
