@@ -7,42 +7,58 @@ const LPCDIndicators = () => {
   const [indicators, setIndicators] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search term
   const initialIndicators = [
-    "Academic anxiety in English",
-    "Acting",
-    "Adoptable in difficult situation",
-    "Anxiety in appearing test",
-    "Anxiety in historical timeline",
-    "Anxiety in spelling",
-    "Appear in Exam",
-    "Clay Modelling",
-    "Co-operative with classroom",
-    "Co-operative with friends",
-    "Dancing",
-    "Diligent",
-    "Effectively manages time",
+    "Academic Anxiety in English",
+    "Adoptable",
+    "Anxiety in Maths",
+    "Anxiety To appear test",
+    "Body Smart",
+    "Calculation",
+    "Critical thinker",
+    "Curious",
+    "Drawing",
+    "Effective note taker",
     "Empathetic",
+    "Energy level",
+    "English grammar",
+    "English Spelling",
+    "Evaluation",
+    "Friendly",
+    "Friendly Attitude",
+    "Games",
+    "Gardening",
+    "Handwriting",
     "Hard Working",
     "Honest",
-    "Instrumental Vocal",
-    "Interact with classmates",
-    "Logic smart",
+    "Leadership skills",
+    "Logic Smart",
+    "Mathematical formula",
     "Mathematics",
     "Music Smart",
-    "Nature smart",
-    "None",
-    "Painting",
-    "People smart",
+    "N.A.",
+    "Nature Smart",
+    "NO",
+    "Open minded",
+    "Picture Smart",
     "Playing",
-    "Pronounciation",
-    "Running skill",
+    "Practice of English",
+    "Practice of Environment",
+    "Practice of Mathematics",
+    "Punctual",
+    "Quiz",
+    "Reading",
     "Self motivated",
-    "Self smart",
+    "Self Smart",
+    "Singing",
     "Spelling",
-    "Spelling Punctuality",
-    "Understanding historical timeline",
-    "Understanding Mathematics",
-    "Word smart",
+    "Time management",
+    "To appear test",
+    "Word Smart",
+    "Work smart",
+    "Writing habit",
+    "Writing Test",
+    "Yoga",
   ];
   // Load from localStorage on first render
   useEffect(() => {
@@ -84,6 +100,9 @@ const LPCDIndicators = () => {
     setIndicators(filtered);
     localStorage.setItem("indicators", JSON.stringify(filtered));
     toast.success("Indicator deleted successfully.");
+    setEditIndex(null);
+    setEditValue("");
+    setSearchTerm("");
   };
 
   const handleEdit = (index) => {
@@ -93,7 +112,10 @@ const LPCDIndicators = () => {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    if (!editValue.trim()) return;
+    if (!editValue.trim() && indicators.includes(editValue.trim())) {
+      toast.error("Indicator already exists.");
+      return;
+    }
     const updated = [...indicators];
     updated[editIndex] = editValue.trim();
     // Sort after update
@@ -105,11 +127,13 @@ const LPCDIndicators = () => {
     toast.success("Indicator updated successfully.");
     setEditIndex(null);
     setEditValue("");
+    setSearchTerm("");
   };
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
     toast.success("Indicator copied to clipboard.");
+    setSearchTerm("");
   };
 
   const handleReset = () => {
@@ -134,7 +158,7 @@ const LPCDIndicators = () => {
 
   return (
     <div className="container mt-4">
-      <div className="col-md-6 mx-auto">
+      <div className="mx-auto">
         <button
           type="button"
           className="btn btn-success mb-4"
@@ -159,7 +183,7 @@ const LPCDIndicators = () => {
           <div className="input-group mb-4">
             <input
               type="text"
-              className="form-control"
+              className="col-md-6 form-control"
               placeholder="Enter indicator name"
               value={indicator}
               onChange={(e) => setIndicator(e.target.value)}
@@ -174,79 +198,97 @@ const LPCDIndicators = () => {
           </div>
         </form>
 
+        {/* Search Input */}
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search indicators..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
         {/* Indicator List */}
         <ul className="list-group mb-4">
           {indicators.length === 0 && (
             <li className="list-group-item text-muted">No indicators added.</li>
           )}
 
-          {indicators.map((item, index) => (
-            <li
-              key={index}
-              className="list-group-item d-flex justify-content-between align-items-center"
-            >
-              {editIndex === index ? (
-                <input
-                  type="text"
-                  className="form-control me-2"
-                  value={editValue}
-                  onChange={(e) => setEditValue(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleUpdate(e);
-                    }
-                  }}
-                />
-              ) : (
-                <span>{item}</span>
-              )}
+          {indicators.map((item, index) =>
+            // Filter indicators based on search term
+            item.toLowerCase().includes(searchTerm.toLowerCase()) ? (
+              <li
+                // It's generally better to use a stable unique ID if available,
+                // but index is used here to maintain consistency with existing code.
+                // If items can be reordered or deleted, a unique ID from the item itself is preferred.
 
-              <div className="btn-group">
+                key={index}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
                 {editIndex === index ? (
-                  <>
-                    <button
-                      type="submit"
-                      className="btn btn-success btn-sm"
-                      onClick={handleUpdate}
-                    >
-                      Update
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-warning btn-sm"
-                      onClick={() => {
-                        setEditIndex(null);
-                        setEditValue("");
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </>
+                  <input
+                    type="text"
+                    className="form-control me-2"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleUpdate(e);
+                      }
+                    }}
+                  />
                 ) : (
-                  <>
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => handleCopy(item)}
-                    >
-                      Copy
-                    </button>
-                    <button
-                      className="btn btn-warning btn-sm"
-                      onClick={() => handleEdit(index)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(index)}
-                    >
-                      Delete
-                    </button>
-                  </>
+                  <span>{item}</span>
                 )}
-              </div>
-            </li>
-          ))}
+
+                <div className="btn-group">
+                  {editIndex === index ? (
+                    <>
+                      <button
+                        type="submit"
+                        className="btn btn-success btn-sm"
+                        onClick={handleUpdate}
+                      >
+                        Update
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-warning btn-sm"
+                        onClick={() => {
+                          setEditIndex(null);
+                          setEditValue("");
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => handleCopy(item)}
+                      >
+                        Copy
+                      </button>
+                      <button
+                        className="btn btn-warning btn-sm"
+                        onClick={() => handleEdit(index)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(index)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </div>
+              </li>
+            ) : null
+          )}
         </ul>
 
         {/* Reset Button */}
