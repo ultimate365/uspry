@@ -1,36 +1,86 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { createDownloadLink } from "@/modules/calculatefunctions";
+import { toast } from "react-toastify";
 const LPCDIndicators = () => {
   const [indicator, setIndicator] = useState("");
   const [indicators, setIndicators] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
-
+  const initialIndicators = [
+    "Academic anxiety in English",
+    "Acting",
+    "Adoptable in difficult situation",
+    "Anxiety in appearing test",
+    "Anxiety in historical timeline",
+    "Anxiety in spelling",
+    "Appear in Exam",
+    "Clay Modelling",
+    "Co-operative with classroom",
+    "Co-operative with friends",
+    "Dancing",
+    "Diligent",
+    "Effectively manages time",
+    "Empathetic",
+    "Hard Working",
+    "Honest",
+    "Instrumental Vocal",
+    "Interact with classmates",
+    "Logic smart",
+    "Mathematics",
+    "Music Smart",
+    "Nature smart",
+    "None",
+    "Painting",
+    "People smart",
+    "Playing",
+    "Pronounciation",
+    "Running skill",
+    "Self motivated",
+    "Self smart",
+    "Spelling",
+    "Spelling Punctuality",
+    "Understanding historical timeline",
+    "Understanding Mathematics",
+    "Word smart",
+  ];
   // Load from localStorage on first render
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("indicators"));
-    if (saved) setIndicators(saved);
+    if (saved && saved.length > 0) {
+      // If indicators exist in local storage, use them.
+      setIndicators(saved);
+    } else {
+      // Otherwise, set the initial indicators in state and local storage.
+      setIndicators(initialIndicators);
+      localStorage.setItem("indicators", JSON.stringify(initialIndicators));
+    }
   }, []);
 
-  // Save to localStorage whenever indicators change
-  useEffect(() => {
-    localStorage.setItem("indicators", JSON.stringify(indicators));
-  }, [indicators]);
   const sortAlphabetically = (arr) => {
     return [...arr].sort((a, b) => a.localeCompare(b));
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!indicator.trim()) return;
+    const exists = indicators.includes(indicator.trim());
+    if (exists) {
+      setIndicator("");
+      toast.error("Indicator already exists.");
+      return;
+    }
     const updated = sortAlphabetically([...indicators, indicator.trim()]);
     setIndicators(updated);
+    localStorage.setItem("indicators", JSON.stringify(updated));
+    toast.success("Indicator added successfully.");
     setIndicator("");
   };
 
   const handleDelete = (index) => {
     const filtered = indicators.filter((_, i) => i !== index);
     setIndicators(filtered);
+    localStorage.setItem("indicators", JSON.stringify(filtered));
+    toast.success("Indicator deleted successfully.");
   };
 
   const handleEdit = (index) => {
@@ -45,17 +95,38 @@ const LPCDIndicators = () => {
     updated[editIndex] = editValue.trim();
     // Sort after update
     setIndicators(sortAlphabetically(updated));
+    localStorage.setItem(
+      "indicators",
+      JSON.stringify(sortAlphabetically(updated))
+    );
+    toast.success("Indicator updated successfully.");
     setEditIndex(null);
     setEditValue("");
   };
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
+    toast.success("Indicator copied to clipboard.");
   };
 
   const handleReset = () => {
-    setIndicators([]);
-    localStorage.removeItem("indicators");
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset your indicators?"
+    );
+    if (confirmReset) {
+      const resetToInitial = window.confirm(
+        "Do you want to reset to the default list of indicators?\n\nPress 'OK' to reset to default.\nPress 'Cancel' to clear all indicators."
+      );
+      if (resetToInitial) {
+        setIndicators(initialIndicators);
+        localStorage.setItem("indicators", JSON.stringify(initialIndicators));
+        toast.success("Indicators have been reset to the default list.");
+      } else {
+        setIndicators([]);
+        localStorage.setItem("indicators", JSON.stringify([]));
+        toast.success("All indicators have been cleared.");
+      }
+    }
   };
 
   return (
@@ -63,14 +134,23 @@ const LPCDIndicators = () => {
       <div className="col-md-6 mx-auto">
         <button
           type="button"
-          className="btn btn-success m-2"
+          className="btn btn-success mb-4"
           onClick={() => {
             createDownloadLink(indicators, "indicators");
           }}
         >
           Download Indicators
         </button>
-        <h3 className="mb-3">Indicator Manager</h3>
+        <h1
+          className="mb-1 ben"
+          style={{
+            fontSize: 20,
+          }}
+        >
+          শিখনের বৌদ্ধিক দক্ষতার ক্ষেত্রসমূহ
+        </h1>
+        <h5 className="mb-1">(Learning Perspective of Cognitive Domain)</h5>
+        <h5 className="mb-3">(Identified Condition)</h5>
         {/* Input + Submit */}
         <form action="">
           <div className="input-group mb-4">
@@ -108,6 +188,11 @@ const LPCDIndicators = () => {
                   className="form-control me-2"
                   value={editValue}
                   onChange={(e) => setEditValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleUpdate(e);
+                    }
+                  }}
                 />
               ) : (
                 <span>{item}</span>
