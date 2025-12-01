@@ -102,6 +102,8 @@ export default function UserTeachers() {
       desig: "AT",
     },
   ];
+  const [showEditMonthLeaveOBJData, setShowEditMonthLeaveOBJData] =
+    useState(false);
   const [filteredLeaveData, setFilteredLeaveData] = useState([]);
   const [techLeaves, setTechLeaves] = useState(leavesArray);
   const [addData, setAddData] = useState({
@@ -110,6 +112,7 @@ export default function UserTeachers() {
     year: 2025,
     leaves: leavesArray,
   });
+  const [editMonthLeavesObj, setEditMonthLeavesObj] = useState(addData);
   const [addLeaveDateData, setAddLeaveDateData] = useState({
     id: docId,
     techID: "",
@@ -571,7 +574,29 @@ export default function UserTeachers() {
       return a.sl - b.sl;
     });
   }
-
+  const updateMonthLeavesOBJ = async () => {
+    setLoader(true);
+    await updateDoc(
+      doc(firestore, "teachersLeaves", editMonthLeavesObj.id),
+      editMonthLeavesObj
+    )
+      .then(() => {
+        const fM = teacherLeaveState.filter(
+          (el) => el.id !== editMonthLeavesObj.id
+        );
+        const x = [...fM, editMonthLeavesObj];
+        const monthwiseSorted = sortMonthwise(x);
+        setTeacherLeaveState(monthwiseSorted);
+        toast.success("Teachers Leave Data Updated Successfully");
+        setLoader(false);
+        setShowEditMonthLeaveOBJData(false);
+        setFilteredEntry(editMonthLeavesObj);
+      })
+      .catch((e) => {
+        setLoader(false);
+        toast.error("Error updating data: " + e.message);
+      });
+  };
   useEffect(() => {
     if (access !== "admin") {
       router.push("/");
@@ -736,9 +761,19 @@ export default function UserTeachers() {
       {showData && (
         <>
           <div className="noprint">
-            <h4 className="text-center text-primary">
+            <h4 className="text-center text-primary my-2">
               {getMonth()} Teachers Leave Details
             </h4>
+            <button
+              className="btn btn-warning m-2"
+              type="button"
+              onClick={() => {
+                setShowEditMonthLeaveOBJData(true);
+                setEditMonthLeavesObj(filteredEntry[0]);
+              }}
+            >
+              Edit Leaves
+            </button>
           </div>
           <div
             style={{
@@ -1851,6 +1886,199 @@ export default function UserTeachers() {
                   className="btn btn-warning"
                   onClick={() => {
                     setShowEditLeaveDateData(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {showEditMonthLeaveOBJData && (
+        <div
+          className="modal fade show"
+          tabIndex="-1"
+          role="dialog"
+          style={{ display: "block" }}
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-md">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title fs-5" id="staticBackdropLabel">
+                  Edit Leave Data of {editMonthLeavesObj.month} of{" "}
+                  {editMonthLeavesObj.year}
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  aria-label="Close"
+                  onClick={() => {
+                    setShowEditMonthLeaveOBJData(false);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="input-group mb-3">
+                  <label className="input-group-text">ID</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="ID"
+                    value={editMonthLeavesObj.id}
+                    onChange={(e) => {
+                      setEditMonthLeavesObj({
+                        ...editMonthLeavesObj,
+                        id: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div className="input-group mb-3">
+                  <label className="input-group-text">Month</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Month"
+                    value={editMonthLeavesObj.month}
+                    onChange={(e) => {
+                      setEditMonthLeavesObj({
+                        ...editMonthLeavesObj,
+                        month: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+                <div className="input-group mb-3">
+                  <label className="input-group-text">Year</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    placeholder="Year"
+                    value={editMonthLeavesObj.year}
+                    onChange={(e) => {
+                      setEditMonthLeavesObj({
+                        ...editMonthLeavesObj,
+                        year: parseInt(e.target.value),
+                      });
+                    }}
+                  />
+                </div>
+                {editMonthLeavesObj.leaves.map((teacher, index) => (
+                  <div key={index}>
+                    <h5 className="text-primary">{teacher.tname}</h5>
+                    <div className="input-group mb-3">
+                      <label className="input-group-text">Cl This Month</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Cl This Month"
+                        value={editMonthLeavesObj.leaves[index].clThisMonth}
+                        onChange={(e) => {
+                          setEditMonthLeavesObj({
+                            ...editMonthLeavesObj,
+                            leaves: editMonthLeavesObj.leaves.map((el, i) => {
+                              if (i === index) {
+                                return {
+                                  ...el,
+                                  clThisMonth: parseInt(e.target.value),
+                                };
+                              }
+                              return el;
+                            }),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="input-group mb-3">
+                      <label className="input-group-text">Ol This Month</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="Ol This Month"
+                        value={editMonthLeavesObj.leaves[index].olThisMonth}
+                        onChange={(e) => {
+                          setEditMonthLeavesObj({
+                            ...editMonthLeavesObj,
+                            leaves: editMonthLeavesObj.leaves.map((el, i) => {
+                              if (i === index) {
+                                return {
+                                  ...el,
+                                  olThisMonth: parseInt(e.target.value),
+                                };
+                              }
+                              return el;
+                            }),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="input-group mb-3">
+                      <label className="input-group-text">CL This Year</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="CL This Year"
+                        value={editMonthLeavesObj.leaves[index].clThisYear}
+                        onChange={(e) => {
+                          setEditMonthLeavesObj({
+                            ...editMonthLeavesObj,
+                            leaves: editMonthLeavesObj.leaves.map((el, i) => {
+                              if (i === index) {
+                                return {
+                                  ...el,
+                                  clThisYear: parseInt(e.target.value),
+                                };
+                              }
+                              return el;
+                            }),
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="input-group mb-3">
+                      <label className="input-group-text">OL This Year</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="OL This Year"
+                        value={editMonthLeavesObj.leaves[index].olThisYear}
+                        onChange={(e) => {
+                          setEditMonthLeavesObj({
+                            ...editMonthLeavesObj,
+                            leaves: editMonthLeavesObj.leaves.map((el, i) => {
+                              if (i === index) {
+                                return {
+                                  ...el,
+                                  olThisYear: parseInt(e.target.value),
+                                };
+                              }
+                              return el;
+                            }),
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={() => {
+                    setShowEditMonthLeaveOBJData(false);
+                    updateMonthLeavesOBJ();
+                  }}
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => {
+                    setShowEditMonthLeaveOBJData(false);
                   }}
                 >
                   Cancel
