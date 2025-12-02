@@ -1264,7 +1264,7 @@ export default function Teachersreturn() {
                           Working Days
                         </label>
                         <input
-                          type="number"
+                          type={"text"}
                           className="form-control"
                           id="WorkingDays"
                           name="WorkingDays"
@@ -1274,7 +1274,10 @@ export default function Teachersreturn() {
                             if (e.target.value !== "") {
                               setEditTeacher({
                                 ...editTeacher,
-                                workingDays: parseInt(e.target.value),
+                                workingDays:
+                                  typeof e.target.value === "number"
+                                    ? parseInt(e.target.value)
+                                    : e.target.value,
                               });
                             } else {
                               setEditTeacher({
