@@ -526,7 +526,7 @@ export default function ReturnPrint({ data }) {
                   <Text
                     style={[
                       styles.text,
-                      HOI_DESIGNATION === "HT" ? styles.strikethrough : {},
+                      HOI_DESIGNATION === "HT" ? {} : styles.strikethrough,
                     ]}
                   >
                     Head Teacher
@@ -537,7 +537,7 @@ export default function ReturnPrint({ data }) {
                   <Text
                     style={[
                       styles.text,
-                      HOI_DESIGNATION === "HT" ? {} : styles.strikethrough,
+                      HOI_DESIGNATION === "HT" ? styles.strikethrough : {},
                     ]}
                   >
                     Teacher-in-Charge
