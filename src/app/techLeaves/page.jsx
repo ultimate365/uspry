@@ -304,227 +304,192 @@ export default function UserTeachers() {
     setShowAddModal(false);
     setLoader(true);
     try {
-      await setDoc(doc(firestore, "teachersLeaves", addData.id), addData)
-        .then(() => {
-          setLoader(false);
-          setShowAddModal(false);
-          setShowData(true);
-          toast.success("Teachers Leave Data Added Successfully");
-          setTeacherLeaveState((prev) => {
-            const updatedData = [...prev, addData];
-            return sortMonthwise(updatedData);
-          });
-          calledData(sortMonthwise([...allEnry, addData]));
-          setFilteredEntry((prev) => {
-            const updatedData = [...prev, addData];
-            return sortMonthwise(updatedData);
-          });
-          setEntryMonths((prev) => {
-            const updatedMonths = uniqArray([...prev, addData.month]).sort(
-              (a, b) =>
-                monthNamesWithIndex.indexOf(a) - monthNamesWithIndex.indexOf(b)
-            );
-            return updatedMonths;
-          });
-        })
-        .catch((error) => {
-          setLoader(false);
-          toast.error("Error adding data: " + error.message);
-        });
+      await setDoc(doc(firestore, "teachersLeaves", addData.id), addData);
+
+      toast.success("Teachers Leave Data Added Successfully");
+      setShowData(true);
+
+      const newAllEntries = sortMonthwise([...allEnry, addData]);
+      setTeacherLeaveState(newAllEntries);
+      calledData(newAllEntries); // This updates allEnry
+
+      // Update filteredEntry to show the newly added month's data
+      setFilteredEntry([addData]);
+      setFilteredData(addData.leaves);
+
+      setEntryMonths((prev) =>
+        uniqArray([...prev, addData.month]).sort(
+          (a, b) => months.indexOf(a) - months.indexOf(b)
+        )
+      );
     } catch (error) {
-      setLoader(false);
       toast.error("Error adding data: " + error.message);
+    } finally {
+      setLoader(false);
     }
   };
   const updateLeaveData = async (id, value, field, isDecrement = false) => {
     setLoader(true);
-    const updatedValue = isDecrement ? value - 1 : value + 1;
-    const updatedData = filteredData.map((entry) => {
-      if (entry.id === id) {
-        return {
-          ...entry,
-          [field]: updatedValue,
-          clThisYear:
-            field === "clThisMonth"
-              ? entry.clThisYear + (isDecrement ? -1 : 1)
-              : entry.clThisYear,
-          olThisYear:
-            field === "olThisMonth"
-              ? entry.olThisYear + (isDecrement ? -1 : 1)
-              : entry.olThisYear,
-        };
-      }
-      return entry;
-    });
-    await updateDoc(doc(firestore, "teachersLeaves", month + "-" + year), {
-      leaves: updatedData,
-    })
-      .then(async () => {
-        if (field === "clThisMonth" && !isDecrement) {
-          await setDoc(
-            doc(firestore, "leaveDates", addLeaveDateData.id),
-            addLeaveDateData
-          ).then(() => {
-            toast.success("Teachers Cl Added Successfully");
-            const x = [...leaveDateState, addLeaveDateData];
-            const monthwiseSorted = sortLeaves(x);
-            setLeaveDateState(monthwiseSorted);
-            const y = monthwiseSorted.filter(
-              (el) => el.year == selectedYear && el.month == month
-            );
-            setFilteredLeaveData(y);
-          });
-        } else if (field === "clThisMonth" && isDecrement) {
-          await deleteDoc(doc(firestore, "leaveDates", clDelId)).then(() => {
-            const x = leaveDateState.filter((el) => el.id !== clDelId);
-            const y = x.filter(
-              (el) => el.year == selectedYear && el.month == month
-            );
-            setLeaveDateState(x);
-            setFilteredLeaveData(y);
-            toast.success("Teachers Cl Deleted Successfully");
-          });
-        } else if (field === "olThisMonth" && !isDecrement) {
-          await setDoc(
-            doc(firestore, "leaveDates", addLeaveDateData.id),
-            addLeaveDateData
-          ).then(() => {
-            toast.success("Teachers Cl Added Successfully");
-            const x = [...leaveDateState, addLeaveDateData];
-            const monthwiseSorted = sortLeaves(x);
-            setLeaveDateState(monthwiseSorted);
-            const y = monthwiseSorted.filter(
-              (el) => el.year == selectedYear && el.month == month
-            );
-            setFilteredLeaveData(y);
-          });
-        } else if (field === "olThisMonth" && isDecrement) {
-          await deleteDoc(doc(firestore, "leaveDates", olDelId)).then(() => {
-            const x = leaveDateState.filter((el) => el.id !== clDelId);
-            const y = x.filter(
-              (el) => el.year == selectedYear && el.month == month
-            );
-            setLeaveDateState(x);
-            setFilteredLeaveData(y);
-            toast.success("Teachers Cl Deleted Successfully");
-          });
-        }
+    try {
+      const updatedValue = isDecrement ? value - 1 : value + 1;
+      const updatedLeavesData = filteredData.map((entry) =>
+        entry.id === id ? { ...entry, [field]: updatedValue } : entry
+      );
 
-        let x = techLeaves;
-        x.map((el) => {
-          if (el.id === id) {
-            field === "clThisMonth"
-              ? (el.clThisYear = isDecrement
-                  ? el.clThisYear - 1
-                  : el.clThisYear + 1)
-              : (el.olThisYear = isDecrement
-                  ? el.olThisYear - 1
-                  : el.olThisYear + 1);
-          }
-        });
-        setTechLeaves(x);
-        setFilteredEntry(updatedData);
-        setFilteredData(updatedData);
-        setTeacherLeaveState((prev) => {
-          const updatedNewData = prev.map((entry) => {
-            if (entry.id === month + "-" + year) {
-              return {
-                ...entry,
-                leaves: updatedData,
-              };
-            }
-            return entry;
-          });
-          return sortMonthwise(updatedNewData);
-        });
-        calledData(sortMonthwise(teacherLeaveState));
-      })
-      .catch((error) => {
-        toast.error("Error updating data: " + error.message);
-      })
-      .finally(() => {
-        setLoader(false);
+      await updateDoc(doc(firestore, "teachersLeaves", month + "-" + year), {
+        leaves: updatedLeavesData,
       });
+
+      let newLeaveDateState = [...leaveDateState];
+      if (field === "clThisMonth" || field === "olThisMonth") {
+        if (!isDecrement) {
+          await setDoc(
+            doc(firestore, "leaveDates", addLeaveDateData.id),
+            addLeaveDateData
+          );
+          newLeaveDateState.push(addLeaveDateData);
+          toast.success(
+            `Teacher's ${addLeaveDateData.leaveType} Added Successfully`
+          );
+        } else {
+          const deleteId = field === "clThisMonth" ? clDelId : olDelId;
+          await deleteDoc(doc(firestore, "leaveDates", deleteId));
+          newLeaveDateState = newLeaveDateState.filter(
+            (el) => el.id !== deleteId
+          );
+          toast.success(`Teacher's Leave Deleted Successfully`);
+        }
+      }
+
+      const sortedLeaveDates = sortLeaves(newLeaveDateState);
+      setLeaveDateState(sortedLeaveDates);
+      setFilteredLeaveData(
+        sortedLeaveDates.filter(
+          (el) => el.year == selectedYear && el.month == month
+        )
+      );
+
+      const updatedTechLeaves = techLeaves.map((el) => {
+        if (el.id === id) {
+          const increment = isDecrement ? -1 : 1;
+          return {
+            ...el,
+            clThisYear:
+              field === "clThisMonth"
+                ? el.clThisYear + increment
+                : el.clThisYear,
+            olThisYear:
+              field === "olThisMonth"
+                ? el.olThisYear + increment
+                : el.olThisYear,
+          };
+        }
+        return el;
+      });
+      setTechLeaves(updatedTechLeaves);
+
+      setFilteredData(updatedLeavesData);
+
+      const updatedTeacherLeaveState = teacherLeaveState.map((entry) =>
+        entry.id === month + "-" + year
+          ? { ...entry, leaves: updatedLeavesData }
+          : entry
+      );
+      const sortedGlobalState = sortMonthwise(updatedTeacherLeaveState);
+      setTeacherLeaveState(sortedGlobalState);
+      calledData(sortedGlobalState);
+    } catch (error) {
+      toast.error("Error updating data: " + error.message);
+    } finally {
+      setLoader(false);
+    }
   };
   const uploadLeaveDateData = async () => {
     setLoader(true);
     setShowLeaveDateAdd(false);
-    await setDoc(
-      doc(firestore, "leaveDates", addLeaveDateData.id),
-      addLeaveDateData
-    )
-      .then(() => {
-        toast.success("Teachers Leave Date Added Successfully");
-        const x = [...leaveDateState, addLeaveDateData];
-        const monthwiseSorted = sortLeaves(x);
-        setLeaveDateState(monthwiseSorted);
-        const z =
-          monthwiseSorted.filter(
-            (el) => el.year == selectedYear && el.month == month
-          ) || [];
-        setFilteredLeaveData(z);
-        setLoader(false);
-        setAddLeaveDateData({
-          id: docId,
-          techID: "",
-          month: monthName,
-          year: yearName,
-          leaveType: "",
-          date: todayInString(),
-          sl: "",
-        });
-        setSelectedTeacher("");
-      })
-      .catch((e) => {
-        setLoader(false);
-        toast.error("Error updating data: " + e.message);
+    try {
+      await setDoc(
+        doc(firestore, "leaveDates", addLeaveDateData.id),
+        addLeaveDateData
+      );
+
+      toast.success("Teachers Leave Date Added Successfully");
+      const newLeaveDates = sortLeaves([...leaveDateState, addLeaveDateData]);
+      setLeaveDateState(newLeaveDates);
+
+      setFilteredLeaveData(
+        newLeaveDates.filter(
+          (el) => el.year == selectedYear && el.month == month
+        )
+      );
+
+      setAddLeaveDateData({
+        id: uuid().split("-")[0].substring(0, 6),
+        techID: "",
+        month: monthName,
+        year: yearName,
+        leaveType: "",
+        date: todayInString(),
+        sl: "",
       });
+      setSelectedTeacher("");
+    } catch (e) {
+      toast.error("Error updating data: " + e.message);
+    } finally {
+      setLoader(false);
+    }
   };
   const updateLeaveDate = async () => {
     setLoader(true);
     setShowEditLeaveDateData(false);
-    await updateDoc(
-      doc(firestore, "leaveDates", editLeaveDateObj.id),
-      editLeaveDateObj
-    )
-      .then(() => {
-        toast.success("Teachers Leave Date Updated Successfully");
-        const x = leaveDateState.filter((el) => el.id !== editLeaveDateObj.id);
-        const y = [...x, editLeaveDateObj];
-        const monthwiseSorted = sortLeaves(y);
-        setLeaveDateState(monthwiseSorted);
-        const z =
-          monthwiseSorted.filter(
-            (el) => el.year == selectedYear && el.month == month
-          ) || [];
-        setFilteredLeaveData(z);
-        setLoader(false);
-      })
-      .catch((e) => {
-        setLoader(false);
-        toast.error("Error updating data: " + e.message);
-      });
+    try {
+      await updateDoc(
+        doc(firestore, "leaveDates", editLeaveDateObj.id),
+        editLeaveDateObj
+      );
+      toast.success("Teachers Leave Date Updated Successfully");
+
+      const updatedLeaveDates = leaveDateState.map((el) =>
+        el.id === editLeaveDateObj.id ? editLeaveDateObj : el
+      );
+      const sortedLeaveDates = sortLeaves(updatedLeaveDates);
+      setLeaveDateState(sortedLeaveDates);
+
+      setFilteredLeaveData(
+        sortedLeaveDates.filter(
+          (el) => el.year == selectedYear && el.month == month
+        )
+      );
+    } catch (e) {
+      toast.error("Error updating data: " + e.message);
+    } finally {
+      setLoader(false);
+    }
   };
   const deleteLeaveDate = async () => {
     setLoader(true);
     setShowEditLeaveDateData(false);
-    await deleteDoc(doc(firestore, "leaveDates", editLeaveDateObj.id))
-      .then(() => {
-        toast.success("Teachers Leave Date Deleted Successfully");
-        const x = leaveDateState.filter((el) => el.id !== editLeaveDateObj.id);
-        const y = x.filter(
+    try {
+      await deleteDoc(doc(firestore, "leaveDates", editLeaveDateObj.id));
+
+      toast.success("Teachers Leave Date Deleted Successfully");
+      const remainingLeaves = leaveDateState.filter(
+        (el) => el.id !== editLeaveDateObj.id
+      );
+      setLeaveDateState(remainingLeaves);
+
+      setFilteredLeaveData(
+        remainingLeaves.filter(
           (el) =>
             el.year == editLeaveDateObj.year &&
             el.month == editLeaveDateObj.month
-        );
-        setLeaveDateState(x);
-        setFilteredLeaveData(y);
-        setLoader(false);
-      })
-      .catch((e) => {
-        setLoader(false);
-        toast.error("Error deleting data: " + e.message);
-      });
+        )
+      );
+    } catch (e) {
+      toast.error("Error deleting data: " + e.message);
+    } finally {
+      setLoader(false);
+    }
   };
   function sortLeaves(leaves) {
     const monthOrder = {
@@ -671,7 +636,7 @@ export default function UserTeachers() {
               onClick={() => {
                 setShowLeaveDateAdd(true);
                 setAddLeaveDateData({
-                  id: docId,
+                  id: uuid().split("-")[0].substring(0, 6), // Generate a new ID when opening the modal
                   techID: "",
                   month: monthName,
                   year: yearName,
@@ -862,6 +827,7 @@ export default function UserTeachers() {
                               setShowCLAdd(true);
                               setAddLeaveDateData({
                                 ...addLeaveDateData,
+                                id: uuid().split("-")[0].substring(0, 6), // Generate a new ID for this specific CL entry
                                 techID: entry.id,
                                 leaveType: "CL",
                                 sl:
@@ -949,6 +915,7 @@ export default function UserTeachers() {
                               setShowOlAdd(true);
                               setAddLeaveDateData({
                                 ...addLeaveDateData,
+                                id: uuid().split("-")[0].substring(0, 6), // Generate a new ID for this specific OL entry
                                 techID: entry.id,
                                 leaveType: "OL",
                                 sl:
@@ -1163,7 +1130,7 @@ export default function UserTeachers() {
                   onClick={() => {
                     setShowLeaveDateAdd(false);
                     setAddLeaveDateData({
-                      id: docId,
+                      id: uuid().split("-")[0].substring(0, 6), // Generate a new ID on cancel for the next entry
                       techID: "",
                       month: monthName,
                       year: yearName,

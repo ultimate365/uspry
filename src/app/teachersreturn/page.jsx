@@ -98,6 +98,11 @@ export default function Teachersreturn() {
   const [frontPageZoom, setFrontPageZoom] = useState(93);
   const [backPageZoom, setBackPageZoom] = useState(80);
   const [showZoom, setShowZoom] = useState(false);
+  const [availableYears, setAvailableYears] = useState([]);
+  const [availableMonths, setAvailableMonths] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+
   const [inspection, setInspection] = useState({
     inspectionDate: "",
     pp: "",
@@ -109,7 +114,8 @@ export default function Teachersreturn() {
     total: "",
   });
   const id = getID();
-  const entry = {
+
+  const [entry, setEntry] = useState({
     id,
     month,
     year,
@@ -119,8 +125,7 @@ export default function Teachersreturn() {
     inspection,
     date: todayInString(),
     remarks,
-  };
-
+  });
   const getMonthlyData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
@@ -135,9 +140,9 @@ export default function Teachersreturn() {
     setReturnState(monthwiseSorted);
     setLoader(false);
     calledData(monthwiseSorted);
-    appedData(monthwiseSorted[monthwiseSorted.length - 1]);
+    appendData(monthwiseSorted[monthwiseSorted.length - 1]);
   };
-  const appedData = (data) => {
+  const appendData = (data) => {
     setTeachers(data.teachers);
     setFilteredData(data.teachers);
     setStudents(data.students);
@@ -147,14 +152,14 @@ export default function Teachersreturn() {
     setShowModal(true);
   };
   const calledData = (array) => {
-    let x = [];
-    array.map((entry) => {
-      const entryYear = entry.id.split("-")[1];
-      x.push(entryYear);
-      x = uniqArray(x);
-      x = x.sort((a, b) => a - b);
-    });
+    const years = uniqArray(
+      array.map((entry) => {
+        const entryYear = entry.id.split("-")[1];
+        return entryYear;
+      })
+    ).sort((a, b) => a - b);
 
+    setAvailableYears(years);
     setLoader(false);
   };
 
@@ -167,7 +172,7 @@ export default function Teachersreturn() {
       getMonthlyData();
     } else {
       calledData(returnState);
-      appedData(returnState[returnState.length - 1]);
+      appendData(returnState[returnState.length - 1]);
     }
     //eslint-disable-next-line
   }, []);
@@ -196,6 +201,34 @@ export default function Teachersreturn() {
     }
     //eslint-disable-next-line
   }, []);
+
+  const handleYearChange = (e) => {
+    const year = e.target.value;
+    setSelectedYear(year);
+    setSelectedMonth(""); // Reset month selection
+    if (year) {
+      const monthsForYear = returnState
+        .filter((item) => item.id.endsWith(`-${year}`))
+        .map((item) => item.month);
+      setAvailableMonths(monthsForYear);
+    } else {
+      setAvailableMonths([]);
+    }
+  };
+
+  const handleMonthChange = (e) => {
+    const month = e.target.value;
+    setSelectedMonth(month);
+    if (month && selectedYear) {
+      const selectedData = returnState.find(
+        (item) => item.id === `${month}-${selectedYear}`
+      );
+      if (selectedData) {
+        appendData(selectedData);
+        setEntry(selectedData);
+      }
+    }
+  };
   return (
     <div className="container-fluid">
       {loader && <Loader />}
@@ -250,6 +283,43 @@ export default function Teachersreturn() {
           >
             Edit Student Data
           </button>
+        </div>
+      </div>
+      <div className="col-md-6 mx-auto my-2 noprint">
+        <div className="row">
+          <div className="col-md-6">
+            <label htmlFor="year-select">Select Year</label>
+            <select
+              id="year-select"
+              className="form-select"
+              value={selectedYear}
+              onChange={handleYearChange}
+            >
+              <option value="">-- Select a Year --</option>
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="month-select">Select Month</label>
+            <select
+              id="month-select"
+              className="form-select"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+              disabled={!selectedYear}
+            >
+              <option value="">-- Select a Month --</option>
+              {availableMonths.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -1425,7 +1495,9 @@ export default function Teachersreturn() {
                           textDecorationStyle: "dotted",
                         }}
                       >
-                        {getMonth()}
+                        {selectedMonth
+                          ? `${entry.month.toUpperCase()} of ${entry.year}`
+                          : getMonth()}
                       </span>
                     </p>
                   </div>
