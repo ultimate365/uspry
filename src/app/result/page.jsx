@@ -279,7 +279,7 @@ export default function Result() {
                         ? 300
                         : viewStudent.nclass < 3
                         ? 450
-                        : 600
+                        : 500
                       : viewStudent.nclass === 0
                       ? 150
                       : viewStudent.nclass < 3
@@ -305,7 +305,7 @@ export default function Result() {
                             ? 300
                             : viewStudent.nclass < 3
                             ? 450
-                            : 600
+                            : 500
                           : getPartTotal(2) > 0
                           ? viewStudent.nclass === 0
                             ? 150
