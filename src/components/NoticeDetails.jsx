@@ -17,22 +17,8 @@ import Loader from "./Loader";
 import { useGlobalContext } from "../context/Store";
 import { DateValueToSring } from "../modules/calculatefunctions";
 import { v4 as uuid } from "uuid";
-
-// Plugins
-// eslint-disable-next-line
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
-
-// Import styles
-// eslint-disable-next-line
-import "@react-pdf-viewer/core/lib/styles/index.css";
-// eslint-disable-next-line
-import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import Image from "next/image";
-import useWindowSize from "@rooks/use-window-size";
 const NoticeDetails = ({ sata }) => {
-  // Create new plugin instance
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  const { innerWidth, innerHeight } = useWindowSize();
   const { state } = useGlobalContext();
   const user = state?.USER;
   const name = user?.name;

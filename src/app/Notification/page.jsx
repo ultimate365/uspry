@@ -27,11 +27,14 @@ import {
   createDownloadLink,
   DateValueToSring,
 } from "../../modules/calculatefunctions";
-
-import NoticeDetails from "../../components/NoticeDetails";
 import { useGlobalContext } from "../../context/Store";
 import { SCHOOLNAME } from "@/modules/constants";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const NoticeDetails = dynamic(() => import("../../components/NoticeDetails"), {
+  ssr: false,
+});
 const Notification = () => {
   const {
     noticeState,
