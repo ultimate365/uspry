@@ -200,9 +200,54 @@ export default function CreateHeroResult() {
         return student;
       });
 
-      setData(updatedData);
-      setStudentResultState(updatedData);
-      setFilteredData(updatedData);
+      // Recalculate totals and new_roll_no for local state
+      const studentsWithTotal = updatedData.map((student) => {
+        const total =
+          (student.ben1 || 0) +
+          (student.ben2 || 0) +
+          (student.ben3 || 0) +
+          (student.eng1 || 0) +
+          (student.eng2 || 0) +
+          (student.eng3 || 0) +
+          (student.math1 || 0) +
+          (student.math2 || 0) +
+          (student.math3 || 0) +
+          (student.health1 || 0) +
+          (student.health2 || 0) +
+          (student.health3 || 0) +
+          (student.work1 || 0) +
+          (student.work2 || 0) +
+          (student.work3 || 0) +
+          (student.envs1 || 0) +
+          (student.envs2 || 0) +
+          (student.envs3 || 0);
+        return { ...student, total };
+      });
+
+      const studentsByClass = studentsWithTotal.reduce((acc, student) => {
+        const studentClass = student.class;
+        if (!acc[studentClass]) {
+          acc[studentClass] = [];
+        }
+        acc[studentClass].push(student);
+        return acc;
+      }, {});
+
+      let finalUpdatedData = [];
+      for (const studentClass in studentsByClass) {
+        const sortedClass = studentsByClass[studentClass].sort(
+          (a, b) => b.total - a.total
+        );
+        const classWithNewRolls = sortedClass.map((student, index) => ({
+          ...student,
+          new_roll_no: index + 1,
+        }));
+        finalUpdatedData.push(...classWithNewRolls);
+      }
+
+      setData(finalUpdatedData);
+      setStudentResultState(finalUpdatedData);
+      setFilteredData(finalUpdatedData);
       toast.success("Marks updated successfully");
       setSelectPart("");
       setIsPartSelected(false);
@@ -305,7 +350,7 @@ export default function CreateHeroResult() {
       grow: 2,
       width: "80px",
     },
-    ,
+
     {
       name: "Class",
       selector: (row) => row.class,
@@ -342,7 +387,87 @@ export default function CreateHeroResult() {
       grow: 2,
       width: "100px",
     },
+    {
+      name: "New Roll No",
+      selector: (row) => row.new_roll_no,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+      grow: 2,
+      width: "120px",
+    },
   ];
+
+  const upgradeStudent = async () => {
+    setLoader(true);
+
+    const studentsWithTotal = data.map((student) => {
+      const total =
+        (student.ben1 || 0) +
+        (student.ben2 || 0) +
+        (student.ben3 || 0) +
+        (student.eng1 || 0) +
+        (student.eng2 || 0) +
+        (student.eng3 || 0) +
+        (student.math1 || 0) +
+        (student.math2 || 0) +
+        (student.math3 || 0) +
+        (student.health1 || 0) +
+        (student.health2 || 0) +
+        (student.health3 || 0) +
+        (student.work1 || 0) +
+        (student.work2 || 0) +
+        (student.work3 || 0) +
+        (student.envs1 || 0) +
+        (student.envs2 || 0) +
+        (student.envs3 || 0);
+      return { ...student, total };
+    });
+
+    const studentsByClass = studentsWithTotal.reduce((acc, student) => {
+      const studentClass = student.class;
+      if (!acc[studentClass]) {
+        acc[studentClass] = [];
+      }
+      acc[studentClass].push(student);
+      return acc;
+    }, {});
+
+    let updatedStudents = [];
+    for (const studentClass in studentsByClass) {
+      const sortedClass = studentsByClass[studentClass].sort(
+        (a, b) => b.total - a.total
+      );
+      const classWithNewRolls = sortedClass.map((student, index) => ({
+        ...student,
+        new_roll_no: index + 1,
+      }));
+      updatedStudents.push(...classWithNewRolls);
+    }
+
+    try {
+      const batch = writeBatch(firestore);
+      updatedStudents.forEach((student) => {
+        const studentRef = doc(firestore, "studentsResult", student.id);
+        batch.update(studentRef, {
+          new_roll_no: student.new_roll_no,
+          total: student.total,
+        });
+      });
+      await batch.commit().then(() => {
+        setData(updatedStudents);
+        setStudentResultState(updatedStudents);
+        setFilteredData(updatedStudents);
+        toast.success("Marks updated successfully");
+      });
+    } catch (error) {
+      setLoader(false);
+      toast.error("Error updating roll numbers");
+      console.error("Error updating roll numbers:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   return (
     <div className="container-fluid text-center my-3">
@@ -359,10 +484,17 @@ export default function CreateHeroResult() {
       <div className="my-3">
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-primary m-2"
           onClick={() => setShowAddMarks(true)}
         >
           Enter Marks
+        </button>
+        <button
+          type="button"
+          className="btn btn-success m-2"
+          onClick={upgradeStudent}
+        >
+          Upgrade to Next Class
         </button>
       </div>
       <h3 className="text-center text-primary">Student's Result Details</h3>
