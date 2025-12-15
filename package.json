@@ -33,7 +33,7 @@
     "fuse.js": "^7.1.0",
     "input": "^1.0.1",
     "mongoose": "^8.3.4",
-    "next": "14.2.3",
+    "next": "14.2.35",
     "nodemailer": "^6.9.16",
     "nodemailer-smtp-transport": "^2.7.4",
     "papaparse": "^5.4.1",
