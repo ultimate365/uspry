@@ -195,7 +195,7 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
                     <Text style={styles.textBold}>Subject</Text>
@@ -206,7 +206,7 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
                     <Text style={styles.textBold}>I</Text>
@@ -218,7 +218,7 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
                     <Text style={styles.textBold}>II</Text>
@@ -230,7 +230,7 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
                     <Text style={styles.textBold}>III</Text>
@@ -242,7 +242,7 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
                     <Text style={styles.textBold}>Total</Text>
@@ -253,7 +253,7 @@ export default function PPResult({ data }) {
                       width: "12%",
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
                     <Text style={styles.textBold}>Percentage</Text>
@@ -287,10 +287,10 @@ export default function PPResult({ data }) {
                           borderRightWidth: 1,
                           justifyContent: "center",
                           alignItems: "center",
-                          height: 30,
+                          height: 35,
                         }}
                       >
-                        <Text style={styles.textBoldBold}>{sub.fullName}</Text>
+                        <Text style={styles.textBold}>{sub.fullName}</Text>
                       </View>
                       <View
                         style={{
@@ -298,10 +298,10 @@ export default function PPResult({ data }) {
                           borderRightWidth: 1,
                           justifyContent: "center",
                           alignItems: "center",
-                          height: 30,
+                          height: 35,
                         }}
                       >
-                        <Text style={styles.textBoldBold}>{mark1}</Text>
+                        <Text style={styles.textBold}>{mark1}</Text>
                       </View>
                       <View
                         style={{
@@ -309,10 +309,10 @@ export default function PPResult({ data }) {
                           borderRightWidth: 1,
                           justifyContent: "center",
                           alignItems: "center",
-                          height: 30,
+                          height: 35,
                         }}
                       >
-                        <Text style={styles.textBoldBold}>{mark2}</Text>
+                        <Text style={styles.textBold}>{mark2}</Text>
                       </View>
                       <View
                         style={{
@@ -320,10 +320,10 @@ export default function PPResult({ data }) {
                           borderRightWidth: 1,
                           justifyContent: "center",
                           alignItems: "center",
-                          height: 30,
+                          height: 35,
                         }}
                       >
-                        <Text style={styles.textBoldBold}>{mark3}</Text>
+                        <Text style={styles.textBold}>{mark3}</Text>
                       </View>
                       <View
                         style={{
@@ -331,22 +331,20 @@ export default function PPResult({ data }) {
                           borderRightWidth: 1,
                           justifyContent: "center",
                           alignItems: "center",
-                          height: 30,
+                          height: 35,
                         }}
                       >
-                        <Text style={styles.textBoldBold}>
-                          {getSubjectTotal()}
-                        </Text>
+                        <Text style={styles.textBold}>{getSubjectTotal()}</Text>
                       </View>
                       <View
                         style={{
                           width: "12%",
                           justifyContent: "center",
                           alignItems: "center",
-                          height: 30,
+                          height: 35,
                         }}
                       >
-                        <Text style={styles.textBoldBold}>
+                        <Text style={styles.textBold}>
                           {getSubjectTotal()} %
                         </Text>
                       </View>
@@ -367,10 +365,10 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
-                    <Text style={styles.textBoldBold}>Grand Total</Text>
+                    <Text style={styles.textBold}>Grand Total</Text>
                   </View>
                   <View
                     style={{
@@ -378,10 +376,10 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
-                    <Text style={styles.textBoldBold}>{total1} / 60</Text>
+                    <Text style={styles.textBold}>{total1} / 60</Text>
                   </View>
                   <View
                     style={{
@@ -389,10 +387,10 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
-                    <Text style={styles.textBoldBold}>{total2} / 90</Text>
+                    <Text style={styles.textBold}>{total2} / 90</Text>
                   </View>
                   <View
                     style={{
@@ -400,10 +398,10 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
-                    <Text style={styles.textBoldBold}>{total3} / 150</Text>
+                    <Text style={styles.textBold}>{total3} / 150</Text>
                   </View>
                   <View
                     style={{
@@ -411,20 +409,20 @@ export default function PPResult({ data }) {
                       borderRightWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
-                    <Text style={styles.textBoldBold}>{grandTotal} / 300</Text>
+                    <Text style={styles.textBold}>{grandTotal} / 300</Text>
                   </View>
                   <View
                     style={{
                       width: "12%",
                       justifyContent: "center",
                       alignItems: "center",
-                      height: 30,
+                      height: 35,
                     }}
                   >
-                    <Text style={styles.textBoldBold}>
+                    <Text style={styles.textBold}>
                       {totalPercentage.toFixed(2)} %
                     </Text>
                   </View>
@@ -441,17 +439,17 @@ export default function PPResult({ data }) {
                 }}
               >
                 <View>
-                  <Text style={styles.textBoldBold}>
+                  <Text style={styles.textBold}>
                     OVER ALL GRAND TOTAL: {totalMarks} / 300
                   </Text>
                 </View>
                 <View>
-                  <Text style={styles.textBoldBold}>
+                  <Text style={styles.textBold}>
                     OVER ALL GRAND PERCENTAGE: {totalPercentage.toFixed(2)} %
                   </Text>
                 </View>
                 <View>
-                  <Text style={styles.textBoldBold}>GRADE: {getGrade()}</Text>
+                  <Text style={styles.textBold}>GRADE: {getGrade()}</Text>
                 </View>
               </View>
               <View
@@ -465,19 +463,17 @@ export default function PPResult({ data }) {
                 }}
               >
                 <View>
-                  <Text style={styles.textBoldBold}>
+                  <Text style={styles.textBold}>
                     Signature of the Class Teacher
                   </Text>
                 </View>
                 <View>
-                  <Text style={styles.textBoldBold}>
+                  <Text style={styles.textBold}>
                     Signature of the Head Teacher
                   </Text>
                 </View>
                 <View>
-                  <Text style={styles.textBoldBold}>
-                    Signature of the Gurdian
-                  </Text>
+                  <Text style={styles.textBold}>Signature of the Gurdian</Text>
                 </View>
               </View>
             </View>
