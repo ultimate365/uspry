@@ -16,7 +16,17 @@ import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { createDownloadLink } from "../../modules/calculatefunctions";
+import dynamic from "next/dynamic";
+import PPResult from "../../pdf/PPResult";
 export default function CreateHeroResult() {
+  const PDFDownloadLink = dynamic(
+    async () =>
+      await import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Please Wait...</p>,
+    }
+  );
   const { state, studentResultState, setStudentResultState } =
     useGlobalContext();
   const router = useRouter();
@@ -93,6 +103,7 @@ export default function CreateHeroResult() {
   const [isPartSelected, setIsPartSelected] = useState(false);
   const [isClassSelected, setIsClassSelected] = useState(false);
   const [isSubjectSelected, setIsSubjectSelected] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
 
   // Marks input state
   const [marksInput, setMarksInput] = useState([]);
@@ -496,6 +507,40 @@ export default function CreateHeroResult() {
         >
           Upgrade to Next Class
         </button>
+      </div>
+      <div className="my-3">
+        <button
+          type="button"
+          className="btn btn-primary m-2"
+          onClick={() => setShowDownload(!showDownload)}
+        >
+          {showDownload ? "Hide PP Result" : "Show PP Result"}
+        </button>
+        {showDownload && (
+          <div className="my-3 mx-auto">
+            {/* <PPResult data={data.filter((el) => el.nclass === 0)} /> */}
+            <PDFDownloadLink
+              document={
+                <PPResult data={data.filter((el) => el.nclass === 0)} />
+              }
+              fileName={`Result of Pre Primary Students.pdf`}
+              style={{
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
+                margin: 10,
+              }}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Please Wait..." : "Download PP Results"
+              }
+            </PDFDownloadLink>
+          </div>
+        )}
       </div>
       <h3 className="text-center text-primary">Student's Result Details</h3>
 

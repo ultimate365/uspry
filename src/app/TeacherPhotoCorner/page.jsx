@@ -8,7 +8,7 @@ import Image from "next/image";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import TeachersCorner from "../../components/TeachersCorner";
+import TeachersCorner from "../../pdf/TeachersCorner";
 import dynamic from "next/dynamic";
 export default function TeacherPhotoCorner() {
   const PDFDownloadLink = dynamic(

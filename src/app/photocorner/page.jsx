@@ -6,7 +6,7 @@ import { useGlobalContext } from "../../context/Store";
 import { SCHOOLNAME } from "@/modules/constants";
 import Image from "next/image";
 import Loader from "@/components/Loader";
-import StudentCorner from "../../components/StudentCorner";
+import StudentCorner from "../../pdf/StudentCorner";
 import dynamic from "next/dynamic";
 export default function PhotoCorner() {
   const PDFDownloadLink = dynamic(

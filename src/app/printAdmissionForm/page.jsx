@@ -5,7 +5,7 @@ import schoolLogo from "@/../public/assets/images/logoweb.png";
 import Image from "next/image";
 import { SCHOOLBENGALIADDRESS, SCHOOLBENGALINAME } from "@/modules/constants";
 import { useRouter } from "next/navigation";
-import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import CompDownloadAdmissionForm from "@/pdf/CompDownloadAdmissionForm";
 
 import { DateValueToSring } from "@/modules/calculatefunctions";
 import dynamic from "next/dynamic";

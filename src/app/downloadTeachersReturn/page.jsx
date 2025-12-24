@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import ReturnPrint from "../../components/ReturnPrint";
+import ReturnPrint from "../../pdf/ReturnPrint";
 
 export default function Page() {
   const PDFDownloadLink = dynamic(

@@ -25,7 +25,7 @@ import { useGlobalContext } from "../../context/Store";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import SchoolCertificate from "../../components/SchoolCertificate";
+import SchoolCertificate from "../../pdf/SchoolCertificate";
 import FuzzySearch from "../../components/FuzzySearch";
 export default function AdmissionRegisterData() {
   const PDFDownloadLink = dynamic(

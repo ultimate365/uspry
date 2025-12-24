@@ -34,7 +34,7 @@ import { DateValueToSring } from "../../modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { SCHOOLNAME, classWiseAge } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import CompDownloadAdmissionForm from "@/pdf/CompDownloadAdmissionForm";
 import Image from "next/image";
 export default function Admission() {
   const { setStateObject, setApplicationFormState, applicationFormState } =

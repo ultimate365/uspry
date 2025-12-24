@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { useGlobalContext } from "../../context/Store";
 import { SCHOOLNAME } from "../../modules/constants";
-import ExamSeatDistribution from "../../components/ExamSeatDistribution";
+import ExamSeatDistribution from "../../pdf/ExamSeatDistribution";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 export default function Result() {

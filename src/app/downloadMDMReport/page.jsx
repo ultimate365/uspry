@@ -2,7 +2,7 @@
 import React, { Suspense, useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
-import MDMPrint from "@/components/MDMPrint";
+import MDMPrint from "@/pdf/MDMPrint";
 import dynamic from "next/dynamic";
 
 export default function Page() {

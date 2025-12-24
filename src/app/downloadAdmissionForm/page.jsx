@@ -6,7 +6,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import CompDownloadAdmissionForm from "@/pdf/CompDownloadAdmissionForm";
 import { DateValueToSring } from "../../modules/calculatefunctions";
 import { useGlobalContext } from "../../context/Store";
 export default function DownloadAdmissionForm() {

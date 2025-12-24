@@ -24,7 +24,7 @@ import {
 } from "@/modules/calculatefunctions";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
-import MDMPrint from "@/components/MDMPrint";
+import MDMPrint from "@/pdf/MDMPrint";
 export default function MDMmonthlyReport() {
   const { monthlyReportState, setMonthlyReportState, state } =
     useGlobalContext();

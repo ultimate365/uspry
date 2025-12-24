@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import dynamic from "next/dynamic";
-import SchoolCertificate from "../../components/SchoolCertificate";
+import SchoolCertificate from "../../pdf/SchoolCertificate";
 export default function Page() {
   const PDFDownloadLink = dynamic(
     () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),

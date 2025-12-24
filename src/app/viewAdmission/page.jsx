@@ -29,7 +29,7 @@ import {
   SCHOOLBENGALINAME,
 } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import CompDownloadAdmissionForm from "@/components/CompDownloadAdmissionForm";
+import CompDownloadAdmissionForm from "@/pdf/CompDownloadAdmissionForm";
 import Image from "next/image";
 import schoolLogo from "@/../public/assets/images/logoweb.png";
 export default function ViewAdmission() {

@@ -35,7 +35,7 @@ import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
-import ReturnPrint from "@/components/ReturnPrint";
+import ReturnPrint from "@/pdf/ReturnPrint";
 export default function MonthlyTeachersReturn() {
   const PDFDownloadLink = dynamic(
     () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
