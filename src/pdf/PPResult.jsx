@@ -270,9 +270,7 @@ export default function PPResult({ data }) {
                   const getSubjectTotal = () => {
                     return mark1 + mark2 + mark3;
                   };
-                  const getSubjectPercentage = () => {
-                    return (getSubjectTotal() / 100) * 100;
-                  };
+
                   return (
                     <View
                       key={ind}
@@ -346,9 +344,7 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>
-                          {getSubjectPercentage()} %
-                        </Text>
+                        <Text style={styles.text}>{getSubjectTotal()} %</Text>
                       </View>
                     </View>
                   );
