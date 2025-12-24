@@ -290,7 +290,7 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>{sub.fullName}</Text>
+                        <Text style={styles.textBold}>{sub.fullName}</Text>
                       </View>
                       <View
                         style={{
@@ -301,7 +301,7 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>{mark1}</Text>
+                        <Text style={styles.textBold}>{mark1}</Text>
                       </View>
                       <View
                         style={{
@@ -312,7 +312,7 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>{mark2}</Text>
+                        <Text style={styles.textBold}>{mark2}</Text>
                       </View>
                       <View
                         style={{
@@ -323,7 +323,7 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>{mark3}</Text>
+                        <Text style={styles.textBold}>{mark3}</Text>
                       </View>
                       <View
                         style={{
@@ -334,7 +334,7 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>{getSubjectTotal()}</Text>
+                        <Text style={styles.textBold}>{getSubjectTotal()}</Text>
                       </View>
                       <View
                         style={{
@@ -344,7 +344,9 @@ export default function PPResult({ data }) {
                           height: 30,
                         }}
                       >
-                        <Text style={styles.text}>{getSubjectTotal()} %</Text>
+                        <Text style={styles.textBold}>
+                          {getSubjectTotal()} %
+                        </Text>
                       </View>
                     </View>
                   );
@@ -366,7 +368,7 @@ export default function PPResult({ data }) {
                       height: 30,
                     }}
                   >
-                    <Text style={styles.text}>Grand Total</Text>
+                    <Text style={styles.textBold}>Grand Total</Text>
                   </View>
                   <View
                     style={{
@@ -377,7 +379,7 @@ export default function PPResult({ data }) {
                       height: 30,
                     }}
                   >
-                    <Text style={styles.text}>{total1} / 60</Text>
+                    <Text style={styles.textBold}>{total1} / 60</Text>
                   </View>
                   <View
                     style={{
@@ -388,7 +390,7 @@ export default function PPResult({ data }) {
                       height: 30,
                     }}
                   >
-                    <Text style={styles.text}>{total2} / 90</Text>
+                    <Text style={styles.textBold}>{total2} / 90</Text>
                   </View>
                   <View
                     style={{
@@ -399,7 +401,7 @@ export default function PPResult({ data }) {
                       height: 30,
                     }}
                   >
-                    <Text style={styles.text}>{total3} / 150</Text>
+                    <Text style={styles.textBold}>{total3} / 150</Text>
                   </View>
                   <View
                     style={{
@@ -410,7 +412,7 @@ export default function PPResult({ data }) {
                       height: 30,
                     }}
                   >
-                    <Text style={styles.text}>{grandTotal} / 300</Text>
+                    <Text style={styles.textBold}>{grandTotal} / 300</Text>
                   </View>
                   <View
                     style={{
@@ -420,7 +422,7 @@ export default function PPResult({ data }) {
                       height: 30,
                     }}
                   >
-                    <Text style={styles.text}>
+                    <Text style={styles.textBold}>
                       {totalPercentage.toFixed(2)} %
                     </Text>
                   </View>
