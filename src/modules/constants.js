@@ -66,3 +66,4 @@ export const classWiseAge = [
   { className: "CLASS V", benClassName: "পঞ্চম শ্রেনী", age: 10 },
 ];
 export const TELEGRAM_TEACHER_GROUP = "https://t.me/+LZsOjnE9mBAxZjI9";
+export const AndroidAppLink = "1FDcOHPETUb5iOA32SnOEUqPUiUkrljKE";

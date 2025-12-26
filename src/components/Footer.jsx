@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { SCHOOLADDRESS, SCHOOLNAME } from "@/modules/constants";
+import { AndroidAppLink, SCHOOLADDRESS, SCHOOLNAME } from "@/modules/constants";
+import GoogleDriveDownload from "./GoogleDriveDownload";
 const Footer = () => {
   return (
     <div
@@ -86,7 +87,7 @@ const Footer = () => {
         <h5 className="container text-center">Important Links:</h5>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
-          href="https://banglarshiksha.gov.in/login"
+          href="https://banglarshiksha.wb.gov.in/login"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -94,7 +95,7 @@ const Footer = () => {
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
-          href="https://school.banglarshiksha.gov.in/sms/"
+          href="https://school.banglarshiksha.gov.in/instance/sms_login/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -102,11 +103,27 @@ const Footer = () => {
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
-          href="https://www.wbbpe.org"
+          href="https://schoolinfo.banglarshiksha.gov.in/login"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="bi bi-browser-chrome"></i> UDISE+
+        </Link>
+        <Link
+          className="d-inline-block m-2 text-decoration-none text-primary"
+          href="https://wbbpe.wb.gov.in"
           target="_blank"
           rel="noopener noreferrer"
         >
           <i className="bi bi-browser-chrome"></i> WBBPE
+        </Link>
+        <Link
+          className="d-inline-block m-2 text-decoration-none text-primary"
+          href="https://www.wbbpeonline.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="bi bi-browser-chrome"></i> WBBPE Online
         </Link>
         <Link
           className="d-inline-block m-2 text-decoration-none text-primary"
@@ -148,14 +165,10 @@ const Footer = () => {
         >
           <i className="bi bi-browser-chrome"></i> WB Results
         </Link>
-        <Link
-          className="d-inline-block m-2 text-decoration-none text-primary"
-          href="https://drive.google.com/file/d/1FDcOHPETUb5iOA32SnOEUqPUiUkrljKE/view?usp=drive_link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i className="bi bi-android2"></i> Our App
-        </Link>
+        <div className="d-inline-block m-2 text-decoration-none text-primary">
+          <i className="bi bi-android2"></i>{" "}
+          <GoogleDriveDownload fileId={AndroidAppLink} text="Our Android App" />
+        </div>
       </div>
 
       <h6 className="text-center bg-dark text-white p-2 mb-0 h-font">
