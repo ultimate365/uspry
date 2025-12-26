@@ -151,6 +151,20 @@ export default function Teachersreturn() {
     setRemarks(data.remarks);
     setShowModal(true);
   };
+
+  // Keep `entry` in sync with current local pieces so updating only `teachers`
+  // won't drop other fields (students, inspection, remarks, workingDays).
+  useEffect(() => {
+    setEntry((prev) => ({
+      ...prev,
+      teachers: filteredData,
+      students,
+      inspection,
+      workingDays,
+      remarks,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredData, students, inspection, workingDays, remarks]);
   const calledData = (array) => {
     const years = uniqArray(
       array.map((entry) => {
@@ -649,7 +663,7 @@ export default function Teachersreturn() {
                           <p>
                             Data:
                             {JSON.stringify(teacher)
-                              .split(`"`)
+                              ?.split(`"`)
                               .join("")
                               .split("{")
                               .join("")
@@ -664,51 +678,51 @@ export default function Teachersreturn() {
                       <h5>PP:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.pp)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <h5>Class I:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.i)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <h5>Class II:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.ii)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <h5>Class III:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.iii)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <h5>Class IV:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.iv)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       {entry?.students?.v?.Total !== "-" && (
@@ -716,7 +730,7 @@ export default function Teachersreturn() {
                           <h5>Class V:</h5>
                           <p className="text-center text-break">
                             {JSON.stringify(entry?.students?.iv)
-                              .split(`"`)
+                              ?.split(`"`)
                               .join("")
                               .split("{")
                               .join("")
@@ -728,11 +742,11 @@ export default function Teachersreturn() {
                       <h5>Total:</h5>
                       <p className="text-center text-break">
                         {JSON.stringify(entry?.students?.total)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                     </div>
@@ -741,61 +755,61 @@ export default function Teachersreturn() {
                       <p>Date:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.inspectionDate)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <p>PP:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.pp)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <p>Class I:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.i)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <p>Class II:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.ii)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <p>Class III:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.iii)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       <p>Class IV:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.iv)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                       {inspection?.v?.Total !== "-" && (
@@ -803,7 +817,7 @@ export default function Teachersreturn() {
                           <p>Class V:</p>
                           <p className="text-center text-break">
                             {JSON.stringify(inspection?.v)
-                              .split(`"`)
+                              ?.split(`"`)
                               .join("")
                               .split("{")
                               .join("")
@@ -815,11 +829,11 @@ export default function Teachersreturn() {
                       <p>Total Student:</p>
                       <p className="text-center text-break">
                         {JSON.stringify(inspection?.total)
-                          .split(`"`)
+                          ?.split(`"`)
                           .join("")
-                          .split("{")
+                          ?.split("{")
                           .join("")
-                          .split("}")
+                          ?.split("}")
                           .join("")}
                       </p>
                     </div>
@@ -1059,7 +1073,7 @@ export default function Teachersreturn() {
                       {/* <!-- Button trigger modal --> */}
                       <button
                         type="button"
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary btn-sm m-1"
                         onClick={() => {
                           setEditTeacher(teacher);
                           setShowEditForm(true);
@@ -1068,6 +1082,37 @@ export default function Teachersreturn() {
                         }}
                       >
                         Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm m-1"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Remove ${teacher?.tname} from this month?`
+                            )
+                          ) {
+                            try {
+                              const updated = filteredData.filter(
+                                (t) => t.id !== teacher.id
+                              );
+                              setFilteredData(updated);
+                              setTeachers(updated);
+                              setEntry((prev) => ({
+                                ...prev,
+                                teachers: updated,
+                              }));
+                              toast.success(
+                                `${teacher?.tname} removed for this month`
+                              );
+                            } catch (error) {
+                              console.log(error);
+                              toast.error("Failed to remove teacher");
+                            }
+                          }
+                        }}
+                      >
+                        Remove
                       </button>
                     </td>
                   </tr>
