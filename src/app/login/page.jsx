@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useGlobalContext } from "../../context/Store";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,20 +19,61 @@ import {
   getSubmitDateInput,
 } from "@/modules/calculatefunctions";
 import CustomInput from "../../components/CustomInput";
+import axios from "axios";
 export default function Login() {
   const router = useRouter();
   const { state, setState, teachersState } = useGlobalContext();
   const [loader, setLoader] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [teacherData, setTeacherData] = useState({
+    dojnow: "",
+    pan: "",
+    udise: "",
+    gp: "",
+    dob: "",
+    question: "",
+    email: "",
+    access: "",
+    registered: false,
+    ifsc: "",
+    dor: "",
+    id: "",
+    showAccount: false,
+    circle: "",
+    fname: "",
+    disability: "",
+    association: "",
+    address: "",
+    account: "",
+    hoi: "",
+    dataYear: 2024,
+    school: "",
+    doj: "",
+    training: "",
+    education: "",
+    tname: "",
+    desig: "",
+    phone: "",
+    rank: 4,
+    gender: "",
+    cast: "",
+    service: "",
+    bank: "",
+    empid: "",
+    userType: "",
+  });
+  const formRef = useRef(null);
   const [studentIDERR, setStudentIDERR] = useState("");
-  const [userNameErr, setUserNameErr] = useState("");
-  const [passwordErr, setPasswordErr] = useState("");
+  const [phoneErr, setPhoneErr] = useState("");
   const [showTip, setShowTip] = useState(false);
   const [loginType, setLoginType] = useState(true);
   const [studentID, setStudentID] = useState("");
   const today = new Date();
   const [dob, setDob] = useState(`01-01-${today.getFullYear() - 10}`);
+  const [mobileOTP, setMobileOTP] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+
   const onChangeRadio = () => {
     setLoginType(!loginType);
   };
@@ -111,79 +152,18 @@ export default function Login() {
     if (validForm()) {
       try {
         setLoader(true);
-        const collectionRef = collection(firestore, "userTeachers");
-        const q = query(
-          collectionRef,
-          where("username", "==", username.toUpperCase())
-        );
+        const collectionRef = collection(firestore, "teachers");
+        const q = query(collectionRef, where("phone", "==", phone.toString()));
         const querySnapshot = await getDocs(q);
-        // console.log(querySnapshot.docs[0].data().pan);
         if (querySnapshot.docs.length > 0) {
           const data = querySnapshot.docs[0].data();
-          const userPassword = password;
-          const serverPassword = data.password;
-          // if (data.password === password) {
-          if (await comparePassword(userPassword, serverPassword)) {
-            const collectionRef2 = collection(firestore, "teachers");
-            const q2 = query(collectionRef2, where("id", "==", data.id));
-            const querySnapshot2 = await getDocs(q2);
-            if (querySnapshot2.docs.length > 0) {
-              const data = querySnapshot2.docs[0].data();
-              setLoader(false);
-              toast.success(
-                `Congrats! ${data.tname} Your Data is Authenticated, Please verify Your Login!`,
-                {
-                  position: "top-right",
-                  autoClose: 1500,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-
-                  draggable: true,
-                  progress: undefined,
-                  theme: "light",
-                }
-              );
-              const Obj = {
-                name: data.tname,
-                desig: data.desig,
-                mobile: data.phone,
-                id: data.id,
-                username: data.username,
-                userType: data.access,
-              };
-              // setState({
-              //   USER: Obj,
-              //   LOGGEDAT: Date.now(),
-              //   ACCESS: data.access,
-              // });
-              encryptObjData("nonverifieduid", Obj, 10080);
-              router.push("/verifyLogin");
-            }
-          } else {
-            setLoader(false);
-            toast.error("Wrong Password!", {
-              position: "top-right",
-              autoClose: 1500,
-              hideProgressBar: false,
-              closeOnClick: true,
-
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-          }
+          setLoader(false);
+          setTeacherData(data);
+          setName(data.tname);
+          await sendVerificationOTP(phone, data.tname);
         } else {
           setLoader(false);
-          toast.error("Invalid Username!", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.error("Invalid Mobile Number!");
         }
       } catch (error) {
         setLoader(false);
@@ -206,23 +186,73 @@ export default function Login() {
 
   const validForm = () => {
     let isValid = false;
-    if (username.length === 0) {
-      setUserNameErr("Username is required");
+
+    if (phone.toString().length === 0) {
+      setPhoneErr("Mobile Number is required");
+      isValid = false;
+    } else if (phone.toString().length !== 10) {
+      setPhoneErr("10 Digit Mobile Number is required");
+      isValid = false;
     } else {
-      setUserNameErr("");
+      setPhoneErr("");
+      isValid = true;
     }
-    if (password.length === 0) {
-      setPasswordErr("Password is required");
-    } else {
-      setPasswordErr("");
-    }
-    isValid = username.length > 0 && password.length > 0;
     return isValid;
   };
 
   let userdetails, loggedAt;
   let details = getCookie("uid");
-
+  const sendVerificationOTP = async (phone, name) => {
+    setLoader(true);
+    const res = await axios.post("/api/sendVerificationOTP", {
+      phone,
+      name,
+    });
+    const record = res.data;
+    if (record.success) {
+      toast.success("OTP sent to your Mobile Number!");
+      setLoader(false);
+      setOtpSent(true);
+    } else {
+      toast.error("Failed to send OTP!");
+      setLoader(false);
+    }
+  };
+  const verifyOTP = async (e) => {
+    e.preventDefault();
+    if (mobileOTP !== "" && mobileOTP.length === 6) {
+      setLoader(true);
+      try {
+        const res = await axios.post("/api/verifyMobileOTP", {
+          phone: phone.toString(),
+          phoneCode: mobileOTP,
+          name: name,
+        });
+        const record = res.data;
+        if (record.success) {
+          toast.success("Your Mobile Number is successfully verified!");
+          setLoader(false);
+          encryptObjData("uid", teacherData, 10080);
+          setCookie("loggedAt", Date.now(), 10080);
+          setTimeout(() => {
+            setState({
+              USER: teacherData,
+              LOGGEDAT: Date.now(),
+              ACCESS: "admin",
+            });
+            router.push("/dashboard");
+          }, 500);
+        } else {
+          toast.error("Please enter a Valid 6 Digit OTP");
+          setLoader(false);
+        }
+      } catch (error) {
+        toast.error("Failed to verify OTP!");
+        setLoader(false);
+        console.error(error);
+      }
+    }
+  };
   useEffect(() => {}, [loginType]);
 
   useEffect(() => {
@@ -372,59 +402,94 @@ export default function Login() {
             </div>
           ) : (
             <div>
-              <form
-                method="post"
-                className="mx-auto my-2"
-                autoComplete="off"
-                onSubmit={submitTeacherData}
-              >
-                <h4 className="text-black timesNewRoman">
-                  Teacher&#8217;s Login
-                </h4>
-                <div className="input-group mb-3">
-                  <span className="input-group-text">Username</span>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Enter username"
-                  />
-                </div>
-                {userNameErr.length > 0 && (
-                  <p className="text-danger my-2">{userNameErr}</p>
-                )}
+              {!otpSent ? (
+                <form
+                  method="post"
+                  className="mx-auto my-2"
+                  autoComplete="off"
+                  onSubmit={submitTeacherData}
+                >
+                  <h4 className="text-black timesNewRoman">
+                    Teacher&#8217;s Login
+                  </h4>
 
-                <CustomInput
-                  title={"Password"}
-                  type="password"
-                  className="form-control"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                />
-                {passwordErr.length > 0 && (
-                  <p className="text-danger my-2">{passwordErr}</p>
-                )}
-                <button type="submit" className="btn btn-primary">
-                  Login
-                </button>
-                <div className="my-2">
-                  <p className="text-white fs-4">
-                    {" "}
-                    Forgot Username or Password?{" "}
-                  </p>
-                  <button
-                    type="button"
-                    className="btn btn-dark"
-                    onClick={() => setShowTip(true)}
-                  >
-                    Click Here
+                  <div className="input-group mb-3">
+                    <span className="input-group-text">Mobile No.</span>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => {
+                        if (e.target.value.toString().length <= 10) {
+                          setPhone(e.target.value);
+                        }
+                      }}
+                      placeholder="Enter Mobile No."
+                    />
+                  </div>
+                  {phoneErr.length > 0 && (
+                    <p className="text-danger my-2">{phoneErr}</p>
+                  )}
+
+                  <button type="submit" className="btn btn-primary">
+                    Login
                   </button>
+                  <div className="my-2">
+                    <p className="text-white fs-4">Having Trouble in Login? </p>
+                    <button
+                      type="button"
+                      className="btn btn-dark"
+                      onClick={() => setShowTip(true)}
+                    >
+                      Click Here
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div>
+                  <p>
+                    OTP Sent to your phone +91-
+                    {`${phone?.toString()?.slice(0, 4)}XXXX${phone
+                      ?.toString()
+                      ?.slice(8, 10)}`}{" "}
+                    for an OTP.
+                  </p>
+                  <p>Please check your OTP in your Telegram App</p>
+                  <div className="mx-auto">
+                    <form ref={formRef} autoComplete="off" onSubmit={verifyOTP}>
+                      <input
+                        className="form-control mb-3"
+                        autoFocus
+                        title="Enter Your OTP"
+                        type="text" // ✅ use text so maxlength works
+                        inputMode="numeric"
+                        maxLength={6}
+                        placeholder="Enter Your 6 digit OTP"
+                        value={mobileOTP}
+                        onChange={(e) => {
+                          // Only digits, max 6
+                          const inputValue = e.target.value
+                            .replace(/\D/g, "")
+                            .slice(0, 6);
+                          setMobileOTP(inputValue);
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          const pasted = e.clipboardData
+                            .getData("Text")
+                            .replace(/\D/g, "")
+                            .slice(0, 6);
+                          setMobileOTP(pasted);
+                        }}
+                      />
+                      <button type="submit" className="btn btn-primary m-1">
+                        Verify
+                      </button>
+                    </form>
+                  </div>
                 </div>
-              </form>
+              )}
             </div>
           )}
         </div>
@@ -447,11 +512,11 @@ export default function Login() {
                   <div className="mx-auto my-2 noprint">
                     <div className="mb-3 mx-auto">
                       <h6 htmlFor="rank" className="text-danger text-break">
-                        Your Default Username is Your Employeed ID and Your
-                        Default password is your PAN in Capital
+                        You Must have the Telegram App in your Mobile to login
                       </h6>
                       <h6 htmlFor="rank" className="text-danger text-break">
-                        However You can Chage it anytime after login
+                        You can ask the HT to alter any change in your Mobile
+                        No.
                       </h6>
                     </div>
                   </div>

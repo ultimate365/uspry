@@ -7,7 +7,7 @@ import Link from "next/link";
 import { SCHOOLNAME } from "@/modules/constants";
 export default function Dashboard() {
   const { state } = useGlobalContext();
-  const name = state?.USER?.name;
+  const name = state?.USER?.tname;
   const student_class = state?.USER?.class;
   const desig = state?.USER?.desig;
   const access = state?.ACCESS;

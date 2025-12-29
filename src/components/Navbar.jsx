@@ -288,7 +288,7 @@ export default function Navbar() {
               Students Login Section
             </Link>
           </li>
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link
               className="nav-link"
               href="/userTeachers"
@@ -296,9 +296,9 @@ export default function Navbar() {
             >
               Teachers Login Section
             </Link>
-          </li>
+          </li> */}
 
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link
               className="nav-link"
               href="/updateunp"
@@ -306,7 +306,7 @@ export default function Navbar() {
             >
               Update Username And Password
             </Link>
-          </li>
+          </li> */}
 
           <li className="nav-item">
             <Link

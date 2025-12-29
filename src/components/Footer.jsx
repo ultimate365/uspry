@@ -76,7 +76,7 @@ const Footer = () => {
             </h5>
             <br />
             <h5 className="d-inline-block mb-2 text-decoration-none text-dark">
-              ABDUS SALAM MOLLICK, ASSISTANT TEACHER
+              SANCHITA DAS, ASSISTANT TEACHER
             </h5>
             <br />
           </div>
