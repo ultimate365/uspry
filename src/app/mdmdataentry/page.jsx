@@ -1892,9 +1892,8 @@ export default function MDMData() {
                             if (e.target.value !== "") {
                               setMonthlyPPCost(parseInt(e.target.value));
                               setMonthTotalCost(
-                                parseInt(e.target.value) + monthlyPRYCost
-                                  ? monthlyPRYCost
-                                  : 0
+                                parseInt(e.target.value) +
+                                  (monthlyPRYCost ? monthlyPRYCost : 0)
                               );
                             } else {
                               setMonthlyPPCost("");
@@ -1916,9 +1915,8 @@ export default function MDMData() {
                             if (e.target.value !== "") {
                               setMonthlyPRYCost(parseInt(e.target.value));
                               setMonthTotalCost(
-                                parseInt(e.target.value) + monthlyPPCost
-                                  ? monthlyPPCost
-                                  : 0
+                                parseInt(e.target.value) +
+                                  (monthlyPPCost ? monthlyPPCost : 0)
                               );
                             } else {
                               setMonthlyPRYCost("");
