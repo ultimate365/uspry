@@ -1905,6 +1905,8 @@ export default function Teachersreturn() {
                           <td style={{ border: "1px solid" }}>{index + 1}</td>
                           <td style={{ border: "1px solid", paddingInline: 2 }}>
                             {teacher.tname}
+                            <br />
+                            (&#9990; {teacher?.phone})
                           </td>
                           <td style={{ border: "1px solid", paddingInline: 2 }}>
                             {teacher.desig}

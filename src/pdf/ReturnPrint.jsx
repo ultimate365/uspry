@@ -389,7 +389,9 @@ export default function ReturnPrint({ data }) {
                       </View>
                       <View style={[styles.colName, styles.teacherDataCell]}>
                         <Text style={styles.title2}>
-                          {teacher?.tname?.split(" ").join("\n")}
+                          {`${teacher?.tname?.split(" ").join("\n")}\n(Ph: ${
+                            teacher?.phone
+                          })`}
                         </Text>
                       </View>
                       <View
