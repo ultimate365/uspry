@@ -131,29 +131,18 @@ export default function Transactions() {
     closingBalance: "",
   });
   const [showEdit, setShowEdit] = useState(false);
-  const getId = () => {
-    const currentDate = new Date();
+  const getId = (d) => {
+    const currentDate = d ? new Date(d) : new Date(date);
     const month =
-      monthNamesWithIndex[
-        today.getDate() > 10
-          ? today.getMonth()
-          : today.getMonth() === 0
-          ? 11
-          : today.getMonth() - 1
-      ].monthName;
-    const year = currentDate.getFullYear();
-    return `${month}-${year}`;
-  };
-  const getMonthYear = (date) => {
-    const currentDate = new Date(date);
-    const cmonth =
       monthNamesWithIndex[
         currentDate.getDate() > 10
           ? currentDate.getMonth()
+          : currentDate.getMonth() === 0
+          ? 11
           : currentDate.getMonth() - 1
       ].monthName;
-    const cyear = currentDate.getFullYear();
-    return `${cmonth}-${cyear}`;
+    const year = currentDate.getFullYear();
+    return `${month}-${year}`;
   };
   const [id, setId] = useState("");
   const [purpose, setPurpose] = useState("MDM WITHDRAWAL");
@@ -644,12 +633,10 @@ export default function Transactions() {
     } else {
       setAllTransactions(transactionState);
       setThisAccounTransactions(
-        transactionState
-          .filter(
-            (transaction) =>
-              transaction.accountNumber === stateObject.accountNumber
-          )
-          .reverse()
+        transactionState.filter(
+          (transaction) =>
+            transaction.accountNumber === stateObject.accountNumber
+        )
       );
       const x = transactionState.filter((t) => t.id === id);
       if (x.length > 0) {
@@ -681,10 +668,14 @@ export default function Transactions() {
             className="btn btn-success m-2"
             onClick={() => {
               setShowEntry(true);
-              const lastTransaction =
-                transactionState[transactionState.length - 1];
-              setPpOB(lastTransaction.ppCB);
-              setPryOB(lastTransaction.pryCB);
+              const accountTransactions = transactionState.filter(
+                (t) => t.accountNumber === stateObject.accountNumber
+              );
+              if (accountTransactions.length > 0) {
+                const lastTransaction = accountTransactions[0];
+                setPpOB(lastTransaction.ppCB);
+                setPryOB(lastTransaction.pryCB);
+              }
             }}
           >
             Add New Transaction
@@ -843,7 +834,7 @@ export default function Transactions() {
                       setShowEntry(false);
                       setAmount("");
                       setPurpose("MDM WITHDRAWAL");
-                      setId(getId());
+                      setId(getId(todayInString()));
                       setType("DEBIT");
                       setDate(todayInString());
                       setPpOB("");
@@ -919,7 +910,7 @@ export default function Transactions() {
                               setMonth(cmonth);
                               setYear(cyear);
 
-                              const genId = getMonthYear(e.target.value);
+                              const genId = getId(e.target.value);
                               const checkId = transactionState.filter(
                                 (tr) => tr.id === genId
                               );
@@ -1068,9 +1059,16 @@ export default function Transactions() {
                             value={ppOB}
                             onChange={(e) => {
                               if (e.target.value !== "") {
-                                setPpOB(parseFloat(e.target.value));
+                                const val = parseFloat(e.target.value);
+                                setPpOB(val);
+                                if (type === "CREDIT") {
+                                  setPpCB(val + (ppRC !== "" ? ppRC : 0));
+                                } else {
+                                  setPpCB(val - (ppEX !== "" ? ppEX : 0));
+                                }
                               } else {
                                 setPpOB("");
+                                setPpCB("");
                               }
                             }}
                             placeholder="Enter PP Opening Balance"
@@ -1157,9 +1155,18 @@ export default function Transactions() {
                             value={pryOB}
                             onChange={(e) => {
                               if (e.target.value !== "") {
-                                setPryOB(parseFloat(round2dec(e.target.value)));
+                                const val = parseFloat(
+                                  round2dec(e.target.value)
+                                );
+                                setPryOB(val);
+                                if (type === "CREDIT") {
+                                  setPryCB(val + (pryRC !== "" ? pryRC : 0));
+                                } else {
+                                  setPryCB(val - (pryEX !== "" ? pryEX : 0));
+                                }
                               } else {
                                 setPryOB("");
+                                setPryCB("");
                               }
                             }}
                             placeholder="Enter Primary Opening Balance"
@@ -1256,7 +1263,7 @@ export default function Transactions() {
                       setShowEntry(false);
                       setAmount("");
                       setPurpose("MDM WITHDRAWAL");
-                      setId(getId());
+                      setId(getId(todayInString()));
                       setType("DEBIT");
                       setDate(todayInString());
                       setPpOB("");

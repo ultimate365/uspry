@@ -453,6 +453,17 @@ export default function MDMData() {
         )
       );
       setMonthRiceConsunption(thisMonthTotalRiceConsumption);
+      const totalMeals = ppTotalMeal + pryTotalMeal;
+      const ppRiceEx =
+        totalMeals > 0
+          ? Math.round(
+              (thisMonthTotalRiceConsumption * ppTotalMeal) / totalMeals
+            )
+          : 0;
+      const pryRiceEx =
+        totalMeals > 0 ? thisMonthTotalRiceConsumption - ppRiceEx : 0;
+      setRicePPEX(ppRiceEx);
+      setRicePryEX(pryRiceEx);
       setMonthRiceGiven(totalRiceGiven);
       setMonthRiceCB(
         prevMonthData?.riceCB + totalRiceGiven - thisMonthTotalRiceConsumption
@@ -1647,6 +1658,20 @@ export default function MDMData() {
                           )
                         );
                         setMonthRiceConsunption(thisMonthTotalRiceConsumption);
+                        const totalMeals = ppTotalMeal + pryTotalMeal;
+                        const ppRiceEx =
+                          totalMeals > 0
+                            ? Math.round(
+                                (thisMonthTotalRiceConsumption * ppTotalMeal) /
+                                  totalMeals
+                              )
+                            : 0;
+                        const pryRiceEx =
+                          totalMeals > 0
+                            ? thisMonthTotalRiceConsumption - ppRiceEx
+                            : 0;
+                        setRicePPEX(ppRiceEx);
+                        setRicePryEX(pryRiceEx);
                         setMonthRiceGiven(totalRiceGiven);
                         setMonthRiceCB(
                           prevMonthData?.riceCB +
@@ -1890,16 +1915,20 @@ export default function MDMData() {
                           value={monthlyPPCost}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setMonthlyPPCost(parseInt(e.target.value));
-                              setMonthTotalCost(
-                                parseInt(e.target.value) +
-                                  (monthlyPRYCost ? monthlyPRYCost : 0)
-                              );
+                              const val = parseFloat(e.target.value);
+                              setMonthlyPPCost(val);
+                              setMonthTotalCost(val + (monthlyPRYCost || 0));
+                              setMdmTransaction((prev) => ({
+                                ...prev,
+                                ppCB: (prev.ppOB || 0) + (prev.ppRC || 0) - val,
+                              }));
                             } else {
                               setMonthlyPPCost("");
-                              setMonthTotalCost(
-                                monthlyPRYCost ? monthlyPRYCost : 0
-                              );
+                              setMonthTotalCost(monthlyPRYCost || 0);
+                              setMdmTransaction((prev) => ({
+                                ...prev,
+                                ppCB: (prev.ppOB || 0) + (prev.ppRC || 0),
+                              }));
                             }
                           }}
                         />
@@ -1913,16 +1942,21 @@ export default function MDMData() {
                           value={monthlyPRYCost}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setMonthlyPRYCost(parseInt(e.target.value));
-                              setMonthTotalCost(
-                                parseInt(e.target.value) +
-                                  (monthlyPPCost ? monthlyPPCost : 0)
-                              );
+                              const val = parseFloat(e.target.value);
+                              setMonthlyPRYCost(val);
+                              setMonthTotalCost(val + (monthlyPPCost || 0));
+                              setMdmTransaction((prev) => ({
+                                ...prev,
+                                pryCB:
+                                  (prev.pryOB || 0) + (prev.pryRC || 0) - val,
+                              }));
                             } else {
                               setMonthlyPRYCost("");
-                              setMonthTotalCost(
-                                monthlyPPCost ? monthlyPPCost : 0
-                              );
+                              setMonthTotalCost(monthlyPPCost || 0);
+                              setMdmTransaction((prev) => ({
+                                ...prev,
+                                pryCB: (prev.pryOB || 0) + (prev.pryRC || 0),
+                              }));
                             }
                           }}
                         />
@@ -1954,14 +1988,22 @@ export default function MDMData() {
                           value={mdmTransaction.ppOB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
+                              const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                ppOB: parseFloat(e.target.value),
+                                ppOB: val,
+                                ppCB:
+                                  val +
+                                  (mdmTransaction.ppRC || 0) -
+                                  (monthlyPPCost || 0),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppOB: "",
+                                ppCB:
+                                  (mdmTransaction.ppRC || 0) -
+                                  (monthlyPPCost || 0),
                               });
                             }
                           }}
@@ -1978,14 +2020,22 @@ export default function MDMData() {
                           value={mdmTransaction.pryOB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
+                              const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                pryOB: parseFloat(e.target.value),
+                                pryOB: val,
+                                pryCB:
+                                  val +
+                                  (mdmTransaction.pryRC || 0) -
+                                  (monthlyPRYCost || 0),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryOB: "",
+                                pryCB:
+                                  (mdmTransaction.pryRC || 0) -
+                                  (monthlyPRYCost || 0),
                               });
                             }
                           }}
@@ -2002,18 +2052,22 @@ export default function MDMData() {
                           value={mdmTransaction.ppRC}
                           onChange={(e) => {
                             if (e.target.value !== "") {
+                              const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                ppRC: parseFloat(e.target.value),
+                                ppRC: val,
                                 ppCB:
-                                  mdmTransaction.ppOB +
-                                  parseFloat(e.target.value),
+                                  (mdmTransaction.ppOB || 0) +
+                                  val -
+                                  (monthlyPPCost || 0),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppRC: "",
-                                ppCB: mdmTransaction.ppOB,
+                                ppCB:
+                                  (mdmTransaction.ppOB || 0) -
+                                  (monthlyPPCost || 0),
                               });
                             }
                           }}
@@ -2030,18 +2084,22 @@ export default function MDMData() {
                           value={mdmTransaction.pryRC}
                           onChange={(e) => {
                             if (e.target.value !== "") {
+                              const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                pryRC: parseFloat(e.target.value),
+                                pryRC: val,
                                 pryCB:
-                                  mdmTransaction.pryOB +
-                                  parseFloat(e.target.value),
+                                  (mdmTransaction.pryOB || 0) +
+                                  val -
+                                  (monthlyPRYCost || 0),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryRC: "",
-                                pryCB: mdmTransaction.pryOB,
+                                pryCB:
+                                  (mdmTransaction.pryOB || 0) -
+                                  (monthlyPRYCost || 0),
                               });
                             }
                           }}
@@ -2058,14 +2116,22 @@ export default function MDMData() {
                           value={mdmTransaction.ppCB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
+                              const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                ppCB: parseFloat(e.target.value),
+                                ppOB: val,
+                                ppCB:
+                                  val +
+                                  (mdmTransaction.ppRC || 0) -
+                                  (monthlyPPCost || 0),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppCB: "",
+                                ppCB:
+                                  (mdmTransaction.ppRC || 0) -
+                                  (monthlyPPCost || 0),
                               });
                             }
                           }}
@@ -2082,14 +2148,22 @@ export default function MDMData() {
                           value={mdmTransaction.pryCB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
+                              const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                pryCB: parseFloat(e.target.value),
+                                pryOB: val,
+                                pryCB:
+                                  val +
+                                  (mdmTransaction.pryRC || 0) -
+                                  (monthlyPRYCost || 0),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryCB: "",
+                                pryCB:
+                                  (mdmTransaction.pryRC || 0) -
+                                  (monthlyPRYCost || 0),
                               });
                             }
                           }}
@@ -2198,9 +2272,27 @@ export default function MDMData() {
                           value={ricePPOB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePPOB(parseInt(e.target.value));
+                              const val = parseFloat(e.target.value);
+                              setRicePPOB(val);
+                              setRicePPCB(
+                                val + (ricePPRC || 0) - (ricePPEX || 0)
+                              );
+                              setMonthRiceOB(val + (ricePryOB || 0));
+                              setMonthRiceCB(
+                                val +
+                                  (ricePPRC || 0) -
+                                  (ricePPEX || 0) +
+                                  (ricePryCB || 0)
+                              );
                             } else {
                               setRicePPOB("");
+                              setRicePPCB((ricePPRC || 0) - (ricePPEX || 0));
+                              setMonthRiceOB(ricePryOB || 0);
+                              setMonthRiceCB(
+                                (ricePPRC || 0) -
+                                  (ricePPEX || 0) +
+                                  (ricePryCB || 0)
+                              );
                             }
                           }}
                         />
@@ -2216,9 +2308,27 @@ export default function MDMData() {
                           value={ricePryOB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePryOB(parseInt(e.target.value));
+                              const val = parseFloat(e.target.value);
+                              setRicePryOB(val);
+                              setRicePryCB(
+                                val + (ricePryRC || 0) - (ricePryEX || 0)
+                              );
+                              setMonthRiceOB(val + (ricePPOB || 0));
+                              setMonthRiceCB(
+                                val +
+                                  (ricePryRC || 0) -
+                                  (ricePryEX || 0) +
+                                  (ricePPCB || 0)
+                              );
                             } else {
                               setRicePryOB("");
+                              setRicePryCB((ricePryRC || 0) - (ricePryEX || 0));
+                              setMonthRiceOB(ricePPOB || 0);
+                              setMonthRiceCB(
+                                (ricePryRC || 0) -
+                                  (ricePryEX || 0) +
+                                  (ricePPCB || 0)
+                              );
                             }
                           }}
                         />
@@ -2234,7 +2344,7 @@ export default function MDMData() {
                           value={monthRiceOB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setMonthRiceOB(parseInt(e.target.value));
+                              setMonthRiceOB(parseFloat(e.target.value));
                             } else {
                               setMonthRiceOB("");
                             }
@@ -2250,9 +2360,27 @@ export default function MDMData() {
                           value={ricePPRC}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePPRC(parseInt(e.target.value));
+                              const val = parseFloat(e.target.value);
+                              setRicePPRC(val);
+                              setRicePPCB(
+                                (ricePPOB || 0) + val - (ricePPEX || 0)
+                              );
+                              setMonthRiceGiven(val + (ricePryRC || 0));
+                              setMonthRiceCB(
+                                (ricePPOB || 0) +
+                                  val -
+                                  (ricePPEX || 0) +
+                                  (ricePryCB || 0)
+                              );
                             } else {
                               setRicePPRC("");
+                              setRicePPCB((ricePPOB || 0) - (ricePPEX || 0));
+                              setMonthRiceGiven(ricePryRC || 0);
+                              setMonthRiceCB(
+                                (ricePPOB || 0) -
+                                  (ricePPEX || 0) +
+                                  (ricePryCB || 0)
+                              );
                             }
                           }}
                         />
@@ -2266,9 +2394,27 @@ export default function MDMData() {
                           value={ricePryRC}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePryRC(parseInt(e.target.value));
+                              const val = parseFloat(e.target.value);
+                              setRicePryRC(val);
+                              setRicePryCB(
+                                (ricePryOB || 0) + val - (ricePryEX || 0)
+                              );
+                              setMonthRiceGiven(val + (ricePPRC || 0));
+                              setMonthRiceCB(
+                                (ricePryOB || 0) +
+                                  val -
+                                  (ricePryEX || 0) +
+                                  (ricePPCB || 0)
+                              );
                             } else {
                               setRicePryRC("");
+                              setRicePryCB((ricePryOB || 0) - (ricePryEX || 0));
+                              setMonthRiceGiven(ricePPRC || 0);
+                              setMonthRiceCB(
+                                (ricePryOB || 0) -
+                                  (ricePryEX || 0) +
+                                  (ricePPCB || 0)
+                              );
                             }
                           }}
                         />
@@ -2282,7 +2428,7 @@ export default function MDMData() {
                           value={monthRiceGiven}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setMonthRiceGiven(parseInt(e.target.value));
+                              setMonthRiceGiven(parseFloat(e.target.value));
                             } else {
                               setMonthRiceGiven("");
                             }
@@ -2298,33 +2444,27 @@ export default function MDMData() {
                           value={ricePPEX}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePPEX(parseInt(e.target.value));
-                              setRicePPCB(
-                                ricePPOB + ricePPRC - parseInt(e.target.value)
-                              );
-                              setMonthRiceConsunption(
-                                parseInt(e.target.value) + ricePryEX
-                                  ? ricePryEX
-                                  : 0
-                              );
+                              const val = parseFloat(e.target.value);
+                              setRicePPEX(val);
+                              setRicePPCB(ricePPOB + ricePPRC - val);
+                              setMonthRiceConsunption(val + (ricePryEX || 0));
                               setMonthRiceCB(
                                 ricePPOB +
                                   ricePPRC +
                                   ricePryOB +
                                   ricePryRC -
-                                  parseInt(e.target.value) +
-                                  ricePryEX
-                                  ? ricePryEX
-                                  : 0
+                                  (val + (ricePryEX || 0))
                               );
                             } else {
                               setRicePPEX("");
                               setRicePPCB(ricePPOB + ricePPRC);
-                              setMonthRiceConsunption(
-                                ricePryEX ? ricePryEX : 0
-                              );
+                              setMonthRiceConsunption(ricePryEX || 0);
                               setMonthRiceCB(
-                                ricePPOB + ricePPRC + ricePryOB + ricePryRC
+                                ricePPOB +
+                                  ricePPRC +
+                                  ricePryOB +
+                                  ricePryRC -
+                                  (ricePryEX || 0)
                               );
                             }
                           }}
@@ -2339,31 +2479,27 @@ export default function MDMData() {
                           value={ricePryEX}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePryEX(parseInt(e.target.value));
-                              setRicePryCB(
-                                ricePryOB + ricePryRC - parseInt(e.target.value)
-                              );
-                              setMonthRiceConsunption(
-                                parseInt(e.target.value) + ricePPEX
-                                  ? ricePPEX
-                                  : 0
-                              );
+                              const val = parseFloat(e.target.value);
+                              setRicePryEX(val);
+                              setRicePryCB(ricePryOB + ricePryRC - val);
+                              setMonthRiceConsunption(val + (ricePPEX || 0));
                               setMonthRiceCB(
                                 ricePryOB +
                                   ricePryRC +
                                   ricePPOB +
                                   ricePPRC -
-                                  parseInt(e.target.value) +
-                                  ricePPEX
-                                  ? ricePPEX
-                                  : 0
+                                  (val + (ricePPEX || 0))
                               );
                             } else {
                               setRicePryEX("");
                               setRicePryCB(ricePryOB + ricePryRC);
-                              setMonthRiceConsunption(ricePPEX ? ricePPEX : 0);
+                              setMonthRiceConsunption(ricePPEX || 0);
                               setMonthRiceCB(
-                                ricePryOB + ricePryRC + ricePPOB + ricePPRC
+                                ricePryOB +
+                                  ricePryRC +
+                                  ricePPOB +
+                                  ricePPRC -
+                                  (ricePPEX || 0)
                               );
                             }
                           }}
@@ -2378,7 +2514,9 @@ export default function MDMData() {
                           value={monthRiceConsunption}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setMonthRiceConsunption(parseInt(e.target.value));
+                              setMonthRiceConsunption(
+                                parseFloat(e.target.value)
+                              );
                             } else {
                               setMonthRiceConsunption("");
                             }
@@ -2394,7 +2532,7 @@ export default function MDMData() {
                           value={ricePPCB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePPCB(parseInt(e.target.value));
+                              setRicePPCB(parseFloat(e.target.value));
                             } else {
                               setRicePPCB("");
                             }
@@ -2412,7 +2550,7 @@ export default function MDMData() {
                           value={ricePryCB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setRicePryCB(parseInt(e.target.value));
+                              setRicePryCB(parseFloat(e.target.value));
                             } else {
                               setRicePryCB("");
                             }
@@ -2430,7 +2568,7 @@ export default function MDMData() {
                           value={monthRiceCB}
                           onChange={(e) => {
                             if (e.target.value !== "") {
-                              setMonthRiceCB(parseInt(e.target.value));
+                              setMonthRiceCB(parseFloat(e.target.value));
                             } else {
                               setMonthRiceCB("");
                             }
@@ -2450,7 +2588,7 @@ export default function MDMData() {
                             if (e.target.value !== "") {
                               setMdmRice({
                                 ...mdmRice,
-                                prevRicePPRC: parseInt(e.target.value),
+                                prevRicePPRC: parseFloat(e.target.value),
                               });
                             } else {
                               setMdmRice({
@@ -2474,7 +2612,7 @@ export default function MDMData() {
                             if (e.target.value !== "") {
                               setMdmRice({
                                 ...mdmRice,
-                                prevRicePryRC: parseInt(e.target.value),
+                                prevRicePryRC: parseFloat(e.target.value),
                               });
                             } else {
                               setMdmRice({
@@ -2498,7 +2636,7 @@ export default function MDMData() {
                             if (e.target.value !== "") {
                               setMdmRice({
                                 ...mdmRice,
-                                prevRicePPEX: parseInt(e.target.value),
+                                prevRicePPEX: parseFloat(e.target.value),
                               });
                             } else {
                               setMdmRice({
@@ -2522,7 +2660,7 @@ export default function MDMData() {
                             if (e.target.value !== "") {
                               setMdmRice({
                                 ...mdmRice,
-                                prevRicePryEX: parseInt(e.target.value),
+                                prevRicePryEX: parseFloat(e.target.value),
                               });
                             } else {
                               setMdmRice({
