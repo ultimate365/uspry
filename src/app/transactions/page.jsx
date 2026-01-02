@@ -48,7 +48,11 @@ export default function Transactions() {
         : today.getMonth() - 1
     ].monthName;
   const [month, setMonth] = useState(thisMonth);
-  const [year, setYear] = useState(today.getFullYear().toString());
+  const [year, setYear] = useState(
+    today.getDate() <= 10 && today.getMonth() === 0
+      ? today.getFullYear() - 1
+      : today.getFullYear()
+  );
   const [transactionPurpose, setTransactionPurpose] =
     useState("MDM WITHDRAWAL");
   const [loader, setLoader] = useState(false);

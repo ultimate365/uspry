@@ -85,7 +85,10 @@ export default function Teachersreturn() {
         ? 11
         : currentDate.getMonth() - 1
     ].monthName;
-  const year = currentDate?.getFullYear();
+  const year =
+    currentDate.getDate() <= 10 && currentDate.getMonth() === 0
+      ? currentDate.getFullYear() - 1
+      : currentDate.getFullYear();
 
   const getMonth = () => {
     return `${month.toUpperCase()} of ${year}`;

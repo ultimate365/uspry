@@ -70,7 +70,10 @@ export default function VecTransactions() {
           ? 11
           : currentDate.getMonth() - 1
       ].monthName;
-    const year = currentDate.getFullYear();
+    const year =
+      currentDate.getDate() <= 10 && currentDate.getMonth() === 0
+        ? currentDate.getFullYear() - 1
+        : currentDate.getFullYear();
     return `${month}-${year}`;
   };
   const [id, setId] = useState(getId());
