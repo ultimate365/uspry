@@ -253,6 +253,11 @@ export default function Login() {
       }
     }
   };
+  useEffect(() => {
+    if (mobileOTP.length === 6) {
+      formRef.current?.requestSubmit();
+    }
+  }, [mobileOTP]);
   useEffect(() => {}, [loginType]);
 
   useEffect(() => {
@@ -453,7 +458,7 @@ export default function Login() {
                     {`${phone?.toString()?.slice(0, 4)}XXXX${phone
                       ?.toString()
                       ?.slice(8, 10)}`}{" "}
-                    for an OTP.
+                    .
                   </p>
                   <p>Please check your OTP in your Telegram App</p>
                   <div className="mx-auto">
