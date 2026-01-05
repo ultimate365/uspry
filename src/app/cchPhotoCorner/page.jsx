@@ -57,17 +57,17 @@ export default function CchPhotoCorner() {
               <h6 className="m-1 p-0 text-center text-wrap">
                 Designation: Cook Cum Helper {index + 1}
               </h6>
+              {index === 0 && (
+                <h6 className="m-1 p-0 text-center text-wrap">
+                  School Key Holder
+                </h6>
+              )}
               <h6 className="m-1 p-0 text-center text-wrap">
                 Mobile: {el?.mobile}
               </h6>
               <h6 className="m-1 p-0 text-center text-wrap">Address:</h6>
-
-              <h6 className="m-1 p-0 text-center text-wrap">
-               {el?.address1}
-              </h6>
-              <h6 className="m-1 p-0 text-center text-wrap">
-               {el?.address2}
-              </h6>
+              <h6 className="m-1 p-0 text-center text-wrap">{el?.address1}</h6>
+              <h6 className="m-1 p-0 text-center text-wrap">{el?.address2}</h6>
             </div>
           );
         })}
