@@ -17,10 +17,7 @@ const height = 3508;
 
 export default function StudentCorner({ data }) {
   return (
-    <Document
-      style={{ margin: 5, padding: 5 }}
-      title={`Student Photo Corner`}
-    >
+    <Document style={{ margin: 5, padding: 5 }} title={`Student Photo Corner`}>
       <Page size="A4" orientation="portrait" style={styles.page}>
         <View style={styles.pageMainView}>
           <View
@@ -45,6 +42,7 @@ export default function StudentCorner({ data }) {
                     padding: 2,
                   }}
                   key={index}
+                  wrap={false}
                 >
                   <View
                     style={{
