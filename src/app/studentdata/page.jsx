@@ -78,10 +78,17 @@ export default function StudentData() {
       ...doc.data(),
       id: doc.id,
     }));
-    setData(data);
-    setFilteredData(data);
+    const sortedData = data.sort((a, b) => {
+      if (a.nclass === b.nclass) {
+        return a.roll_no - b.roll_no;
+      } else {
+        return a.nclass - b.nclass;
+      }
+    });
+    setData(sortedData);
+    setFilteredData(sortedData);
     setShowTable(true);
-    setStudentState(data);
+    setStudentState(sortedData);
     setStudentUpdateTime(Date.now());
   };
   const addNewStudent = async () => {
@@ -104,7 +111,13 @@ export default function StudentData() {
             mother_name: "",
           });
           setShowAdd(false);
-          const newData = studentState.concat(addStudent);
+          const newData = studentState.concat(addStudent).sort((a, b) => {
+            if (a.nclass === b.nclass) {
+              return a.roll_no - b.roll_no;
+            } else {
+              return a.nclass - b.nclass;
+            }
+          });
           setStudentState(newData);
           setData(newData);
           setFilteredData(newData);
@@ -435,6 +448,7 @@ export default function StudentData() {
                             setAddStudent({
                               ...addStudent,
                               father_name: e.target.value.toUpperCase(),
+                              guardians_name: e.target.value.toUpperCase(),
                             });
                           }}
                           required

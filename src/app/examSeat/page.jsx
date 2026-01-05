@@ -39,11 +39,19 @@ export default function Result() {
     const querySnapshot = await getDocs(
       query(collection(firestore, "students"))
     );
-    const data = querySnapshot.docs.map((doc) => ({
-      // doc.data() is never undefined for query doc snapshots
-      ...doc.data(),
-      id: doc.id,
-    }));
+    const data = querySnapshot.docs
+      .map((doc) => ({
+        // doc.data() is never undefined for query doc snapshots
+        ...doc.data(),
+        id: doc.id,
+      }))
+      .sort((a, b) => {
+        if (a.nclass === b.nclass) {
+          return a.roll_no - b.roll_no;
+        } else {
+          return a.nclass - b.nclass;
+        }
+      });
     setExamData(data);
     setStudentState(data);
     setStudentUpdateTime(Date.now());
