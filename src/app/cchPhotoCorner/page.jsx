@@ -3,11 +3,39 @@ import React from "react";
 import CCH from "./cch.json";
 import { SCHOOLNAME } from "@/modules/constants";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import CCHPhotoCorner from "../../pdf/CCHPhotoCorner";
 export default function CchPhotoCorner() {
+  const PDFDownloadLink = dynamic(
+    () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+    {
+      ssr: false,
+      loading: () => <p>Loading...</p>,
+    }
+  );
   return (
     <div className="container text-center mx-auto flex-wrap my-2">
       <h3 className="text-center">COOK CUM HELPERS' CORNER OF {SCHOOLNAME}</h3>
-
+      <div className="my-3 noprint">
+        <PDFDownloadLink
+          document={<CCHPhotoCorner data={CCH} />}
+          fileName={`CCH Photo Corner.pdf`}
+          style={{
+            textDecoration: "none",
+            padding: "10px",
+            color: "#fff",
+            backgroundColor: "navy",
+            border: "1px solid #4a4a4a",
+            width: "40%",
+            borderRadius: 10,
+            margin: 10,
+          }}
+        >
+          {({ blob, url, loading, error }) =>
+            loading ? "Loading..." : "Download CCH Photo Corner PDF"
+          }
+        </PDFDownloadLink>
+      </div>
       <div className="row mx-auto justify-content-center">
         {CCH.map((el, index) => {
           return (

@@ -135,7 +135,7 @@ export default function Result() {
                   </h6>
                   <h6 className="m-1" style={{ margin: 0, padding: 0 }}>
                     {" "}
-                    {item?.class?.split(" (A)")[0]}
+                    {item?.class}
                   </h6>
                   <h4 className="m-1" style={{ margin: 0, padding: 0 }}>
                     ROLL: {item?.roll_no}

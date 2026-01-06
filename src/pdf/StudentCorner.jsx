@@ -11,7 +11,7 @@ import {
   Font,
   PDFViewer,
 } from "@react-pdf/renderer";
-
+import { SCHOOLNAME } from "@/modules/constants";
 const width = 2480;
 const height = 3508;
 
@@ -20,6 +20,7 @@ export default function StudentCorner({ data }) {
     <Document style={{ margin: 5, padding: 5 }} title={`Student Photo Corner`}>
       <Page size="A4" orientation="portrait" style={styles.page}>
         <View style={styles.pageMainView}>
+          <Text style={styles.title}>STUDENT PHOTO CORNER OF {SCHOOLNAME}</Text>
           <View
             style={{
               flexDirection: "row",
@@ -56,9 +57,7 @@ export default function StudentCorner({ data }) {
                     }}
                   ></View>
                   <Text style={styles.text}>{item?.student_name}</Text>
-                  <Text style={styles.text}>
-                    {item?.class?.split(" (A)")[0]}
-                  </Text>
+                  <Text style={styles.text}>{item?.class}</Text>
                   <Text style={styles.text}>ROLL: {item?.roll_no}</Text>
                   <Text style={styles.text}>Mother: {item?.mother_name}</Text>
                   <Text style={styles.text}>Father: {item?.father_name}</Text>
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     fontFamily: "TimesBold",
     textAlign: "center",

@@ -45,7 +45,7 @@ export default function StudentData() {
     id: docId,
     student_id: "",
     guardians_name: "",
-    class: "CLASS PP (A)",
+    class: "PRE PRIMARY",
     father_name: "",
     roll_no: 1,
     birthdate: todayInString(),
@@ -103,7 +103,7 @@ export default function StudentData() {
             id: docId,
             student_id: "",
             guardians_name: "",
-            class: "CLASS PP (A)",
+            class: "PRE PRIMARY",
             father_name: "",
             roll_no: 1,
             birthdate: todayInString(),
@@ -215,7 +215,7 @@ export default function StudentData() {
     },
     {
       name: "Class",
-      selector: (row) => row.class.split(" (A)")[0],
+      selector: (row) => row.class,
       sortable: +true,
       wrap: +true,
       center: +true,
@@ -536,37 +536,37 @@ export default function StudentData() {
                           defaultValue={addStudent.class}
                           onChange={(e) => {
                             const value = e.target.value;
-                            if (value === "CLASS PP (A)") {
+                            if (value === "PRE PRIMARY") {
                               setAddStudent({
                                 ...addStudent,
                                 class: value,
                                 nclass: 0,
                               });
-                            } else if (value === "CLASS I (A)") {
+                            } else if (value === "CLASS I") {
                               setAddStudent({
                                 ...addStudent,
                                 class: value,
                                 nclass: 1,
                               });
-                            } else if (value === "CLASS II (A)") {
+                            } else if (value === "CLASS II") {
                               setAddStudent({
                                 ...addStudent,
                                 class: value,
                                 nclass: 2,
                               });
-                            } else if (value === "CLASS III (A)") {
+                            } else if (value === "CLASS III") {
                               setAddStudent({
                                 ...addStudent,
                                 class: value,
                                 nclass: 3,
                               });
-                            } else if (value === "CLASS IV (A)") {
+                            } else if (value === "CLASS IV") {
                               setAddStudent({
                                 ...addStudent,
                                 class: value,
                                 nclass: 4,
                               });
-                            } else if (value === "CLASS V (A)") {
+                            } else if (value === "CLASS V") {
                               setAddStudent({
                                 ...addStudent,
                                 class: value,
@@ -575,12 +575,12 @@ export default function StudentData() {
                             }
                           }}
                         >
-                          <option value={"CLASS PP (A)"}>প্রাক প্রাথমিক</option>
-                          <option value={"CLASS I (A)"}>প্রথম শ্রেনী</option>
-                          <option value={"CLASS II (A)"}>দ্বিতীয় শ্রেনী</option>
-                          <option value={"CLASS III (A)"}>তৃতীয় শ্রেনী</option>
-                          <option value={"CLASS IV (A)"}>চতুর্থ শ্রেনী</option>
-                          <option value={"CLASS V (A)"}>পঞ্চম শ্রেনী</option>
+                          <option value={"PRE PRIMARY"}>প্রাক প্রাথমিক</option>
+                          <option value={"CLASS I"}>প্রথম শ্রেনী</option>
+                          <option value={"CLASS II"}>দ্বিতীয় শ্রেনী</option>
+                          <option value={"CLASS III"}>তৃতীয় শ্রেনী</option>
+                          <option value={"CLASS IV"}>চতুর্থ শ্রেনী</option>
+                          <option value={"CLASS V"}>পঞ্চম শ্রেনী</option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">
@@ -857,37 +857,37 @@ export default function StudentData() {
                           defaultValue={editStudent.class}
                           onChange={(e) => {
                             const value = e.target.value;
-                            if (value === "CLASS PP (A)") {
+                            if (value === "PRE PRIMARY") {
                               setEditStudent({
                                 ...editStudent,
                                 class: value,
                                 nclass: 0,
                               });
-                            } else if (value === "CLASS I (A)") {
+                            } else if (value === "CLASS I") {
                               setEditStudent({
                                 ...editStudent,
                                 class: value,
                                 nclass: 1,
                               });
-                            } else if (value === "CLASS II (A)") {
+                            } else if (value === "CLASS II") {
                               setEditStudent({
                                 ...editStudent,
                                 class: value,
                                 nclass: 2,
                               });
-                            } else if (value === "CLASS III (A)") {
+                            } else if (value === "CLASS III") {
                               setEditStudent({
                                 ...editStudent,
                                 class: value,
                                 nclass: 3,
                               });
-                            } else if (value === "CLASS IV (A)") {
+                            } else if (value === "CLASS IV") {
                               setEditStudent({
                                 ...editStudent,
                                 class: value,
                                 nclass: 4,
                               });
-                            } else if (value === "CLASS V (A)") {
+                            } else if (value === "CLASS V") {
                               setEditStudent({
                                 ...editStudent,
                                 class: value,
@@ -896,12 +896,12 @@ export default function StudentData() {
                             }
                           }}
                         >
-                          <option value={"CLASS PP (A)"}>প্রাক প্রাথমিক</option>
-                          <option value={"CLASS I (A)"}>প্রথম শ্রেনী</option>
-                          <option value={"CLASS II (A)"}>দ্বিতীয় শ্রেনী</option>
-                          <option value={"CLASS III (A)"}>তৃতীয় শ্রেনী</option>
-                          <option value={"CLASS IV (A)"}>চতুর্থ শ্রেনী</option>
-                          <option value={"CLASS V (A)"}>পঞ্চম শ্রেনী</option>
+                          <option value={"PRE PRIMARY"}>প্রাক প্রাথমিক</option>
+                          <option value={"CLASS I"}>প্রথম শ্রেনী</option>
+                          <option value={"CLASS II"}>দ্বিতীয় শ্রেনী</option>
+                          <option value={"CLASS III"}>তৃতীয় শ্রেনী</option>
+                          <option value={"CLASS IV"}>চতুর্থ শ্রেনী</option>
+                          <option value={"CLASS V"}>পঞ্চম শ্রেনী</option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">

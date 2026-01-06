@@ -50,17 +50,13 @@ export default function HPRCInsidePage({ data }) {
                         <Text style={styles.text}>শ্রেণী (Class): </Text>
                       </View>
                       <View style={styles.dataView}>
-                        <Text style={styles.text}>
-                          {item?.class.split(" (A)")[0]}
-                        </Text>
+                        <Text style={styles.text}>{item?.class}</Text>
                       </View>
                       <View>
                         <Text style={styles.text}>বিভাগ (Section): </Text>
                       </View>
                       <View style={styles.dataView}>
-                        <Text style={styles.text}>
-                          {item?.class.split(" (A)")[1]}
-                        </Text>
+                        <Text style={styles.text}>{item?.class}</Text>
                       </View>
                     </View>
                   </View>

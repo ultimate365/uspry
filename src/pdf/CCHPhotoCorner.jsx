@@ -11,42 +11,78 @@ import {
   Font,
   PDFViewer,
 } from "@react-pdf/renderer";
-
+import { SCHOOLNAME } from "@/modules/constants";
 const width = 2480;
 const height = 3508;
-export default function ExamSeatDistribution({ examData }) {
+
+export default function CCHPhotoCorner({ data }) {
   return (
-    <Document
-      style={{ margin: 5, padding: 5 }}
-      title={`Exam Seat Distribution`}
-    >
-      <Page size="A4" orientation="portrait" style={styles.page}>
+    <Document style={{ margin: 5, padding: 5 }} title={`CCH Photo Corner`}>
+      <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.pageMainView}>
+          <Text style={styles.title}>
+            COOK CUM HELPER'S PHOTO CORNER OF {SCHOOLNAME}
+          </Text>
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: "space-evenly",
+              alignItems: "flex-start",
               flexWrap: "wrap",
             }}
           >
-            {examData.length > 0 &&
-              examData.map((item, index) => (
+            {data.length > 0 &&
+              data.map((el, index) => (
                 <View
                   style={{
-                    width: "22%",
+                    width: 170,
+                    height: 250,
                     borderWidth: 2,
                     justifyContent: "center",
                     alignItems: "center",
-                    height: 55,
+                    alignSelf: "center",
                     borderRadius: 10,
                     margin: 5,
+                    padding: 2,
                   }}
                   key={index}
                 >
-                  <Text style={styles.title2}>{item?.student_name}</Text>
-                  <Text style={styles.title2}>{item?.class}</Text>
-                  <Text style={styles.title}>ROLL: {item?.roll_no}</Text>
+                  <View
+                    style={{
+                      width: 120,
+                      height: 140,
+                      borderWidth: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignSelf: "center",
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Image
+                      src={el?.url}
+                      style={{
+                        width: 100,
+                        height: 120,
+                        borderWidth: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignSelf: "center",
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
+
+                  <Text style={styles.text}>Name: {el?.name}</Text>
+                  <Text style={styles.text}>
+                    Designation: Cook Cum Helper {index + 1}
+                  </Text>
+                  {index === 0 && (
+                    <Text style={styles.text}>School Key Holder</Text>
+                  )}
+                  <Text style={styles.text}>Mobile: {el?.mobile}</Text>
+                  <Text style={styles.text}>Address:</Text>
+                  <Text style={styles.text}>{el?.address1}</Text>
+                  <Text style={styles.text}>{el?.address2}</Text>
                 </View>
               ))}
           </View>
@@ -57,21 +93,19 @@ export default function ExamSeatDistribution({ examData }) {
 }
 const styles = StyleSheet.create({
   page: {
-    padding: 5,
-    margin: 5,
+    padding: 2,
+    margin: 2,
     backgroundColor: "#FFFFFF",
-    justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
     width: width,
     height: height,
   },
   pageMainView: {
-    padding: 5,
+    padding: 2,
     margin: 5,
     alignSelf: "center",
-    width: "99%",
-    height: "99%",
+    width: "100%",
   },
   title: {
     fontSize: 20,

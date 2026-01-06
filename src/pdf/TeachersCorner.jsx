@@ -12,7 +12,6 @@ import {
   PDFViewer,
 } from "@react-pdf/renderer";
 import { SCHOOLNAME } from "@/modules/constants";
-import {titleCase} from "../modules/calculatefunctions"
 const width = 2480;
 const height = 3508;
 
@@ -21,7 +20,9 @@ export default function TeachersCorner({ data }) {
     <Document style={{ margin: 5, padding: 5 }} title={`Teacher Photo Corner`}>
       <Page size="A4" orientation="landscape" style={styles.page}>
         <View style={styles.pageMainView}>
-          <Text style={styles.title}>Teacher's Photo Corner of {titleCase(SCHOOLNAME)}</Text>
+          <Text style={styles.title}>
+            TEACHER'S PHOTO CORNER OF {SCHOOLNAME}
+          </Text>
           <View
             style={{
               flexDirection: "row",
@@ -34,7 +35,8 @@ export default function TeachersCorner({ data }) {
               data.map((el, index) => (
                 <View
                   style={{
-                    width: 150,
+                    width: 170,
+                    height: 250,
                     borderWidth: 2,
                     justifyContent: "center",
                     alignItems: "center",

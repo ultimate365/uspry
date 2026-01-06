@@ -56,8 +56,8 @@ export default function AdmissionRegisterData() {
     father_name: "",
     student_name: "",
     mother_name: "",
-    dob: "",
-    year: "",
+    dob: todayInString(),
+    year: new Date().getFullYear(),
     ref: "",
   });
   const [viewStudent, setViewStudent] = useState({
@@ -65,8 +65,8 @@ export default function AdmissionRegisterData() {
     father_name: "",
     student_name: "",
     mother_name: "",
-    dob: "",
-    year: "",
+    dob: todayInString(),
+    year: new Date().getFullYear(),
     ref: "",
   });
   const [editStudent, setEditStudent] = useState({
@@ -74,8 +74,8 @@ export default function AdmissionRegisterData() {
     father_name: "",
     student_name: "",
     mother_name: "",
-    dob: "",
-    year: "",
+    dob: todayInString(),
+    year: new Date().getFullYear(),
     ref: "",
   });
   const AdmissionRegisterData = async () => {
@@ -99,24 +99,23 @@ export default function AdmissionRegisterData() {
   };
   const addNewStudent = async () => {
     setShowTable(false);
+    const newId = addStudent.id || docId;
+    const studentData = { ...addStudent, id: newId };
     try {
-      await setDoc(
-        doc(firestore, "admissionRegister", addStudent.id),
-        addStudent
-      )
+      await setDoc(doc(firestore, "admissionRegister", newId), studentData)
         .then(() => {
           toast.success("New Student Added Successfully");
           setAddStudent({
-            id: docId,
+            id: "",
             father_name: "",
             student_name: "",
             mother_name: "",
-            dob: "",
-            year: "",
+            dob: todayInString(),
+            year: new Date().getFullYear(),
             ref: "",
           });
           setShowAdd(false);
-          const newData = admissionRegisterState.concat(addStudent);
+          const newData = admissionRegisterState.concat(studentData);
           setAdmissionRegisterState(newData);
           setData(newData);
           setFilteredData(newData);
@@ -148,8 +147,8 @@ export default function AdmissionRegisterData() {
             father_name: "",
             student_name: "",
             mother_name: "",
-            dob: "",
-            year: "",
+            dob: todayInString(),
+            year: new Date().getFullYear(),
             ref: "",
           });
           setShowEdit(false);
@@ -159,8 +158,8 @@ export default function AdmissionRegisterData() {
             father_name: "",
             student_name: "",
             mother_name: "",
-            dob: "",
-            year: "",
+            dob: todayInString(),
+            year: new Date().getFullYear(),
             ref: "",
           });
           const newData = admissionRegisterState.map((item) =>
@@ -514,8 +513,8 @@ export default function AdmissionRegisterData() {
                           father_name: "",
                           student_name: "",
                           mother_name: "",
-                          dob: "",
-                          year: "",
+                          dob: todayInString(),
+                          year: new Date().getFullYear(),
                           ref: "",
                         });
                       }}
@@ -604,6 +603,29 @@ export default function AdmissionRegisterData() {
                           required
                         />
                       </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Admission Year *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Admission Year"
+                          value={addStudent.year}
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              setAddStudent({
+                                ...addStudent,
+                                year: parseInt(e.target.value),
+                              });
+                            } else {
+                              setAddStudent({
+                                ...addStudent,
+                                year: "",
+                              });
+                            }
+                          }}
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="modal-footer">
@@ -635,8 +657,8 @@ export default function AdmissionRegisterData() {
                           father_name: "",
                           student_name: "",
                           mother_name: "",
-                          dob: "",
-                          year: "",
+                          dob: todayInString(),
+                          year: new Date().getFullYear(),
                           ref: "",
                         });
                       }}
@@ -673,8 +695,8 @@ export default function AdmissionRegisterData() {
                           father_name: "",
                           student_name: "",
                           mother_name: "",
-                          dob: "",
-                          year: "",
+                          dob: todayInString(),
+                          year: new Date().getFullYear(),
                           ref: "",
                         });
                         setShowDldBtn(false);
@@ -767,8 +789,8 @@ export default function AdmissionRegisterData() {
                           father_name: "",
                           student_name: "",
                           mother_name: "",
-                          dob: "",
-                          year: "",
+                          dob: todayInString(),
+                          year: new Date().getFullYear(),
                           ref: "",
                         });
                         setShowDldBtn(false);
@@ -806,8 +828,8 @@ export default function AdmissionRegisterData() {
                           father_name: "",
                           student_name: "",
                           mother_name: "",
-                          dob: "",
-                          year: "",
+                          dob: todayInString(),
+                          year: new Date().getFullYear(),
                           ref: "",
                         });
                       }}
@@ -895,6 +917,29 @@ export default function AdmissionRegisterData() {
                           required
                         />
                       </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Admission Year *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Admission Year"
+                          value={editStudent.year}
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              setEditStudent({
+                                ...editStudent,
+                                year: parseInt(e.target.value),
+                              });
+                            } else {
+                              setEditStudent({
+                                ...editStudent,
+                                year: "",
+                              });
+                            }
+                          }}
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="modal-footer">
@@ -915,8 +960,8 @@ export default function AdmissionRegisterData() {
                           father_name: "",
                           student_name: "",
                           mother_name: "",
-                          dob: "",
-                          year: "",
+                          dob: todayInString(),
+                          year: new Date().getFullYear(),
                           ref: "",
                         });
                       }}

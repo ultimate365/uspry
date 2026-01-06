@@ -70,7 +70,7 @@ export default function UserStudents() {
     },
     {
       name: "Class",
-      selector: (row) => row.class.split(" (A)")[0],
+      selector: (row) => row.class,
       sortable: +true,
       wrap: +true,
       center: +true,

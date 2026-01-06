@@ -174,9 +174,7 @@ export default function PhotoCorner() {
                       className="text-center justify-content-center align-items-center"
                     ></div>
                   </div>
-                  <h6 className="m-1 p-0 text-center text-wrap">
-                    {el?.class?.split(" (A)").join("")}
-                  </h6>
+                  <h6 className="m-1 p-0 text-center text-wrap">{el?.class}</h6>
 
                   <h6>Roll No.- {el?.roll_no}</h6>
 

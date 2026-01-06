@@ -445,9 +445,7 @@ export default function HolisticPRCard() {
                                   width: "25%",
                                 }}
                               >
-                                <p className="m-0 p-0 text-start">
-                                  {""}
-                                </p>
+                                <p className="m-0 p-0 text-start">{""}</p>
                               </div>
                             </div>
                             <div
@@ -552,7 +550,7 @@ export default function HolisticPRCard() {
                                 }}
                               >
                                 <p className="m-0 p-0 text-start">
-                                  {el?.class?.split(" (A)")[0]}
+                                  {el?.class}
                                 </p>
                               </div>
                               <div style={{ width: "17%" }}>
