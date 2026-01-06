@@ -611,17 +611,12 @@ export default function AdmissionRegisterData() {
                           placeholder="Admission Year"
                           value={addStudent.year}
                           onChange={(e) => {
-                            if (e.target.value) {
-                              setAddStudent({
-                                ...addStudent,
-                                year: parseInt(e.target.value),
-                              });
-                            } else {
-                              setAddStudent({
-                                ...addStudent,
-                                year: "",
-                              });
-                            }
+                            setAddStudent({
+                              ...addStudent,
+                              year: e.target.value
+                                ? parseInt(e.target.value)
+                                : "",
+                            });
                           }}
                           required
                         />
@@ -925,17 +920,12 @@ export default function AdmissionRegisterData() {
                           placeholder="Admission Year"
                           value={editStudent.year}
                           onChange={(e) => {
-                            if (e.target.value) {
-                              setEditStudent({
-                                ...editStudent,
-                                year: parseInt(e.target.value),
-                              });
-                            } else {
-                              setEditStudent({
-                                ...editStudent,
-                                year: "",
-                              });
-                            }
+                            setEditStudent({
+                              ...editStudent,
+                              year: e.target.value
+                                ? parseInt(e.target.value)
+                                : "",
+                            });
                           }}
                           required
                         />
