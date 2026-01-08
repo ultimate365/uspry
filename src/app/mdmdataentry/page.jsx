@@ -641,6 +641,9 @@ export default function MDMData() {
     } else if (parseInt(selectedYear) >= 2025 && parseInt(entryMonth) >= 5) {
       setThisMonthMDMAllowance(MDM_COST_MAY_2025);
       mdmCost = MDM_COST_MAY_2025;
+    } else {
+      setThisMonthMDMAllowance(MDM_COST_MAY_2025);
+      mdmCost = MDM_COST_MAY_2025;
     }
 
     setPpTotalMeal(ppTotal);
