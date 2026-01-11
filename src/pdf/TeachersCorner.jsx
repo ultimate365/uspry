@@ -51,13 +51,20 @@ export default function TeachersCorner({ data }) {
                     style={{
                       width: 100,
                       height: 120,
-                      borderWidth: 1,
+                      // borderWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
                       alignSelf: "center",
                       borderRadius: 10,
                     }}
-                  ></View>
+                  >
+                    <Image
+                      src={el?.url}
+                      alt="Teacher Photo"
+                      width={100}
+                      height={120}
+                    />
+                  </View>
                   <Text style={styles.text}>Name: {el?.tname}</Text>
                   <Text style={styles.text}>Designation: {el?.desig}</Text>
                   <Text style={styles.text}>Mobile: {el?.phone}</Text>

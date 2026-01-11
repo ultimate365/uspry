@@ -109,7 +109,17 @@ export default function TeacherPhotoCorner() {
                         // borderColor: "1px solid black",
                       }}
                       className="text-center justify-content-center align-items-center border-1 border-dark"
-                    ></div>
+                    >
+                      <Image
+                        src={el?.url}
+                        alt="Teacher Photo"
+                        width={150}
+                        height={180}
+                        style={{
+                          borderRadius: 10,
+                        }}
+                      />
+                    </div>
                   </div>
 
                   <h6 className="m-1 p-0 text-center text-wrap">
