@@ -27,6 +27,7 @@ import {
   getDocs,
   query,
   collection,
+  where,
 } from "firebase/firestore";
 import { BsClipboard, BsClipboard2Check } from "react-icons/bs";
 import { useGlobalContext } from "../../context/Store";
@@ -349,28 +350,27 @@ export default function Admission() {
 
   const getAdmission = async () => {
     try {
-      const querySnapshot = await getDocs(
-        query(collection(firestore, "admission"))
+      // Count admissions for the current YEAR so numbering resets each year
+      const yearQuery = query(
+        collection(firestore, "admission"),
+        where("student_addmission_year", "==", YEAR)
       );
-      const data = querySnapshot.docs.map((doc) => ({
-        // doc.data() is never undefined for query doc snapshots
-        id: doc.id,
-        ...doc.data(),
-      }));
-      const dataLength = data.length;
-      let countLength = dataLength;
-      if (dataLength <= 9) {
-        countLength = "0" + (countLength + 1);
-      } else {
-        countLength = countLength + 1;
+      const querySnapshot = await getDocs(yearQuery);
+      const count = querySnapshot.size || querySnapshot.docs.length || 0;
+
+      // Find next available sequential ID for the year with 2-digit padding (01, 02...)
+      const pad2 = (n) => (n <= 9 ? "0" + n : n <= 99 ? String(n) : String(n));
+      let seq = count + 1;
+      let candidateID = "";
+      while (true) {
+        const countLength = pad2(seq);
+        candidateID = `USPRYS-ONLINE-${YEAR}-${countLength}`;
+        const docSnap = await getDoc(doc(firestore, "admission", candidateID));
+        if (!docSnap.exists()) break;
+        seq += 1;
       }
-      let genID = `USPRYS-ONLINE-${YEAR}-${countLength}`;
-      const checkDuplicate = data.filter((entry) => entry.id === genID);
-      if (checkDuplicate.length > 0) {
-        genID = genID + "-" + getRandomAlphabet();
-      }
-      setAdmissionID(genID);
-      return genID;
+      setAdmissionID(candidateID);
+      return candidateID;
     } catch (error) {
       setLoader(false);
       console.error("Error getting documents: ", error);
