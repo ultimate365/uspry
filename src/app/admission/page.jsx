@@ -458,6 +458,7 @@ export default function Admission() {
               student_addmission_dateAndTime: Date.now(),
               student_addmission_year: YEAR,
             });
+            setSrc(null);
           })
 
           .catch((error) => {
