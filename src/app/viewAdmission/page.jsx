@@ -997,14 +997,14 @@ export default function ViewAdmission() {
                         <div className="d-flex justify-content-around my-1">
                           <h5>
                             ছাত্র/ছাত্রীর পূর্বের বিদ্যালয়ের নাম ও ঠিকানা:{" "}
-                            <h6
+                            <span
                               style={{
                                 textDecoration: "underline 1px dotted",
                                 textUnderlineOffset: 4,
                               }}
                             >
                               {studentDetails?.student_previous_school}
-                            </h6>
+                            </span>
                           </h5>
                         </div>
                       )}
