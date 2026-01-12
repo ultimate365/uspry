@@ -19,13 +19,9 @@ export default function CompDownloadAdmissionForm({ data }) {
   const {
     id,
     url,
-    student_beng_name,
     student_eng_name,
-    father_beng_name,
     father_eng_name,
-    mother_beng_name,
     mother_eng_name,
-    guardian_beng_name,
     guardian_eng_name,
     student_birthday,
     student_gender,
@@ -85,10 +81,7 @@ export default function CompDownloadAdmissionForm({ data }) {
           </View>
           <View style={styles.paraView}>
             <Text style={styles.paraText}>
-              ছাত্র / ছাত্রীর নাম (বাংলায়): {student_beng_name}
-            </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-              (ইংরাজীতে): {student_eng_name}
+              ছাত্র / ছাত্রীর নাম : {student_eng_name}
             </Text>
           </View>
           <View style={styles.paraView}>
@@ -106,27 +99,14 @@ export default function CompDownloadAdmissionForm({ data }) {
             </Text>
           </View>
           <View style={styles.paraView}>
-            <Text style={styles.paraText}>
-              পিতার নাম (বাংলায়): {father_beng_name}
-            </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-              (ইংরাজীতে): {father_eng_name}
-            </Text>
+            <Text style={styles.paraText}>পিতার নাম : {father_eng_name}</Text>
+          </View>
+          <View style={styles.paraView}>
+            <Text style={styles.paraText}>মাতার নাম : {mother_eng_name}</Text>
           </View>
           <View style={styles.paraView}>
             <Text style={styles.paraText}>
-              মাতার নাম (বাংলায়): {mother_beng_name}
-            </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-              (ইংরাজীতে): {mother_eng_name}
-            </Text>
-          </View>
-          <View style={styles.paraView}>
-            <Text style={styles.paraText}>
-              অভিভাবকের নাম (বাংলায়): {guardian_beng_name}
-            </Text>
-            <Text style={[styles.paraText, { paddingLeft: scrWidth(8) }]}>
-              (ইংরাজীতে): {guardian_eng_name}
+              অভিভাবকের নাম : {guardian_eng_name}
             </Text>
           </View>
           <View style={styles.paraView}>

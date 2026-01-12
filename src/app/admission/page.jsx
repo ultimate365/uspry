@@ -36,6 +36,10 @@ import { SCHOOLNAME, classWiseAge } from "@/modules/constants";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/pdf/CompDownloadAdmissionForm";
 import Image from "next/image";
+import {
+  deleteFileFromGithub,
+  uploadFileToGithub,
+} from "../../modules/gitFileHndler";
 export default function Admission() {
   const { setStateObject, setApplicationFormState, applicationFormState } =
     useGlobalContext();
@@ -52,13 +56,9 @@ export default function Admission() {
     id: "",
     url: "",
     photoName: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_birthday: `01-01-${new Date().getFullYear() - 5}`,
     student_gender: "",
@@ -83,13 +83,9 @@ export default function Admission() {
   });
   const [errInputField, setErrInputField] = useState({
     student_photo: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_gender: "",
     student_mobile: "",
@@ -122,13 +118,9 @@ export default function Admission() {
     id: "",
     url: "",
     photoName: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_birthday: "",
     student_gender: "",
@@ -154,13 +146,9 @@ export default function Admission() {
     id: "",
     url: "",
     photoName: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_birthday: "",
     student_gender: "",
@@ -189,13 +177,9 @@ export default function Admission() {
     let formIsValid = true;
     setErrInputField({
       student_photo: "",
-      student_beng_name: "",
       student_eng_name: "",
-      father_beng_name: "",
       father_eng_name: "",
-      mother_beng_name: "",
       mother_eng_name: "",
-      guardian_beng_name: "",
       guardian_eng_name: "",
       student_gender: "",
       student_mobile: "",
@@ -219,25 +203,11 @@ export default function Admission() {
         student_photo: "দয়া করে ছাত্র/ছাত্রীর ফটো সিলেক্ট করুন",
       }));
     }
-    if (inputField.student_beng_name === "") {
-      formIsValid = false;
-      setErrInputField((prevState) => ({
-        ...prevState,
-        student_beng_name: "দয়া করে ছাত্র/ছাত্রীর বাংলা নাম লিখুন",
-      }));
-    }
     if (inputField.student_eng_name === "") {
       formIsValid = false;
       setErrInputField((prevState) => ({
         ...prevState,
         student_eng_name: "দয়া করে ছাত্র/ছাত্রীর ইংরাজী নাম লিখুন",
-      }));
-    }
-    if (inputField.father_beng_name === "") {
-      formIsValid = false;
-      setErrInputField((prevState) => ({
-        ...prevState,
-        father_beng_name: "দয়া করে বাবার বাংলা নাম লিখুন",
       }));
     }
     if (inputField.father_eng_name === "") {
@@ -247,25 +217,11 @@ export default function Admission() {
         father_eng_name: "দয়া করে বাবার ইংরাজী নাম লিখুন",
       }));
     }
-    if (inputField.mother_beng_name === "") {
-      formIsValid = false;
-      setErrInputField((prevState) => ({
-        ...prevState,
-        mother_beng_name: "দয়া করে মাতার বাংলা নাম লিখুন",
-      }));
-    }
     if (inputField.mother_eng_name === "") {
       formIsValid = false;
       setErrInputField((prevState) => ({
         ...prevState,
         mother_eng_name: "দয়া করে মাতার ইংরাজী নাম লিখুন",
-      }));
-    }
-    if (inputField.guardian_beng_name === "") {
-      formIsValid = false;
-      setErrInputField((prevState) => ({
-        ...prevState,
-        guardian_beng_name: "দয়া করে অভিভাবকের বাংলা নাম লিখুন",
       }));
     }
     if (inputField.guardian_eng_name === "") {
@@ -428,118 +384,87 @@ export default function Admission() {
       try {
         setLoader(true);
         const genID = await getAdmission();
-        const filestorageRef = ref(
-          storage,
-          `/studentImages/${genID + "-" + file.name}`
+        const githubUrl = await uploadFileToGithub(
+          file,
+          `${genID + "-" + file.name}`,
+          "admission"
         );
-        const uploadTask = uploadBytesResumable(filestorageRef, file);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            setShowPercent(true);
-            const percent = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        const entry = {
+          id: genID,
+          url: githubUrl,
+          photoName: `${genID + "-" + file.name}`,
+          student_eng_name: inputField.student_eng_name.toUpperCase(),
+          father_eng_name: inputField.father_eng_name.toUpperCase(),
+          mother_eng_name: inputField.mother_eng_name.toUpperCase(),
+          guardian_eng_name: inputField.guardian_eng_name.toUpperCase(),
+          student_birthday: inputField.student_birthday,
+          student_gender: inputField.student_gender,
+          student_mobile: inputField.student_mobile,
+          student_aadhaar: inputField.student_aadhaar,
+          student_religion: inputField.student_religion,
+          student_race: inputField.student_race,
+          student_bpl_status: inputField.student_bpl_status,
+          student_bpl_number: inputField.student_bpl_number,
+          student_village: inputField.student_village.toUpperCase(),
+          student_post_office: inputField.student_post_office.toUpperCase(),
+          student_police_station:
+            inputField.student_police_station.toUpperCase(),
+          student_pin_code: inputField.student_pin_code,
+          student_addmission_class: inputField.student_addmission_class,
+          student_previous_class: inputField.student_previous_class,
+          student_previous_class_year: inputField.student_previous_class_year,
+          student_previous_school:
+            inputField.student_previous_school.toUpperCase(),
+          student_previous_student_id: inputField.student_previous_student_id,
+          student_addmission_date: todayInString(),
+          student_addmission_year: YEAR,
+          student_addmission_dateAndTime: Date.now(),
+        };
+        await setDoc(doc(firestore, "admission", genID), entry)
+          .then(() => {
+            setLoader(false);
+            toast.success(
+              "Congrats! Form Has Been Submitted to Us Successfully!"
             );
-
-            // // update progress
-            setProgress(percent);
-          },
-          (err) => console.log(err),
-          () => {
-            // download url
-            getDownloadURL(uploadTask.snapshot.ref).then(async (photourl) => {
-              // console.log(url);
-
-              const entry = {
-                id: genID,
-                url: photourl,
-                photoName: `${genID + "-" + file.name}`,
-                student_beng_name: inputField.student_beng_name,
-                student_eng_name: inputField.student_eng_name.toUpperCase(),
-                father_beng_name: inputField.father_beng_name,
-                father_eng_name: inputField.father_eng_name.toUpperCase(),
-                mother_beng_name: inputField.mother_beng_name,
-                mother_eng_name: inputField.mother_eng_name.toUpperCase(),
-                guardian_beng_name: inputField.guardian_beng_name,
-                guardian_eng_name: inputField.guardian_eng_name.toUpperCase(),
-                student_birthday: inputField.student_birthday,
-                student_gender: inputField.student_gender,
-                student_mobile: inputField.student_mobile,
-                student_aadhaar: inputField.student_aadhaar,
-                student_religion: inputField.student_religion,
-                student_race: inputField.student_race,
-                student_bpl_status: inputField.student_bpl_status,
-                student_bpl_number: inputField.student_bpl_number,
-                student_village: inputField.student_village.toUpperCase(),
-                student_post_office:
-                  inputField.student_post_office.toUpperCase(),
-                student_police_station:
-                  inputField.student_police_station.toUpperCase(),
-                student_pin_code: inputField.student_pin_code,
-                student_addmission_class: inputField.student_addmission_class,
-                student_previous_class: inputField.student_previous_class,
-                student_previous_class_year:
-                  inputField.student_previous_class_year,
-                student_previous_school:
-                  inputField.student_previous_school.toUpperCase(),
-                student_previous_student_id:
-                  inputField.student_previous_student_id,
-                student_addmission_date: todayInString(),
-                student_addmission_year: YEAR,
-                student_addmission_dateAndTime: Date.now(),
-              };
-              await setDoc(doc(firestore, "admission", genID), entry)
-                .then(() => {
-                  setLoader(false);
-                  toast.success(
-                    "Congrats! Form Has Been Submitted to Us Successfully!"
-                  );
-                  setFormSubmitted(true);
-                  setShowForm(false);
-                  setStateObject(entry);
-                  setInputField({
-                    id: "",
-                    url: "",
-                    photoName: "",
-                    student_beng_name: "",
-                    student_eng_name: "",
-                    father_beng_name: "",
-                    father_eng_name: "",
-                    mother_beng_name: "",
-                    mother_eng_name: "",
-                    guardian_beng_name: "",
-                    guardian_eng_name: "",
-                    student_birthday: `01-01-${new Date().getFullYear() - 5}`,
-                    student_gender: "",
-                    student_mobile: "",
-                    student_aadhaar: "",
-                    student_religion: "",
-                    student_race: "GENERAL",
-                    student_bpl_status: "NO",
-                    student_bpl_number: "",
-                    student_village: "SEHAGORI",
-                    student_post_office: "KHOROP",
-                    student_police_station: "JOYPUR",
-                    student_pin_code: "711401",
-                    student_addmission_class: "PRE PRIMARY",
-                    student_previous_class: "FIRST TIME ADDMISSION",
-                    student_previous_class_year: "",
-                    student_previous_school: "",
-                    student_previous_student_id: "",
-                    student_addmission_date: todayInString(),
-                    student_addmission_dateAndTime: Date.now(),
-                    student_addmission_year: YEAR,
-                  });
-                })
-
-                .catch((error) => {
-                  setLoader(false);
-                  toast.error("Something went Wrong");
-                  console.log(error);
-                });
+            setFormSubmitted(true);
+            setShowForm(false);
+            setStateObject(entry);
+            setInputField({
+              id: "",
+              url: "",
+              photoName: "",
+              student_eng_name: "",
+              father_eng_name: "",
+              mother_eng_name: "",
+              guardian_eng_name: "",
+              student_birthday: `01-01-${new Date().getFullYear() - 5}`,
+              student_gender: "",
+              student_mobile: "",
+              student_aadhaar: "",
+              student_religion: "",
+              student_race: "GENERAL",
+              student_bpl_status: "NO",
+              student_bpl_number: "",
+              student_village: "SEHAGORI",
+              student_post_office: "KHOROP",
+              student_police_station: "JOYPUR",
+              student_pin_code: "711401",
+              student_addmission_class: "PRE PRIMARY",
+              student_previous_class: "FIRST TIME ADDMISSION",
+              student_previous_class_year: "",
+              student_previous_school: "",
+              student_previous_student_id: "",
+              student_addmission_date: todayInString(),
+              student_addmission_dateAndTime: Date.now(),
+              student_addmission_year: YEAR,
             });
-          }
-        );
+          })
+
+          .catch((error) => {
+            setLoader(false);
+            toast.error("Something went Wrong");
+            console.log(error);
+          });
       } catch (e) {
         setLoader(false);
         toast.error("Something went Wrong");
@@ -605,13 +530,9 @@ export default function Admission() {
     id: "",
     url: "",
     photoName: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_birthday: ``,
     student_gender: "",
@@ -637,13 +558,9 @@ export default function Admission() {
 
   const [errEditInputField, setErrEditInputField] = useState({
     id: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_gender: "",
     student_mobile: "",
@@ -679,13 +596,9 @@ export default function Admission() {
                 id: "",
                 url: "",
                 photoName: "",
-                student_beng_name: "",
                 student_eng_name: "",
-                father_beng_name: "",
                 father_eng_name: "",
-                mother_beng_name: "",
                 mother_eng_name: "",
-                guardian_beng_name: "",
                 guardian_eng_name: "",
                 student_birthday: ``,
                 student_gender: "",
@@ -728,13 +641,9 @@ export default function Admission() {
   const validEditForm = () => {
     let formIsValid = true;
     setErrEditInputField({
-      student_beng_name: "",
       student_eng_name: "",
-      father_beng_name: "",
       father_eng_name: "",
-      mother_beng_name: "",
       mother_eng_name: "",
-      guardian_beng_name: "",
       guardian_eng_name: "",
       student_gender: "",
       student_mobile: "",
@@ -751,25 +660,11 @@ export default function Admission() {
       student_previous_school: "",
       student_previous_student_id: "",
     });
-    if (editInputField.student_beng_name === "") {
-      formIsValid = false;
-      setErrEditInputField((prevState) => ({
-        ...prevState,
-        student_beng_name: "দয়া করে ছাত্র/ছাত্রীর বাংলা নাম লিখুন",
-      }));
-    }
     if (editInputField.student_eng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         student_eng_name: "দয়া করে ছাত্র/ছাত্রীর ইংরাজী নাম লিখুন",
-      }));
-    }
-    if (editInputField.father_beng_name === "") {
-      formIsValid = false;
-      setErrEditInputField((prevState) => ({
-        ...prevState,
-        father_beng_name: "দয়া করে বাবার বাংলা নাম লিখুন",
       }));
     }
     if (editInputField.father_eng_name === "") {
@@ -779,25 +674,11 @@ export default function Admission() {
         father_eng_name: "দয়া করে বাবার ইংরাজী নাম লিখুন",
       }));
     }
-    if (editInputField.mother_beng_name === "") {
-      formIsValid = false;
-      setErrEditInputField((prevState) => ({
-        ...prevState,
-        mother_beng_name: "দয়া করে মাতার বাংলা নাম লিখুন",
-      }));
-    }
     if (editInputField.mother_eng_name === "") {
       formIsValid = false;
       setErrEditInputField((prevState) => ({
         ...prevState,
         mother_eng_name: "দয়া করে মাতার ইংরাজী নাম লিখুন",
-      }));
-    }
-    if (editInputField.guardian_beng_name === "") {
-      formIsValid = false;
-      setErrEditInputField((prevState) => ({
-        ...prevState,
-        guardian_beng_name: "দয়া করে অভিভাবকের বাংলা নাম লিখুন",
       }));
     }
     if (editInputField.guardian_eng_name === "") {
@@ -927,8 +808,25 @@ export default function Admission() {
     setLoader(true);
     await deleteDoc(doc(firestore, "admission", entry.id))
       .then(async () => {
-        const desertRef = ref(storage, `studentImages/${entry.photoName}`);
-        await deleteObject(desertRef);
+        try {
+          const desertRef = ref(storage, `studentImages/${entry.photoName}`);
+          await deleteObject(desertRef);
+        } catch (error) {
+          console.log(error);
+        }
+        try {
+          const isDelFromGithub = await deleteFileFromGithub(
+            entry.photoName,
+            "admission"
+          );
+          if (isDelFromGithub) {
+            toast.success("File deleted successfully From Github!");
+          } else {
+            toast.error("Error Deleting File From Github!");
+          }
+        } catch (error) {
+          console.log(error);
+        }
         toast.success("You Application Deleted successfully");
         setShowSearchedResult(false);
         setLoader(false);
@@ -996,10 +894,6 @@ export default function Admission() {
         <div className="my-4">
           <div className="my-4">
             <h5 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h5>
-            <h5 className="text-danger">
-              *** যে অংশগুলি বাংলায় বলা আছে শুধুমাত্র সেইগুলিই বাংলায় করবেন বাকি
-              সমস্ত অংশ ইংরাজীতে লিখবেন।
-            </h5>
             <h5 className="text-danger ben">
               ** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনার ছাত্র/ছাত্রীর সমস্ত
               প্রয়োজনীয় ডকুমেন্টস আপনার সাথে রাখুন।
@@ -1059,26 +953,6 @@ export default function Admission() {
                       transformOrigin: "start",
                     }}
                   ></div>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
-                <label className="form-label">ছাত্র/ছাত্রীর বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={inputField.student_beng_name}
-                  placeholder="ছাত্র/ছাত্রীর বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setInputField({
-                      ...inputField,
-                      student_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errInputField.student_beng_name.length > 0 && (
-                  <span className="error">
-                    {errInputField.student_beng_name}
-                  </span>
                 )}
               </div>
               <div className="mb-3 col-md-4">
@@ -1228,27 +1102,6 @@ export default function Admission() {
                 )}
               </div>
               <div className="mb-3 col-md-4">
-                <label className="form-label">পিতার বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={inputField.father_beng_name}
-                  placeholder="পিতার বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setInputField({
-                      ...inputField,
-                      father_beng_name: e.target.value,
-                      guardian_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errInputField.father_beng_name.length > 0 && (
-                  <span className="error">
-                    {errInputField.father_beng_name}
-                  </span>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
                 <label className="form-label">পিতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
@@ -1268,26 +1121,6 @@ export default function Admission() {
                 )}
               </div>
               <div className="mb-3 col-md-4">
-                <label className="form-label">মাতার বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={inputField.mother_beng_name}
-                  placeholder="মাতার বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setInputField({
-                      ...inputField,
-                      mother_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errInputField.mother_beng_name.length > 0 && (
-                  <span className="error">
-                    {errInputField.mother_beng_name}
-                  </span>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
                 <label className="form-label">মাতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
@@ -1303,26 +1136,6 @@ export default function Admission() {
                 />
                 {errInputField.mother_eng_name.length > 0 && (
                   <span className="error">{errInputField.mother_eng_name}</span>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
-                <label className="form-label">অভিভাবকের বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={inputField.guardian_beng_name}
-                  placeholder="অভিভাবকের বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setInputField({
-                      ...inputField,
-                      guardian_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errInputField.guardian_beng_name.length > 0 && (
-                  <span className="error">
-                    {errInputField.guardian_beng_name}
-                  </span>
                 )}
               </div>
               <div className="mb-3 col-md-4">
@@ -1701,13 +1514,9 @@ export default function Admission() {
                       id: "",
                       url: "",
                       photoName: "",
-                      student_beng_name: "",
                       student_eng_name: "",
-                      father_beng_name: "",
                       father_eng_name: "",
-                      mother_beng_name: "",
                       mother_eng_name: "",
-                      guardian_beng_name: "",
                       guardian_eng_name: "",
                       student_birthday: `01-01-${new Date().getFullYear() - 5}`,
                       student_gender: "",
@@ -2024,10 +1833,6 @@ export default function Admission() {
       {showEditForm && (
         <div className="my-4">
           <h5 className="text-danger">* চিহ্ন দেওয়া অংশগুলি আবশ্যিক।</h5>
-          <h5 className="text-danger">
-            *** যে অংশগুলি বাংলায় বলা আছে শুধুমাত্র সেইগুলিই বাংলায় করবেন বাকি
-            সমস্ত অংশ ইংরাজীতে লিখবেন।
-          </h5>
           <h5 className="text-danger ben">
             ** অনুগ্রহ করে ফর্ম ফিলাপের সময় আপনার ছাত্র/ছাত্রীর সমস্ত প্রয়োজনীয়
             ডকুমেন্টস আপনার সাথে রাখুন।
@@ -2043,26 +1848,6 @@ export default function Admission() {
               className="row mx-auto"
               autoComplete="off"
             >
-              <div className="mb-3 col-md-4">
-                <label className="form-label">ছাত্র/ছাত্রীর বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={editInputField.student_beng_name}
-                  placeholder="ছাত্র/ছাত্রীর বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setEditInputField({
-                      ...editInputField,
-                      student_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errEditInputField.student_beng_name.length > 0 && (
-                  <span className="error">
-                    {errEditInputField.student_beng_name}
-                  </span>
-                )}
-              </div>
               <div className="mb-3 col-md-4">
                 <label className="form-label">
                   ছাত্র/ছাত্রীর ইংরাজীতে নাম*
@@ -2204,27 +1989,6 @@ export default function Admission() {
                 )}
               </div>
               <div className="mb-3 col-md-4">
-                <label className="form-label">পিতার বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={editInputField.father_beng_name}
-                  placeholder="পিতার বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setEditInputField({
-                      ...editInputField,
-                      father_beng_name: e.target.value,
-                      guardian_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errEditInputField.father_beng_name.length > 0 && (
-                  <span className="error">
-                    {errEditInputField.father_beng_name}
-                  </span>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
                 <label className="form-label">পিতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
@@ -2246,26 +2010,6 @@ export default function Admission() {
                 )}
               </div>
               <div className="mb-3 col-md-4">
-                <label className="form-label">মাতার বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={editInputField.mother_beng_name}
-                  placeholder="মাতার বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setEditInputField({
-                      ...editInputField,
-                      mother_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errEditInputField.mother_beng_name.length > 0 && (
-                  <span className="error">
-                    {errEditInputField.mother_beng_name}
-                  </span>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
                 <label className="form-label">মাতার ইংরাজীতে নাম*</label>
                 <input
                   type="text"
@@ -2282,26 +2026,6 @@ export default function Admission() {
                 {errEditInputField.mother_eng_name.length > 0 && (
                   <span className="error">
                     {errEditInputField.mother_eng_name}
-                  </span>
-                )}
-              </div>
-              <div className="mb-3 col-md-4">
-                <label className="form-label">অভিভাবকের বাংলায় নাম*</label>
-                <input
-                  type="text"
-                  value={editInputField.guardian_beng_name}
-                  placeholder="অভিভাবকের বাংলায় নাম"
-                  className="form-control"
-                  onChange={(e) =>
-                    setEditInputField({
-                      ...editInputField,
-                      guardian_beng_name: e.target.value,
-                    })
-                  }
-                />
-                {errEditInputField.guardian_beng_name.length > 0 && (
-                  <span className="error">
-                    {errEditInputField.guardian_beng_name}
                   </span>
                 )}
               </div>
@@ -2685,13 +2409,9 @@ export default function Admission() {
                       id: "",
                       url: "",
                       photoName: "",
-                      student_beng_name: "",
                       student_eng_name: "",
-                      father_beng_name: "",
                       father_eng_name: "",
-                      mother_beng_name: "",
                       mother_eng_name: "",
-                      guardian_beng_name: "",
                       guardian_eng_name: "",
                       student_birthday: ``,
                       student_gender: "",

@@ -67,3 +67,6 @@ export const classWiseAge = [
 ];
 export const TELEGRAM_TEACHER_GROUP = "https://t.me/+LZsOjnE9mBAxZjI9";
 export const AndroidAppLink = "1FDcOHPETUb5iOA32SnOEUqPUiUkrljKE";
+export const myAPIKey =
+  "U2FsdGVkX1+Lv2hwK/2FcawY26//MKlyB3gLr+2qK5hBEw2LjyNpHgeryE9GYoqFRb8j/k8aqO1eF2G7SB8Jwipd+fmxFCVRINBqiQI4cHwEMCT+vOtJFY/uAZTRZ9yP7X7m5ueiPZf131gnT6naZw==";
+export const githubUsername = "usprys";

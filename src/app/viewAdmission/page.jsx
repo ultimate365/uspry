@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import {
   btnArray,
+  createDownloadLink,
   formatDateAndTime,
   getCurrentDateInput,
   todayInString,
@@ -32,6 +33,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import CompDownloadAdmissionForm from "@/pdf/CompDownloadAdmissionForm";
 import Image from "next/image";
 import schoolLogo from "@/../public/assets/images/logoweb.png";
+import { deleteFileFromGithub } from "@/modules/gitFileHndler";
 export default function ViewAdmission() {
   const { state, setStateObject } = useGlobalContext();
   const user = state?.USER;
@@ -52,13 +54,9 @@ export default function ViewAdmission() {
     id: "",
     url: "",
     photoName: "",
-    student_beng_name: "",
     student_eng_name: "",
-    father_beng_name: "",
     father_eng_name: "",
-    mother_beng_name: "",
     mother_eng_name: "",
-    guardian_beng_name: "",
     guardian_eng_name: "",
     student_birthday: `01-01-${new Date().getFullYear() - 5}`,
     student_gender: "",
@@ -226,19 +224,29 @@ export default function ViewAdmission() {
     setLoader(true);
     await deleteDoc(doc(firestore, "admission", entry.id))
       .then(async () => {
-        const desertRef = ref(storage, `studentImages/${entry.photoName}`);
-        await deleteObject(desertRef)
-          .then(() => {
-            toast.success("Image deleted successfully");
-            toast.success("Application Deleted successfully");
-            getData();
-            setLoader(false);
-          })
-          .catch((error) => {
-            console.log(error);
-            setLoader(false);
-            toast.error("Failed to delete Image");
-          });
+        try {
+          const desertRef = ref(storage, `studentImages/${entry.photoName}`);
+          await deleteObject(desertRef);
+        } catch (error) {
+          console.log(error);
+        }
+        try {
+          const isDelFromGithub = await deleteFileFromGithub(
+            entry.photoName,
+            "admission"
+          );
+          if (isDelFromGithub) {
+            toast.success("File deleted successfully From Github!");
+          } else {
+            toast.error("Error Deleting File From Github!");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        toast.success("Image deleted successfully");
+        toast.success("Application Deleted successfully");
+        getData();
+        setLoader(false);
       })
       .catch((e) => {
         console.log(e);
@@ -268,6 +276,15 @@ export default function ViewAdmission() {
         onClick={() => router.push("/admission")}
       >
         Add / Edit Entry
+      </button>
+      <button
+        type="button"
+        className="btn btn-primary m-2"
+        onClick={() => {
+          createDownloadLink(allData, "admission");
+        }}
+      >
+        Download Admission Data
       </button>
       <div className="d-flex flex-row mx-auto mb-3 justify-content-evenly px-2 align-items-center form-check form-switch">
         <h4 className="col-md-2 text-danger m-2">Close Admission</h4>
@@ -755,20 +772,7 @@ export default function ViewAdmission() {
                       </div>
                       <div className="d-flex justify-content-around my-1">
                         <h5>
-                          ছাত্র / ছাত্রীর নাম (বাংলায়):{" "}
-                          <span
-                            style={{
-                              textDecoration: "underline 1px dotted",
-                              textUnderlineOffset: 6,
-                            }}
-                          >
-                            {studentDetails?.student_beng_name}
-                          </span>
-                        </h5>
-                        <h5>&nbsp;&nbsp;&nbsp;&nbsp;</h5>
-
-                        <h5>
-                          (ইংরাজীতে):{" "}
+                          ছাত্র / ছাত্রীর নাম :{" "}
                           <span
                             style={{
                               textDecoration: "underline 1px dotted",
@@ -831,19 +835,7 @@ export default function ViewAdmission() {
                       </div>
                       <div className="d-flex justify-content-around my-1">
                         <h5>
-                          পিতার নাম (বাংলায়):{" "}
-                          <span
-                            style={{
-                              textDecoration: "underline 1px dotted",
-                              textUnderlineOffset: 6,
-                            }}
-                          >
-                            {studentDetails?.father_beng_name}
-                          </span>
-                        </h5>
-
-                        <h5>
-                          (ইংরাজীতে):{" "}
+                          পিতার নাম :{" "}
                           <span
                             style={{
                               textDecoration: "underline 1px dotted",
@@ -856,19 +848,7 @@ export default function ViewAdmission() {
                       </div>
                       <div className="d-flex justify-content-around my-1">
                         <h5>
-                          মাতার নাম (বাংলায়):{" "}
-                          <span
-                            style={{
-                              textDecoration: "underline 1px dotted",
-                              textUnderlineOffset: 6,
-                            }}
-                          >
-                            {studentDetails?.mother_beng_name}
-                          </span>
-                        </h5>
-
-                        <h5>
-                          (ইংরাজীতে):{" "}
+                          মাতার নাম :{" "}
                           <span
                             style={{
                               textDecoration: "underline 1px dotted",
@@ -881,19 +861,7 @@ export default function ViewAdmission() {
                       </div>
                       <div className="d-flex justify-content-around my-1">
                         <h5>
-                          অভিভাবকের নাম (বাংলায়):{" "}
-                          <span
-                            style={{
-                              textDecoration: "underline 1px dotted",
-                              textUnderlineOffset: 6,
-                            }}
-                          >
-                            {studentDetails?.guardian_beng_name}
-                          </span>
-                        </h5>
-
-                        <h5>
-                          (ইংরাজীতে):{" "}
+                          অভিভাবকের নাম:{" "}
                           <span
                             style={{
                               textDecoration: "underline 1px dotted",
