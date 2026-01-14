@@ -1375,6 +1375,7 @@ export default function Admission() {
                   <option value={"CLASS II"}>দ্বিতীয় শ্রেনী</option>
                   <option value={"CLASS III"}>তৃতীয় শ্রেনী</option>
                   <option value={"CLASS IV"}>চতুর্থ শ্রেনী</option>
+                  <option value={"CLASS V"}>পঞ্চম শ্রেনী</option>
                 </select>
                 {errInputField.student_addmission_class.length > 0 && (
                   <span className="error">
@@ -1416,6 +1417,7 @@ export default function Admission() {
                     <option value={"CLASS II"}>দ্বিতীয় শ্রেনী</option>
                     <option value={"CLASS III"}>তৃতীয় শ্রেনী</option>
                     <option value={"CLASS IV"}>চতুর্থ শ্রেনী</option>
+                    <option value={"CLASS V"}>পঞ্চম শ্রেনী</option>
                   </select>
                 </div>
                 <div className="mb-3 col-md-6">
@@ -2269,6 +2271,7 @@ export default function Admission() {
                   <option value={"CLASS II"}>দ্বিতীয় শ্রেনী</option>
                   <option value={"CLASS III"}>তৃতীয় শ্রেনী</option>
                   <option value={"CLASS IV"}>চতুর্থ শ্রেনী</option>
+                  <option value={"CLASS V"}>পঞ্চম শ্রেনী</option>
                 </select>
                 {errEditInputField.student_addmission_class.length > 0 && (
                   <span className="error">
@@ -2310,6 +2313,7 @@ export default function Admission() {
                     <option value={"CLASS II"}>দ্বিতীয় শ্রেনী</option>
                     <option value={"CLASS III"}>তৃতীয় শ্রেনী</option>
                     <option value={"CLASS IV"}>চতুর্থ শ্রেনী</option>
+                    <option value={"CLASS V"}>পঞ্চম শ্রেনী</option>
                   </select>
                 </div>
                 <div className="mb-3 col-md-6">
