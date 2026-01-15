@@ -142,8 +142,8 @@ export default function MDMData() {
     PRIMARY_GIRLS: 25,
     PRIMARY_STUDENTS: 40,
     TOTAL_STUDENTS: 46,
-    YEAR: "2025",
-    id: "2025",
+    YEAR: new Date().getFullYear(),
+    id: new Date().getFullYear().toString(),
   });
   const [StudentEditData, setStudentEditData] = useState({
     PP_STUDENTS: 8,
@@ -151,8 +151,8 @@ export default function MDMData() {
     PRIMARY_GIRLS: 25,
     PRIMARY_STUDENTS: 40,
     TOTAL_STUDENTS: 46,
-    YEAR: "2025",
-    id: "2025",
+    YEAR: new Date().getFullYear(),
+    id: new Date().getFullYear().toString(),
   });
   const [StudentEntryData, setStudentEntryData] = useState({
     PP_STUDENTS: 8,
@@ -160,8 +160,8 @@ export default function MDMData() {
     PRIMARY_GIRLS: 25,
     PRIMARY_STUDENTS: 40,
     TOTAL_STUDENTS: 46,
-    YEAR: "2025",
-    id: "2025",
+    YEAR: new Date().getFullYear(),
+    id: new Date().getFullYear().toString(),
   });
   const UseFocus = () => {
     const htmlElRef = useRef(null);
@@ -878,14 +878,14 @@ export default function MDMData() {
           PRIMARY_GIRLS: 25,
           PRIMARY_STUDENTS: 40,
           TOTAL_STUDENTS: 46,
-          YEAR: "2025",
-          id: "2025",
+          YEAR: new Date().getFullYear(),
+          id: new Date().getFullYear().toString(),
         });
         setShowStudentDataEditForm(false);
         const filteredEntry = StudentDataState.filter(
-          (el) => el.id !== StudentEntryData.id
+          (el) => el.id !== StudentEditData.id
         );
-        const updatedEntry = [...filteredEntry, StudentEntryData];
+        const updatedEntry = [...filteredEntry, StudentEditData];
         setStudentDataState(updatedEntry);
         setLoader(false);
       });
