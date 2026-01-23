@@ -109,7 +109,7 @@ export default function UserTeachers() {
   const [addData, setAddData] = useState({
     id: "January-2025",
     month: "January",
-    year: 2025,
+    year: new Date().getFullYear(),
     leaves: leavesArray,
   });
   const [editMonthLeavesObj, setEditMonthLeavesObj] = useState(addData);
@@ -148,13 +148,13 @@ export default function UserTeachers() {
   const [olDelId, setOlDelId] = useState("");
 
   const [editLeaveDateObj, setEditLeaveDateObj] = useState({
-    year: 2025,
+    year: new Date().getFullYear(),
     techID: "",
     leaveType: "",
     id: "",
     month: "",
     sl: "",
-    date: "01-01-2025",
+    date: todayInString(),
   });
   const [showEditLeaveDateData, setShowEditLeaveDateData] = useState(false);
   const [showData, setShowData] = useState(false);
@@ -165,8 +165,8 @@ export default function UserTeachers() {
       currentDate.getDate() > 10
         ? currentDate.getMonth()
         : currentDate.getMonth() === 0
-        ? 11
-        : currentDate.getMonth() - 1
+          ? 11
+          : currentDate.getMonth() - 1
     ].monthName;
   const yearName = currentDate.getFullYear();
   const getMonth = () => {
@@ -196,7 +196,7 @@ export default function UserTeachers() {
           entry.leaves.map((el) => {
             // Find the index of the teacher in the master leavesArray using their ID
             const teacherIndex = leavesArray.findIndex(
-              (teacher) => teacher.id === el.id
+              (teacher) => teacher.id === el.id,
             );
             // Only update totals if the teacher is found in the current leavesArray
             if (teacherIndex !== -1) {
@@ -234,31 +234,68 @@ export default function UserTeachers() {
     console.log(month);
     let x = [];
 
-    allEnry.map((entry, index) => {
+    // Recompute totals up to the selected month for the chosen year
+    const clTotals = Array(leavesArray.length).fill(0);
+    const olTotals = Array(leavesArray.length).fill(0);
+    const t = [...leavesArray];
+    const selectedMonthIndex = months.indexOf(month);
+
+    allEnry.forEach((entry) => {
       const entryYear = entry.id.split("-")[1];
       const entryMonth = entry.id.split("-")[0];
+      const entryMonthIndex = months.indexOf(entryMonth);
+
+      // Accumulate totals for all months in the year up to the selected month
+      if (entryYear == selectedYear && entryMonthIndex <= selectedMonthIndex) {
+        entry.leaves.forEach((el) => {
+          const teacherIndex = leavesArray.findIndex(
+            (teacher) => teacher.id === el.id,
+          );
+          if (teacherIndex !== -1) {
+            clTotals[teacherIndex] += el.clThisMonth;
+            olTotals[teacherIndex] += el.olThisMonth;
+          }
+        });
+      }
+
+      // Also pick the exact month's entry to show detail rows
       if (entryYear == selectedYear && entryMonth === month) {
         x.push(entry);
         setShowData(true);
         setFilteredData(entry?.leaves);
         const fLDate = leaveDateState.filter(
-          (el) => el.year == selectedYear && el.month == month
+          (el) => el.year == selectedYear && el.month == month,
         );
         setFilteredLeaveData(fLDate);
         setAddLeaveDateData({ ...addLeaveDateData, month });
         setMonth(entry?.month);
         setYear(entry?.year);
         document.title = `${entry?.month} ${entry?.year} Teachers Leave Details`;
-        return x;
       }
     });
+
+    // Apply accumulated totals into techLeaves (by id)
+    t.forEach((teacher, index) => {
+      teacher.clThisYear = clTotals[index];
+      teacher.olThisYear = olTotals[index];
+
+      // set current month's values from the selected month's entry if present
+      const currentMonthEntry = x[0];
+      if (currentMonthEntry) {
+        const cur = currentMonthEntry.leaves.find((l) => l.id === teacher.id);
+        teacher.clThisMonth = cur ? cur.clThisMonth : 0;
+        teacher.olThisMonth = cur ? cur.olThisMonth : 0;
+      }
+    });
+
+    setTechLeaves(t);
     setFilteredEntry(x);
   };
 
   const getMonthlyData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "teachersLeaves"))
+      query(collection(firestore, "teachersLeaves")),
     );
     const data = querySnapshot.docs.map((doc) => ({
       // doc.data() is never undefined for query doc snapshots
@@ -269,7 +306,7 @@ export default function UserTeachers() {
     setTeacherLeaveState(monthwiseSorted);
 
     const querySnapshot2 = await getDocs(
-      query(collection(firestore, "leaveDates"))
+      query(collection(firestore, "leaveDates")),
     );
     const data2 = querySnapshot2.docs.map((doc) => ({
       // doc.data() is never undefined for query doc snapshots
@@ -319,8 +356,8 @@ export default function UserTeachers() {
 
       setEntryMonths((prev) =>
         uniqArray([...prev, addData.month]).sort(
-          (a, b) => months.indexOf(a) - months.indexOf(b)
-        )
+          (a, b) => months.indexOf(a) - months.indexOf(b),
+        ),
       );
     } catch (error) {
       toast.error("Error adding data: " + error.message);
@@ -333,7 +370,7 @@ export default function UserTeachers() {
     try {
       const updatedValue = isDecrement ? value - 1 : value + 1;
       const updatedLeavesData = filteredData.map((entry) =>
-        entry.id === id ? { ...entry, [field]: updatedValue } : entry
+        entry.id === id ? { ...entry, [field]: updatedValue } : entry,
       );
 
       await updateDoc(doc(firestore, "teachersLeaves", month + "-" + year), {
@@ -345,17 +382,17 @@ export default function UserTeachers() {
         if (!isDecrement) {
           await setDoc(
             doc(firestore, "leaveDates", addLeaveDateData.id),
-            addLeaveDateData
+            addLeaveDateData,
           );
           newLeaveDateState.push(addLeaveDateData);
           toast.success(
-            `Teacher's ${addLeaveDateData.leaveType} Added Successfully`
+            `Teacher's ${addLeaveDateData.leaveType} Added Successfully`,
           );
         } else {
           const deleteId = field === "clThisMonth" ? clDelId : olDelId;
           await deleteDoc(doc(firestore, "leaveDates", deleteId));
           newLeaveDateState = newLeaveDateState.filter(
-            (el) => el.id !== deleteId
+            (el) => el.id !== deleteId,
           );
           toast.success(`Teacher's Leave Deleted Successfully`);
         }
@@ -365,8 +402,8 @@ export default function UserTeachers() {
       setLeaveDateState(sortedLeaveDates);
       setFilteredLeaveData(
         sortedLeaveDates.filter(
-          (el) => el.year == selectedYear && el.month == month
-        )
+          (el) => el.year == selectedYear && el.month == month,
+        ),
       );
 
       const updatedTechLeaves = techLeaves.map((el) => {
@@ -393,7 +430,7 @@ export default function UserTeachers() {
       const updatedTeacherLeaveState = teacherLeaveState.map((entry) =>
         entry.id === month + "-" + year
           ? { ...entry, leaves: updatedLeavesData }
-          : entry
+          : entry,
       );
       const sortedGlobalState = sortMonthwise(updatedTeacherLeaveState);
       setTeacherLeaveState(sortedGlobalState);
@@ -410,7 +447,7 @@ export default function UserTeachers() {
     try {
       await setDoc(
         doc(firestore, "leaveDates", addLeaveDateData.id),
-        addLeaveDateData
+        addLeaveDateData,
       );
 
       toast.success("Teachers Leave Date Added Successfully");
@@ -419,8 +456,8 @@ export default function UserTeachers() {
 
       setFilteredLeaveData(
         newLeaveDates.filter(
-          (el) => el.year == selectedYear && el.month == month
-        )
+          (el) => el.year == selectedYear && el.month == month,
+        ),
       );
 
       setAddLeaveDateData({
@@ -445,20 +482,20 @@ export default function UserTeachers() {
     try {
       await updateDoc(
         doc(firestore, "leaveDates", editLeaveDateObj.id),
-        editLeaveDateObj
+        editLeaveDateObj,
       );
       toast.success("Teachers Leave Date Updated Successfully");
 
       const updatedLeaveDates = leaveDateState.map((el) =>
-        el.id === editLeaveDateObj.id ? editLeaveDateObj : el
+        el.id === editLeaveDateObj.id ? editLeaveDateObj : el,
       );
       const sortedLeaveDates = sortLeaves(updatedLeaveDates);
       setLeaveDateState(sortedLeaveDates);
 
       setFilteredLeaveData(
         sortedLeaveDates.filter(
-          (el) => el.year == selectedYear && el.month == month
-        )
+          (el) => el.year == selectedYear && el.month == month,
+        ),
       );
     } catch (e) {
       toast.error("Error updating data: " + e.message);
@@ -474,7 +511,7 @@ export default function UserTeachers() {
 
       toast.success("Teachers Leave Date Deleted Successfully");
       const remainingLeaves = leaveDateState.filter(
-        (el) => el.id !== editLeaveDateObj.id
+        (el) => el.id !== editLeaveDateObj.id,
       );
       setLeaveDateState(remainingLeaves);
 
@@ -482,8 +519,8 @@ export default function UserTeachers() {
         remainingLeaves.filter(
           (el) =>
             el.year == editLeaveDateObj.year &&
-            el.month == editLeaveDateObj.month
-        )
+            el.month == editLeaveDateObj.month,
+        ),
       );
     } catch (e) {
       toast.error("Error deleting data: " + e.message);
@@ -543,11 +580,11 @@ export default function UserTeachers() {
     setLoader(true);
     await updateDoc(
       doc(firestore, "teachersLeaves", editMonthLeavesObj.id),
-      editMonthLeavesObj
+      editMonthLeavesObj,
     )
       .then(() => {
         const fM = teacherLeaveState.filter(
-          (el) => el.id !== editMonthLeavesObj.id
+          (el) => el.id !== editMonthLeavesObj.id,
         );
         const x = [...fM, editMonthLeavesObj];
         const monthwiseSorted = sortMonthwise(x);
@@ -624,7 +661,7 @@ export default function UserTeachers() {
                   }),
                 });
                 teacherLeaveState.filter(
-                  (el) => el.id === `${monthName}-${yearName}`
+                  (el) => el.id === `${monthName}-${yearName}`,
                 ).length > 0 &&
                   toast.error("Data for this month already exists.");
               }}
@@ -798,7 +835,7 @@ export default function UserTeachers() {
               <tbody>
                 {filteredData.map((entry, i) => {
                   const techLDates = filteredLeaveData.filter(
-                    (el) => el.techID === entry.id
+                    (el) => el.techID === entry.id,
                   );
                   return (
                     <tr key={i} style={{ verticalAlign: "middle" }}>
@@ -832,7 +869,7 @@ export default function UserTeachers() {
                                 leaveType: "CL",
                                 sl:
                                   techLDates.filter(
-                                    (el) => el.leaveType === "CL"
+                                    (el) => el.leaveType === "CL",
                                   ).length + 1,
                                 date: `01-${(months.indexOf(month) + 1)
                                   .toString()
@@ -864,7 +901,7 @@ export default function UserTeachers() {
                                 field: "clThisMonth",
                                 tname: entry.tname,
                                 cl: techLDates.filter(
-                                  (el) => el.leaveType === "CL"
+                                  (el) => el.leaveType === "CL",
                                 ),
                               });
                             }}
@@ -920,7 +957,7 @@ export default function UserTeachers() {
                                 leaveType: "OL",
                                 sl:
                                   techLDates.filter(
-                                    (el) => el.leaveType === "OL"
+                                    (el) => el.leaveType === "OL",
                                   ).length + 1,
                                 date: `01-${(months.indexOf(month) + 1)
                                   .toString()
@@ -953,7 +990,7 @@ export default function UserTeachers() {
                                 field: "olThisMonth",
                                 tname: entry.tname,
                                 ol: techLDates.filter(
-                                  (el) => el.leaveType === "OL"
+                                  (el) => el.leaveType === "OL",
                                 ),
                               });
                             }}
@@ -995,10 +1032,12 @@ export default function UserTeachers() {
                         {entry.olThisYear}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
-                        {techLeaves[i].clThisYear}
+                        {techLeaves.find((t) => t.id === entry.id)
+                          ?.clThisYear || 0}
                       </td>
                       <td className="fs-5" suppressHydrationWarning>
-                        {techLeaves[i].olThisYear}
+                        {techLeaves.find((t) => t.id === entry.id)
+                          ?.olThisYear || 0}
                       </td>
                     </tr>
                   );
@@ -1088,7 +1127,7 @@ export default function UserTeachers() {
                   onClick={addLeaveData}
                   disabled={
                     teacherLeaveState.filter(
-                      (el) => el.id === `${addData?.month}-${addData?.year}`
+                      (el) => el.id === `${addData?.month}-${addData?.year}`,
                     ).length > 0
                   }
                 >
@@ -1263,7 +1302,7 @@ export default function UserTeachers() {
                               el.techID === addLeaveDateData.techID &&
                               el.leaveType === value &&
                               el.month === addLeaveDateData.month &&
-                              el.year === addLeaveDateData.year
+                              el.year === addLeaveDateData.year,
                           );
                           if (value) {
                             setAddLeaveDateData({
@@ -1438,7 +1477,7 @@ export default function UserTeachers() {
                       addLeaveDateData.techID,
                       addLeaveDateData.sl - 1,
                       "clThisMonth",
-                      false
+                      false,
                     );
                     setShowCLAdd(false);
                   }}
@@ -1528,7 +1567,7 @@ export default function UserTeachers() {
                       clDelObj.id,
                       clDelObj.value,
                       "clThisMonth",
-                      true
+                      true,
                     );
                     setShowClDel(false);
                   }}
@@ -1636,7 +1675,7 @@ export default function UserTeachers() {
                       addLeaveDateData.techID,
                       addLeaveDateData.sl - 1,
                       "olThisMonth",
-                      false
+                      false,
                     );
                     setShowOlAdd(false);
                   }}
@@ -1726,7 +1765,7 @@ export default function UserTeachers() {
                       olDelObj.id,
                       olDelObj.value,
                       "olThisMonth",
-                      true
+                      true,
                     );
                     setShowOlDel(false);
                   }}
@@ -1762,7 +1801,7 @@ export default function UserTeachers() {
                   Edit {editLeaveDateObj.leaveType} of{" "}
                   {
                     leavesArray.filter(
-                      (el) => el.id === editLeaveDateObj.techID
+                      (el) => el.id === editLeaveDateObj.techID,
                     )[0].tname
                   }
                 </h5>
