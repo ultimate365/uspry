@@ -789,7 +789,9 @@ export default function HolisticPRCard() {
                                     width: "25%",
                                   }}
                                 >
-                                  <p className="m-0 p-0 text-start">{""}</p>
+                                  <p className="m-0 p-0 text-start">
+                                    {website}
+                                  </p>
                                 </div>
                               </div>
                               <div
@@ -858,7 +860,8 @@ export default function HolisticPRCard() {
                               >
                                 <div className="col-md-5">
                                   <p className="m-0 p-0 text-start">
-                                    ছাত্রী/ছাত্রের নাম (Name of the student):{" "}
+                                    ছাত্রী/ছাত্রের নাম (Name of the
+                                    student):{" "}
                                   </p>
                                 </div>
                                 <div
@@ -893,7 +896,10 @@ export default function HolisticPRCard() {
                                     width: "11%",
                                   }}
                                 >
-                                  <p className="m-0 p-0 text-start">
+                                  <p
+                                    className="m-0 p-0 text-start"
+                                    style={{ fontSize: 9 }}
+                                  >
                                     {el?.class}
                                   </p>
                                 </div>
@@ -1141,7 +1147,8 @@ export default function HolisticPRCard() {
                               >
                                 <div style={{ width: "40%" }}>
                                   <p className="m-0 p-0 text-start">
-                                    অভিভাবিকা / অভিভাবকের নাম (Gurdian's Name):{" "}
+                                    অভিভাবিকা / অভিভাবকের নাম (Gurdian's
+                                    Name):{" "}
                                   </p>
                                 </div>
                                 <div
@@ -1177,17 +1184,7 @@ export default function HolisticPRCard() {
                                   }}
                                 >
                                   <p className="m-0 p-0 text-start">
-                                    {el?.mobile === "0"
-                                      ? ""
-                                      : el?.mobile === "9999999999"
-                                      ? ""
-                                      : el?.mobile === "7872882343"
-                                      ? ""
-                                      : el?.mobile === "7679230482"
-                                      ? ""
-                                      : el?.mobile === "9933684468"
-                                      ? ""
-                                      : el?.mobile}
+                                    {el?.mobile}
                                   </p>
                                 </div>
                               </div>
