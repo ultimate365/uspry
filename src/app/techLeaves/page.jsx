@@ -419,6 +419,7 @@ export default function UserTeachers() {
               field === "olThisMonth"
                 ? el.olThisYear + increment
                 : el.olThisYear,
+            [field]: el[field] + increment,
           };
         }
         return el;
