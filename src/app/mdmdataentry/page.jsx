@@ -1923,14 +1923,18 @@ export default function MDMData() {
                               setMonthTotalCost(val + (monthlyPRYCost || 0));
                               setMdmTransaction((prev) => ({
                                 ...prev,
-                                ppCB: (prev.ppOB || 0) + (prev.ppRC || 0) - val,
+                                ppCB: round2dec(
+                                  (prev.ppOB || 0) + (prev.ppRC || 0) - val,
+                                ),
                               }));
                             } else {
                               setMonthlyPPCost("");
                               setMonthTotalCost(monthlyPRYCost || 0);
                               setMdmTransaction((prev) => ({
                                 ...prev,
-                                ppCB: (prev.ppOB || 0) + (prev.ppRC || 0),
+                                ppCB: round2dec(
+                                  (prev.ppOB || 0) + (prev.ppRC || 0),
+                                ),
                               }));
                             }
                           }}
@@ -1950,15 +1954,18 @@ export default function MDMData() {
                               setMonthTotalCost(val + (monthlyPPCost || 0));
                               setMdmTransaction((prev) => ({
                                 ...prev,
-                                pryCB:
+                                pryCB: round2dec(
                                   (prev.pryOB || 0) + (prev.pryRC || 0) - val,
+                                ),
                               }));
                             } else {
                               setMonthlyPRYCost("");
                               setMonthTotalCost(monthlyPPCost || 0);
                               setMdmTransaction((prev) => ({
                                 ...prev,
-                                pryCB: (prev.pryOB || 0) + (prev.pryRC || 0),
+                                pryCB: round2dec(
+                                  (prev.pryOB || 0) + (prev.pryRC || 0),
+                                ),
                               }));
                             }
                           }}
@@ -1995,18 +2002,20 @@ export default function MDMData() {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppOB: val,
-                                ppCB:
+                                ppCB: round2dec(
                                   val +
-                                  (mdmTransaction.ppRC || 0) -
-                                  (monthlyPPCost || 0),
+                                    (mdmTransaction.ppRC || 0) -
+                                    (monthlyPPCost || 0),
+                                ),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppOB: "",
-                                ppCB:
+                                ppCB: round2dec(
                                   (mdmTransaction.ppRC || 0) -
-                                  (monthlyPPCost || 0),
+                                    (monthlyPPCost || 0),
+                                ),
                               });
                             }
                           }}
@@ -2027,18 +2036,20 @@ export default function MDMData() {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryOB: val,
-                                pryCB:
+                                pryCB: round2dec(
                                   val +
-                                  (mdmTransaction.pryRC || 0) -
-                                  (monthlyPRYCost || 0),
+                                    (mdmTransaction.pryRC || 0) -
+                                    (monthlyPRYCost || 0),
+                                ),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryOB: "",
-                                pryCB:
+                                pryCB: round2dec(
                                   (mdmTransaction.pryRC || 0) -
-                                  (monthlyPRYCost || 0),
+                                    (monthlyPRYCost || 0),
+                                ),
                               });
                             }
                           }}
@@ -2059,18 +2070,20 @@ export default function MDMData() {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppRC: val,
-                                ppCB:
+                                ppCB: round2dec(
                                   (mdmTransaction.ppOB || 0) +
-                                  val -
-                                  (monthlyPPCost || 0),
+                                    val -
+                                    (monthlyPPCost || 0),
+                                ),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppRC: "",
-                                ppCB:
+                                ppCB: round2dec(
                                   (mdmTransaction.ppOB || 0) -
-                                  (monthlyPPCost || 0),
+                                    (monthlyPPCost || 0),
+                                ),
                               });
                             }
                           }}
@@ -2091,18 +2104,20 @@ export default function MDMData() {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryRC: val,
-                                pryCB:
+                                pryCB: round2dec(
                                   (mdmTransaction.pryOB || 0) +
-                                  val -
-                                  (monthlyPRYCost || 0),
+                                    val -
+                                    (monthlyPRYCost || 0),
+                                ),
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryRC: "",
-                                pryCB:
+                                pryCB: round2dec(
                                   (mdmTransaction.pryOB || 0) -
-                                  (monthlyPRYCost || 0),
+                                    (monthlyPRYCost || 0),
+                                ),
                               });
                             }
                           }}
