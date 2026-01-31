@@ -44,14 +44,14 @@ export default function Transactions() {
       today.getDate() > 10
         ? today.getMonth()
         : today.getMonth() === 0
-        ? 11
-        : today.getMonth() - 1
+          ? 11
+          : today.getMonth() - 1
     ].monthName;
   const [month, setMonth] = useState(thisMonth);
   const [year, setYear] = useState(
     today.getDate() <= 10 && today.getMonth() === 0
       ? today.getFullYear() - 1
-      : today.getFullYear()
+      : today.getFullYear(),
   );
   const [transactionPurpose, setTransactionPurpose] =
     useState("MDM WITHDRAWAL");
@@ -136,15 +136,17 @@ export default function Transactions() {
   });
   const [showEdit, setShowEdit] = useState(false);
   const getId = (d) => {
-    const currentDate = d ? new Date(d) : new Date(date);
-    const month =
-      monthNamesWithIndex[
-        currentDate.getDate() > 10
-          ? currentDate.getMonth()
-          : currentDate.getMonth() === 0
+    let currentDate = d ? new Date(d) : new Date(date);
+    if (isNaN(currentDate.getTime())) {
+      currentDate = new Date();
+    }
+    const monthIndex =
+      currentDate.getDate() > 10
+        ? currentDate.getMonth()
+        : currentDate.getMonth() === 0
           ? 11
-          : currentDate.getMonth() - 1
-      ].monthName;
+          : currentDate.getMonth() - 1;
+    const month = monthNamesWithIndex?.[monthIndex]?.monthName;
     const year = currentDate.getFullYear();
     return `${month}-${year}`;
   };
@@ -153,7 +155,7 @@ export default function Transactions() {
   const getTransactions = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "transactions"))
+      query(collection(firestore, "transactions")),
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -164,8 +166,8 @@ export default function Transactions() {
       .sort((a, b) => b.createdAt - a.createdAt);
     setThisAccounTransactions(
       data.filter(
-        (account) => account.accountNumber === stateObject.accountNumber
-      )
+        (account) => account.accountNumber === stateObject.accountNumber,
+      ),
     );
     setLoader(false);
     setAllTransactions(data);
@@ -215,7 +217,7 @@ export default function Transactions() {
       x = [...x, transaction];
       x = x.sort((a, b) => b.createdAt - a.createdAt);
       const w = x.filter(
-        (item) => item.accountNumber === stateObject.accountNumber
+        (item) => item.accountNumber === stateObject.accountNumber,
       );
 
       setThisAccounTransactions(w);
@@ -229,7 +231,7 @@ export default function Transactions() {
         date: date,
       });
       const filteredAccounts = accountState.filter(
-        (el) => el.id !== stateObject.id
+        (el) => el.id !== stateObject.id,
       );
 
       setAccountState([...filteredAccounts, thisAccount]);
@@ -255,13 +257,13 @@ export default function Transactions() {
       transaction.type === "DEBIT"
         ? parseFloat(
             round2dec(
-              parseFloat(stateObject.balance) + parseFloat(transaction.amount)
-            )
+              parseFloat(stateObject.balance) + parseFloat(transaction.amount),
+            ),
           )
         : parseFloat(
             round2dec(
-              parseFloat(stateObject.balance) - parseFloat(transaction.amount)
-            )
+              parseFloat(stateObject.balance) - parseFloat(transaction.amount),
+            ),
           );
     await updateDoc(doc(firestore, "accounts", stateObject.id), {
       balance: thisAccount.balance,
@@ -272,12 +274,12 @@ export default function Transactions() {
     x = x.sort((a, b) => b.createdAt - a.createdAt);
     setTransactionState(x);
     const y = x.filter(
-      (account) => account.accountNumber === stateObject.accountNumber
+      (account) => account.accountNumber === stateObject.accountNumber,
     );
 
     setThisAccounTransactions(y);
     let filteredAccounts = accountState.filter(
-      (el) => el.id !== stateObject.id
+      (el) => el.id !== stateObject.id,
     );
     filteredAccounts.push(thisAccount);
     setAccountState(filteredAccounts);
@@ -293,7 +295,7 @@ export default function Transactions() {
       setLoader(true);
       await updateDoc(
         doc(firestore, "transactions", editTransaction.id),
-        editTransaction
+        editTransaction,
       );
 
       const fetchedAmount = stateObject.balance;
@@ -307,22 +309,22 @@ export default function Transactions() {
           if (fetchedAmount + parseFloat(editTransaction.amount) * 2 < 0) {
             amount =
               round2dec(
-                (fetchedAmount + parseFloat(editTransaction.amount) * 2) * -1
+                (fetchedAmount + parseFloat(editTransaction.amount) * 2) * -1,
               ) * -1;
           } else {
             amount = round2dec(
-              fetchedAmount + parseFloat(editTransaction.amount) * 2
+              fetchedAmount + parseFloat(editTransaction.amount) * 2,
             );
           }
         } else {
           if (fetchedAmount - parseFloat(editTransaction.amount) * 2 < 0) {
             amount =
               round2dec(
-                (fetchedAmount - parseFloat(editTransaction.amount) * 2) * -1
+                (fetchedAmount - parseFloat(editTransaction.amount) * 2) * -1,
               ) * -1;
           } else {
             amount = round2dec(
-              fetchedAmount - parseFloat(editTransaction.amount) * 2
+              fetchedAmount - parseFloat(editTransaction.amount) * 2,
             );
           }
         }
@@ -335,22 +337,22 @@ export default function Transactions() {
           if (fetchedAmount + parseFloat(editTransaction.amount) * 2 < 0) {
             amount =
               round2dec(
-                (fetchedAmount + parseFloat(editTransaction.amount) * 2) * -1
+                (fetchedAmount + parseFloat(editTransaction.amount) * 2) * -1,
               ) * -1;
           } else {
             amount = round2dec(
-              fetchedAmount + parseFloat(editTransaction.amount) * 2
+              fetchedAmount + parseFloat(editTransaction.amount) * 2,
             );
           }
         } else {
           if (fetchedAmount - parseFloat(editTransaction.amount) * 2 < 0) {
             amount =
               round2dec(
-                (fetchedAmount - parseFloat(editTransaction.amount) * 2) * -1
+                (fetchedAmount - parseFloat(editTransaction.amount) * 2) * -1,
               ) * -1;
           } else {
             amount = round2dec(
-              fetchedAmount - parseFloat(editTransaction.amount) * 2
+              fetchedAmount - parseFloat(editTransaction.amount) * 2,
             );
           }
         }
@@ -371,13 +373,13 @@ export default function Transactions() {
                 (fetchedAmount +
                   parseFloat(orgTransaction.amount) -
                   parseFloat(editTransaction.amount)) *
-                  -1
+                  -1,
               ) * -1;
           } else {
             amount = round2dec(
               fetchedAmount +
                 parseFloat(orgTransaction.amount) -
-                parseFloat(editTransaction.amount)
+                parseFloat(editTransaction.amount),
             );
           }
         } else {
@@ -392,13 +394,13 @@ export default function Transactions() {
                 (fetchedAmount -
                   parseFloat(orgTransaction.amount) +
                   parseFloat(editTransaction.amount)) *
-                  -1
+                  -1,
               ) * -1;
           } else {
             amount = round2dec(
               fetchedAmount -
                 parseFloat(orgTransaction.amount) +
-                parseFloat(editTransaction.amount)
+                parseFloat(editTransaction.amount),
             );
           }
         }
@@ -416,13 +418,13 @@ export default function Transactions() {
                 (fetchedAmount -
                   parseFloat(orgTransaction.amount) +
                   parseFloat(editTransaction.amount)) *
-                  -1
+                  -1,
               ) * -1;
           } else {
             amount = round2dec(
               fetchedAmount -
                 parseFloat(orgTransaction.amount) +
-                parseFloat(editTransaction.amount)
+                parseFloat(editTransaction.amount),
             );
           }
         } else {
@@ -437,13 +439,13 @@ export default function Transactions() {
                 (fetchedAmount -
                   parseFloat(orgTransaction.amount) -
                   parseFloat(editTransaction.amount)) *
-                  -1
+                  -1,
               ) * -1;
           } else {
             amount = round2dec(
               fetchedAmount -
                 parseFloat(orgTransaction.amount) +
-                parseFloat(editTransaction.amount)
+                parseFloat(editTransaction.amount),
             );
           }
         }
@@ -453,7 +455,7 @@ export default function Transactions() {
       thisAccount.balance = amount;
       await updateDoc(doc(firestore, "accounts", stateObject.id), thisAccount);
       let filteredAccounts = accountState.filter(
-        (el) => el.id !== stateObject.id
+        (el) => el.id !== stateObject.id,
       );
       filteredAccounts.push(thisAccount);
       setAccountState(filteredAccounts);
@@ -464,7 +466,7 @@ export default function Transactions() {
       x = x.sort((a, b) => b.createdAt - a.createdAt);
       setTransactionState(x);
       const y = x.filter(
-        (account) => account.accountNumber === stateObject.accountNumber
+        (account) => account.accountNumber === stateObject.accountNumber,
       );
 
       setThisAccounTransactions(y);
@@ -639,8 +641,8 @@ export default function Transactions() {
       setThisAccounTransactions(
         transactionState.filter(
           (transaction) =>
-            transaction.accountNumber === stateObject.accountNumber
-        )
+            transaction.accountNumber === stateObject.accountNumber,
+        ),
       );
       const x = transactionState.filter((t) => t.id === id);
       if (x.length > 0) {
@@ -673,7 +675,7 @@ export default function Transactions() {
             onClick={() => {
               setShowEntry(true);
               const accountTransactions = transactionState.filter(
-                (t) => t.accountNumber === stateObject.accountNumber
+                (t) => t.accountNumber === stateObject.accountNumber,
               );
               if (accountTransactions.length > 0) {
                 const lastTransaction = accountTransactions[0];
@@ -908,7 +910,7 @@ export default function Transactions() {
                                     : currentDate.getMonth() - 1
                                 ].monthName;
                               const cyear = getSubmitDateInput(
-                                e.target.value
+                                e.target.value,
                               )?.split("-")[2];
                               setDate(date);
                               setMonth(cmonth);
@@ -916,7 +918,7 @@ export default function Transactions() {
 
                               const genId = getId(e.target.value);
                               const checkId = transactionState.filter(
-                                (tr) => tr.id === genId
+                                (tr) => tr.id === genId,
                               );
                               if (checkId.length > 0) {
                                 setId(genId + `-${checkId.length + 1}`);
@@ -1115,7 +1117,7 @@ export default function Transactions() {
                                 if (e.target.value !== "") {
                                   setPpEX(parseFloat(e.target.value));
                                   setPpCB(
-                                    ppOB + ppRC - parseFloat(e.target.value)
+                                    ppOB + ppRC - parseFloat(e.target.value),
                                   );
                                 } else {
                                   setPpRC("");
@@ -1160,7 +1162,7 @@ export default function Transactions() {
                             onChange={(e) => {
                               if (e.target.value !== "") {
                                 const val = parseFloat(
-                                  round2dec(e.target.value)
+                                  round2dec(e.target.value),
                                 );
                                 setPryOB(val);
                                 if (type === "CREDIT") {
@@ -1213,8 +1215,8 @@ export default function Transactions() {
                                   setPryEX(parseFloat(e.target.value));
                                   setPryCB(
                                     parseFloat(
-                                      round2dec(pryOB + pryRC - e.target.value)
-                                    )
+                                      round2dec(pryOB + pryRC - e.target.value),
+                                    ),
                                   );
                                 } else {
                                   setPryRC("");
@@ -1336,7 +1338,7 @@ export default function Transactions() {
                             className="form-control"
                             id="date"
                             defaultValue={getCurrentDateInput(
-                              editTransaction.date
+                              editTransaction.date,
                             )}
                             onChange={(e) => {
                               const date = getSubmitDateInput(e.target.value);
@@ -1349,7 +1351,7 @@ export default function Transactions() {
                                     : currentDate.getMonth() - 1
                                 ].monthName;
                               const cyear = getSubmitDateInput(
-                                e.target.value
+                                e.target.value,
                               )?.split("-")[2];
                               setEditTransaction({
                                 ...editTransaction,
@@ -1655,8 +1657,8 @@ export default function Transactions() {
                                     round2dec(
                                       editTransaction.pryOB +
                                         editTransaction.pryRC -
-                                        parsedAmount
-                                    )
+                                        parsedAmount,
+                                    ),
                                   ),
                                 });
                               } else {
