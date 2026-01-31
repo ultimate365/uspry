@@ -213,7 +213,7 @@ export default function MDMData() {
           ].sort(
             (a, b) =>
               Date.parse(getCurrentDateInput(a.date)) -
-              Date.parse(getCurrentDateInput(b.date))
+              Date.parse(getCurrentDateInput(b.date)),
           );
           setAllEnry(x);
           setMealState(x);
@@ -256,7 +256,7 @@ export default function MDMData() {
 
   const searchTodaysData = async () => {
     const todaysData = allEnry.filter(
-      (entry) => entry.date === todayInString()
+      (entry) => entry.date === todayInString(),
     );
     if (todaysData.length > 0) {
       const data = todaysData[0];
@@ -296,7 +296,7 @@ export default function MDMData() {
             ].sort(
               (a, b) =>
                 Date.parse(getCurrentDateInput(a.date)) -
-                Date.parse(getCurrentDateInput(b.date))
+                Date.parse(getCurrentDateInput(b.date)),
             );
             setAllEnry(x);
             setMealState(x);
@@ -325,7 +325,7 @@ export default function MDMData() {
   const getMainData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "mdmData"))
+      query(collection(firestore, "mdmData")),
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -336,7 +336,7 @@ export default function MDMData() {
       .sort(
         (a, b) =>
           Date.parse(getCurrentDateInput(a.date)) -
-          Date.parse(getCurrentDateInput(b.date))
+          Date.parse(getCurrentDateInput(b.date)),
       );
     setLoader(false);
     setAllEnry(data);
@@ -362,7 +362,7 @@ export default function MDMData() {
       .sort(
         (a, b) =>
           Date.parse(getCurrentDateInput(a.date)) -
-          Date.parse(getCurrentDateInput(b.date))
+          Date.parse(getCurrentDateInput(b.date)),
       );
     setLoader(false);
     setRiceData(data);
@@ -375,7 +375,7 @@ export default function MDMData() {
     const year = date?.split("-")[2];
     if (StudentDataState.length === 0) {
       const querySnapshot = await getDocs(
-        query(collection(firestore, "studentYearData"))
+        query(collection(firestore, "studentYearData")),
       );
       const data = querySnapshot.docs.map((doc) => ({
         // doc.data() is never undefined for query doc snapshots
@@ -403,7 +403,7 @@ export default function MDMData() {
   const getMonthlyData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "mothlyMDMData"))
+      query(collection(firestore, "mothlyMDMData")),
     );
     const data = querySnapshot.docs.map((doc) => ({
       // doc.data() is never undefined for query doc snapshots
@@ -413,13 +413,13 @@ export default function MDMData() {
     const monthwiseSorted = sortMonthwise(data);
     setMonthlyReportState(monthwiseSorted);
     const thisMonthlyData = monthwiseSorted.filter(
-      (data) => data.id === monthYearID
+      (data) => data.id === monthYearID,
     );
     if (thisMonthlyData.length > 0) {
       filterMonthlyData(thisMonthlyData[0]);
     }
     const thisMonthIndex = monthwiseSorted.findIndex(
-      (data) => data.id === monthYearID
+      (data) => data.id === monthYearID,
     );
     let prevMonthData = monthwiseSorted[monthwiseSorted.length - 1];
     if (thisMonthIndex !== -1) {
@@ -449,15 +449,15 @@ export default function MDMData() {
       setMonthTotalCost(
         Math.round(
           ppTotalMeal * thisMonthMDMAllowance +
-            pryTotalMeal * thisMonthMDMAllowance
-        )
+            pryTotalMeal * thisMonthMDMAllowance,
+        ),
       );
       setMonthRiceConsunption(thisMonthTotalRiceConsumption);
       const totalMeals = ppTotalMeal + pryTotalMeal;
       const ppRiceEx =
         totalMeals > 0
           ? Math.round(
-              (thisMonthTotalRiceConsumption * ppTotalMeal) / totalMeals
+              (thisMonthTotalRiceConsumption * ppTotalMeal) / totalMeals,
             )
           : 0;
       const pryRiceEx =
@@ -466,7 +466,7 @@ export default function MDMData() {
       setRicePryEX(pryRiceEx);
       setMonthRiceGiven(totalRiceGiven);
       setMonthRiceCB(
-        prevMonthData?.riceCB + totalRiceGiven - thisMonthTotalRiceConsumption
+        prevMonthData?.riceCB + totalRiceGiven - thisMonthTotalRiceConsumption,
       );
     }
 
@@ -607,15 +607,15 @@ export default function MDMData() {
       y.sort(
         (a, b) =>
           Date.parse(getCurrentDateInput(a.date)) -
-          Date.parse(getCurrentDateInput(b.date))
-      )
+          Date.parse(getCurrentDateInput(b.date)),
+      ),
     );
 
     let riceGiven = 0;
     let thisMonthRiceData = y.sort(
       (a, b) =>
         Date.parse(getCurrentDateInput(a.date)) -
-        Date.parse(getCurrentDateInput(b.date))
+        Date.parse(getCurrentDateInput(b.date)),
     );
     y.map((entry) => {
       riceGiven += entry.riceGiven;
@@ -658,7 +658,7 @@ export default function MDMData() {
     setThisMonthTotalCost(Math.round(ppTotal * mdmCost + pryTotal * mdmCost));
     setMonthlyPRYCost(
       Math.round(ppTotal * mdmCost + pryTotal * mdmCost) -
-        Math.round(ppTotal * mdmCost)
+        Math.round(ppTotal * mdmCost),
     );
     setMonthRiceOB(thisMonthRiceData[0]?.riceOB);
     setMonthRiceCB(thisMonthRiceData[0]?.riceCB);
@@ -667,12 +667,12 @@ export default function MDMData() {
     setThisMonthTotalRiceConsumption(
       thisMonthRiceData[0]?.riceOB +
         riceGiven -
-        thisMonthRiceData[thisMonthRiceData.length - 1]?.riceCB
+        thisMonthRiceData[thisMonthRiceData.length - 1]?.riceCB,
     );
     setShowDataTable(true);
     setMonthText(month.monthName);
     const thisMTrans = transactionState.filter(
-      (item) => item.month === month.monthName && item.year == selectedYear
+      (item) => item.month === month.monthName && item.year == selectedYear,
     );
     setThisMonthTransaction(thisMTrans);
   };
@@ -706,7 +706,7 @@ export default function MDMData() {
           ].sort(
             (a, b) =>
               Date.parse(getCurrentDateInput(a.date)) -
-              Date.parse(getCurrentDateInput(b.date))
+              Date.parse(getCurrentDateInput(b.date)),
           );
           setRiceState(x);
           setRiceData(x);
@@ -841,7 +841,7 @@ export default function MDMData() {
           setMealState(filteredEntry);
           setAllEnry(filteredEntry);
           setMoreFilteredData(
-            moreFilteredData.filter((el) => el.id !== entry.id)
+            moreFilteredData.filter((el) => el.id !== entry.id),
           );
           setFilteredData(filteredData.filter((el) => el.id !== entry.id));
           findRiceEntry(filteredEntry);
@@ -869,7 +869,7 @@ export default function MDMData() {
     try {
       await updateDoc(
         doc(firestore, "studentYearData", StudentEditData.id),
-        StudentEditData
+        StudentEditData,
       ).then(() => {
         toast.success("Student Data Updated successfully");
         setStudentEditData({
@@ -883,7 +883,7 @@ export default function MDMData() {
         });
         setShowStudentDataEditForm(false);
         const filteredEntry = StudentDataState.filter(
-          (el) => el.id !== StudentEditData.id
+          (el) => el.id !== StudentEditData.id,
         );
         const updatedEntry = [...filteredEntry, StudentEditData];
         setStudentDataState(updatedEntry);
@@ -901,7 +901,7 @@ export default function MDMData() {
     try {
       await setDoc(
         doc(firestore, "studentYearData", StudentEntryData.YEAR),
-        StudentEntryData
+        StudentEntryData,
       )
         .then(() => {
           toast.success("Student Data Submitted successfully");
@@ -947,7 +947,7 @@ export default function MDMData() {
   const getTransactions = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "transactions"))
+      query(collection(firestore, "transactions")),
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -1194,7 +1194,7 @@ export default function MDMData() {
                 setDate(getSubmitDateInput(e.target.value));
                 setDocId(getSubmitDateInput(e.target.value));
                 const filteredData = allEnry.filter(
-                  (entry) => entry.date === getSubmitDateInput(e.target.value)
+                  (entry) => entry.date === getSubmitDateInput(e.target.value),
                 );
                 if (filteredData.length > 0) {
                   const selectedDateData = filteredData[0];
@@ -1354,11 +1354,11 @@ export default function MDMData() {
                         {month.monthName +
                           " - " +
                           moreFilteredData.filter(
-                            (m) => m.date.split("-")[1] === month.index
+                            (m) => m.date.split("-")[1] === month.index,
                           ).length +
                           ` ${
                             moreFilteredData.filter(
-                              (m) => m.date.split("-")[1] === month.index
+                              (m) => m.date.split("-")[1] === month.index,
                             ).length > 1
                               ? " Entries"
                               : " Entry"
@@ -1371,7 +1371,7 @@ export default function MDMData() {
               {selectedYear == today.getFullYear() &&
                 today.getDate() >= 20 &&
                 moreFilteredData.filter(
-                  (m) => m.date.split("-")[1] == today.getMonth() + 1
+                  (m) => m.date.split("-")[1] == today.getMonth() + 1,
                 ).length === 0 && (
                   <div>
                     <h3 className="text-danger text-center mb-3">
@@ -1481,7 +1481,7 @@ export default function MDMData() {
                   <tbody>
                     {filteredData.map((entry, i) => {
                       const findRiceData = filteredRiceData.filter(
-                        (r) => r.id === entry.id
+                        (r) => r.id === entry.id,
                       );
                       const foundRData = findRiceData[0];
                       return (
@@ -1538,7 +1538,7 @@ export default function MDMData() {
                                 // eslint-disable-next-line no-alert
                                 if (
                                   window.confirm(
-                                    "Are you sure you want to delete this entry?"
+                                    "Are you sure you want to delete this entry?",
                                   )
                                 ) {
                                   delEntry(entry);
@@ -1578,14 +1578,14 @@ export default function MDMData() {
                           PP MDM Cost ={" "}
                           {`${ppTotalMeal} X ₹ ${thisMonthMDMAllowance} = `}₹{" "}
                           {IndianFormat(
-                            Math.round(ppTotalMeal * thisMonthMDMAllowance)
+                            Math.round(ppTotalMeal * thisMonthMDMAllowance),
                           )}
                         </p>
                         <p style={{ margin: 0, padding: 0 }}>
                           Primary MDM Cost ={" "}
                           {`${pryTotalMeal} X ₹${thisMonthMDMAllowance} = `}₹{" "}
                           {IndianFormat(
-                            Math.round(pryTotalMeal * thisMonthMDMAllowance)
+                            Math.round(pryTotalMeal * thisMonthMDMAllowance),
                           )}
                         </p>
                         <p style={{ margin: 0, padding: 0 }}>
@@ -1615,13 +1615,13 @@ export default function MDMData() {
                       getMonthlyData();
                     } else {
                       const thisMonthlyData = monthlyReportState.filter(
-                        (data) => data.id === monthYearID
+                        (data) => data.id === monthYearID,
                       );
                       if (thisMonthlyData.length > 0) {
                         filterMonthlyData(thisMonthlyData[0]);
                       }
                       const thisMonthIndex = monthlyReportState.findIndex(
-                        (data) => data.id === monthYearID
+                        (data) => data.id === monthYearID,
                       );
                       let prevMonthData =
                         monthlyReportState[monthlyReportState.length - 1];
@@ -1649,16 +1649,16 @@ export default function MDMData() {
                         setRicePryOB(prevMonthData?.ricePryCB);
                         setRiceOB(prevMonthData?.riceCB);
                         setMonthlyPPCost(
-                          Math.round(ppTotalMeal * thisMonthMDMAllowance)
+                          Math.round(ppTotalMeal * thisMonthMDMAllowance),
                         );
                         setMonthlyPRYCost(
-                          Math.round(pryTotalMeal * thisMonthMDMAllowance)
+                          Math.round(pryTotalMeal * thisMonthMDMAllowance),
                         );
                         setMonthTotalCost(
                           Math.round(
                             ppTotalMeal * thisMonthMDMAllowance +
-                              pryTotalMeal * thisMonthMDMAllowance
-                          )
+                              pryTotalMeal * thisMonthMDMAllowance,
+                          ),
                         );
                         setMonthRiceConsunption(thisMonthTotalRiceConsumption);
                         const totalMeals = ppTotalMeal + pryTotalMeal;
@@ -1666,7 +1666,7 @@ export default function MDMData() {
                           totalMeals > 0
                             ? Math.round(
                                 (thisMonthTotalRiceConsumption * ppTotalMeal) /
-                                  totalMeals
+                                  totalMeals,
                               )
                             : 0;
                         const pryRiceEx =
@@ -1679,7 +1679,7 @@ export default function MDMData() {
                         setMonthRiceCB(
                           prevMonthData?.riceCB +
                             totalRiceGiven -
-                            thisMonthTotalRiceConsumption
+                            thisMonthTotalRiceConsumption,
                         );
                       }
                     }
@@ -2122,19 +2122,12 @@ export default function MDMData() {
                               const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                ppOB: val,
-                                ppCB:
-                                  val +
-                                  (mdmTransaction.ppRC || 0) -
-                                  (monthlyPPCost || 0),
+                                ppCB: val,
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 ppCB: "",
-                                ppCB:
-                                  (mdmTransaction.ppRC || 0) -
-                                  (monthlyPPCost || 0),
                               });
                             }
                           }}
@@ -2154,19 +2147,13 @@ export default function MDMData() {
                               const val = parseFloat(e.target.value);
                               setMdmTransaction({
                                 ...mdmTransaction,
-                                pryOB: val,
-                                pryCB:
-                                  val +
-                                  (mdmTransaction.pryRC || 0) -
-                                  (monthlyPRYCost || 0),
+
+                                pryCB: val,
                               });
                             } else {
                               setMdmTransaction({
                                 ...mdmTransaction,
                                 pryCB: "",
-                                pryCB:
-                                  (mdmTransaction.pryRC || 0) -
-                                  (monthlyPRYCost || 0),
                               });
                             }
                           }}
@@ -2278,14 +2265,14 @@ export default function MDMData() {
                               const val = parseFloat(e.target.value);
                               setRicePPOB(val);
                               setRicePPCB(
-                                val + (ricePPRC || 0) - (ricePPEX || 0)
+                                val + (ricePPRC || 0) - (ricePPEX || 0),
                               );
                               setMonthRiceOB(val + (ricePryOB || 0));
                               setMonthRiceCB(
                                 val +
                                   (ricePPRC || 0) -
                                   (ricePPEX || 0) +
-                                  (ricePryCB || 0)
+                                  (ricePryCB || 0),
                               );
                             } else {
                               setRicePPOB("");
@@ -2294,7 +2281,7 @@ export default function MDMData() {
                               setMonthRiceCB(
                                 (ricePPRC || 0) -
                                   (ricePPEX || 0) +
-                                  (ricePryCB || 0)
+                                  (ricePryCB || 0),
                               );
                             }
                           }}
@@ -2314,14 +2301,14 @@ export default function MDMData() {
                               const val = parseFloat(e.target.value);
                               setRicePryOB(val);
                               setRicePryCB(
-                                val + (ricePryRC || 0) - (ricePryEX || 0)
+                                val + (ricePryRC || 0) - (ricePryEX || 0),
                               );
                               setMonthRiceOB(val + (ricePPOB || 0));
                               setMonthRiceCB(
                                 val +
                                   (ricePryRC || 0) -
                                   (ricePryEX || 0) +
-                                  (ricePPCB || 0)
+                                  (ricePPCB || 0),
                               );
                             } else {
                               setRicePryOB("");
@@ -2330,7 +2317,7 @@ export default function MDMData() {
                               setMonthRiceCB(
                                 (ricePryRC || 0) -
                                   (ricePryEX || 0) +
-                                  (ricePPCB || 0)
+                                  (ricePPCB || 0),
                               );
                             }
                           }}
@@ -2366,14 +2353,14 @@ export default function MDMData() {
                               const val = parseFloat(e.target.value);
                               setRicePPRC(val);
                               setRicePPCB(
-                                (ricePPOB || 0) + val - (ricePPEX || 0)
+                                (ricePPOB || 0) + val - (ricePPEX || 0),
                               );
                               setMonthRiceGiven(val + (ricePryRC || 0));
                               setMonthRiceCB(
                                 (ricePPOB || 0) +
                                   val -
                                   (ricePPEX || 0) +
-                                  (ricePryCB || 0)
+                                  (ricePryCB || 0),
                               );
                             } else {
                               setRicePPRC("");
@@ -2382,7 +2369,7 @@ export default function MDMData() {
                               setMonthRiceCB(
                                 (ricePPOB || 0) -
                                   (ricePPEX || 0) +
-                                  (ricePryCB || 0)
+                                  (ricePryCB || 0),
                               );
                             }
                           }}
@@ -2400,14 +2387,14 @@ export default function MDMData() {
                               const val = parseFloat(e.target.value);
                               setRicePryRC(val);
                               setRicePryCB(
-                                (ricePryOB || 0) + val - (ricePryEX || 0)
+                                (ricePryOB || 0) + val - (ricePryEX || 0),
                               );
                               setMonthRiceGiven(val + (ricePPRC || 0));
                               setMonthRiceCB(
                                 (ricePryOB || 0) +
                                   val -
                                   (ricePryEX || 0) +
-                                  (ricePPCB || 0)
+                                  (ricePPCB || 0),
                               );
                             } else {
                               setRicePryRC("");
@@ -2416,7 +2403,7 @@ export default function MDMData() {
                               setMonthRiceCB(
                                 (ricePryOB || 0) -
                                   (ricePryEX || 0) +
-                                  (ricePPCB || 0)
+                                  (ricePPCB || 0),
                               );
                             }
                           }}
@@ -2456,7 +2443,7 @@ export default function MDMData() {
                                   ricePPRC +
                                   ricePryOB +
                                   ricePryRC -
-                                  (val + (ricePryEX || 0))
+                                  (val + (ricePryEX || 0)),
                               );
                             } else {
                               setRicePPEX("");
@@ -2467,7 +2454,7 @@ export default function MDMData() {
                                   ricePPRC +
                                   ricePryOB +
                                   ricePryRC -
-                                  (ricePryEX || 0)
+                                  (ricePryEX || 0),
                               );
                             }
                           }}
@@ -2491,7 +2478,7 @@ export default function MDMData() {
                                   ricePryRC +
                                   ricePPOB +
                                   ricePPRC -
-                                  (val + (ricePPEX || 0))
+                                  (val + (ricePPEX || 0)),
                               );
                             } else {
                               setRicePryEX("");
@@ -2502,7 +2489,7 @@ export default function MDMData() {
                                   ricePryRC +
                                   ricePPOB +
                                   ricePPRC -
-                                  (ricePPEX || 0)
+                                  (ricePPEX || 0),
                               );
                             }
                           }}
@@ -2518,7 +2505,7 @@ export default function MDMData() {
                           onChange={(e) => {
                             if (e.target.value !== "") {
                               setMonthRiceConsunption(
-                                parseFloat(e.target.value)
+                                parseFloat(e.target.value),
                               );
                             } else {
                               setMonthRiceConsunption("");
@@ -2738,10 +2725,10 @@ export default function MDMData() {
                   }
                   const beforePrevDate = `${beforePrevDay}-${Month}-${Year}`;
                   const filteredData = riceData.filter(
-                    (entry) => entry.date === prevDate
+                    (entry) => entry.date === prevDate,
                   );
                   const filteredPrevDayData = riceData.filter(
-                    (entry) => entry.date === beforePrevDate
+                    (entry) => entry.date === beforePrevDate,
                   );
                   if (filteredData.length > 0) {
                     setRiceOB(filteredData[0]?.riceCB);
@@ -2780,7 +2767,7 @@ export default function MDMData() {
                     setRiceCB(
                       parseFloat(e.target.value) +
                         (riceGiven === "" ? 0 : riceGiven) -
-                        (riceExpend === "" ? 0 : riceExpend)
+                        (riceExpend === "" ? 0 : riceExpend),
                     );
                   } else {
                     setRiceOB("");
@@ -2802,7 +2789,7 @@ export default function MDMData() {
                     setRiceCB(
                       riceOB -
                         (riceGiven === "" ? 0 : riceGiven) -
-                        parseFloat(e.target.value)
+                        parseFloat(e.target.value),
                     );
                   } else {
                     setRiceExpend("");
@@ -2935,7 +2922,7 @@ export default function MDMData() {
                         // eslint-disable-next-line no-alert
                         if (
                           window.confirm(
-                            `Are you sure you want to delete student data for ${student.YEAR}`
+                            `Are you sure you want to delete student data for ${student.YEAR}`,
                           )
                         ) {
                           deleteStudentData(student.id);
