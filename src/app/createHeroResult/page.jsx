@@ -25,7 +25,7 @@ export default function CreateHeroResult() {
     {
       ssr: false,
       loading: () => <p>Please Wait...</p>,
-    }
+    },
   );
   const { state, studentResultState, setStudentResultState } =
     useGlobalContext();
@@ -120,12 +120,20 @@ export default function CreateHeroResult() {
   const studentData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "studentsResult"))
+      query(collection(firestore, "studentsResult")),
     );
-    const data = querySnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    const data = querySnapshot.docs
+      .map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+      .sort((a, b) => {
+        //sort by nclass, then sort by roll_no within the same nclass
+        if (a.nclass === b.nclass) {
+          return a.roll_no - b.roll_no;
+        }
+        return a.nclass - b.nclass;
+      });
     setData(data);
     setFilteredData(data);
     setLoader(false);
@@ -157,7 +165,7 @@ export default function CreateHeroResult() {
       const partNumber = selectPart.split(" ")[1];
       const subjectPartKey = `${selectedSubject}${partNumber}`;
       const studentsInClass = data.filter(
-        (student) => student.class === selectedClass
+        (student) => student.class === selectedClass,
       );
       const initialMarks = studentsInClass.map((student) => ({
         id: student.id,
@@ -171,12 +179,12 @@ export default function CreateHeroResult() {
     if (value) {
       setMarksInput((prev) =>
         prev.map((item) =>
-          item.id === id ? { ...item, mark: parseInt(value) || 0 } : item
-        )
+          item.id === id ? { ...item, mark: parseInt(value) || 0 } : item,
+        ),
       );
     } else {
       setMarksInput((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, mark: "" } : item))
+        prev.map((item) => (item.id === id ? { ...item, mark: "" } : item)),
       );
     }
   };
@@ -247,7 +255,7 @@ export default function CreateHeroResult() {
       let finalUpdatedData = [];
       for (const studentClass in studentsByClass) {
         const sortedClass = studentsByClass[studentClass].sort(
-          (a, b) => b.total - a.total
+          (a, b) => b.total - a.total,
         );
         const classWithNewRolls = sortedClass.map((student, index) => ({
           ...student,
@@ -279,11 +287,11 @@ export default function CreateHeroResult() {
     setLoader(true);
     await updateDoc(
       doc(firestore, "studentsResult", editStudentMarks.id),
-      editStudentMarks
+      editStudentMarks,
     )
       .then(() => {
         const newData = studentResultState.map((item) =>
-          item.id === editStudentMarks.id ? editStudentMarks : item
+          item.id === editStudentMarks.id ? editStudentMarks : item,
         );
         setData(newData);
         setStudentResultState(newData);
@@ -447,7 +455,7 @@ export default function CreateHeroResult() {
     let updatedStudents = [];
     for (const studentClass in studentsByClass) {
       const sortedClass = studentsByClass[studentClass].sort(
-        (a, b) => b.total - a.total
+        (a, b) => b.total - a.total,
       );
       const classWithNewRolls = sortedClass.map((student, index) => ({
         ...student,
@@ -638,8 +646,8 @@ export default function CreateHeroResult() {
                           setIsSubjectSelected(!!e.target.value);
                           setSelectedFullSubject(
                             subjects.find(
-                              (sub) => sub.shortName === e.target.value
-                            ).fullName
+                              (sub) => sub.shortName === e.target.value,
+                            ).fullName,
                           );
                         }}
                       >
@@ -695,8 +703,8 @@ export default function CreateHeroResult() {
                               {selectPart == "PART 1"
                                 ? "10"
                                 : selectPart == "PART 2"
-                                ? "30"
-                                : "50"}
+                                  ? "30"
+                                  : "50"}
                               )
                             </th>
                           </tr>
@@ -707,7 +715,7 @@ export default function CreateHeroResult() {
                             .sort((a, b) => a.roll_no - b.roll_no)
                             .map((student) => {
                               const markItem = marksInput.find(
-                                (item) => item.id == student.id
+                                (item) => item.id == student.id,
                               );
                               const mark = markItem ? markItem.mark : 0;
                               return (
@@ -723,14 +731,14 @@ export default function CreateHeroResult() {
                                         selectPart == "PART 1"
                                           ? "10"
                                           : selectPart == "PART 2"
-                                          ? "30"
-                                          : "50"
+                                            ? "30"
+                                            : "50"
                                       }
                                       value={mark}
                                       onChange={(e) =>
                                         handleMarkChange(
                                           student.id,
-                                          e.target.value
+                                          e.target.value,
                                         )
                                       }
                                     />
@@ -852,8 +860,8 @@ export default function CreateHeroResult() {
                       part === 1
                         ? part1total
                         : part === 2
-                        ? part2total
-                        : part3total;
+                          ? part2total
+                          : part3total;
                     return total > 0 ? (
                       <div className="col-md-4 text-center" key={part}>
                         <div className="card mb-4">
@@ -994,19 +1002,19 @@ export default function CreateHeroResult() {
                                       part === 1
                                         ? "10"
                                         : part === 2
-                                        ? "30"
-                                        : "50"
+                                          ? "30"
+                                          : "50"
                                     }
                                     value={mark}
                                     onChange={(e) => {
                                       const parsedValue = parseInt(
                                         e.target.value,
-                                        10
+                                        10,
                                       );
                                       setEditStudentMarks({
                                         ...editStudentMarks,
                                         [`${subject.shortName}${part}`]: isNaN(
-                                          parsedValue
+                                          parsedValue,
                                         )
                                           ? ""
                                           : parsedValue,
@@ -1032,19 +1040,19 @@ export default function CreateHeroResult() {
                                       part === 1
                                         ? "10"
                                         : part === 2
-                                        ? "30"
-                                        : "50"
+                                          ? "30"
+                                          : "50"
                                     }
                                     value={mark}
                                     onChange={(e) => {
                                       const parsedValue = parseInt(
                                         e.target.value,
-                                        10
+                                        10,
                                       );
                                       setEditStudentMarks({
                                         ...editStudentMarks,
                                         [`${subject.shortName}${part}`]: isNaN(
-                                          parsedValue
+                                          parsedValue,
                                         )
                                           ? ""
                                           : parsedValue,
@@ -1069,19 +1077,19 @@ export default function CreateHeroResult() {
                                       part === 1
                                         ? "10"
                                         : part === 2
-                                        ? "30"
-                                        : "50"
+                                          ? "30"
+                                          : "50"
                                     }
                                     value={mark}
                                     onChange={(e) => {
                                       const parsedValue = parseInt(
                                         e.target.value,
-                                        10
+                                        10,
                                       );
                                       setEditStudentMarks({
                                         ...editStudentMarks,
                                         [`${subject.shortName}${part}`]: isNaN(
-                                          parsedValue
+                                          parsedValue,
                                         )
                                           ? ""
                                           : parsedValue,
@@ -1115,42 +1123,42 @@ export default function CreateHeroResult() {
                                   ? editStudentMarks.work1
                                   : 0)
                               : part === 2
-                              ? (editStudentMarks.ben2
-                                  ? editStudentMarks.ben2
-                                  : 0) +
-                                (editStudentMarks.eng2
-                                  ? editStudentMarks.eng2
-                                  : 0) +
-                                (editStudentMarks.math2
-                                  ? editStudentMarks.math2
-                                  : 0) +
-                                (editStudentMarks.health2
-                                  ? editStudentMarks.health2
-                                  : 0) +
-                                (editStudentMarks.work2
-                                  ? editStudentMarks.work2
-                                  : 0) +
-                                (editStudentMarks.envs2
-                                  ? editStudentMarks.envs2
-                                  : 0)
-                              : (editStudentMarks.ben3
-                                  ? editStudentMarks.ben3
-                                  : 0) +
-                                (editStudentMarks.eng3
-                                  ? editStudentMarks.eng3
-                                  : 0) +
-                                (editStudentMarks.math3
-                                  ? editStudentMarks.math3
-                                  : 0) +
-                                (editStudentMarks.work3
-                                  ? editStudentMarks.work3
-                                  : 0) +
-                                (editStudentMarks.health3
-                                  ? editStudentMarks.health3
-                                  : 0) +
-                                (editStudentMarks.envs3
-                                  ? editStudentMarks.envs3
-                                  : 0)}
+                                ? (editStudentMarks.ben2
+                                    ? editStudentMarks.ben2
+                                    : 0) +
+                                  (editStudentMarks.eng2
+                                    ? editStudentMarks.eng2
+                                    : 0) +
+                                  (editStudentMarks.math2
+                                    ? editStudentMarks.math2
+                                    : 0) +
+                                  (editStudentMarks.health2
+                                    ? editStudentMarks.health2
+                                    : 0) +
+                                  (editStudentMarks.work2
+                                    ? editStudentMarks.work2
+                                    : 0) +
+                                  (editStudentMarks.envs2
+                                    ? editStudentMarks.envs2
+                                    : 0)
+                                : (editStudentMarks.ben3
+                                    ? editStudentMarks.ben3
+                                    : 0) +
+                                  (editStudentMarks.eng3
+                                    ? editStudentMarks.eng3
+                                    : 0) +
+                                  (editStudentMarks.math3
+                                    ? editStudentMarks.math3
+                                    : 0) +
+                                  (editStudentMarks.work3
+                                    ? editStudentMarks.work3
+                                    : 0) +
+                                  (editStudentMarks.health3
+                                    ? editStudentMarks.health3
+                                    : 0) +
+                                  (editStudentMarks.envs3
+                                    ? editStudentMarks.envs3
+                                    : 0)}
                           </h6>
                         </div>
                       </div>
