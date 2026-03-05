@@ -685,7 +685,7 @@ export default function MDMData() {
         date: date,
         riceOB: riceOB,
         riceGiven: riceGiven === "" ? 0 : riceGiven,
-        riceExpend: riceExpend,
+        riceExpend: riceExpend ? riceExpend : 0,
         riceCB: riceCB,
       })
         .then(() => {
@@ -700,7 +700,7 @@ export default function MDMData() {
               date: date,
               riceOB: riceOB,
               riceGiven: riceGiven === "" ? 0 : riceGiven,
-              riceExpend: riceExpend,
+              riceExpend: riceExpend ? riceExpend : 0,
               riceCB: riceCB,
             },
           ].sort(
@@ -2856,7 +2856,7 @@ export default function MDMData() {
               className="btn btn-success m-2"
               onClick={(e) => {
                 e.preventDefault();
-                if (riceExpend === 0 || riceExpend === "") {
+                if (riceExpend) {
                   setErrRice("Please Enter Rice Expenditure");
                   return;
                 }
