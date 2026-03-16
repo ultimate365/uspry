@@ -1233,7 +1233,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.pp?.Total ? students?.pp?.Total : "-"}
+                    {students?.pp?.GeneralTotal
+                      ? students?.pp?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -1282,7 +1284,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.i?.Total ? students?.i?.Total : "-"}
+                    {students?.i?.GeneralTotal
+                      ? students?.i?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -1333,7 +1337,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.ii?.Total ? students?.ii?.Total : "-"}
+                    {students?.ii?.GeneralTotal
+                      ? students?.ii?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -1382,7 +1388,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iii?.Total ? students?.iii?.Total : "-"}
+                    {students?.iii?.GeneralTotal
+                      ? students?.iii?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -1433,7 +1441,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.iv?.Total ? students?.iv?.Total : "-"}
+                    {students?.iv?.GeneralTotal
+                      ? students?.iv?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -1482,7 +1492,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.v?.Total ? students?.v?.Total : "-"}
+                    {students?.v?.GeneralTotal
+                      ? students?.v?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
@@ -1538,7 +1550,9 @@ export default function ReturnPrint({ data }) {
                   }}
                 >
                   <Text style={styles.text5}>
-                    {students?.total?.Total ? students?.total?.Total : "-"}
+                    {students?.total?.GeneralTotal
+                      ? students?.total?.GeneralTotal
+                      : "-"}
                   </Text>
                 </View>
               </View>
