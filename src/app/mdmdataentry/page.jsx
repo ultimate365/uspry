@@ -2806,6 +2806,7 @@ export default function MDMData() {
                         (riceGiven === "" ? 0 : riceGiven) -
                         parseFloat(e.target.value),
                     );
+                    setErrRice("");
                   } else {
                     setRiceExpend("");
                     setRiceCB(riceOB - (riceGiven === "" ? 0 : riceGiven));
@@ -2856,7 +2857,7 @@ export default function MDMData() {
               className="btn btn-success m-2"
               onClick={(e) => {
                 e.preventDefault();
-                if (riceExpend) {
+                if (riceExpend === "") {
                   setErrRice("Please Enter Rice Expenditure");
                   return;
                 }
