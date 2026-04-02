@@ -1255,7 +1255,7 @@ export default function Transactions() {
                             className="form-control"
                             readOnly
                             id="pryCB"
-                            value={parseFloat(ppCB + pryCB)}
+                            value={parseFloat(ppCB) + parseFloat(pryCB)}
                             placeholder="MDM Account Closing Balance"
                           />
                         </div>
