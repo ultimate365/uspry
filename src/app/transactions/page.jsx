@@ -1246,6 +1246,19 @@ export default function Transactions() {
                             placeholder="Enter Primary Closing Balance"
                           />
                         </div>
+                        <div className="mb-3">
+                          <label htmlFor="pryCB" className="form-label">
+                            MDM Account Closing Balance
+                          </label>
+                          <input
+                            type="number"
+                            className="form-control"
+                            readOnly
+                            id="pryCB"
+                            value={parseFloat(ppCB) + parseFloat(pryCB)}
+                            placeholder="MDM Account Closing Balance"
+                          />
+                        </div>
                       </div>
                     </div>
                   </form>
