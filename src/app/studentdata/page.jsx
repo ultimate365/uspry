@@ -71,7 +71,7 @@ export default function StudentData() {
   });
   const studentData = async () => {
     const querySnapshot = await getDocs(
-      query(collection(firestore, "students"))
+      query(collection(firestore, "students")),
     );
     const data = querySnapshot.docs.map((doc) => ({
       // doc.data() is never undefined for query doc snapshots
@@ -156,7 +156,7 @@ export default function StudentData() {
           });
           setShowEdit(false);
           const newData = studentState.map((item) =>
-            item.id === editStudent.id ? editStudent : item
+            item.id === editStudent.id ? editStudent : item,
           );
           setStudentState(newData);
           setData(newData);
@@ -235,6 +235,13 @@ export default function StudentData() {
       center: +true,
     },
     {
+      name: "Aadhar No.",
+      selector: (row) => row.aadhaar,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+    },
+    {
       name: "Birth Date",
       selector: (row) => row.birthdate,
       sortable: +true,
@@ -299,7 +306,7 @@ export default function StudentData() {
             onClick={() => {
               //eslint-disable-next-line
               let message = confirm(
-                `Are You Sure To Delete Student ${row.student_name}`
+                `Are You Sure To Delete Student ${row.student_name}`,
               );
               message
                 ? deleteStudent(row.id)
@@ -492,7 +499,7 @@ export default function StudentData() {
                           type="date"
                           className="form-control"
                           defaultValue={getCurrentDateInput(
-                            addStudent.birthdate
+                            addStudent.birthdate,
                           )}
                           onChange={(e) => {
                             const data = getSubmitDateInput(e.target.value);
@@ -813,7 +820,7 @@ export default function StudentData() {
                           type="date"
                           className="form-control"
                           defaultValue={getCurrentDateInput(
-                            editStudent.birthdate
+                            editStudent.birthdate,
                           )}
                           onChange={(e) => {
                             const data = getSubmitDateInput(e.target.value);
