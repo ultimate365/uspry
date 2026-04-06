@@ -631,6 +631,7 @@ export default function CreateHeroResult() {
                         <option value="CLASS II">CLASS II</option>
                         <option value="CLASS III">CLASS III</option>
                         <option value="CLASS IV">CLASS IV</option>
+                        <option value="CLASS V">CLASS V</option>
                       </select>
                     </div>
                   )}
@@ -671,7 +672,8 @@ export default function CreateHeroResult() {
                             );
                           } else if (
                             selectedClass === "CLASS III" ||
-                            selectedClass === "CLASS IV"
+                            selectedClass === "CLASS IV" ||
+                            selectedClass === "CLASS V"
                           ) {
                             return (
                               <option value={sub.shortName} key={index}>
@@ -1064,7 +1066,8 @@ export default function CreateHeroResult() {
                               );
                             } else if (
                               editStudentMarks.class === "CLASS III" ||
-                              editStudentMarks.class === "CLASS IV"
+                              editStudentMarks.class === "CLASS IV" ||
+                              editStudentMarks.class === "CLASS V"
                             ) {
                               return (
                                 <p key={subject.shortName}>
