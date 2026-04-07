@@ -736,7 +736,7 @@ export default function CreateHeroResult() {
                                             ? "30"
                                             : "50"
                                       }
-                                      value={mark}
+                                      value={mark || ""}
                                       onChange={(e) =>
                                         handleMarkChange(
                                           student.id,
@@ -1007,7 +1007,7 @@ export default function CreateHeroResult() {
                                           ? "30"
                                           : "50"
                                     }
-                                    value={mark}
+                                    value={mark || ""}
                                     onChange={(e) => {
                                       const parsedValue = parseInt(
                                         e.target.value,
