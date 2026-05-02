@@ -438,8 +438,8 @@ export default function MDMData() {
         ...mdmRice,
         prevRicePPRC: prevMonthData?.ricePPRC,
         prevRicePryRC: prevMonthData?.ricePryRC,
-        prevRicePPEX: prevMonthData?.ricePPCB,
-        prevRicePryEX: prevMonthData?.ricePryCB,
+        prevRicePPEX: prevMonthData?.ricePPEX,
+        prevRicePryEX: prevMonthData?.ricePryEX,
       });
       setRicePPOB(prevMonthData?.ricePPCB);
       setRicePryOB(prevMonthData?.ricePryCB);
