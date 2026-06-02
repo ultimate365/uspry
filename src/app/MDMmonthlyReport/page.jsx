@@ -33,7 +33,7 @@ export default function MDMmonthlyReport() {
     {
       ssr: false,
       loading: () => <p>Loading...</p>,
-    }
+    },
   );
   const [thisMonthlyData, setThisMonthlyData] = useState({
     id: "",
@@ -120,7 +120,7 @@ export default function MDMmonthlyReport() {
         const entryYear = entry.year;
         const entryMonth = entry.month;
 
-        if (entryYear === selectedValue) {
+        if (entryYear == selectedValue) {
           x.push(entry);
           y.push(entryMonth);
         }
@@ -141,7 +141,7 @@ export default function MDMmonthlyReport() {
     allEnry.map((entry) => {
       const entryYear = entry.year;
       const entryMonth = entry.month;
-      if (entryYear === selectedYear && entryMonth === month) {
+      if (entryYear == selectedYear && entryMonth === month) {
         x.push(entry);
         setThisMonthlyData(entry);
         setShowData(true);
@@ -152,7 +152,7 @@ export default function MDMmonthlyReport() {
   const getMonthlyData = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "mothlyMDMData"))
+      query(collection(firestore, "mothlyMDMData")),
     );
     const data = querySnapshot.docs.map((doc) => ({
       // doc.data() is never undefined for query doc snapshots
@@ -587,7 +587,9 @@ export default function MDMmonthlyReport() {
                     <td style={{ border: "1px solid" }}>
                       ₹{" "}
                       {IndianFormat(
-                        round2dec(thisMonthlyData?.ppOB + thisMonthlyData?.ppRC)
+                        round2dec(
+                          thisMonthlyData?.ppOB + thisMonthlyData?.ppRC,
+                        ),
                       )}
                     </td>
                     <td style={{ border: "1px solid" }}>
@@ -623,8 +625,8 @@ export default function MDMmonthlyReport() {
                       ₹{" "}
                       {IndianFormat(
                         round2dec(
-                          thisMonthlyData?.pryOB + thisMonthlyData?.pryRC
-                        )
+                          thisMonthlyData?.pryOB + thisMonthlyData?.pryRC,
+                        ),
                       )}
                     </td>
                     <td style={{ border: "1px solid" }}>
@@ -1090,7 +1092,9 @@ export default function MDMmonthlyReport() {
                     <td style={{ border: "1px solid" }}>
                       ₹
                       {IndianFormat(
-                        round2dec(thisMonthlyData?.ppOB + thisMonthlyData?.ppRC)
+                        round2dec(
+                          thisMonthlyData?.ppOB + thisMonthlyData?.ppRC,
+                        ),
                       )}
                     </td>
                     <td style={{ border: "1px solid" }}>
@@ -1133,8 +1137,8 @@ export default function MDMmonthlyReport() {
                       ₹
                       {IndianFormat(
                         round2dec(
-                          thisMonthlyData?.pryOB + thisMonthlyData?.pryRC
-                        )
+                          thisMonthlyData?.pryOB + thisMonthlyData?.pryRC,
+                        ),
                       )}
                     </td>
                     <td style={{ border: "1px solid" }}>
