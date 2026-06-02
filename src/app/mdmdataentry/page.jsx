@@ -757,7 +757,7 @@ export default function MDMData() {
       const entry = {
         id: monthYearID,
         month: monthToSubmit,
-        year: selectedYear.toString(),
+        year: parseInt(selectedYear),
         financialYear: financialYear,
         worrkingDays: monthWorkingDays !== "" ? monthWorkingDays : 0,
         totalWorkingDays: totalWorkingDays !== "" ? totalWorkingDays : 0,
