@@ -114,6 +114,9 @@ export default function MDMData() {
     useState("");
   const [monthRiceCB, setMonthRiceCB] = useState("");
   const [monthYearID, setMonthYearID] = useState("");
+  const [showCombinedEntry, setShowCombinedEntry] = useState(false);
+  const [showCombinedUpdate, setShowCombinedUpdate] = useState(false);
+  const [isBothDone, setIsBothDone] = useState(false);
   const [mdmTransaction, setMdmTransaction] = useState({
     ppOB: "",
     pryOB: "",
@@ -367,12 +370,14 @@ export default function MDMData() {
     setLoader(false);
     setRiceData(data);
     setRiceState(data);
-    setRiceOB(data[data.length - 1].riceCB);
-    setRiceCB(data[data.length - 1].riceCB);
+    if (data.length > 0) {
+      setRiceOB(data[data.length - 1].riceCB);
+      setRiceCB(data[data.length - 1].riceCB);
+    }
     findRiceEntry(data);
   };
   const getStudentData = async () => {
-    const year = date?.split("-")[2];
+    const year = date?.split("-")?.[2];
     if (StudentDataState.length === 0) {
       const querySnapshot = await getDocs(
         query(collection(firestore, "studentYearData")),
@@ -539,6 +544,11 @@ export default function MDMData() {
     setShowEntry(false);
     setShowUpdate(false);
     setShowRiceData(false);
+    setShowCombinedEntry(false);
+    setShowCombinedUpdate(false);
+    setShowStudentDataEntryForm(false);
+    setShowDataTable(false);
+    setShowMonthSelection(false);
     setShowMonthlyReport(true);
   };
 
@@ -627,8 +637,8 @@ export default function MDMData() {
       ppTotal += entry.pp;
       pryTotal += entry.pry;
     });
-    let mdmCost = PREV_MDM_COST;
-    const entryMonth = x[0]?.date.split("-")[1];
+    let mdmCost = thisMonthMDMAllowance;
+    const entryMonth = x[0]?.date?.split("-")?.[1];
     if (parseInt(selectedYear) <= 2024 && parseInt(entryMonth) <= 11) {
       setThisMonthMDMAllowance(PREV_MDM_COST);
       mdmCost = PREV_MDM_COST;
@@ -749,6 +759,203 @@ export default function MDMData() {
         theme: "light",
       });
     }
+  };
+
+  const submitCombinedData = async () => {
+    if (validForm()) {
+      setLoader(true);
+      try {
+        // Submit MDM (Coverage) Data
+        await setDoc(doc(firestore, "mdmData", date), {
+          pp: parseInt(pp),
+          pry: parseInt(pry),
+          date: date,
+          id: date,
+        });
+
+        // Submit Rice Data
+        await setDoc(doc(firestore, "rice", date), {
+          id: date,
+          date: date,
+          riceOB: riceOB,
+          riceGiven: riceGiven === "" ? 0 : riceGiven,
+          riceExpend: riceExpend ? riceExpend : 0,
+          riceCB: riceCB,
+        });
+
+        toast.success("Coverage and Rice Data submitted successfully");
+
+        // Update MDM state
+        let mdmEntries = allEnry;
+        mdmEntries = [
+          ...mdmEntries,
+          { pp: parseInt(pp), pry: parseInt(pry), date: date, id: date },
+        ].sort(
+          (a, b) =>
+            Date.parse(getCurrentDateInput(a.date)) -
+            Date.parse(getCurrentDateInput(b.date)),
+        );
+        setAllEnry(mdmEntries);
+        setMealState(mdmEntries);
+        setMdmDone(true);
+
+        // Update Rice state
+        let riceEntries = riceState;
+        riceEntries = [
+          ...riceEntries,
+          {
+            id: date,
+            date: date,
+            riceOB: riceOB,
+            riceGiven: riceGiven === "" ? 0 : riceGiven,
+            riceExpend: riceExpend ? riceExpend : 0,
+            riceCB: riceCB,
+          },
+        ].sort(
+          (a, b) =>
+            Date.parse(getCurrentDateInput(a.date)) -
+            Date.parse(getCurrentDateInput(b.date)),
+        );
+        setRiceState(riceEntries);
+        setRiceData(riceEntries);
+        setRiceDone(true);
+
+        // Reset form
+        setPp("");
+        setPry("");
+        setRiceOB("");
+        setRiceExpend("");
+        setRiceGiven("");
+        setRiceCB("");
+        setDate(todayInString());
+        setDocId(todayInString());
+        setShowCombinedEntry(false);
+        setLoader(false);
+      } catch (e) {
+        console.log(e);
+        setLoader(false);
+        toast.error("Failed to submit data. Please try again");
+      }
+    } else {
+      toast.error("Please fill all the required fields");
+    }
+  };
+
+  const updateCombinedData = async () => {
+    if (validForm()) {
+      setLoader(true);
+      try {
+        // Update MDM (Coverage) Data
+        await setDoc(doc(firestore, "mdmData", docId), {
+          pp: parseInt(pp),
+          pry: parseInt(pry),
+          date: docId,
+          id: docId,
+        });
+
+        // Update Rice Data
+        await setDoc(doc(firestore, "rice", docId), {
+          id: docId,
+          date: docId,
+          riceOB: riceOB,
+          riceGiven: riceGiven === "" ? 0 : riceGiven,
+          riceExpend: riceExpend ? riceExpend : 0,
+          riceCB: riceCB,
+        });
+
+        toast.success("Coverage and Rice Data updated successfully");
+
+        // Update MDM state
+        let mdmData = allEnry.filter((entry) => entry.id !== docId);
+        mdmData = [
+          ...mdmData,
+          { pp: parseInt(pp), pry: parseInt(pry), date: docId, id: docId },
+        ].sort(
+          (a, b) =>
+            Date.parse(getCurrentDateInput(a.date)) -
+            Date.parse(getCurrentDateInput(b.date)),
+        );
+        setAllEnry(mdmData);
+        setMealState(mdmData);
+
+        // Update Rice state
+        let riceEntries = riceState.filter((entry) => entry.id !== docId);
+        riceEntries = [
+          ...riceEntries,
+          {
+            id: docId,
+            date: docId,
+            riceOB: riceOB,
+            riceGiven: riceGiven === "" ? 0 : riceGiven,
+            riceExpend: riceExpend ? riceExpend : 0,
+            riceCB: riceCB,
+          },
+        ].sort(
+          (a, b) =>
+            Date.parse(getCurrentDateInput(a.date)) -
+            Date.parse(getCurrentDateInput(b.date)),
+        );
+        setRiceState(riceEntries);
+        setRiceData(riceEntries);
+
+        // Reset form
+        setPp("");
+        setPry("");
+        setRiceOB("");
+        setRiceExpend("");
+        setRiceGiven("");
+        setRiceCB("");
+        setDate(todayInString());
+        setDocId(todayInString());
+        setShowCombinedEntry(false);
+        setShowCombinedUpdate(false);
+        setLoader(false);
+      } catch (e) {
+        console.log(e);
+        setLoader(false);
+        toast.error("Something went wrong!");
+      }
+    } else {
+      toast.error("Please fill all required fields!");
+    }
+  };
+
+  const searchTodaysCombinedData = async () => {
+    const todaysData = allEnry.filter(
+      (entry) => entry.date === todayInString(),
+    );
+    if (todaysData.length > 0) {
+      const mdmData = todaysData[0];
+      setPp(mdmData.pp);
+      setPry(mdmData.pry);
+
+      const todaysRiceData = riceData.filter(
+        (entry) => entry.date === todayInString(),
+      );
+      if (todaysRiceData.length > 0) {
+        const riceEntry = todaysRiceData[0];
+        setRiceOB(riceEntry.riceOB);
+        setRiceGiven(riceEntry.riceGiven);
+        setRiceExpend(riceEntry.riceExpend);
+        setRiceCB(riceEntry.riceCB);
+      }
+
+      setDate(getCurrentDateInput(mdmData.date));
+      setDocId(mdmData.date);
+      setShowCombinedUpdate(true);
+    } else {
+      setShowCombinedUpdate(true);
+      setDocId(todayInString());
+      toast.error("Todays Entry Not Done Yet!");
+    }
+    setShowDataTable(false);
+    setShowMonthSelection(false);
+    setShowCombinedEntry(false);
+    setShowMonthlyReport(false);
+    setShowRiceData(false);
+    setShowEntry(false);
+    setShowUpdate(false);
+    setShowStudentDataEntryForm(false);
   };
 
   const submitMonthlyData = async () => {
@@ -996,20 +1203,20 @@ export default function MDMData() {
       setAllEnry(mealState);
       findMDMEntry(mealState);
     }
-    if (access !== "admin") {
+    if (access !== undefined && access !== "admin") {
       router.push("/");
-      toast.error("Unathorized access");
+      toast.error("Unauthorized access");
     }
     getStudentData();
     //eslint-disable-next-line
-  }, []);
+  }, [access]);
 
   useEffect(() => {
-    const year = date?.split("-")[2];
+    const year = date?.split("-")?.[2];
     if (StudentDataState.length !== 0) {
       setStudentData(StudentDataState.filter((s) => s.YEAR === year)[0]);
     }
-  }, [date]);
+  }, [date, StudentDataState]);
 
   return (
     <div className="container">
@@ -1020,43 +1227,71 @@ export default function MDMData() {
         type="button"
         className={`btn btn-${mdmDone ? "danger" : "success"} m-1`}
         onClick={() => {
-          allEnry.map((entry) => {
-            if (entry.date === todayInString()) {
-              toast.error("Todays Entry Already Done!");
-              setPp(entry.pp);
-              setPry(entry.pry);
-              setErrPP("");
-              setErrPry("");
-            } else {
-              setPp("");
-              setPry("");
-              setErrPP("");
-              setErrPry("");
-            }
-            setShowEntry(true);
-            setShowUpdate(false);
-            setShowMonthlyReport(false);
-            setDate(todayInString());
-            setShowDataTable(false);
-            setShowMonthSelection(false);
-            setShowRiceData(false);
-          });
+          const todayEntry = allEnry.find(
+            (entry) => entry.date === todayInString(),
+          );
+          const todayRice = riceState.find(
+            (entry) => entry.date === todayInString(),
+          );
+          if (todayEntry) {
+            toast.error("Todays Entry Already Done!");
+            setPp(todayEntry.pp);
+            setPry(todayEntry.pry);
+            setErrPP("");
+            setErrPry("");
+          } else {
+            setPp("");
+            setPry("");
+            setErrPP("");
+            setErrPry("");
+          }
+          setRiceOB("");
+          setRiceExpend("");
+          setRiceGiven("");
+          setRiceCB("");
+          if (todayRice) {
+            setRiceOB(todayRice.riceOB);
+            setRiceExpend(todayRice.riceExpend);
+            setRiceGiven(todayRice.riceGiven);
+            setRiceCB(todayRice.riceCB);
+          } else {
+            const lastRiceCB =
+              riceState.length > 0
+                ? riceState[riceState.length - 1].riceCB
+                : "";
+            setRiceOB(lastRiceCB);
+            setRiceCB(lastRiceCB);
+            setRiceExpend("");
+            setRiceGiven("");
+          }
+          setErrPP("");
+          setErrPry("");
+          setErrRice("");
+          setShowCombinedEntry(true);
+          setShowCombinedUpdate(false);
+          setShowMonthlyReport(false);
+          setDate(todayInString());
+          setShowDataTable(false);
+          setShowMonthSelection(false);
+          setShowRiceData(false);
+          setShowEntry(false);
+          setShowUpdate(false);
           setTimeout(() => {
             setInput1Focus();
           }, 200);
         }}
       >
-        Coverage Entry
+        Combined Entry (Coverage & Rice)
       </button>
       <button
         type="button"
-        className={`btn btn-${!mdmDone ? "danger" : "success"} m-1`}
+        className={`btn btn-${!mdmDone || !riceDone ? "danger" : "success"} m-1`}
         onClick={() => {
-          searchTodaysData();
+          searchTodaysCombinedData();
           setShowStudentDataEntryForm(false);
         }}
       >
-        Coverage Update
+        Combined Update (Coverage & Rice)
       </button>
       <button
         type="button"
@@ -1070,33 +1305,6 @@ export default function MDMData() {
       </button>
       <button
         type="button"
-        className={`btn btn-${riceDone ? "danger" : "success"} m-1`}
-        onClick={() => {
-          if (riceDone) {
-            toast.error("Todays Rice Entry Already Done!");
-          }
-          setRiceOB(riceState[riceState.length - 1].riceCB);
-          setRiceCB(riceState[riceState.length - 1].riceCB);
-          setRiceExpend("");
-          setRiceGiven("");
-          setShowRiceData(true);
-          setShowMonthlyReport(false);
-          setShowDataTable(false);
-          setShowMonthSelection(false);
-          setShowEntry(false);
-          setShowUpdate(false);
-          setShowStudentDataEntryForm(false);
-          setDate(todayInString());
-          setDocId(todayInString());
-          setTimeout(() => {
-            setInput2Focus();
-          }, 200);
-        }}
-      >
-        Rice Data
-      </button>
-      <button
-        type="button"
         className={`btn btn-dark m-1`}
         onClick={() => {
           setShowStudentDataEntryForm(true);
@@ -1106,67 +1314,170 @@ export default function MDMData() {
           setShowMonthSelection(false);
           setShowEntry(false);
           setShowUpdate(false);
+          setShowCombinedEntry(false);
+          setShowCombinedUpdate(false);
         }}
       >
         Student Data Entry
       </button>
-      {showEntry && (
+      {showCombinedEntry && (
         <form>
-          <h4 className="my-3">Coverage Entry</h4>
-          <div className="form-group m-2">
-            <label className="m-2">Date</label>
-            <input
-              type="date"
-              className="form-control"
-              defaultValue={getCurrentDateInput(date)}
-              onChange={(e) => setDate(getSubmitDateInput(e.target.value))}
-            />
+          <h4 className="my-3">Combined Entry (Coverage & Rice Data)</h4>
+          <div className="row">
+            <div className="col-md-6">
+              <h5 className="text-primary">Coverage Data</h5>
+              <div className="form-group m-2">
+                <label className="m-2">Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  defaultValue={getCurrentDateInput(date)}
+                  onChange={(e) => setDate(getSubmitDateInput(e.target.value))}
+                />
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">PP</label>
+                <input
+                  ref={input1Ref}
+                  type="number"
+                  className="form-control"
+                  placeholder={`Max Limit: ${StudentData?.PP_STUDENTS}`}
+                  value={pp}
+                  onChange={(e) => {
+                    if (e.target.value > StudentData?.PP_STUDENTS) {
+                      toast.error("PP Limit Exceeded!");
+                      setPp(StudentData?.PP_STUDENTS);
+                    } else {
+                      setPp(e.target.value);
+                    }
+                  }}
+                />
+                {errPP && <p className="text-danger">{errPP}</p>}
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Primary</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Max Limit: ${StudentData?.PRIMARY_STUDENTS}`}
+                  value={pry}
+                  onChange={(e) => {
+                    if (e.target.value > StudentData?.PRIMARY_STUDENTS) {
+                      toast.error("Primary Limit Exceeded!");
+                      setPry(StudentData?.PRIMARY_STUDENTS);
+                    } else {
+                      setPry(e.target.value);
+                    }
+                  }}
+                />
+                {errPry && <p className="text-danger">{errPry}</p>}
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <h5 className="text-info">Rice Data</h5>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Opening Balance (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Opening Balance`}
+                  value={riceOB}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceOB(parseFloat(e.target.value));
+                      setRiceCB(
+                        parseFloat(e.target.value) +
+                          (riceGiven === "" ? 0 : riceGiven) -
+                          (riceExpend === "" ? 0 : riceExpend),
+                      );
+                    } else {
+                      setRiceOB("");
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Expenditure (in Kg.)</label>
+                <input
+                  ref={input2Ref}
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Expenditure`}
+                  value={riceExpend}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceExpend(parseFloat(e.target.value));
+                      setRiceCB(
+                        riceOB -
+                          riceOB +
+                          riceOB +
+                          (riceGiven === "" ? 0 : riceGiven) -
+                          parseFloat(e.target.value),
+                      );
+                      setErrRice("");
+                    } else {
+                      setRiceExpend("");
+                      setRiceCB(riceOB - (riceGiven === "" ? 0 : riceGiven));
+                      setRiceCB(riceOB + (riceGiven === "" ? 0 : riceGiven));
+                    }
+                  }}
+                />
+                {errRice && <p className="text-danger m-2">{errRice}</p>}
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Received (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Received (in Kg.)`}
+                  value={riceGiven}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceGiven(parseFloat(e.target.value));
+                      setRiceCB(
+                        riceOB + parseFloat(e.target.value) - riceExpend,
+                      );
+                    } else {
+                      setRiceGiven("");
+                      setRiceCB(riceOB - riceExpend);
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Closing Balance (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Closing Balance (in Kg.)`}
+                  value={riceCB}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceCB(parseFloat(e.target.value));
+                    } else {
+                      setRiceCB("");
+                    }
+                  }}
+                />
+              </div>
+              <h4 className="text-info m-2">Closing Balance: {riceCB} Kg.</h4>
+            </div>
           </div>
-          <div className="form-group m-2">
-            <label className="m-2">PP</label>
-            <input
-              ref={input1Ref}
-              type="number"
-              className="form-control"
-              placeholder={`Max Limit: ${StudentData?.PP_STUDENTS}`}
-              value={pp}
-              onChange={(e) => {
-                if (e.target.value > StudentData?.PP_STUDENTS) {
-                  toast.error("PP Limit Exceeded!");
-                  setPp(StudentData?.PP_STUDENTS);
-                } else {
-                  setPp(e.target.value);
-                }
-              }}
-            />
-            {errPP && <p className="text-danger">{errPP}</p>}
-          </div>
-          <div className="form-group m-2">
-            <label className="m-2">Primary</label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder={`Max Limit: ${StudentData?.PRIMARY_STUDENTS}`}
-              value={pry}
-              onChange={(e) => {
-                if (e.target.value > StudentData?.PRIMARY_STUDENTS) {
-                  toast.error("Primary Limit Exceeded!");
-                  setPry(StudentData?.PRIMARY_STUDENTS);
-                } else {
-                  setPry(e.target.value);
-                }
-              }}
-            />
-            {errPry && <p className="text-danger">{errPry}</p>}
-          </div>
+
           <div className="my-2">
             <button
               type="submit"
               className="btn btn-primary m-1"
               onClick={(e) => {
-                setShowEntry(false);
                 e.preventDefault();
-                submitData();
+                if (riceExpend === "") {
+                  setErrRice("Please Enter Rice Expenditure");
+                  return;
+                }
+                setErrRice("");
+                setShowCombinedEntry(false);
+                submitCombinedData();
               }}
             >
               Submit
@@ -1174,7 +1485,227 @@ export default function MDMData() {
             <button
               type="button"
               className="btn btn-danger m-1"
-              onClick={() => setShowEntry(false)}
+              onClick={() => {
+                setShowCombinedEntry(false);
+                setPp("");
+                setPry("");
+                setRiceOB("");
+                setRiceExpend("");
+                setRiceGiven("");
+                setRiceCB("");
+                setDate(todayInString());
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+      {showCombinedUpdate && (
+        <form>
+          <h4 className="my-3">Combined Update (Coverage & Rice Data)</h4>
+          <div className="row">
+            <div className="col-md-6">
+              <h5 className="text-primary">Coverage Data</h5>
+              <div className="form-group m-2">
+                <label className="m-2">Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  defaultValue={date}
+                  onChange={(e) => {
+                    const newDate = getSubmitDateInput(e.target.value);
+                    setDate(newDate);
+                    setDocId(newDate);
+                    const filteredMdmData = allEnry.filter(
+                      (entry) => entry.date === newDate,
+                    );
+                    if (filteredMdmData.length > 0) {
+                      const selectedDateData = filteredMdmData[0];
+                      setPp(selectedDateData.pp);
+                      setPry(selectedDateData.pry);
+                    } else {
+                      setPp("");
+                      setPry("");
+                      toast.error("No MDM Data Found on selected Date!");
+                    }
+                    const filteredRiceDataForDate = riceData.filter(
+                      (entry) => entry.date === newDate,
+                    );
+                    if (filteredRiceDataForDate.length > 0) {
+                      const selectedRiceData = filteredRiceDataForDate[0];
+                      setRiceOB(selectedRiceData.riceOB);
+                      setRiceGiven(selectedRiceData.riceGiven);
+                      setRiceExpend(selectedRiceData.riceExpend);
+                      setRiceCB(selectedRiceData.riceCB);
+                    } else {
+                      setRiceOB("");
+                      setRiceGiven("");
+                      setRiceExpend("");
+                      setRiceCB("");
+                      toast.error("No Rice Data Found on selected Date!");
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">PP</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Max Limit: ${StudentData?.PP_STUDENTS}`}
+                  value={pp}
+                  onChange={(e) => {
+                    if (e.target.value > StudentData?.PP_STUDENTS) {
+                      toast.error("PP Limit Exceeded!");
+                      setPp(StudentData?.PP_STUDENTS);
+                    } else {
+                      setPp(e.target.value);
+                    }
+                  }}
+                />
+                {errPP && <p className="text-danger">{errPP}</p>}
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Primary</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Max Limit: ${StudentData?.PRIMARY_STUDENTS}`}
+                  value={pry}
+                  onChange={(e) => {
+                    if (e.target.value > StudentData?.PRIMARY_STUDENTS) {
+                      toast.error("Primary Limit Exceeded!");
+                      setPry(StudentData?.PRIMARY_STUDENTS);
+                    } else {
+                      setPry(e.target.value);
+                    }
+                  }}
+                />
+                {errPry && <p className="text-danger">{errPry}</p>}
+              </div>
+            </div>
+
+            <div className="col-md-6">
+              <h5 className="text-info">Rice Data</h5>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Opening Balance (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Opening Balance`}
+                  value={riceOB}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceOB(parseFloat(e.target.value));
+                      setRiceCB(
+                        parseFloat(e.target.value) +
+                          (riceGiven === "" ? 0 : riceGiven) -
+                          (riceExpend === "" ? 0 : riceExpend),
+                      );
+                    } else {
+                      setRiceOB("");
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Expenditure (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Expenditure`}
+                  value={riceExpend}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceExpend(parseFloat(e.target.value));
+                      setRiceCB(
+                        riceOB -
+                          riceOB +
+                          riceOB +
+                          (riceGiven === "" ? 0 : riceGiven) -
+                          parseFloat(e.target.value),
+                      );
+                      setErrRice("");
+                    } else {
+                      setRiceExpend("");
+                      setRiceCB(riceOB - (riceGiven === "" ? 0 : riceGiven));
+                      setRiceCB(riceOB + (riceGiven === "" ? 0 : riceGiven));
+                    }
+                  }}
+                />
+                {errRice && <p className="text-danger m-2">{errRice}</p>}
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Received (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Received (in Kg.)`}
+                  value={riceGiven}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceGiven(parseFloat(e.target.value));
+                      setRiceCB(
+                        riceOB + parseFloat(e.target.value) - riceExpend,
+                      );
+                    } else {
+                      setRiceGiven("");
+                      setRiceCB(riceOB - riceExpend);
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-group m-2">
+                <label className="m-2">Rice Closing Balance (in Kg.)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder={`Enter Rice Closing Balance (in Kg.)`}
+                  value={riceCB}
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      setRiceCB(parseFloat(e.target.value));
+                    } else {
+                      setRiceCB("");
+                    }
+                  }}
+                />
+              </div>
+              <h4 className="text-info m-2">Closing Balance: {riceCB} Kg.</h4>
+            </div>
+          </div>
+
+          <div className="my-2">
+            <button
+              type="submit"
+              className="btn btn-primary m-1"
+              onClick={(e) => {
+                e.preventDefault();
+                if (riceExpend === "") {
+                  setErrRice("Please Enter Rice Expenditure");
+                  return;
+                }
+                setErrRice("");
+                updateCombinedData();
+              }}
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger m-1"
+              onClick={() => {
+                setShowCombinedUpdate(false);
+                setDocId(todayInString());
+                setPp("");
+                setPry("");
+                setRiceOB("");
+                setRiceExpend("");
+                setRiceGiven("");
+                setRiceCB("");
+                setDate(todayInString());
+              }}
             >
               Cancel
             </button>
@@ -1521,12 +2052,31 @@ export default function MDMData() {
                                 setDate(getCurrentDateInput(entry.date));
 
                                 setDocId(entry.date);
+                                const rData = riceData.find(
+                                  (r) => r.id === entry.id,
+                                );
+                                if (rData) {
+                                  setRiceOB(rData.riceOB);
+                                  setRiceGiven(rData.riceGiven);
+                                  setRiceExpend(rData.riceExpend);
+                                  setRiceCB(rData.riceCB);
+                                } else {
+                                  setRiceOB("");
+                                  setRiceGiven("");
+                                  setRiceExpend("");
+                                  setRiceCB("");
+                                }
                                 setLoader(false);
                                 setShowEntry(false);
                                 setShowUpdate(true);
+                                setShowCombinedUpdate(true);
+                                setShowCombinedEntry(false);
                                 setShowMonthlyReport(false);
                                 setShowDataTable(false);
                                 setShowMonthSelection(false);
+                                setShowStudentDataEntryForm(false);
+                                setShowEntry(false);
+                                setShowUpdate(false);
                               }}
                             >
                               Edit
@@ -2711,173 +3261,6 @@ export default function MDMData() {
               )}
             </>
           )}
-        </div>
-      )}
-      {showRiceData && (
-        <div className="my-3">
-          <h4 className="my-3">Rice Data</h4>
-          <form>
-            <div className="form-group m-2 col-md-4 mx-auto">
-              <label className="m-2">Date</label>
-              <input
-                type="date"
-                className="form-control"
-                defaultValue={getCurrentDateInput(date)}
-                onChange={(e) => {
-                  const data = getSubmitDateInput(e.target.value);
-                  setDate(data);
-                  const Year = data.split("-")[2];
-                  const Month = data.split("-")[1];
-                  const Day = parseInt(data.split("-")[0]);
-                  let prevDay = Day - 1;
-                  if (prevDay < 10) {
-                    prevDay = "0" + prevDay;
-                  }
-                  const prevDate = `${prevDay}-${Month}-${Year}`;
-                  let beforePrevDay = Day - 2;
-                  if (beforePrevDay < 10) {
-                    beforePrevDay = "0" + beforePrevDay;
-                  }
-                  const beforePrevDate = `${beforePrevDay}-${Month}-${Year}`;
-                  const filteredData = riceData.filter(
-                    (entry) => entry.date === prevDate,
-                  );
-                  const filteredPrevDayData = riceData.filter(
-                    (entry) => entry.date === beforePrevDate,
-                  );
-                  if (filteredData.length > 0) {
-                    setRiceOB(filteredData[0]?.riceCB);
-                  } else if (filteredPrevDayData.length > 0) {
-                    setRiceOB(filteredPrevDayData[0]?.riceCB);
-                  } else {
-                    toast.error(`Could not find entry`);
-                  }
-                  // monthNamesWithIndex.filter((month) => {
-                  //   if (month.index === Month) {
-                  //     setMonYear(`${month.monthName}-${Year}`);
-                  //   }
-                  // });
-                  // const reportData = monthlyReportState.filter(
-                  //   (entry) => entry.id === monYear
-                  // );
-                  // if (reportData.length > 0) {
-                  //   setRiceOB(reportData[0]?.riceCB);
-                  // }
-                }}
-              />
-            </div>
-
-            <h4 className="m-2 text-success">Rice Balance {riceOB} Kg.</h4>
-
-            <div className="form-group m-2 col-md-4 mx-auto">
-              <label className="m-2">Rice Opening Balance (in Kg.)</label>
-              <input
-                type="number"
-                className="form-control "
-                placeholder={`Enter Rice Opening Balance`}
-                value={riceOB}
-                onChange={(e) => {
-                  if (e.target.value !== "") {
-                    setRiceOB(parseFloat(e.target.value));
-                    setRiceCB(
-                      parseFloat(e.target.value) +
-                        (riceGiven === "" ? 0 : riceGiven) -
-                        (riceExpend === "" ? 0 : riceExpend),
-                    );
-                  } else {
-                    setRiceOB("");
-                  }
-                }}
-              />
-            </div>
-            <div className="form-group m-2 col-md-4 mx-auto">
-              <label className="m-2">Rice Expenditure (in Kg.)</label>
-              <input
-                ref={input2Ref}
-                type="number"
-                className="form-control "
-                placeholder={`Enter Rice Expenditure`}
-                value={riceExpend}
-                onChange={(e) => {
-                  if (e.target.value !== "") {
-                    setRiceExpend(parseFloat(e.target.value));
-                    setRiceCB(
-                      riceOB -
-                        (riceGiven === "" ? 0 : riceGiven) -
-                        parseFloat(e.target.value),
-                    );
-                    setErrRice("");
-                  } else {
-                    setRiceExpend("");
-                    setRiceCB(riceOB - (riceGiven === "" ? 0 : riceGiven));
-                  }
-                }}
-              />
-              {errRice && <p className="text-danger m-2">{errRice}</p>}
-            </div>
-            <div className="form-group m-2 col-md-4 mx-auto">
-              <label className="m-2">Rice Received (in Kg.)</label>
-              <input
-                type="number"
-                className="form-control "
-                placeholder={`Enter Rice Received (in Kg.)`}
-                value={riceGiven}
-                onChange={(e) => {
-                  if (e.target.value !== "") {
-                    setRiceGiven(parseFloat(e.target.value));
-                    setRiceCB(riceOB + parseFloat(e.target.value) - riceExpend);
-                  } else {
-                    setRiceGiven("");
-                    setRiceCB(riceOB - riceExpend);
-                  }
-                }}
-              />
-            </div>
-            <div className="form-group m-2 col-md-4 mx-auto">
-              <label className="m-2">Rice Closing Balance (in Kg.)</label>
-              <input
-                type="number"
-                className="form-control "
-                placeholder={`Enter Rice Closing Balance (in Kg.)`}
-                value={riceCB}
-                onChange={(e) => {
-                  if (e.target.value !== "") {
-                    setRiceCB(parseFloat(e.target.value));
-                  } else {
-                    setRiceCB("");
-                  }
-                }}
-              />
-            </div>
-
-            <h4 className="text-info m-2">Closing Balance {riceCB} Kg.</h4>
-
-            <button
-              type="submit"
-              className="btn btn-success m-2"
-              onClick={(e) => {
-                e.preventDefault();
-                if (riceExpend === "") {
-                  setErrRice("Please Enter Rice Expenditure");
-                  return;
-                }
-                setErrRice("");
-
-                submitRice();
-              }}
-            >
-              Submit
-            </button>
-            <button
-              type="button"
-              className="btn btn-danger m-2"
-              onClick={() => {
-                setShowRiceData(false);
-              }}
-            >
-              Cancel
-            </button>
-          </form>
         </div>
       )}
       {showStudentDataEntryForm && (
