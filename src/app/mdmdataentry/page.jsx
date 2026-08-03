@@ -6,6 +6,7 @@ import {
   SCHOOLNAME,
   PREV_MDM_COST,
   MDM_COST_MAY_2025,
+  MDM_COST_AUG_2026,
 } from "@/modules/constants";
 import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
@@ -651,6 +652,9 @@ export default function MDMData() {
     } else if (parseInt(selectedYear) >= 2025 && parseInt(entryMonth) >= 5) {
       setThisMonthMDMAllowance(MDM_COST_MAY_2025);
       mdmCost = MDM_COST_MAY_2025;
+    } else if (parseInt(selectedYear) >= 2026 && parseInt(entryMonth) >= 8) {
+      setThisMonthMDMAllowance(MDM_COST_AUG_2026);
+      mdmCost = MDM_COST_AUG_2026;
     } else {
       setThisMonthMDMAllowance(MDM_COST_MAY_2025);
       mdmCost = MDM_COST_MAY_2025;
