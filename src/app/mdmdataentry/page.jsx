@@ -55,6 +55,28 @@ export default function MDMData() {
   const access = state?.ACCESS;
   const [date, setDate] = useState(todayInString());
   const today = new Date();
+  const getMDMAllowanceForMonth = (year, monthIndex) => {
+    const parsedYear = Number(year);
+    const parsedMonth = Number(monthIndex);
+
+    if (parsedYear <= 2024) {
+      return PREV_MDM_COST;
+    }
+
+    if (parsedYear === 2024) {
+      return parsedMonth <= 11 ? PREV_MDM_COST : MDM_COST;
+    }
+
+    if (parsedYear === 2025) {
+      return parsedMonth <= 4 ? MDM_COST : MDM_COST_MAY_2025;
+    }
+
+    if (parsedYear === 2026) {
+      return parsedMonth <= 7 ? MDM_COST_MAY_2025 : MDM_COST_AUG_2026;
+    }
+
+    return MDM_COST_AUG_2026;
+  };
   const [pp, setPp] = useState("");
   const [pry, setPry] = useState("");
   const [showEntry, setShowEntry] = useState(false);
@@ -70,8 +92,9 @@ export default function MDMData() {
   const [allEnry, setAllEnry] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [moreFilteredData, setMoreFilteredData] = useState([]);
-  const [thisMonthMDMAllowance, setThisMonthMDMAllowance] =
-    useState(PREV_MDM_COST);
+  const [thisMonthMDMAllowance, setThisMonthMDMAllowance] = useState(() =>
+    getMDMAllowanceForMonth(today.getFullYear(), today.getMonth() + 1),
+  );
   const [ppTotalMeal, setPpTotalMeal] = useState("");
   const [pryTotalMeal, setPryTotalMeal] = useState("");
   const [showMonthSelection, setShowMonthSelection] = useState(false);
@@ -638,27 +661,9 @@ export default function MDMData() {
       ppTotal += entry.pp;
       pryTotal += entry.pry;
     });
-    let mdmCost = thisMonthMDMAllowance;
     const entryMonth = x[0]?.date?.split("-")?.[1];
-    if (parseInt(selectedYear) <= 2024 && parseInt(entryMonth) <= 11) {
-      setThisMonthMDMAllowance(PREV_MDM_COST);
-      mdmCost = PREV_MDM_COST;
-    } else if (parseInt(selectedYear) === 2024 && parseInt(entryMonth) === 12) {
-      setThisMonthMDMAllowance(MDM_COST);
-      mdmCost = MDM_COST;
-    } else if (parseInt(selectedYear) === 2025 && parseInt(entryMonth) <= 4) {
-      setThisMonthMDMAllowance(MDM_COST);
-      mdmCost = MDM_COST;
-    } else if (parseInt(selectedYear) >= 2025 && parseInt(entryMonth) >= 5) {
-      setThisMonthMDMAllowance(MDM_COST_MAY_2025);
-      mdmCost = MDM_COST_MAY_2025;
-    } else if (parseInt(selectedYear) >= 2026 && parseInt(entryMonth) >= 8) {
-      setThisMonthMDMAllowance(MDM_COST_AUG_2026);
-      mdmCost = MDM_COST_AUG_2026;
-    } else {
-      setThisMonthMDMAllowance(MDM_COST_MAY_2025);
-      mdmCost = MDM_COST_MAY_2025;
-    }
+    const mdmCost = getMDMAllowanceForMonth(selectedYear, entryMonth);
+    setThisMonthMDMAllowance(mdmCost);
 
     setPpTotalMeal(ppTotal);
     setPryTotalMeal(pryTotal);

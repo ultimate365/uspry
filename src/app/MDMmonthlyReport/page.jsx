@@ -2,6 +2,10 @@
 import {
   BLOCK,
   CCH_NAME,
+  MDM_COST,
+  MDM_COST_AUG_2026,
+  MDM_COST_MAY_2025,
+  PREV_MDM_COST,
   PRIMARY_STUDENTS,
   SCHOOL_TYPE,
   SCHOOLNAME,
@@ -26,6 +30,29 @@ import { useRouter } from "next/navigation";
 import { useGlobalContext } from "../../context/Store";
 import MDMPrint from "@/pdf/MDMPrint";
 export default function MDMmonthlyReport() {
+  const getMDMAllowanceForMonth = (year, monthIndex) => {
+    const parsedYear = Number(year);
+    const parsedMonth = Number(monthIndex);
+
+    if (parsedYear <= 2024) {
+      return PREV_MDM_COST;
+    }
+
+    if (parsedYear === 2024) {
+      return parsedMonth <= 11 ? PREV_MDM_COST : MDM_COST;
+    }
+
+    if (parsedYear === 2025) {
+      return parsedMonth <= 4 ? MDM_COST : MDM_COST_MAY_2025;
+    }
+
+    if (parsedYear === 2026) {
+      return parsedMonth <= 7 ? MDM_COST_MAY_2025 : MDM_COST_AUG_2026;
+    }
+
+    return MDM_COST_AUG_2026;
+  };
+
   const { monthlyReportState, setMonthlyReportState, state } =
     useGlobalContext();
   const PDFDownloadLink = dynamic(
@@ -91,6 +118,10 @@ export default function MDMmonthlyReport() {
   const [showZoom, setShowZoom] = useState(false);
   const [newFormatZoom, setNewFormatZoom] = useState(100);
   const [oldFormatZoom, setOldFormatZoom] = useState(100);
+  const currentMonthMDMAllowance = getMDMAllowanceForMonth(
+    thisMonthlyData?.year,
+    thisMonthlyData?.month,
+  );
   const calledData = (array) => {
     let x = [];
     array.map((entry) => {
@@ -2337,13 +2368,13 @@ export default function MDMmonthlyReport() {
                           {thisMonthlyData?.ppTotal}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          ₹ {thisMonthMDMAllowance}
+                          ₹ {currentMonthMDMAllowance}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          {thisMonthlyData?.ppTotal} × ₹ {thisMonthMDMAllowance}{" "}
+                          {thisMonthlyData?.ppTotal} × ₹ {currentMonthMDMAllowance}{" "}
                           = ₹ 
                           {Math.round(
-                            thisMonthlyData?.ppTotal * thisMonthMDMAllowance
+                            thisMonthlyData?.ppTotal * currentMonthMDMAllowance
                           )}
                         </td>
                       </tr>
@@ -2358,14 +2389,14 @@ export default function MDMmonthlyReport() {
                           {thisMonthlyData?.pryTotal}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
-                          ₹ {thisMonthMDMAllowance}
+                          ₹ {currentMonthMDMAllowance}
                         </td>
                         <td style={{ border: "1px solid", paddingInline: 2 }}>
                           {thisMonthlyData?.pryTotal} × ₹{" "}
-                          {thisMonthMDMAllowance} = ₹{" "}
+                          {currentMonthMDMAllowance} = ₹{" "}
                           
                           {Math.round(
-                            thisMonthlyData?.pryTotal * thisMonthMDMAllowance
+                            thisMonthlyData?.pryTotal * currentMonthMDMAllowance
                           )}
                         </td>
                       </tr>
