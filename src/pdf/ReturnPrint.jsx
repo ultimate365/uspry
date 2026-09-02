@@ -5422,6 +5422,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 5,
     marginVertical: 20,
+    marginTop: 40,
     width: "100%",
   },
   signatureGroup: {
