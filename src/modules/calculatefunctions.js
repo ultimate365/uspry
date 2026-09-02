@@ -10,7 +10,7 @@ export const encryptPassword = async (password) =>
 export function round2dec(value) {
   if (value % 1 !== 0) {
     return parseFloat(
-      Number(Math.round(value + "e" + 2) + "e-" + 2).toFixed(2)
+      Number(Math.round(value + "e" + 2) + "e-" + 2).toFixed(2),
     );
   } else {
     return value;
@@ -63,7 +63,7 @@ export function NumInWords(number) {
           first[Math.floor(tempNumber / Math.pow(1000, i))] +
             mad[i] +
             " " +
-            word
+            word,
         );
       } else {
         word = titleCase(
@@ -72,7 +72,7 @@ export function NumInWords(number) {
             first[Math.floor(tempNumber / Math.pow(1000, i)) % 10] +
             mad[i] +
             " " +
-            word
+            word,
         );
       }
     }
@@ -82,7 +82,7 @@ export function NumInWords(number) {
       word = titleCase(
         first[Math.floor(tempNumber / (100 * Math.pow(1000, i)))] +
           "hunderd " +
-          word
+          word,
       );
   }
   return word;
@@ -327,7 +327,7 @@ export const IndianFormat = (x) => {
     var afterPoint = "";
     if (x?.indexOf(".") > 0)
       afterPoint = x?.substring(x?.indexOf("."), x?.length);
-    x = Math.floor(x);
+    x = Math.trunc(x);
     x = x?.toString();
     var lastThree = x?.substring(x?.length - 3);
     var otherNumbers = x?.substring(0, x?.length - 3);
@@ -655,7 +655,7 @@ export const getServiceLife = (date) => {
   let monthinMillis = 2629800000;
   let age = Math.floor((currentDate - birthDate) / yearInMillis);
   let months = Math.floor(
-    ((currentDate - birthDate) % yearInMillis) / monthinMillis
+    ((currentDate - birthDate) % yearInMillis) / monthinMillis,
   );
   if (age) {
     return `${age} years ${months} months`;
@@ -743,7 +743,7 @@ export const sortMonthwise = (array) => {
   });
 };
 const alphabetArray = Array.from({ length: 26 }, (_, i) =>
-  String.fromCharCode(i + 65)
+  String.fromCharCode(i + 65),
 );
 
 export function getRandomAlphabet() {
