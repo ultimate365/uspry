@@ -5179,7 +5179,7 @@ const styles = StyleSheet.create({
 
   /* Teacher columns */
   teacherHeader: { borderLeftWidth: 0, borderRightWidth: 0, height: 68 },
-  teacherDataCell: { height: 55 },
+  teacherDataCell: { height: 60 },
 
   colSerial: {
     width: "4%",
