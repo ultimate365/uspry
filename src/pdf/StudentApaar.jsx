@@ -35,7 +35,7 @@ export default function StudentApaar({ apaarData }) {
                     borderWidth: 2,
                     justifyContent: "center",
                     alignItems: "center",
-                    height: 75,
+                    height: 85,
                     borderRadius: 10,
                     margin: 5,
                   }}

@@ -155,7 +155,7 @@ export default function PhotoCorner() {
                 textDecoration: "none",
                 padding: "10px",
                 color: "#fff",
-                backgroundColor: "navy",
+                backgroundColor: "purple",
                 border: "1px solid #4a4a4a",
                 width: "40%",
                 borderRadius: 10,
