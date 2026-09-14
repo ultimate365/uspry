@@ -7,6 +7,7 @@ import { SCHOOLNAME } from "@/modules/constants";
 import Image from "next/image";
 import Loader from "@/components/Loader";
 import StudentCorner from "../../pdf/StudentCorner";
+import StudentApaar from "../../pdf/StudentApaar";
 import dynamic from "next/dynamic";
 export default function PhotoCorner() {
   const PDFDownloadLink = dynamic(
@@ -14,7 +15,7 @@ export default function PhotoCorner() {
     {
       ssr: false,
       loading: () => <p>Loading...</p>,
-    }
+    },
   );
   const {
     state,
@@ -30,7 +31,7 @@ export default function PhotoCorner() {
   const [filteredData, setFilteredData] = useState([]);
   const studentData = async () => {
     const querySnapshot = await getDocs(
-      query(collection(firestore, "students"))
+      query(collection(firestore, "students")),
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -146,6 +147,26 @@ export default function PhotoCorner() {
               }
             </PDFDownloadLink>
           </div>
+          <div className="my-3 noprint">
+            <PDFDownloadLink
+              document={<StudentApaar apaarData={filteredData} />}
+              fileName={`Student Apaar.pdf`}
+              style={{
+                textDecoration: "none",
+                padding: "10px",
+                color: "#fff",
+                backgroundColor: "navy",
+                border: "1px solid #4a4a4a",
+                width: "40%",
+                borderRadius: 10,
+                margin: 10,
+              }}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? "Loading..." : "Download Student Apaar PDF"
+              }
+            </PDFDownloadLink>
+          </div>
           <div className="row mx-auto text-center">
             {filteredData.map((el, index) => {
               return (
@@ -193,14 +214,14 @@ export default function PhotoCorner() {
                     {el?.mobile === "0"
                       ? ""
                       : el?.mobile === "9999999999"
-                      ? ""
-                      : el?.mobile === "7872882343"
-                      ? ""
-                      : el?.mobile === "7679230482"
-                      ? ""
-                      : el?.mobile === "9933684468"
-                      ? ""
-                      : el?.mobile}
+                        ? ""
+                        : el?.mobile === "7872882343"
+                          ? ""
+                          : el?.mobile === "7679230482"
+                            ? ""
+                            : el?.mobile === "9933684468"
+                              ? ""
+                              : el?.mobile}
                   </h6>
                   <h6 className="m-1 p-0 text-center text-wrap">
                     Student ID: {el?.student_id}
