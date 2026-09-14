@@ -160,6 +160,7 @@ export default function PhotoCorner() {
                 width: "40%",
                 borderRadius: 10,
                 margin: 10,
+                marginTop: 20,
               }}
             >
               {({ blob, url, loading, error }) =>

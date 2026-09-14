@@ -43,12 +43,12 @@ export default function StudentApaar({ apaarData }) {
                 >
                   <Text style={styles.title2}>{item?.student_name}</Text>
                   <Text style={styles.title2}>{item?.class}</Text>
-                  <Text style={styles.title}>ROLL: {item?.roll_no}</Text>
-                  <Text style={styles.title}>
+                  <Text style={styles.title2}>ROLL: {item?.roll_no}</Text>
+                  <Text style={styles.title2}>
                     BSP Student ID: {item?.student_id}
                   </Text>
-                  <Text style={styles.title}>PEN: {item?.pen}</Text>
-                  <Text style={styles.title}>Apaar: {item?.apaar}</Text>
+                  <Text style={styles.title2}>PEN: {item?.pen}</Text>
+                  <Text style={styles.title2}>Apaar: {item?.apaar}</Text>
                 </View>
               ))}
           </View>
