@@ -53,6 +53,8 @@ export default function StudentData() {
     mother_name: "",
     gender: "BOYS",
     aadhaar: "",
+    apaar: "",
+    pen: "",
   });
   const [editStudent, setEditStudent] = useState({
     nclass: 0,
@@ -68,6 +70,8 @@ export default function StudentData() {
     mother_name: "",
     gender: "BOYS",
     aadhaar: "",
+    apaar: "",
+    pen: "",
   });
   const studentData = async () => {
     const querySnapshot = await getDocs(
@@ -230,6 +234,20 @@ export default function StudentData() {
     {
       name: "Student ID",
       selector: (row) => row.student_id,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+    },
+    {
+      name: "PEN",
+      selector: (row) => row.pen,
+      sortable: +true,
+      wrap: +true,
+      center: +true,
+    },
+    {
+      name: "APAAR",
+      selector: (row) => row.apaar,
       sortable: +true,
       wrap: +true,
       center: +true,
@@ -422,6 +440,9 @@ export default function StudentData() {
                           birthdate: todayInString(),
                           student_name: "",
                           mother_name: "",
+                          pen: "",
+                          apaar: "",
+                          aadhaar: "",
                         });
                       }}
                     ></button>
@@ -623,7 +644,7 @@ export default function StudentData() {
                         />
                       </div>
                       <div className="mb-3 col-md-6">
-                        <label className="form-label">Aadhaar No. *</label>
+                        <label className="form-label">Aadhaar No.</label>
                         <input
                           type="number"
                           className="form-control"
@@ -635,9 +656,39 @@ export default function StudentData() {
                               aadhaar: e.target.value,
                             });
                           }}
-                          required
                         />
                       </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">PEN</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="PEN"
+                          value={addStudent.pen}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              pen: e.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">APAAR</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="APAAR"
+                          value={addStudent.apaar}
+                          onChange={(e) => {
+                            setAddStudent({
+                              ...addStudent,
+                              apaar: e.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+
                       <div className="mb-3 col-md-6">
                         <label className="form-label">Student ID *</label>
                         <input
@@ -702,6 +753,9 @@ export default function StudentData() {
                           birthdate: todayInString(),
                           student_name: "",
                           mother_name: "",
+                          pen: "",
+                          apaar: "",
+                          aadhaar: "",
                         });
                       }}
                     >
@@ -744,6 +798,9 @@ export default function StudentData() {
                           birthdate: todayInString(),
                           student_name: "",
                           mother_name: "",
+                          pen: "",
+                          apaar: "",
+                          aadhaar: "",
                         });
                       }}
                     ></button>
@@ -959,6 +1016,37 @@ export default function StudentData() {
                           required
                         />
                       </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">Apaar</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="Apaar"
+                          value={editStudent.apaar}
+                          onChange={(e) => {
+                            setEditStudent({
+                              ...editStudent,
+                              apaar: e.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label className="form-label">PEN</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          placeholder="PEN"
+                          value={editStudent.pen}
+                          onChange={(e) => {
+                            setEditStudent({
+                              ...editStudent,
+                              pen: e.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+
                       <div className="mb-3 col-md-6">
                         <label className="form-label">Student ID *</label>
                         <input
