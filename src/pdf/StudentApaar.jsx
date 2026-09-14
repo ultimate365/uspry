@@ -14,46 +14,73 @@ import {
 
 const width = 2480;
 const height = 3508;
+
+// Calculate items per page based on card dimensions
+// Each card is ~22% width + margins, height ~130px
+// A4 page can fit roughly 4 columns x 7 rows = 28 items per page
+const ITEMS_PER_PAGE = 28;
+
+// Function to split data into chunks
+const chunkData = (data, size) => {
+  const chunks = [];
+  for (let i = 0; i < data.length; i += size) {
+    chunks.push(data.slice(i, i + size));
+  }
+  return chunks;
+};
+
 export default function StudentApaar({ apaarData }) {
+  const pages = chunkData(apaarData, ITEMS_PER_PAGE);
+
   return (
     <Document style={{ margin: 5, padding: 5 }} title={`Student Apaar`}>
-      <Page size="A4" orientation="portrait" style={styles.page}>
-        <View style={styles.pageMainView}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {apaarData.length > 0 &&
-              apaarData.map((item, index) => (
-                <View
-                  style={{
-                    width: "22%",
-                    borderWidth: 2,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: 85,
-                    borderRadius: 10,
-                    margin: 5,
-                  }}
-                  key={index}
-                >
-                  <Text style={styles.title2}>{item?.student_name}</Text>
-                  <Text style={styles.title2}>{item?.class}</Text>
-                  <Text style={styles.title2}>ROLL: {item?.roll_no}</Text>
-                  <Text style={styles.title2}>
-                    BSP Student ID: {item?.student_id}
-                  </Text>
-                  <Text style={styles.title2}>PEN: {item?.pen}</Text>
-                  <Text style={styles.title2}>Apaar: {item?.apaar}</Text>
-                </View>
-              ))}
+      {pages.map((pageData, pageIndex) => (
+        <Page
+          key={pageIndex}
+          size="A4"
+          orientation="portrait"
+          style={styles.page}
+        >
+          <View style={styles.pageMainView}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "flex-start",
+                flexWrap: "wrap",
+              }}
+            >
+              {pageData.length > 0 &&
+                pageData.map((item, index) => (
+                  <View
+                    style={{
+                      width: "22%",
+                      borderWidth: 2,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 100,
+                      borderRadius: 10,
+                      margin: 5,
+                    }}
+                    key={`${pageIndex}-${index}`}
+                    wrap={false}
+                  >
+                    <Text style={styles.title2}>{item?.student_name}</Text>
+                    <Text style={styles.title2}>{item?.class}</Text>
+                    <Text style={styles.title2}>ROLL: {item?.roll_no}</Text>
+                    <Text style={styles.title2}>
+                      BSP Student ID: {item?.student_id}
+                    </Text>
+                    <Text style={styles.title2}>PEN: {item?.pen}</Text>
+                    {item?.apaar && (
+                      <Text style={styles.title2}>APAAR: {item?.apaar}</Text>
+                    )}
+                  </View>
+                ))}
+            </View>
           </View>
-        </View>
-      </Page>
+        </Page>
+      ))}
     </Document>
   );
 }
@@ -86,6 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "TimesBold",
     textAlign: "center",
+    marginVertical: 2,
   },
   titleMain: {
     fontSize: 20,
