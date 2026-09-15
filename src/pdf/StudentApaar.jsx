@@ -55,7 +55,7 @@ export default function StudentApaar({ apaarData }) {
                   <View
                     style={{
                       width: "22%",
-                      borderWidth: 2,
+                      borderWidth: 1,
                       justifyContent: "center",
                       alignItems: "center",
                       height: 100,
