@@ -244,6 +244,7 @@ export default function StudentData() {
       sortable: +true,
       wrap: +true,
       center: +true,
+      omit: access !== "admin",
     },
     {
       name: "APAAR",
@@ -251,6 +252,7 @@ export default function StudentData() {
       sortable: +true,
       wrap: +true,
       center: +true,
+      omit: access !== "admin",
     },
     {
       name: "Aadhar No.",
@@ -258,6 +260,7 @@ export default function StudentData() {
       sortable: +true,
       wrap: +true,
       center: +true,
+      omit: access !== "admin",
     },
     {
       name: "Birth Date",
