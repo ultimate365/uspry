@@ -67,8 +67,8 @@ export default function VecTransactions() {
         currentDate.getDate() > 10
           ? currentDate.getMonth()
           : currentDate.getMonth() === 0
-          ? 11
-          : currentDate.getMonth() - 1
+            ? 11
+            : currentDate.getMonth() - 1
       ].monthName;
     const year =
       currentDate.getDate() <= 10 && currentDate.getMonth() === 0
@@ -80,7 +80,7 @@ export default function VecTransactions() {
   const getTransactions = async () => {
     setLoader(true);
     const querySnapshot = await getDocs(
-      query(collection(firestore, "vectransactions"))
+      query(collection(firestore, "vectransactions")),
     );
     const data = querySnapshot.docs
       .map((doc) => ({
@@ -88,7 +88,8 @@ export default function VecTransactions() {
         ...doc.data(),
         id: doc.id,
       }))
-      .sort((a, b) => b.createdAt - a.createdAt);
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .sort((a, b) => a.openingBalance - b.openingBalance);
     setLoader(false);
     setAllTransactions(data);
     setAllFTransactions(data);
@@ -120,18 +121,18 @@ export default function VecTransactions() {
             ? parseFloat(
                 round2dec(
                   parseFloat(stateObject.balance) +
-                    parseFloat(transaction.amount)
-                )
+                    parseFloat(transaction.amount),
+                ),
               )
             : parseFloat(
                 round2dec(
                   parseFloat(stateObject.balance) -
-                    parseFloat(transaction.amount)
-                )
+                    parseFloat(transaction.amount),
+                ),
               );
         await updateDoc(
           doc(firestore, "vecaccount", stateObject.id),
-          thisAccount
+          thisAccount,
         )
           .then(() => {
             setStateObject(thisAccount);
@@ -182,7 +183,7 @@ export default function VecTransactions() {
       setLoader(true);
       await updateDoc(
         doc(firestore, "vectransactions", editVecObj.id),
-        editVecObj
+        editVecObj,
       );
 
       let thisAccount = stateObject;
@@ -645,7 +646,7 @@ export default function VecTransactions() {
                               ...vecObj,
                               type: value,
                               closingBalance: round2dec(
-                                stateObject.balance - vecObj.amount
+                                stateObject.balance - vecObj.amount,
                               ),
                             });
                           } else {
@@ -676,7 +677,7 @@ export default function VecTransactions() {
                         readOnly={true}
                         onChange={(e) => {
                           toast.error(
-                            "Can't change the opening balance, from this section"
+                            "Can't change the opening balance, from this section",
                           );
                         }}
                       />
@@ -697,7 +698,7 @@ export default function VecTransactions() {
                           monthNamesWithIndex[inpMonth].monthName;
                         let newId = `${textMonth}-${inpYear}`;
                         const checkDuplicate = allTransactions.filter(
-                          (transaction) => transaction.id === newId
+                          (transaction) => transaction.id === newId,
                         );
                         if (checkDuplicate.length > 0) {
                           newId =
@@ -727,8 +728,8 @@ export default function VecTransactions() {
                                 ? parseFloat(
                                     round2dec(
                                       vecObj.openingBalance -
-                                        parseFloat(e.target.value)
-                                    )
+                                        parseFloat(e.target.value),
+                                    ),
                                   )
                                 : parseFloat(e.target.value) +
                                   vecObj.openingBalance,
