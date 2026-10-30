@@ -88,8 +88,7 @@ export default function VecTransactions() {
         ...doc.data(),
         id: doc.id,
       }))
-      .sort((a, b) => b.createdAt - a.createdAt)
-      .sort((a, b) => a.openingBalance - b.openingBalance);
+      .sort((a, b) => b.createdAt - a.createdAt);
     setLoader(false);
     setAllTransactions(data);
     setAllFTransactions(data);
